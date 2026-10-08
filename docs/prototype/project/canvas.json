@@ -1,0 +1,22 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Main.dc.html": {"expand": "fill", "h": 4900, "is_interactive": true, "title": "1 · Homepage", "w": 1440, "x": 0, "y": 0},
+    "Faculties.dc.html": {"expand": "fill", "h": 2400, "is_interactive": true, "title": "2 · Faculties", "w": 1440, "x": 1520, "y": 0},
+    "Faculty.dc.html": {"expand": "fill", "h": 3400, "is_interactive": true, "title": "3 · Faculty site (FSIT)", "w": 1440, "x": 3040, "y": 0},
+    "Microsite.dc.html": {"expand": "fill", "h": 3600, "is_interactive": true, "title": "4 · Department site (CSE)", "w": 1440, "x": 4560, "y": 0},
+    "Program.dc.html": {"expand": "fill", "h": 5200, "is_interactive": true, "title": "5 · Program page (MBA)", "w": 1440, "x": 6080, "y": 0},
+    "AdminNotice.dc.html": {"expand": "fill", "h": 1100, "is_interactive": true, "title": "6 · Admin — Edit Notice", "w": 1440, "x": 7600, "y": 0}
+  },
+  "createdOnFiles": {"at": "2026-10-08T10:00:00Z", "v": 1},
+  "designSystems": [],
+  "launch": {"file": "Main.dc.html", "view": "focused"},
+  "notes": {
+    "rowTitle": {"kind": "title1", "maxW": 9000, "text": "University Website — Prototype v3 (DIU live-site branding & real data)", "w": 240, "x": 0, "y": -300},
+    "sampleNote": {"fill": "orange", "size": 24, "text": "Prototype v3. Photos, logo, faculty list, CSE menu, MBA facts, majors, facilitators, testimonials and fees are taken from DIU's current public website and API. Items in [brackets] are placeholders. The program page uses MBA as the template; CSE program cards open the same template. Use Play and click through: Homepage → Faculties → FSIT → CSE → Program.", "w": 380, "x": 9120, "y": 0}
+  },
+  "order": ["Main.dc.html", "Faculties.dc.html", "Faculty.dc.html", "Microsite.dc.html", "Program.dc.html", "AdminNotice.dc.html"],
+  "pages": [],
+  "title": "University Website Prototype"
+}

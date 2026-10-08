@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Faculties</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;family=Hind+Siliguri:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:"Manrope","Hind Siliguri",sans-serif;color:#1E1E1E;background:#FFFFFF}
+a{color:#034EA2}a:hover{color:#002652}
+.nav a{color:#1E1E1E;text-decoration:none;font-weight:600;font-size:15px;padding:10px 2px;border-bottom:2px solid transparent}
+.nav a:hover{color:#034EA2;border-bottom-color:#034EA2}
+.fcard{text-decoration:none;color:inherit;transition:transform .2s, box-shadow .2s}
+.fcard:hover{transform:translateY(-4px);box-shadow:0 22px 48px rgba(0,38,82,.14)}
+.fcard:hover .go{color:#002652}
+.foot a{color:#B7C3D6;text-decoration:none;font-size:14px}
+.foot a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="min-width: 0">
+
+  <div style="background: #FFFFFF; border-bottom: 1px solid #E6E7E8">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 14px 32px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between">
+      <a href="Main.dc.html" style="display: flex; align-items: center"><img src="/_blob/20e4fc74cb3d7032ec20a6d2263d6709" alt="Daffodil International University" style="height: 48px; width: auto"></a>
+      <nav aria-label="Main" class="nav" style="display: flex; flex-wrap: wrap; gap: 26px; align-items: center">
+        <a href="#">About</a><a href="Faculties.dc.html" style="color: #034EA2; border-bottom-color: #034EA2">Faculties</a><a href="Main.dc.html#programs">Programs</a><a href="#">Admission</a><a href="#">Research</a><a href="#">Campus Life</a>
+      </nav>
+      <a href="#" style="background: linear-gradient(90deg,#034EA2,#002652); color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: 15px; padding: 12px 22px; border-radius: 10px">Apply Now</a>
+    </div>
+  </div>
+
+  <!-- PAGE HERO -->
+  <div style="position: relative; overflow: hidden; background: #002652">
+    <img src="/_blob/8475eb5be5d72d160ebabec73cf9aedf" alt="" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.35">
+    <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,38,82,0.95), rgba(3,78,162,0.6))"></div>
+    <div style="position: relative; max-width: 1320px; margin: 0 auto; padding: 72px 32px 80px; color: #FFFFFF; display: flex; flex-direction: column; gap: 18px">
+      <nav aria-label="Breadcrumb" style="font-size: 14px; color: #C7D5E8; display: flex; gap: 8px"><a href="Main.dc.html" style="color: #C7D5E8; text-decoration: none">Home</a><span>/</span><span aria-current="page" style="color: #FFFFFF">Faculties</span></nav>
+      <h1 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 52px; line-height: 1.1">Faculties</h1>
+      <p style="margin: 0; font-size: 18px; line-height: 1.6; color: #D5DEEA; max-width: 680px">Six faculties offering undergraduate, graduate and doctoral pathways — each with its own departments, programs, research and student community.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; max-width: 620px; background: #FFFFFF; border-radius: 14px; padding: 8px">
+        <label for="q" style="position: absolute; left: -9999px">Search programs or departments</label>
+        <input id="q" placeholder="Search a program or department…" style="flex: 1 1 260px; min-width: 0; border: 0; padding: 12px 14px; font-family: inherit; font-size: 16px; color: #1E1E1E; outline: none">
+        <button style="background: linear-gradient(90deg,#034EA2,#002652); color: #FFFFFF; border: 0; border-radius: 10px; padding: 0 22px; min-height: 48px; font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer">Search</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FACULTY CARDS -->
+  <div style="max-width: 1320px; margin: 0 auto; padding: 72px 32px; display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 28px">
+    <sc-for list="{{ faculties }}" as="f" hint-placeholder-count="6">
+      <a href="{{ f.href }}" class="fcard" style="border-radius: 22px; overflow: hidden; border: 1px solid #E6E7E8; background: #FFFFFF; display: flex; flex-direction: column">
+        <div style="position: relative; height: 230px">
+          <img src="{{ f.img }}" alt="{{ f.name }}" style="width: 100%; height: 100%; object-fit: cover; display: block">
+          <span style="position: absolute; top: 16px; left: 16px; background: #FFFFFF; color: #002652; font-weight: 800; font-size: 13px; padding: 6px 12px; border-radius: 999px; letter-spacing: 0.06em">{{ f.code }}</span>
+        </div>
+        <div style="padding: 24px; display: flex; flex-direction: column; gap: 12px; flex: 1">
+          <span style="font-size: 13px; font-weight: 700; color: #034EA2; letter-spacing: 0.06em">FACULTY OF</span>
+          <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 24px; line-height: 1.25; color: #002652">{{ f.name }}</h2>
+          <p style="margin: 0; font-size: 15px; line-height: 1.65; color: #3D3F42">{{ f.text }}</p>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px">
+            <span style="background: #F3F4F9; font-size: 13px; padding: 5px 10px; border-radius: 999px; color: #3D3F42">{{ f.depts }}</span>
+            <span style="background: #F3F4F9; font-size: 13px; padding: 5px 10px; border-radius: 999px; color: #3D3F42">{{ f.programs }}</span>
+          </div>
+          <span class="go" style="margin-top: auto; padding-top: 8px; font-weight: 800; color: #034EA2; font-size: 15px">Explore faculty →</span>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+
+  <!-- CTA -->
+  <div style="max-width: 1320px; margin: 0 auto; padding: 0 32px 72px">
+    <div style="border-radius: 24px; background: #F3F4F9; padding: 40px; display: flex; flex-wrap: wrap; gap: 24px; align-items: center; justify-content: space-between">
+      <div style="display: flex; flex-direction: column; gap: 8px; max-width: 640px">
+        <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 30px; color: #002652">Not sure which faculty fits you?</h2>
+        <p style="margin: 0; font-size: 16px; color: #3D3F42">Compare programs by level, duration and fees, or talk to an admission counsellor.</p>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px">
+        <a href="Main.dc.html#programs" style="background: linear-gradient(90deg,#034EA2,#002652); color: #FFFFFF; text-decoration: none; font-weight: 700; padding: 14px 22px; border-radius: 10px">Find your program</a>
+        <a href="#" style="border: 1.5px solid #034EA2; color: #034EA2; text-decoration: none; font-weight: 700; padding: 13px 20px; border-radius: 10px">Talk to admission</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot" style="background: #002652; color: #B7C3D6">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 32px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center">
+      <div style="background: #FFFFFF; border-radius: 10px; padding: 8px 12px"><img src="/_blob/20e4fc74cb3d7032ec20a6d2263d6709" alt="Daffodil International University" style="height: 34px; width: auto; display: block"></div>
+      <div style="display: flex; flex-wrap: wrap; gap: 22px"><a href="#">Contact</a><a href="#">Prospectus</a><a href="#">Convocation</a><a href="#">FAQ</a></div>
+      <span style="font-size: 13px">© 2026 Daffodil International University</span>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":2400}}'>
+class Component extends DCLogic {
+  renderVals() {
+    return {
+      faculties: [
+        { code: 'FBE', name: 'Business & Entrepreneurship', img: '/_blob/000123a8bbf89bd13291cd528fdad001', href: '#', depts: '[N] departments', programs: '[N] programs', text: 'Become an independent thinker and a leader ready to launch your next start-up.' },
+        { code: 'FSIT', name: 'Science and Information Technology', img: '/_blob/59e58af24fe3cffa5d3aaf4d147a72f1', href: 'Faculty.dc.html', depts: '7 departments', programs: '[N] programs', text: 'A degree from Science and IT prepares you for the fourth industrial revolution that is already happening.' },
+        { code: 'FHSS', name: 'Humanities & Social Sciences', img: '/_blob/de2616aeb36a0849ec2107e8aa686263', href: '#', depts: '[N] departments', programs: '[N] programs', text: 'Excel in thinking, judgement, communication and leadership — and make an impact on society.' },
+        { code: 'FE', name: 'Engineering', img: '/_blob/90d624208f105b941b6d1972d548e4f1', href: '#', depts: '[N] departments', programs: '[N] programs', text: 'High-potential careers in an era of rapid integration and innovation of technology.' },
+        { code: 'FHLS', name: 'Health and Life Sciences', img: '/_blob/4ca9cec026e81e26f020dba18586eec5', href: '#', depts: '[N] departments', programs: '[N] programs', text: 'A faculty with global demand, dedicated to impact on health and human life.' },
+        { code: 'FGS', name: 'Graduate Studies', img: '/_blob/2510bf71060829713cc5f24d3b681456', href: '#', depts: 'Research & PhD', programs: '[N] programs', text: 'Supports research and publications and offers advanced degrees, particularly PhDs.' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

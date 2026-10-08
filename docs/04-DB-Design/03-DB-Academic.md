@@ -1,0 +1,471 @@
+# Database Design
+## DB-03 — Academic Modules (M-01 থেকে M-11)
+
+| বিষয় | তথ্য |
+|---|---|
+| Document | Database Design DB-03 |
+| Version | 0.1 (Draft) |
+| Date | 2026-10-08 |
+| Status | ✔ Confirmed |
+| Based on | [DB-01](01-DB-Core-Kernel.md) (conventions), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 2](../02-SRS/02-SRS-Academic.md), `project_diu` |
+
+> Convention, শ্রেণী (B / C / P / S / L), ⚙ (`platformColumns()`), `active_key` ও Main Site `('site', 0)` — DB-01 Section 1 ও DB-02 Section 1 অনুযায়ী।
+
+### সব Academic Table-এ যা আলাদা করে লেখা হয়নি (kernel থেকে আসে)
+
+| প্রয়োজন | কোথায় থাকে | Ref |
+|---|---|---|
+| Slug (URL) | `core_slugs` | ADR-11 |
+| Photo, cover, logo, PDF, attachment | `core_media_usages` (field নাম উল্লেখ করা হয়েছে) | DB-02 §3 |
+| SEO meta | `core_seo_meta` | DB-02 §9 |
+| Category / Level / Designation ইত্যাদি | `core_terms` (vocabulary key উল্লেখ করা হয়েছে) | DB-02 §4 |
+| Dean, Head, Coordinator, Officer, Contact person | `core_assignments` (role_key — Standard Role Catalog) | DB-01 §8.2, §8.4 |
+| Related News / Events / Notice | `core_relations` | DB-01 §8.1 |
+| Statistics | `core_stat_sets` / `core_stat_items` | DB-02 §11 |
+| Microsite (menu, template, homepage) | DB-01 §10, DB-02 §5–7 | — |
+
+### Module ও Table Prefix
+
+| Module | Slug | Prefix | Dependency (FK নীতি — SAD Part A 6.6) |
+|---|---|---|---|
+| M-01 Faculty | `faculty` | `faculty_` | — |
+| M-02 Department | `department` | `department_` | Faculty (hard → FK) |
+| M-03 Program | `program` | `program_` | Department (hard → FK) |
+| M-04 Course | `course` | `course_` | Program (hard → FK); Department transitively hard |
+| M-05 Session | `session` | `session_` | — |
+| M-06 Curriculum | `curriculum` | `curriculum_` | Program, Course (hard → FK); Session (optional → index) |
+| M-07 Faculty Member | `faculty-member` | `faculty_member_` | Department (hard → FK) |
+| M-08 Campus | `campus` | `campus_` | — |
+| M-09 Admission Info | `admission` | `admission_` | Program, Session (optional → index) |
+| M-10 Tuition, Waiver & Scholarship | `fee` | `fee_` | Program (hard → FK); Faculty transitively hard (Program → Department → Faculty); Session (optional → index) |
+| M-11 Academic Calendar | `calendar` | `calendar_` | Session, Program (optional → index) |
+
+---
+
+## 1. ERD
+
+```mermaid
+erDiagram
+    faculty_faculties ||--o{ department_departments : "has"
+    department_departments ||--o{ program_programs : "has"
+    department_departments ||--o{ course_courses : "owns"
+    department_departments ||--o{ faculty_member_profiles : "primary"
+    faculty_member_profiles ||--o{ faculty_member_departments : "also in"
+    faculty_member_profiles ||--o{ faculty_member_profile_items : "education etc."
+    program_programs ||--o{ program_majors : ""
+    program_programs ||--o{ program_list_items : "career, industry"
+    program_programs ||--o{ program_facilitators : ""
+    program_programs ||--o{ program_materials : ""
+    program_programs ||--o{ program_memberships : ""
+    program_programs ||--o{ program_variants : ""
+    program_programs ||--o{ course_program : ""
+    course_courses ||--o{ course_program : ""
+    course_courses ||--o{ course_prerequisites : ""
+    course_courses ||--o{ course_outcomes : ""
+    program_programs ||--o{ curriculum_curricula : ""
+    curriculum_curricula ||--o{ curriculum_terms : ""
+    curriculum_terms ||--o{ curriculum_items : ""
+    course_courses ||--o{ curriculum_items : ""
+    curriculum_curricula ||--o{ curriculum_elective_groups : ""
+    campus_campuses ||--o{ campus_buildings : ""
+    program_programs ||--o{ fee_tuitions : ""
+    fee_categories ||--o{ fee_tuitions : ""
+    fee_tuitions ||--o{ fee_tuition_lines : ""
+    fee_waiver_rules ||--o{ fee_waiver_rule_boards : ""
+    fee_boards ||--o{ fee_waiver_rule_boards : ""
+    fee_waiver_rules ||--o{ fee_waiver_rule_categories : ""
+    fee_waiver_categories ||--o{ fee_waiver_rule_categories : ""
+    fee_waiver_rules ||--o{ fee_waiver_rule_genders : ""
+    fee_waiver_rules ||--o{ fee_waiver_rule_faculties : ""
+    fee_waiver_rules ||--o{ fee_waiver_rule_tuitions : ""
+    admission_result_batches ||--o{ admission_results : ""
+    calendar_calendars ||--o{ calendar_events : ""
+```
+
+---
+
+## 2. M-01 Faculty — `faculty_faculties` — B
+
+| Column | Type | Key / N | Default | বর্ণনা |
+|---|---|---|---|---|
+| id | BIGINT UNSIGNED | PK | | |
+| name | JSON | T | | FR-FAC-01 |
+| short_name | VARCHAR(30) | | | যেমন FSIT |
+| overview | JSON | N, T | | Rich text |
+| dean_message | JSON | N, T | | FR-FAC-03 (Dean = Assignment `role_key = dean`) |
+| email | VARCHAR(191) | N | | |
+| phone | VARCHAR(50) | N | | |
+| location | JSON | N, T | | Building / room |
+| campus_id | BIGINT UNSIGNED | N, IX | | Campus optional → FK নয় |
+| show_in_listing | TINYINT(1) | | 1 | FR-FAC-09 (বর্তমান `show_list`) |
+| sort_order | INT UNSIGNED | | 0 | |
+| ⚙ | | | | |
+
+UQ: `(short_name, active_key)`। Media field: `photo`, `cover`, `logo`।
+
+---
+
+## 3. M-02 Department — `department_departments` — B
+
+| Column | Type | Key / N | Default | বর্ণনা |
+|---|---|---|---|---|
+| id | BIGINT UNSIGNED | PK | | |
+| faculty_id | BIGINT UNSIGNED | FK faculty_faculties (restrict), IX | | FR-DEPT-01 |
+| name | JSON | T | | |
+| short_name | VARCHAR(30) | | | যেমন CSE |
+| about_title | JSON | N, T | | |
+| about | JSON | N, T | | |
+| head_message | JSON | N, T | | Head = Assignment `role_key = head` |
+| external_url | VARCHAR(2048) | N | | FR-DEPT-04 |
+| email, phone | VARCHAR(191), VARCHAR(50) | N | | |
+| location | JSON | N, T | | |
+| campus_id | BIGINT UNSIGNED | N, IX | | |
+| show_in_listing | TINYINT(1) | | 1 | |
+| sort_order | INT UNSIGNED | | 0 | |
+| ⚙ | | | | |
+
+UQ: `(faculty_id, short_name, active_key)` (BRL-DEPT-01)। IX: `(faculty_id, is_active, sort_order)`। Media: `photo`, `cover`।
+Faculty পরিবর্তন (FR-DEPT-08) → `EntityHierarchyChanged`।
+
+---
+
+## 4. M-03 Program
+
+### 4.1 `program_programs` — B
+
+| Column | Type | Key / N | Default | বর্ণনা |
+|---|---|---|---|---|
+| id | BIGINT UNSIGNED | PK | | |
+| department_id | BIGINT UNSIGNED | FK department_departments (restrict), IX | | Faculty department থেকে (denormalize নয়) |
+| level_term_id | BIGINT UNSIGNED | FK core_terms (restrict), IX | | Vocabulary `program.level` (FR-PROG-03) |
+| name | JSON | T | | পূর্ণ নাম |
+| short_name | VARCHAR(50) | | | |
+| subtitle | JSON | N, T | | |
+| degree_name | JSON | N, T | | যেমন "Bachelor of Science" |
+| total_credits | DECIMAL(6,1) | N | | |
+| duration_years | DECIMAL(3,1) | N | | |
+| total_terms | TINYINT UNSIGNED | N | | Semester / trimester সংখ্যা |
+| duration_label | JSON | N, T | | "4 Years (12 Semesters)" |
+| medium | VARCHAR(30) | N | | |
+| shift | VARCHAR(20) | N, IX | | `day` / `evening` / `weekend` |
+| class_mode | VARCHAR(20) | N, IX | | `on_campus` / `online` / `hybrid` |
+| summary | JSON | N, T | | |
+| objective | JSON | N, T | | |
+| section_intros | JSON | N, T | | Page section-এর intro text |
+| ai_summary, ai_short_summary | JSON | N, T | | ঐচ্ছিক |
+| eligibility_general | JSON | N, T | | FR-PROG-10 |
+| eligibility_english_medium | JSON | N, T | | O / A Level |
+| eligibility_rules | JSON | N | | Structured (ন্যূনতম GPA ইত্যাদি) |
+| next_intake_on | DATE | N | | "Next semester starts" |
+| application_url | VARCHAR(2048) | N | | Apply button |
+| video_url | VARCHAR(2048) | N | | |
+| show_in_listing | TINYINT(1) | | 1 | বর্তমান `show_program` |
+| sort_order | INT UNSIGNED | | 0 | |
+| published_at | TIMESTAMP | N, IX | | FR-GEN-10/11 (BRD Q-27: status নেই) |
+| ⚙ | | | | |
+
+IX: `(department_id, level_term_id, is_active)`, `(is_active, deleted_at, published_at)` (IX-5)।
+Media: `image`, `brochure` (FR-PROG-17)। Approved alumni, industry expert ইত্যাদি সংখ্যা → Program-এর Stat Set (C-20), column নয়।
+
+### 4.2 Program Sub-item Table
+
+সবগুলো B শ্রেণী, `program_id` FK `program_programs` (**cascade** — Program force delete হলে child-ও যায়), এবং `sort_order`।
+
+| Table | Column (program_id, sort_order, ⚙ ছাড়া) | SRS Ref | বর্তমান |
+|---|---|---|---|
+| `program_majors` | `category_term_id` (FK core_terms, N; vocabulary `program.major-category`), `title` (T), `short_description` (T, N) | FR-PROG-04 | `program_majors`, `program_major_categories` |
+| `program_list_items` | `list_type` VARCHAR(20) (`career_path` / `industry`), `title` (T) — IX `(program_id, list_type, sort_order)` | FR-PROG-05 | `program_career_paths`, `program_industries` |
+| `program_facilitators` | `name`, `designation` (T), `organization` (T), `type` VARCHAR(30), `profile_url`, `linkedin_url`, `email`, `phone`; Media `photo` | FR-PROG-06 | `program_facilitators` |
+| `program_materials` | `title` (T), `url` (N); Media `file` | FR-PROG-07 | `program_materials` |
+| `program_memberships` | `title` (T), `short_description` (T, N); Media `logo` | FR-PROG-08 | `program_professional_memberships` |
+| `program_variants` | `related_program_id` (FK program_programs, set null, N), `title` (T), `short_description` (T), `details` (T, N), `button_text` (T, N), `button_url` (N); Media `image` | FR-PROG-09 | `program_variants` |
+
+> `program_list_items`-এ Career Path ও Industry একত্র: দুটির গঠন একই (শুধু title)। আলাদা table হলে কোড দ্বিগুণ হতো।
+
+---
+
+## 5. M-04 Course
+
+### 5.1 `course_courses` — B
+
+| Column | Type | Key / N | Default | বর্ণনা |
+|---|---|---|---|---|
+| id | BIGINT UNSIGNED | PK | | |
+| department_id | BIGINT UNSIGNED | FK department_departments (restrict), IX | | Owning Department (FR-CRS-01) |
+| code | VARCHAR(30) | | | যেমন CSE-112 |
+| title | JSON | T | | |
+| credit_theory | DECIMAL(4,1) | | 0 | |
+| credit_lab | DECIMAL(4,1) | | 0 | |
+| course_type | VARCHAR(20) | IX | | `core` / `elective` / `ged` / `lab` / `thesis` / `project` |
+| description | JSON | N, T | | |
+| objective | JSON | N, T | | |
+| ⚙ | | | | |
+
+UQ: `(department_id, code, active_key)` (BRL-CRS-01)। Media: `outline`।
+
+### 5.2 Course Sub-table
+
+| Table | শ্রেণী | Column | Key | Ref |
+|---|---|---|---|---|
+| `course_program` | P | `course_id` (FK cascade), `program_id` (FK program_programs cascade), timestamps | PK `(course_id, program_id)`; IX `(program_id)` | FR-CRS-02 |
+| `course_prerequisites` | P | `course_id` (FK cascade), `prerequisite_id` (FK course_courses cascade), timestamps | PK `(course_id, prerequisite_id)`; circular check application-এ | FR-CRS-03 |
+| `course_outcomes` | B | `course_id` (FK cascade), `code` VARCHAR(20) (CLO1), `description` (T), `sort_order`, ⚙ | IX `(course_id, sort_order)` | FR-CRS-04 |
+
+---
+
+## 6. M-05 Academic Session — `session_sessions` — B
+
+| Column | Type | Key / N | Default | বর্ণনা |
+|---|---|---|---|---|
+| id | BIGINT UNSIGNED | PK | | |
+| name | JSON | T | | "Spring 2027" |
+| term_type | VARCHAR(20) | | | `spring` / `summer` / `fall` / `trimester-1` ... (FR-SESS-03) |
+| year | SMALLINT UNSIGNED | IX | | |
+| starts_on, ends_on | DATE | N | | |
+| admission_starts_on | DATE | N | | |
+| description | JSON | N, T | | |
+| is_current | TINYINT(1) | | 0 | একটিই (application; BRL-SESS-01) |
+| is_admission | TINYINT(1) | | 0 | একটিই |
+| ⚙ | | | | |
+
+UQ: `(year, term_type, active_key)`।
+
+---
+
+## 7. M-06 Curriculum
+
+| Table | শ্রেণী | Column (⚙ ছাড়া) | Key | Ref |
+|---|---|---|---|---|
+| `curriculum_curricula` | B | `program_id` (FK program_programs restrict), `name` (T) ("OBE Curriculum 2024"), `effective_session_id` (N, IX — Session optional), `total_credits` DECIMAL(6,1) N, `is_current` TINYINT(1); Media `pdf` | IX `(program_id, is_current)` | FR-CURR-01/06 |
+| `curriculum_terms` | B | `curriculum_id` (FK cascade), `term_no` TINYINT UNSIGNED, `label` (T) ("Semester 1" / "Year 2") | UQ `(curriculum_id, term_no, active_key)` | FR-CURR-02 |
+| `curriculum_elective_groups` | B | `curriculum_id` (FK cascade), `name` (T), `choose_count` TINYINT UNSIGNED, `credit_required` DECIMAL(4,1) N | | FR-CURR-03 |
+| `curriculum_items` | B | `term_id` (FK curriculum_terms cascade), `course_id` (FK course_courses restrict), `elective_group_id` (FK curriculum_elective_groups set null, N), `credit_override` DECIMAL(4,1) N, `sort_order` | UQ `(term_id, course_id, active_key)`; IX `(course_id)` | FR-CURR-02 |
+
+`course_id` restrict: curriculum-এ ব্যবহৃত course force delete করা যাবে না (BRL-CRS-02)।
+
+---
+
+## 8. M-07 Faculty Member
+
+### 8.1 `faculty_member_profiles` — B (Person Source)
+
+| Column | Type | Key / N | Default | বর্ণনা |
+|---|---|---|---|---|
+| id | BIGINT UNSIGNED | PK | | |
+| department_id | BIGINT UNSIGNED | FK department_departments (restrict), IX | | Primary Department |
+| designation_term_id | BIGINT UNSIGNED | FK core_terms (restrict), IX | | Vocabulary `faculty-member.designation` (ordered; FR-FM-05/06) |
+| designation_note | JSON | N, T | | যেমন "and Head" |
+| employee_id | VARCHAR(30) | N | | |
+| name | JSON | T | | |
+| email | VARCHAR(191) | N | | |
+| phone, extension | VARCHAR(50), VARCHAR(20) | N | | |
+| office_room | VARCHAR(100) | N | | |
+| employment_type | VARCHAR(20) | IX | `full_time` | `full_time` / `part_time` / `adjunct` / `on_leave` (BRL-FM-02) |
+| biography | JSON | N, T | | |
+| research_interests | JSON | N, T | | |
+| links | JSON | N | | `{google_scholar, orcid, researchgate, linkedin, website}` |
+| contact_visibility | JSON | N | | কোন contact public (FR-FM-09 সহ) |
+| external_ref | VARCHAR(100) | N, IX | | External faculty portal-এর ID (FR-FM-08) |
+| sort_order | INT UNSIGNED | | 0 | Designation-এর ভেতরে ক্রম |
+| ⚙ | | | | |
+
+UQ: `(employee_id, active_key)` (NULL employee_id একাধিক থাকতে পারে)। IX: `(department_id, is_active, designation_term_id, sort_order)`। Media: `photo`।
+
+### 8.2 Sub-table
+
+| Table | শ্রেণী | Column | Key | Ref |
+|---|---|---|---|---|
+| `faculty_member_departments` | P | `profile_id` (FK cascade), `department_id` (FK department_departments cascade), timestamps | PK `(profile_id, department_id)`; IX `(department_id)` | FR-FM-01 (অতিরিক্ত Department) |
+| `faculty_member_profile_items` | B | `profile_id` (FK cascade), `item_type` VARCHAR(20) (`education` / `experience` / `award` / `membership`), `title` (T), `institution` (T, N), `start_year`, `end_year` SMALLINT N, `description` (T, N), `sort_order`, ⚙ | IX `(profile_id, item_type, sort_order)` | FR-FM-02 |
+
+---
+
+## 9. M-08 Campus
+
+| Table | শ্রেণী | Column (⚙ ছাড়া) | Key | Ref |
+|---|---|---|---|---|
+| `campus_campuses` | B | `name` (T), `short_name`, `address` (T), `latitude`, `longitude` DECIMAL(10,7) N, `map_embed_url` N, `description` (T, N), `phone`, `email` N, `sort_order`; Media `photo`, `gallery` | UQ `(short_name, active_key)` | FR-CAMP-01/04 |
+| `campus_buildings` | B | `campus_id` (FK cascade), `name` (T), `code` VARCHAR(20), `floors` TINYINT N, `sort_order` | UQ `(campus_id, code, active_key)` | FR-CAMP-01 |
+
+---
+
+## 10. M-09 Admission Info
+
+| Table | শ্রেণী | Column (⚙ ছাড়া) | Key | Ref |
+|---|---|---|---|---|
+| `admission_circulars` | B | `session_id` N, `title` (T), `content` (T), `apply_starts_on`, `apply_ends_on` DATE N, `test_on` DATE N, `admission_on` DATE N, `published_at`; Program → `core_relations` (Attachable); Media `pdf` | IX `(session_id)`, `(apply_ends_on)`, IX-5 | FR-ADM-02/03 |
+| `admission_highlights` | B | `title` (T), `url` N, `open_in_new_tab`, `sort_order`; category → vocabulary `admission.highlight-category` (termables); Media `image` | | বর্তমান `admissions`, `admission_facility_categories` |
+| `admission_steps` | B | `title` (T), `description` (T), `icon` N, `sort_order` | | FR-ADM-01 |
+| `admission_contact_groups` | B (Assignable) | `name` (T) ("Undergraduate", "International"), `sort_order`; ব্যক্তি → `core_assignments` (`role_key = contact`) | | FR-ADM-10 |
+| `admission_result_batches` | B | `session_id` N, `name` (T), `is_published` TINYINT(1), `messages` JSON T (`selected`, `not_selected`, `waiting`, `absent`, `not_found`), `imported_rows` INT, `imported_at` | IX `(session_id, is_published)` | FR-ADM-05/08 (বর্তমান `admission_tests`) |
+| `admission_results` | B | `batch_id` (FK admission_result_batches cascade), `program_id` N (Program optional → index), `program_label` VARCHAR(191) (file-এর মূল লেখা), `application_serial` VARCHAR(50), `student_name` VARCHAR(191), `result` VARCHAR(20) (`selected` / `not_selected` / `waiting` / `absent`) | UQ `(batch_id, application_serial, active_key)`; IX `(program_id)` | FR-ADM-05/06, BRL-ADM-02 |
+| `admission_subscribers` | B | `channel` VARCHAR(20) (`email` / `whatsapp`), `contact` VARCHAR(191), `verified_at` N, `source` VARCHAR(30), `unsubscribed_at` N, `unsubscribe_reason` N | UQ `(channel, contact, active_key)` | FR-ADM-09 |
+
+* Result lookup query: `batch (published, session) + application_serial` → UQ index দিয়ে এক ধাপে (AC-ADM-01: < ২ সেকেন্ড)।
+* পুরনো session-এর result: batch-ভিত্তিক bulk purge (BRL-ADM-01) — batch delete → cascade।
+* Newsletter module (M-39) active থাকলে subscriber "Admission Updates" list-এ sync (FR-NLT-08); এই table admission-এর নিজস্ব উৎস।
+
+---
+
+## 11. M-10 Tuition, Waiver & Scholarship (slug `fee`)
+
+### 11.1 Tuition
+
+| Table | শ্রেণী | Column (⚙ ছাড়া) | Key | Ref |
+|---|---|---|---|---|
+| `fee_categories` | B | `name` (T) ("Local", "International"), `code` VARCHAR(20), `currency` CHAR(3) DEFAULT `BDT`, `sort_order` | UQ `(code, active_key)` | FR-FEE-01 |
+| `fee_tuitions` | B | `program_id` (FK program_programs restrict), `fee_category_id` (FK fee_categories restrict), `session_id` N (optional → index), `credit_min`, `credit_max` DECIMAL(6,1) N, `total_terms` TINYINT N, `duration_label` (T, N), `total_min`, `total_max` DECIMAL(12,2) N, `totals_overridden` TINYINT(1), `prospectus_url` N, `sort_order` | UQ `(program_id, fee_category_id, session_id, active_key)`; IX `(fee_category_id)` | FR-FEE-02/12 |
+| `fee_tuition_lines` | B | `tuition_id` (FK cascade), `line_type` VARCHAR(20) (`admission` / `year` / `term` / `per_credit` / `other`), `label` (T) ("1st Year"), `amount` DECIMAL(12,2), `amount_max` DECIMAL(12,2) N, `sort_order` | IX `(tuition_id, sort_order)` | FR-FEE-02 |
+
+> বর্তমান `tuitions`-এর আলাদা column (`admission_fees`, `first_year` … `fourth_year`, `semester_cost`, `other_fee`) `fee_tuition_lines`-এর row হবে। ফলে ৫ বছরের program বা trimester-ভিত্তিক fee-ও schema পরিবর্তন ছাড়া রাখা যায় (BO-06)।
+> `total_min / total_max` line থেকে হিসাব হয়ে save হয়; `totals_overridden = 1` হলে manual মান থাকে (FR-FEE-02)।
+
+### 11.2 Waiver
+
+| Table | শ্রেণী | Column (⚙ ছাড়া) | Key | Ref |
+|---|---|---|---|---|
+| `fee_boards` | B | `level_term_id` (FK core_terms), `name` (T), `sort_order` | | FR-FEE-05 |
+| `fee_waiver_categories` | B | `level_term_id` (FK core_terms), `name` (T) ("Freedom Fighter", "Sibling"), `sort_order` | | FR-FEE-05 |
+| `fee_waiver_rules` | B | `name` (T), `level_term_id` (FK core_terms), `fee_category_id` (FK fee_categories, N), `ssc_min`, `ssc_max`, `hsc_min`, `hsc_max` DECIMAL(3,2) N, `require_ssc_golden`, `require_hsc_golden` TINYINT(1), `ug_cgpa_min`, `ug_cgpa_max` DECIMAL(3,2) N, `is_international` TINYINT(1) N, `waiver_percent` DECIMAL(5,2), `max_waiver_percent` DECIMAL(5,2) N, `message` (T, N), `priority` SMALLINT | IX `(level_term_id, fee_category_id, is_active)` | FR-FEE-05/06/07, BRL-FEE-01 |
+| `fee_waiver_rule_boards` | P | `rule_id` (FK cascade), `board_id` (FK fee_boards cascade) | PK দুটি মিলে | BRL-FEE-04 |
+| `fee_waiver_rule_categories` | P | `rule_id`, `waiver_category_id` (FK cascade) | PK | |
+| `fee_waiver_rule_genders` | P | `rule_id` (FK cascade), `gender` VARCHAR(10) (`male` / `female` / `other`) | PK | বর্তমান `gender_waiver` |
+| `fee_waiver_rule_faculties` | P | `rule_id`, `faculty_id` (FK faculty_faculties cascade) | PK | Faculty transitively hard dependency |
+| `fee_waiver_rule_tuitions` | P | `rule_id`, `tuition_id` (FK fee_tuitions cascade) | PK | |
+
+**Rule-matching নিয়ম:** pivot-এ কোনো row না থাকা = "সব"-এ প্রযোজ্য (যেমন কোনো board নির্বাচিত নেই → সব board)। একাধিক rule মিললে setting অনুযায়ী `highest` (default) বা `additive_with_cap` (FR-FEE-07); `priority` সমান হলে বেশি waiver আগে।
+
+Gender আলাদা master table নয়: মাত্র তিনটি স্থির মান, application enum (বর্তমান `genders` table-এর ২টি row)।
+
+### 11.3 Scholarship — `fee_scholarships` — B
+
+| Column | Type | Key / N | বর্ণনা |
+|---|---|---|---|
+| id | BIGINT UNSIGNED | PK | |
+| title | JSON | T | |
+| summary | JSON | N, T | |
+| details | JSON | N, T | |
+| eligibility | JSON | N, T | |
+| how_to_apply | JSON | N, T | |
+| sort_order | INT UNSIGNED | | |
+| published_at | TIMESTAMP | N | |
+| ⚙ | | | |
+
+Category → vocabulary `fee.scholarship-category` (hierarchical; বর্তমান `scholarship_categories.parent_category_id`)।
+
+---
+
+## 12. M-11 Academic Calendar
+
+| Table | শ্রেণী | Column (⚙ ছাড়া) | Key | Ref |
+|---|---|---|---|---|
+| `calendar_calendars` | B | `title` (T), `session_id` N (index), `year` SMALLINT, `duration_label` (T, N), `published_at`; audience → vocabulary `calendar.audience` (termables, বহু); Media `pdf` (hard copy); view count → `core_view_counts` | IX `(session_id)`, `(year)` | FR-CAL-01/05 |
+| `calendar_events` | B | `calendar_id` (FK cascade), `title` (T), `starts_on` DATE, `ends_on` DATE N, `date_label` (T, N) ("Week 1"), `type_term_id` (FK core_terms, N; vocabulary `calendar.event-type`), `sort_order`; audience → termables (বহু) | IX `(calendar_id, starts_on)`, `(starts_on)` | FR-CAL-02/03/07 |
+
+Program-এর সাথে সম্পর্ক audience term দিয়ে (FR-CAL-09); Program-এ সরাসরি FK নেই।
+
+---
+
+## 13. Vocabulary (এই module-গুলো register করবে)
+
+| Key | Module | Hierarchical | Ordered | বর্তমান উৎস |
+|---|---|---|---|---|
+| `program.level` | Program | | | `program_types`-এর parent (Section 15.1) — Undergraduate, Graduate, Diploma, Post Graduate Diploma |
+| `program.tag` | Program | | | `program_types`-এর বাকি sub-type (Section 15.1) |
+| `program.major-category` | Program | | | `program_major_categories` |
+| `faculty-member.designation` | Faculty Member | | ✔ | — |
+| `admission.highlight-category` | Admission | | | `admission_facility_categories` |
+| `fee.scholarship-category` | Fee | ✔ | | `scholarship_categories` |
+| `calendar.audience` | Calendar | | | `calender_programs` |
+| `calendar.event-type` | Calendar | | | — (নতুন) |
+
+---
+
+## 14. Table সারসংক্ষেপ (DB-03)
+
+| Module | Table | সংখ্যা |
+|---|---|---|
+| Faculty | faculty_faculties | ১ |
+| Department | department_departments | ১ |
+| Program | program_programs, program_majors, program_list_items, program_facilitators, program_materials, program_memberships, program_variants | ৭ |
+| Course | course_courses, course_program, course_prerequisites, course_outcomes | ৪ |
+| Session | session_sessions | ১ |
+| Curriculum | curriculum_curricula, curriculum_terms, curriculum_elective_groups, curriculum_items | ৪ |
+| Faculty Member | faculty_member_profiles, faculty_member_departments, faculty_member_profile_items | ৩ |
+| Campus | campus_campuses, campus_buildings | ২ |
+| Admission | admission_circulars, admission_highlights, admission_steps, admission_contact_groups, admission_result_batches, admission_results, admission_subscribers | ৭ |
+| Fee | fee_categories, fee_tuitions, fee_tuition_lines, fee_boards, fee_waiver_categories, fee_waiver_rules, 5টি waiver pivot, fee_scholarships | ১২ |
+| Calendar | calendar_calendars, calendar_events | ২ |
+| **মোট** | | **৪৪** |
+
+---
+
+## 15. `project_diu` থেকে Migration Mapping
+
+> Row সংখ্যা `SELECT COUNT(*)` দিয়ে নেওয়া (2026-10-08)। পূর্ববর্তী document (BRD, SRS)-এর কিছু সংখ্যা `information_schema`-এর আনুমানিক মান থেকে নেওয়া হয়েছিল; migration-এর আগে dry-run-এ আবার গণনা হবে।
+
+| বর্তমান (row) | নতুন | রূপান্তর |
+|---|---|---|
+| `faculties` (৯) | faculty_faculties | `faculty_name` → name.en, `faculty_short_name`, `faculty_content` → overview, `faculty_serial` → sort_order, `show_list` → show_in_listing, `publication_status` → is_active; `faculty_photo` → Media |
+| `departments` (৪৯) | department_departments | `department_link` → external_url, `about_title`, `department_content` → about; `department_photo`, `department_cover` → Media; `lab_facility` flag বাদ (Lab module relation) |
+| `department_user` | core_user_scopes | DB-01 |
+| `program_types` (২৫) | `program.level` (৪টি term) + `program.tag` | Section 15.1-এর নির্দিষ্ট mapping (DIU confirmed: level Undergraduate, Graduate, Diploma, Post Graduate Diploma) |
+| `department_program_type` (৬৪) | program_programs | `full_program_name` → name, `program_type_parent_id` + `program_type_id` → level_term_id ও tag (Section 15.1), `program_credit_duration` → total_credits / duration_label (parse + manual যাচাই), `next_semester_date` → next_intake_on, `show_program` → show_in_listing; `approved_alumni_number`, `total_major_count`, `teachers_count`, `industry_expert_count` → Program-এর Stat Set (manual item); `faculty_id` বাদ (Department থেকে) |
+| `institutional_programs` (৩), `mba_programs` (৩) | program_programs | Manual review; উপযুক্ত level (Undergraduate / Graduate / Diploma / Post Graduate Diploma) অথবা বিদ্যমান Program-এর সাথে একত্র |
+| `program_majors` (৬৯) + `program_major_categories` | program_majors + term | |
+| `program_career_paths` (১৬৩), `program_industries` (১০৫) | program_list_items | `list_type` অনুযায়ী |
+| `program_facilitators` (৬৯) | program_facilitators | |
+| `facilitators` (৫২) + `facilitator_categories` | core_manual_persons + core_assignments (Department, `role_key = industry_expert`) | Department-স্তরের expert; Program-স্তরের নয় |
+| `program_materials`, `program_professional_memberships`, `program_variants` | সংশ্লিষ্ট table | |
+| `eligibilities` (৫৭) | program_programs.eligibility_* | `normal_student` → eligibility_general, `em_student` → eligibility_english_medium; একাধিক row থাকা program-এর জন্য manual merge |
+| `semesters` (২) | session_sessions | |
+| `admission_notices` (২) | admission_circulars | |
+| `admissions` (২৬) + `admission_facility_categories` | admission_highlights + term | |
+| `admission_tests` (১) | admission_result_batches.messages | একমাত্র row-এর `select_mgs`, `not_select_mgs`, `waiting_mgs`, `absent_mgs`, `not_found` → "Legacy" batch-এর বার্তা ও নতুন batch-এর default |
+| `admission_results` (১,৭২০) | একটি "Legacy" batch + admission_results | `program` (text) → program_label; program_id best-effort match |
+| `admission_contacts` (১৩) + `admission_contact_types` | admission_contact_groups + core_assignments | `admin_id` থাকলে Administration person, নইলে manual person |
+| `admission_subscribers` (৪,৮২৮) | admission_subscribers | `contact_type` → channel; `is_active = 0` → unsubscribed |
+| `tuition_categories` (২) | fee_categories | `category_code` → code |
+| `tuitions` (১০১) | fee_tuitions + fee_tuition_lines | Column → line (Section 11.1); `majors` text → মন্তব্য বা বাদ (manual) |
+| `boards` (৮), `waiver_categories` (২১), `waivers` (৯২) + ৫টি pivot | fee_boards, fee_waiver_categories, fee_waiver_rules + pivot | `waiver_rate` → waiver_percent, `hsc_golden` / `ssc_golden` → require_*_golden, `undergraduate_min / max` → ug_cgpa_*; `international_undergraduate_*` → আলাদা rule (is_international = 1); `gender_waiver.gender_id` → gender string |
+| `scholarships` (২৭) + `scholarship_categories` (৭) | fee_scholarships + term | |
+| `calenders` (১৮) + `calender_programs` (২) + `calendar_events` (১৯২) + pivot (৩৮০) | calendar_calendars, calendar_events + audience term | `date_explanation` → date_label; structured `starts_on` বর্তমান data-তে নেই → manual পূরণ বা parse (সীমাবদ্ধতা) |
+| `coordination_officers` (৭৩) | core_assignments (Department / Program, `role_key = coordinator`) | DB-04-এ বিস্তারিত (Administration person) |
+| Course, Curriculum, Faculty Member, Campus | — | বর্তমান DB-তে নেই; নতুন করে entry বা import |
+
+### 15.1 `program_types` → Level ও Tag (DIU confirmed: level Undergraduate, Graduate, Diploma, Post Graduate Diploma)
+
+বর্তমান data-র গঠন: `parent_id` হলো level (1 = Undergraduate, 2 = Postgraduate, 12 = Proposed), বাকি row সেই level-এর ভেতরের sub-type।
+
+**Level নির্ধারণ (প্রতিটি Program-এর জন্য, `department_program_type` থেকে):**
+
+| শর্ত | নতুন Level | Program সংখ্যা |
+|---|---|---|
+| `program_type_id = 3` (Diploma Holder) | **Diploma** | ৬ (parent 1-এ ২, parent 2-এ ৪) |
+| `program_type_id = 26` (Post Graduate Diploma) | **Post Graduate Diploma** | ১ |
+| নইলে `program_type_parent_id = 1` | **Undergraduate** | ৩৮ |
+| নইলে `program_type_parent_id = 2` | **Graduate** | ১৯ |
+
+> হিসাব: `department_program_type`-এর প্রকৃত row ৬৪ (`COUNT(*)`, 2026-10-08) — parent 1: ৪০টি, parent 2: ২৪টি।
+
+**বাকি sub-type → `program.tag`:**
+
+| বর্তমান row (id) | নতুন |
+|---|---|
+| Major in Cyber Security (4), Major in Data Science (9), Major in Robotics and Embedded System (10) | Tag (Program-এর Major sub-item-এও যোগ করা যাবে — manual) |
+| Dual Degree (DIU-BCU) (7) | Tag |
+| B. Com (Hons) in … (14, 15, 16), BBA in Marketing (18), BBA in Management (23), E-Business Management (19), FinTech (21), Digital Marketing (22) | Tag (মূলত program নামের অংশ; DIU team চাইলে বাদ দিতে পারে) |
+| OBE Curriculum (25), Honors Program (27) | Tag |
+| MS in MIS (5), EX MBA (6), MBA ACD (8), M. Sc in Cyber Security (13), MBA in Leadership (Executive) (20), Micro Masters (24) | Tag |
+| Post Graduate Diploma (26) | Level **Post Graduate Diploma** (নিজস্ব level, confirmed) |
+| Undergraduate (1), Postgraduate (2) | Level-ই (tag নয়) |
+| Proposed Programs (12) | Migrate হবে না (কোনো program ব্যবহার করে না) |
+
+### জ্ঞাত Migration ঝুঁকি
+
+| ঝুঁকি | প্রতিকার |
+|---|---|
+| — | "Post Graduate Diploma" নিজস্ব level হিসেবে confirmed (2026-10-08) |
+| Calendar event-এর তারিখ শুধু লেখা (`date_explanation`) | Structured তারিখ ছাড়া import; Calendar team পরে পূরণ করবে, অথবা parse করা যায় এমনগুলো স্বয়ংক্রিয় |
+| `program_credit_duration` free text | Parse + manual যাচাই |
+| Admission result-এর program text | `program_label` সংরক্ষণ, তাই তথ্য হারায় না |

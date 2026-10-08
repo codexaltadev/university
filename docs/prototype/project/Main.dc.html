@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Main Homepage</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;family=Hind+Siliguri:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:"Manrope","Hind Siliguri",sans-serif;color:#1E1E1E;background:#FFFFFF}
+a{color:#034EA2}a:hover{color:#002652}
+.nav a{color:#1E1E1E;text-decoration:none;font-weight:600;font-size:15px;padding:10px 2px;border-bottom:2px solid transparent}
+.nav a:hover{color:#034EA2;border-bottom-color:#034EA2}
+.tile{text-decoration:none;color:#002652;transition:transform .2s, box-shadow .2s}
+.tile:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,38,82,.16)}
+.pcard{text-decoration:none;color:inherit;transition:transform .2s, box-shadow .2s}
+.pcard:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,38,82,.12)}
+.ghost:hover{background:#FFFFFF;color:#002652}
+.list-link{text-decoration:none;color:inherit}
+.list-link:hover h4{color:#034EA2}
+.foot a{color:#B7C3D6;text-decoration:none;font-size:14px}
+.foot a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="min-width: 0; font-family: Manrope, 'Hind Siliguri', sans-serif">
+
+  <!-- UTILITY BAR -->
+  <div style="background: #002652; color: #B7C3D6; font-size: 13px">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 8px 32px; display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: space-between">
+      <div style="display: flex; flex-wrap: wrap; gap: 20px">
+        <a href="#" style="color: #B7C3D6; text-decoration: none">Students</a>
+        <a href="#" style="color: #B7C3D6; text-decoration: none">Parents</a>
+        <a href="#" style="color: #B7C3D6; text-decoration: none">Faculty &amp; Staff</a>
+        <a href="#" style="color: #B7C3D6; text-decoration: none">Alumni</a>
+        <a href="AdminNotice.dc.html" style="color: #7FD18A; text-decoration: none">Admin panel (prototype)</a>
+      </div>
+      <div style="display: flex; gap: 6px; align-items: center">
+        <button onClick="{{ setEn }}" style="{{ enStyle }}">EN</button>
+        <button onClick="{{ setBn }}" style="{{ bnStyle }}">বাংলা</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <div style="background: #FFFFFF; border-bottom: 1px solid #E6E7E8">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 14px 32px; display: flex; flex-wrap: wrap; gap: 20px; align-items: center; justify-content: space-between">
+      <a href="Main.dc.html" style="display: flex; align-items: center"><img src="/_blob/20e4fc74cb3d7032ec20a6d2263d6709" alt="Daffodil International University" style="height: 48px; width: auto"></a>
+      <nav aria-label="Main" class="nav" style="display: flex; flex-wrap: wrap; gap: 26px; align-items: center">
+        <a href="#">About</a>
+        <a href="Faculties.dc.html">Faculties</a>
+        <a href="#programs">Programs</a>
+        <a href="#">Admission</a>
+        <a href="#">Research</a>
+        <a href="#">Campus Life</a>
+        <a href="#updates">News &amp; Notices</a>
+      </nav>
+      <div style="display: flex; gap: 10px; align-items: center">
+        <button aria-label="Search" style="width: 44px; height: 44px; border-radius: 50%; border: 1px solid #E6E7E8; background: #FFFFFF; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #002652"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg></button>
+        <a href="#" style="background: linear-gradient(90deg,#034EA2,#002652); color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: 15px; padding: 12px 22px; border-radius: 10px">Apply Now</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div style="position: relative; overflow: hidden; background: #002652">
+    <img src="/_blob/8475eb5be5d72d160ebabec73cf9aedf" alt="Aerial view of the Daffodil Smart City campus" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+    <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,38,82,0.94) 0%, rgba(0,38,82,0.78) 42%, rgba(3,78,162,0.15) 100%)"></div>
+    <div style="position: relative; max-width: 1320px; margin: 0 auto; padding: 96px 32px 150px; display: flex; flex-direction: column; gap: 24px; color: #FFFFFF">
+      <span style="align-self: flex-start; display: flex; gap: 8px; align-items: center; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); padding: 8px 14px; border-radius: 999px; font-size: 13px; font-weight: 600"><span style="width: 8px; height: 8px; border-radius: 50%; background: #39B54A"></span>Ranked among the world&#39;s best · #1 in Bangladesh</span>
+      <h1 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 60px; line-height: 1.08; max-width: 760px; letter-spacing: -0.01em">Shaping futures with a global vision</h1>
+      <p style="margin: 0; font-size: 19px; line-height: 1.6; color: #D5DEEA; max-width: 600px">Innovative, learner-centric, technology-driven education on a green, fully-equipped campus.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 14px">
+        <a href="#programs" style="background: #39B54A; color: #002652; text-decoration: none; font-weight: 800; padding: 15px 26px; border-radius: 10px">Find your program</a>
+        <a href="#" class="ghost" style="border: 1.5px solid #FFFFFF; color: #FFFFFF; text-decoration: none; font-weight: 700; padding: 14px 24px; border-radius: 10px">Virtual campus tour</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK TILES (overlap hero) -->
+  <div style="position: relative; max-width: 1320px; margin: -86px auto 0; padding: 0 32px">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px">
+      <sc-for list="{{ tiles }}" as="t" hint-placeholder-count="6">
+        <a href="{{ t.href }}" class="tile" style="background: #FFFFFF; border-radius: 16px; padding: 22px 20px; display: flex; flex-direction: column; gap: 14px; box-shadow: 0 10px 30px rgba(0,38,82,0.10); border: 1px solid #EEF0F5">
+          <span style="width: 44px; height: 44px; border-radius: 12px; background: #EDF6FF; color: #034EA2; display: flex; align-items: center; justify-content: center">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ t.icon }}"/></svg>
+          </span>
+          <span style="font-family: Montserrat, sans-serif; font-weight: 700; font-size: 16px">{{ t.label }}</span>
+          <span style="font-size: 13px; color: #58595B; line-height: 1.5">{{ t.sub }}</span>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- FACULTIES -->
+  <div style="max-width: 1320px; margin: 0 auto; padding: 96px 32px 24px; display: flex; flex-direction: column; gap: 28px">
+    <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; justify-content: space-between">
+      <div style="display: flex; flex-direction: column; gap: 10px; max-width: 640px">
+        <span style="color: #034EA2; font-weight: 700; font-size: 14px; letter-spacing: 0.08em">OUR FACULTIES</span>
+        <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 42px; line-height: 1.15; color: #002652">Six faculties, one ambition</h2>
+      </div>
+      <a href="Faculties.dc.html" style="font-weight: 700; text-decoration: none">All faculties →</a>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px">
+      <sc-for list="{{ faculties }}" as="fa" hint-placeholder-count="6">
+        <a href="{{ fa.href }}" class="pcard" style="position: relative; height: 260px; border-radius: 20px; overflow: hidden; display: block">
+          <img src="{{ fa.img }}" alt="{{ fa.name }}" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover">
+          <div style="position: absolute; inset: 0; background: linear-gradient(180deg, rgba(0,38,82,0) 30%, rgba(0,38,82,0.92) 100%)"></div>
+          <div style="position: absolute; left: 22px; right: 22px; bottom: 20px; color: #FFFFFF; display: flex; flex-direction: column; gap: 6px">
+            <span style="align-self: flex-start; background: rgba(255,255,255,0.18); font-size: 12px; font-weight: 800; padding: 4px 10px; border-radius: 999px; letter-spacing: 0.06em">{{ fa.code }}</span>
+            <span style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 21px; line-height: 1.25">{{ fa.name }}</span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- FIND YOUR DEGREE -->
+  <div id="programs" style="max-width: 1320px; margin: 0 auto; padding: 72px 32px 72px; display: flex; flex-direction: column; gap: 32px">
+    <div style="display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-end; justify-content: space-between">
+      <div style="display: flex; flex-direction: column; gap: 10px; max-width: 640px">
+        <span style="color: #034EA2; font-weight: 700; font-size: 14px; letter-spacing: 0.08em">ACADEMICS</span>
+        <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 42px; line-height: 1.15; color: #002652">Find your degree</h2>
+        <p style="margin: 0; font-size: 17px; color: #58595B">38 programs · 6 faculties · Undergraduate &amp; Graduate pathways</p>
+      </div>
+      <a href="#" style="font-weight: 700; text-decoration: none">Browse all faculties →</a>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px">
+      <sc-for list="{{ levels }}" as="lv" hint-placeholder-count="4">
+        <button onClick="{{ lv.pick }}" style="{{ lv.style }}">{{ lv.label }}</button>
+      </sc-for>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px">
+      <sc-for list="{{ programs }}" as="p" hint-placeholder-count="4">
+        <a href="Program.dc.html" class="pcard" style="border-radius: 18px; overflow: hidden; background: #FFFFFF; border: 1px solid #E6E7E8; display: flex; flex-direction: column">
+          <div style="{{ p.band }}">
+            <span style="background: rgba(255,255,255,0.18); color: #FFFFFF; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 999px">{{ p.faculty }}</span>
+            <span style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 30px; color: rgba(255,255,255,0.9)">{{ p.code }}</span>
+          </div>
+          <div style="padding: 20px; display: flex; flex-direction: column; gap: 10px; flex: 1">
+            <h3 style="margin: 0; font-family: Montserrat, sans-serif; font-size: 18px; line-height: 1.35; color: #002652">{{ p.name }}</h3>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; font-size: 13px; color: #58595B">
+              <span style="background: #F3F4F9; padding: 4px 10px; border-radius: 999px">{{ p.level }}</span>
+              <span style="background: #F3F4F9; padding: 4px 10px; border-radius: 999px">{{ p.duration }}</span>
+            </div>
+            <span style="margin-top: auto; font-weight: 700; color: #034EA2; font-size: 14px">View program →</span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- SCHOLARSHIP -->
+  <div style="background: #F3F4F9">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 80px 32px; display: flex; flex-wrap: wrap; gap: 48px; align-items: center">
+      <div style="flex: 1 1 440px; min-width: 0; position: relative">
+        <img src="/_blob/4b2ff64c38a5471214ee10367af87f72" alt="Student reading in the university library" style="width: 100%; height: 460px; object-fit: cover; border-radius: 24px; display: block">
+        <div style="position: absolute; left: 24px; bottom: 24px; background: #FFFFFF; border-radius: 16px; padding: 18px 22px; box-shadow: 0 16px 40px rgba(0,38,82,0.18); display: flex; flex-direction: column; gap: 4px">
+          <span style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 34px; color: #034EA2">Up to 100%</span>
+          <span style="font-size: 14px; color: #58595B">tuition coverage for top achievers</span>
+        </div>
+      </div>
+      <div style="flex: 1 1 440px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+        <span style="color: #034EA2; font-weight: 700; font-size: 14px; letter-spacing: 0.08em">SCHOLARSHIPS &amp; WAIVERS</span>
+        <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 40px; line-height: 1.15; color: #002652">Scholarships that unlock potential</h2>
+        <p style="margin: 0; font-size: 17px; line-height: 1.7; color: #3D3F42">With more than 25 categories, you are likely to find a scholarship or waiver that fits your journey. Enter your SSC and HSC results to see an estimate in seconds.</p>
+        <div style="display: flex; flex-wrap: wrap; gap: 12px">
+          <a href="#" style="background: linear-gradient(90deg,#034EA2,#002652); color: #FFFFFF; text-decoration: none; font-weight: 700; padding: 14px 24px; border-radius: 10px">Estimate your waiver</a>
+          <a href="#" style="border: 1.5px solid #034EA2; color: #034EA2; text-decoration: none; font-weight: 700; padding: 13px 22px; border-radius: 10px">All scholarships</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEWS / NOTICES / EVENTS -->
+  <div id="updates" style="max-width: 1320px; margin: 0 auto; padding: 88px 32px; display: flex; flex-direction: column; gap: 28px">
+    <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: flex-end; justify-content: space-between">
+      <div style="display: flex; flex-direction: column; gap: 10px">
+        <span style="color: #034EA2; font-weight: 700; font-size: 14px; letter-spacing: 0.08em">WHAT&#39;S HAPPENING</span>
+        <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 40px; color: #002652">News, notices &amp; events</h2>
+      </div>
+      <div role="tablist" style="display: flex; gap: 6px; background: #F3F4F9; padding: 6px; border-radius: 12px">
+        <sc-for list="{{ feedTabs }}" as="ft" hint-placeholder-count="3">
+          <button role="tab" onClick="{{ ft.pick }}" style="{{ ft.style }}">{{ ft.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+
+    <sc-if value="{{ showNews }}" hint-placeholder-val="{{ true }}">
+      <div style="display: flex; flex-wrap: wrap; gap: 28px">
+        <a href="#" class="list-link" style="flex: 999 1 520px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+          <div style="position: relative; height: 340px; border-radius: 20px; overflow: hidden">
+            <img src="/_blob/ec7d70b8e2698c120a1c14a9b7128aa2" alt="Students in front of an academic building" style="width: 100%; height: 100%; object-fit: cover; object-position: center 70%">
+            <span style="position: absolute; top: 16px; left: 16px; background: #39B54A; color: #002652; font-weight: 800; font-size: 12px; padding: 6px 12px; border-radius: 999px">Highlighted</span>
+          </div>
+          <span style="font-size: 14px; color: #58595B">[Date] · [Category]</span>
+          <h4 style="margin: 0; font-family: Montserrat, sans-serif; font-size: 26px; line-height: 1.3; color: #002652">[Highlighted news headline — picked by an admin for the main homepage]</h4>
+        </a>
+        <div style="flex: 1 1 360px; min-width: 0; display: flex; flex-direction: column">
+          <sc-for list="{{ news }}" as="n" hint-placeholder-count="4">
+            <a href="#" class="list-link" style="display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid #E6E7E8">
+              <div style="width: 96px; height: 72px; border-radius: 12px; flex-shrink: 0; background: linear-gradient(135deg,#EDF6FF,#D6E6F7)"></div>
+              <div style="display: flex; flex-direction: column; gap: 6px">
+                <span style="font-size: 13px; color: #58595B">{{ n.meta }}</span>
+                <h4 style="margin: 0; font-size: 16px; line-height: 1.4; color: #1E1E1E; font-weight: 700">{{ n.title }}</h4>
+              </div>
+            </a>
+          </sc-for>
+          <a href="#" style="margin-top: 18px; font-weight: 700; text-decoration: none">All news →</a>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showNotices }}" hint-placeholder-val="{{ false }}">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px">
+        <sc-for list="{{ notices }}" as="nt" hint-placeholder-count="6">
+          <a href="#" class="list-link" style="display: flex; gap: 16px; align-items: flex-start; background: #FFFFFF; border: 1px solid #E6E7E8; border-radius: 16px; padding: 18px">
+            <div style="background: #EDF6FF; color: #034EA2; border-radius: 12px; width: 60px; flex-shrink: 0; text-align: center; padding: 8px 0">
+              <div style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 20px">{{ nt.day }}</div>
+              <div style="font-size: 12px; font-weight: 600">{{ nt.mon }}</div>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 6px">
+              <sc-if value="{{ nt.pinned }}" hint-placeholder-val="{{ false }}"><span style="align-self: flex-start; background: #FDECEC; color: #A3141B; font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 6px">PINNED</span></sc-if>
+              <h4 style="margin: 0; font-size: 16px; line-height: 1.4; font-weight: 700">{{ nt.title }}</h4>
+              <span style="font-size: 13px; color: #58595B">{{ nt.source }}</span>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showEvents }}" hint-placeholder-val="{{ false }}">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px">
+        <sc-for list="{{ events }}" as="ev" hint-placeholder-count="3">
+          <a href="#" class="list-link" style="border-radius: 18px; overflow: hidden; border: 1px solid #E6E7E8; display: flex; flex-direction: column">
+            <div style="height: 150px; background: linear-gradient(135deg,#034EA2,#002652); color: #FFFFFF; display: flex; align-items: flex-end; padding: 18px; box-sizing: border-box">
+              <span style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 34px; line-height: 1">{{ ev.day }} <span style="font-size: 16px; font-weight: 600">{{ ev.mon }}</span></span>
+            </div>
+            <div style="padding: 18px; display: flex; flex-direction: column; gap: 6px">
+              <h4 style="margin: 0; font-size: 17px; font-weight: 700; color: #002652">{{ ev.title }}</h4>
+              <span style="font-size: 14px; color: #58595B">{{ ev.venue }}</span>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- IMPACT BAND -->
+  <div style="background: linear-gradient(110deg,#002652 0%,#034EA2 100%); color: #FFFFFF">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 64px 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 32px">
+      <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 48px">55K+</span><span style="color: #C7D5E8">graduates worldwide</span></div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 48px">19</span><span style="color: #C7D5E8">countries represented</span></div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 48px">Top-20</span><span style="color: #C7D5E8">in SDG 4 (Quality Education)</span></div>
+      <div style="display: flex; flex-direction: column; gap: 6px"><span style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 48px">25+</span><span style="color: #C7D5E8">scholarship categories</span></div>
+    </div>
+  </div>
+
+  <!-- CAMPUS LIFE -->
+  <div style="max-width: 1320px; margin: 0 auto; padding: 88px 32px; display: flex; flex-wrap: wrap; gap: 40px; align-items: center">
+    <div style="flex: 1 1 380px; min-width: 0; display: flex; flex-direction: column; gap: 18px">
+      <span style="color: #034EA2; font-weight: 700; font-size: 14px; letter-spacing: 0.08em">CAMPUS LIFE</span>
+      <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 40px; line-height: 1.15; color: #002652">A green campus built for learning and living</h2>
+      <p style="margin: 0; font-size: 17px; line-height: 1.7; color: #3D3F42">Playgrounds, labs, a library, residential halls and transport across the city — everything a student needs in one place.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px">
+        <a href="#" style="background: linear-gradient(90deg,#034EA2,#002652); color: #FFFFFF; text-decoration: none; font-weight: 700; padding: 14px 22px; border-radius: 10px; display: flex; gap: 10px; align-items: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>Campus life in 60 seconds</a>
+        <a href="#" style="border: 1.5px solid #034EA2; color: #034EA2; text-decoration: none; font-weight: 700; padding: 13px 20px; border-radius: 10px">Transport routes</a>
+      </div>
+    </div>
+    <div style="flex: 999 1 560px; min-width: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px">
+      <img src="/_blob/4163dfa5261274904a50e44f462d4293" alt="Students playing on the central field" style="grid-column: span 2; width: 100%; height: 280px; object-fit: cover; border-radius: 20px; display: block">
+      <img src="/_blob/ec7d70b8e2698c120a1c14a9b7128aa2" alt="International and local students together on campus" style="width: 100%; height: 220px; object-fit: cover; object-position: center 75%; border-radius: 20px; display: block">
+      <img src="/_blob/8475eb5be5d72d160ebabec73cf9aedf" alt="Campus buildings and greenery from above" style="width: 100%; height: 220px; object-fit: cover; border-radius: 20px; display: block">
+    </div>
+  </div>
+
+  <!-- PARTNERS -->
+  <div style="border-top: 1px solid #E6E7E8; border-bottom: 1px solid #E6E7E8">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 36px 32px; display: flex; flex-wrap: wrap; gap: 28px; align-items: center; justify-content: space-between">
+      <span style="font-family: Montserrat, sans-serif; font-weight: 700; color: #002652; font-size: 15px">Research &amp; innovation partners</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 36px; color: #808285; font-family: Montserrat, sans-serif; font-weight: 700; font-size: 20px">
+        <span>Microsoft</span><span>IEEE</span><span>WHO</span><span>Google</span><span>AWS</span><span>Nestlé</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="max-width: 1320px; margin: 0 auto; padding: 72px 32px">
+    <div style="position: relative; overflow: hidden; border-radius: 28px; background: linear-gradient(110deg,#034EA2,#002652); color: #FFFFFF; padding: 56px; display: flex; flex-wrap: wrap; gap: 28px; align-items: center; justify-content: space-between">
+      <div style="position: absolute; right: -80px; top: -80px; width: 320px; height: 320px; border-radius: 50%; background: rgba(57,181,74,0.25)"></div>
+      <div style="position: relative; display: flex; flex-direction: column; gap: 12px; max-width: 620px">
+        <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 40px; line-height: 1.15">Start your journey with us</h2>
+        <p style="margin: 0; font-size: 17px; color: #D5DEEA">Explore our programs, meet inspiring faculty, and become part of a thriving academic network.</p>
+      </div>
+      <div style="position: relative; display: flex; flex-wrap: wrap; gap: 12px">
+        <a href="#" style="background: #39B54A; color: #002652; text-decoration: none; font-weight: 800; padding: 15px 26px; border-radius: 10px">Apply now</a>
+        <a href="#" class="ghost" style="border: 1.5px solid #FFFFFF; color: #FFFFFF; text-decoration: none; font-weight: 700; padding: 14px 24px; border-radius: 10px">Request information</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="foot" style="background: #002652; color: #B7C3D6">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 64px 32px 32px; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 36px">
+      <div style="display: flex; flex-direction: column; gap: 16px; grid-column: span 1">
+        <div style="background: #FFFFFF; border-radius: 12px; padding: 10px 14px; align-self: flex-start"><img src="/_blob/20e4fc74cb3d7032ec20a6d2263d6709" alt="Daffodil International University" style="height: 40px; width: auto; display: block"></div>
+        <p style="margin: 0; font-size: 14px; line-height: 1.7">[Campus address from Website Settings]</p>
+        <label for="nl" style="color: #FFFFFF; font-weight: 700; font-size: 14px">Subscribe to updates</label>
+        <div style="display: flex; gap: 8px">
+          <input id="nl" type="email" placeholder="Your email" style="flex: 1; min-width: 0; padding: 12px 14px; border-radius: 10px; border: 1px solid #234A78; background: #0B3463; color: #FFFFFF; font-family: inherit">
+          <button style="background: #39B54A; color: #002652; border: 0; border-radius: 10px; padding: 0 16px; font-weight: 800; font-family: inherit; cursor: pointer; min-height: 44px">Subscribe</button>
+        </div>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700; font-family: Montserrat, sans-serif">Get in touch</span><a href="#">Contact</a><a href="#">Meet with us</a><a href="#">Location map</a><a href="#">Newsletters</a></div>
+      <div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700; font-family: Montserrat, sans-serif">Useful links</span><a href="#">Convocation</a><a href="#">Prospectus</a><a href="#">Forms</a><a href="#">Discount partners</a><a href="#">FAQ</a></div>
+      <div style="display: flex; flex-direction: column; gap: 10px"><span style="color: #FFFFFF; font-weight: 700; font-family: Montserrat, sans-serif">Quick links</span><a href="Microsite.dc.html">Department of CSE</a><a href="#">Academic calendar</a><a href="#">Tuition fees</a><a href="#">Transport</a><a href="#">Alumni</a></div>
+    </div>
+    <div style="max-width: 1320px; margin: 0 auto; padding: 20px 32px 28px; border-top: 1px solid #12406F; display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; font-size: 13px">
+      <span>© 2026 Daffodil International University</span>
+      <span>Privacy · Copyright · Security</span>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":4400}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { level: 'Undergraduate', lang: 'en', feed: 'news' };
+  }
+  renderVals() {
+    const chip = (on) => 'font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; padding: 11px 20px; min-height: 44px; border-radius: 999px; cursor: pointer; border: 1.5px solid ' + (on ? '#034EA2' : '#D5D5D5') + '; background: ' + (on ? '#034EA2' : '#FFFFFF') + '; color: ' + (on ? '#FFFFFF' : '#2F2F2F');
+    const seg = (on) => 'font-family: Manrope, sans-serif; font-size: 15px; font-weight: 700; padding: 10px 18px; min-height: 44px; border-radius: 9px; cursor: pointer; border: 0; background: ' + (on ? '#FFFFFF' : 'transparent') + '; color: ' + (on ? '#002652' : '#58595B') + '; box-shadow: ' + (on ? '0 2px 8px rgba(0,38,82,0.12)' : 'none');
+    const lang = (on) => 'font-family: Manrope, sans-serif; font-size: 13px; font-weight: 700; min-height: 30px; padding: 0 10px; border-radius: 6px; cursor: pointer; border: 0; background: ' + (on ? '#FFFFFF' : 'transparent') + '; color: ' + (on ? '#002652' : '#B7C3D6');
+    const band = (c1, c2) => 'height: 120px; padding: 18px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; background: linear-gradient(135deg,' + c1 + ',' + c2 + ')';
+    const all = [
+      { level: 'Undergraduate', code: 'CSE', faculty: 'Science & IT', name: 'BSc in Computer Science & Engineering', duration: '4 years', band: band('#034EA2', '#002652') },
+      { level: 'Undergraduate', code: 'BBA', faculty: 'Business & Entrepreneurship', name: '[Program name]', duration: '[Duration]', band: band('#0861A7', '#193B63') },
+      { level: 'Undergraduate', code: 'EEE', faculty: 'Engineering', name: '[Program name]', duration: '[Duration]', band: band('#1E3A5F', '#002652') },
+      { level: 'Undergraduate', code: 'ENG', faculty: 'Humanities', name: '[Program name]', duration: '[Duration]', band: band('#2F8F3E', '#1E5C2A') },
+      { level: 'Graduate', code: 'MSc', faculty: '[Faculty]', name: '[Graduate program name]', duration: '[Duration]', band: band('#034EA2', '#002652') },
+      { level: 'Graduate', code: 'MBA', faculty: '[Faculty]', name: '[Graduate program name]', duration: '[Duration]', band: band('#0861A7', '#193B63') },
+      { level: 'Diploma', code: 'DIP', faculty: '[Faculty]', name: '[Diploma program name]', duration: '[Duration]', band: band('#1E3A5F', '#002652') },
+      { level: 'Post Graduate Diploma', code: 'PGD', faculty: '[Faculty]', name: '[PG Diploma program name]', duration: '[Duration]', band: band('#2F8F3E', '#1E5C2A') }
+    ];
+    const f = this.state.feed;
+    return {
+      enStyle: lang(this.state.lang === 'en'),
+      bnStyle: lang(this.state.lang === 'bn'),
+      setEn: () => this.setState({ lang: 'en' }),
+      setBn: () => this.setState({ lang: 'bn' }),
+      tiles: [
+        { label: 'Admission', sub: 'Dates, eligibility & apply', href: '#', icon: 'M22 10 12 5 2 10l10 5 10-5zM6 12v5c3 2 9 2 12 0v-5' },
+        { label: 'Programs', sub: 'Find your degree', href: '#programs', icon: 'M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5' },
+        { label: 'Waiver calculator', sub: 'Estimate your scholarship', href: '#', icon: 'M4 2h16v20H4zM8 6h8M8 10h2M14 10h2M8 14h2M14 14h2M8 18h8' },
+        { label: 'Academic calendar', sub: 'Semester dates & exams', href: '#', icon: 'M3 5h18v16H3zM16 3v4M8 3v4M3 10h18' },
+        { label: 'Notices', sub: 'Latest official notices', href: '#updates', icon: 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0' },
+        { label: 'Transport', sub: 'Find your bus route', href: '#', icon: 'M5 17h14V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2zM5 11h14M7 21v-4M17 21v-4' }
+      ],
+      faculties: [
+        { code: 'FBE', name: 'Business & Entrepreneurship', img: '/_blob/000123a8bbf89bd13291cd528fdad001', href: 'Faculties.dc.html' },
+        { code: 'FSIT', name: 'Science and Information Technology', img: '/_blob/59e58af24fe3cffa5d3aaf4d147a72f1', href: 'Faculty.dc.html' },
+        { code: 'FHSS', name: 'Humanities & Social Sciences', img: '/_blob/de2616aeb36a0849ec2107e8aa686263', href: 'Faculties.dc.html' },
+        { code: 'FE', name: 'Engineering', img: '/_blob/90d624208f105b941b6d1972d548e4f1', href: 'Faculties.dc.html' },
+        { code: 'FHLS', name: 'Health and Life Sciences', img: '/_blob/4ca9cec026e81e26f020dba18586eec5', href: 'Faculties.dc.html' },
+        { code: 'FGS', name: 'Graduate Studies', img: '/_blob/2510bf71060829713cc5f24d3b681456', href: 'Faculties.dc.html' }
+      ],
+      levels: ['Undergraduate', 'Graduate', 'Diploma', 'Post Graduate Diploma'].map((l) => ({ label: l, style: chip(this.state.level === l), pick: () => this.setState({ level: l }) })),
+      programs: all.filter((p) => p.level === this.state.level),
+      feedTabs: [['news', 'News'], ['notices', 'Notices'], ['events', 'Events']].map(([k, l]) => ({ label: l, style: seg(f === k), pick: () => this.setState({ feed: k }) })),
+      showNews: f === 'news',
+      showNotices: f === 'notices',
+      showEvents: f === 'events',
+      news: [
+        { meta: '[Date] · Department of CSE', title: '[News headline]' },
+        { meta: '[Date] · [Office]', title: '[News headline]' },
+        { meta: '[Date] · [Faculty]', title: '[News headline]' },
+        { meta: '[Date] · [Department]', title: '[News headline]' }
+      ],
+      notices: [
+        { day: '[DD]', mon: '[MON]', pinned: true, title: '[Pinned notice title]', source: 'Registrar Office' },
+        { day: '[DD]', mon: '[MON]', pinned: false, title: '[Notice title]', source: 'Exam Office' },
+        { day: '[DD]', mon: '[MON]', pinned: false, title: '[Notice title]', source: 'Department of CSE' },
+        { day: '[DD]', mon: '[MON]', pinned: false, title: '[Notice title]', source: 'Admission Office' },
+        { day: '[DD]', mon: '[MON]', pinned: false, title: '[Notice title]', source: '[Office]' },
+        { day: '[DD]', mon: '[MON]', pinned: false, title: '[Notice title]', source: '[Department]' }
+      ],
+      events: [
+        { day: '[DD]', mon: '[MON]', title: '[Event title]', venue: '[Venue], Daffodil Smart City' },
+        { day: '[DD]', mon: '[MON]', title: '[Event title]', venue: '[Venue], Daffodil Smart City' },
+        { day: '[DD]', mon: '[MON]', title: '[Event title]', venue: '[Venue], Daffodil Smart City' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

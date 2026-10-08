@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Admin — Edit Notice</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;family=Hind+Siliguri:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:"Manrope","Hind Siliguri",sans-serif;color:#1F2328;background:#F3F4F9}
+a{color:#034EA2}a:hover{color:#002652}
+.side a{display:block;color:#3D4450;text-decoration:none;font-size:14px;padding:8px 12px;border-radius:6px}
+.side a:hover{background:#EDF6FF;color:#034EA2}
+</style>
+</helmet>
+<div style="min-width: 0">
+
+  <!-- TOP BAR -->
+  <div style="background: #FFFFFF; border-bottom: 1px solid #E3E6EA">
+    <div style="padding: 10px 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between">
+      <div style="display: flex; gap: 10px; align-items: center">
+        <img src="/_blob/20e4fc74cb3d7032ec20a6d2263d6709" alt="Daffodil International University" style="height: 34px; width: auto; display: block">
+        <span style="font-weight: 700; color: #002652; border-left: 1px solid #E3E6EA; padding-left: 10px">Admin</span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; font-size: 14px">
+        <span style="color: #5B6470">Prototype — view as:</span>
+        <button onClick="{{ asAdmin }}" style="{{ adminBtn }}">Admin</button>
+        <button onClick="{{ asDept }}" style="{{ deptBtn }}">CSE department user</button>
+        <span style="border: 1px solid #E3E6EA; border-radius: 8px; padding: 8px 12px; background: #FFFFFF">Working in: <strong>{{ context }}</strong></span>
+        <a href="Main.dc.html" style="text-decoration: none; font-weight: 500">View site ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap; align-items: flex-start">
+
+    <!-- SIDEBAR -->
+    <nav aria-label="Admin" class="side" style="flex: 1 1 220px; max-width: 240px; background: #FFFFFF; border-right: 1px solid #E3E6EA; padding: 16px 10px; box-sizing: border-box; display: flex; flex-direction: column; gap: 2px">
+      <a href="#">Dashboard</a>
+      <sc-if value="{{ isDept }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size: 11px; font-weight: 600; color: #8A919B; padding: 12px 12px 4px; letter-spacing: 0.06em">MY MICROSITE</span>
+        <a href="#">Pages</a><a href="#">Menu</a><a href="#">Homepage</a><a href="#">Statistics</a><a href="#">People</a>
+      </sc-if>
+      <span style="font-size: 11px; font-weight: 600; color: #8A919B; padding: 12px 12px 4px; letter-spacing: 0.06em">CONTENT</span>
+      <a href="#">News</a>
+      <a href="#" style="background: #EDF6FF; color: #034EA2; font-weight: 600">Notices</a>
+      <a href="#">Events</a><a href="#">Gallery</a><a href="#">Documents</a><a href="#">Media</a>
+      <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ true }}">
+        <a href="#">Main Site Queue</a><a href="#">Highlights</a>
+        <span style="font-size: 11px; font-weight: 600; color: #8A919B; padding: 12px 12px 4px; letter-spacing: 0.06em">APPEARANCE · SITE</span>
+        <a href="#">Main Menu</a><a href="#">Theme &amp; Design</a><a href="#">Settings</a>
+      </sc-if>
+    </nav>
+
+    <!-- MAIN -->
+    <div style="flex: 999 1 560px; min-width: 0; padding: 24px; box-sizing: border-box; display: flex; flex-direction: column; gap: 16px">
+      <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <span style="font-size: 13px; color: #5B6470">Notices › Edit</span>
+          <h1 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 24px; color: #002652">[Notice title]</h1>
+        </div>
+        <div style="display: flex; gap: 8px">
+          <a href="#" style="border: 1px solid #C7D5E8; background: #FFFFFF; color: #1F2328; text-decoration: none; padding: 10px 16px; border-radius: 8px; font-size: 14px">View on site ↗</a>
+          <button onClick="{{ save }}" style="background: #034EA2; color: #FFFFFF; border: 0; padding: 10px 20px; border-radius: 8px; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer; min-height: 44px">Save</button>
+        </div>
+      </div>
+      <sc-if value="{{ saved }}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="background: #E6F4EA; color: #1E6B34; border-radius: 8px; padding: 10px 14px; font-size: 14px">Saved</div>
+      </sc-if>
+
+      <div style="display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-start">
+
+        <!-- FORM LEFT -->
+        <div style="flex: 999 1 460px; min-width: 0; background: #FFFFFF; border: 1px solid #E3E6EA; border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 16px">
+          <div style="display: flex; gap: 6px; border-bottom: 1px solid #E3E6EA">
+            <span style="padding: 10px 14px; border-bottom: 2px solid #034EA2; color: #034EA2; font-weight: 600; font-size: 14px">Content</span>
+            <span style="padding: 10px 14px; color: #5B6470; font-size: 14px">Attachments</span>
+            <span style="padding: 10px 14px; color: #5B6470; font-size: 14px">SEO</span>
+            <span style="padding: 10px 14px; color: #5B6470; font-size: 14px">Activity</span>
+          </div>
+          <div style="display: flex; gap: 6px">
+            <sc-for list="{{ langs }}" as="lg" hint-placeholder-count="2">
+              <button onClick="{{ lg.pick }}" style="{{ lg.style }}">{{ lg.label }}</button>
+            </sc-for>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="title" style="font-size: 14px; font-weight: 500">Title {{ titleReq }}</label>
+            <input id="title" value="{{ titleVal }}" placeholder="{{ titlePh }}" style="padding: 12px; border: 1px solid #C7D5E8; border-radius: 8px; font-family: inherit; font-size: 15px">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="ref" style="font-size: 14px; font-weight: 500">Reference no.</label>
+            <input id="ref" placeholder="[e.g. office/year/number]" style="padding: 12px; border: 1px solid #C7D5E8; border-radius: 8px; font-family: inherit; font-size: 15px">
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <label for="body" style="font-size: 14px; font-weight: 500">Body</label>
+            <textarea id="body" rows="8" placeholder="[Rich text editor]" style="padding: 12px; border: 1px solid #C7D5E8; border-radius: 8px; font-family: inherit; font-size: 15px; resize: vertical"></textarea>
+          </div>
+        </div>
+
+        <!-- SIDEBAR PANELS -->
+        <div style="flex: 1 1 300px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+
+          <div style="background: #FFFFFF; border: 1px solid #E3E6EA; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+            <span style="font-size: 12px; font-weight: 600; color: #8A919B; letter-spacing: 0.06em">PUBLISHING</span>
+            <label style="display: flex; justify-content: space-between; align-items: center; font-size: 14px">Active
+              <input type="checkbox" checked="{{ active }}" onChange="{{ toggleActive }}" style="width: 22px; height: 22px">
+            </label>
+            <label for="pub" style="font-size: 14px">Publish date</label>
+            <input id="pub" type="datetime-local" style="padding: 10px; border: 1px solid #C7D5E8; border-radius: 8px; font-family: inherit">
+            <span style="font-size: 12px; color: #5B6470">A future date schedules it automatically.</span>
+            <label for="exp" style="font-size: 14px">Expires (optional)</label>
+            <input id="exp" type="date" style="padding: 10px; border: 1px solid #C7D5E8; border-radius: 8px; font-family: inherit">
+            <label style="display: flex; justify-content: space-between; align-items: center; font-size: 14px">Pinned
+              <input type="checkbox" style="width: 22px; height: 22px">
+            </label>
+          </div>
+
+          <div style="background: #FFFFFF; border: 1px solid #E3E6EA; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+            <span style="font-size: 12px; font-weight: 600; color: #8A919B; letter-spacing: 0.06em">SHOW IN</span>
+            <div style="display: flex; flex-wrap: wrap; gap: 6px">
+              <span style="background: #EDF6FF; color: #034EA2; padding: 6px 10px; border-radius: 999px; font-size: 13px">CSE Department</span>
+            </div>
+            <button style="align-self: flex-start; background: transparent; border: 1px dashed #A3A9C9; color: #034EA2; padding: 8px 12px; border-radius: 8px; font-family: inherit; font-size: 13px; cursor: pointer; min-height: 40px">+ Add Faculty / Department / Office</button>
+
+            <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ true }}">
+              <label style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; border-top: 1px solid #E3E6EA; padding-top: 10px">Publish on main site
+                <input type="checkbox" checked="{{ mainSite }}" onChange="{{ toggleMain }}" style="width: 22px; height: 22px">
+              </label>
+              <span style="font-size: 12px; color: #5B6470">Only admins see this switch.</span>
+            </sc-if>
+            <sc-if value="{{ isDept }}" hint-placeholder-val="{{ false }}">
+              <label style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; border-top: 1px solid #E3E6EA; padding-top: 10px">Request main site
+                <input type="checkbox" checked="{{ requested }}" onChange="{{ toggleReq }}" style="width: 22px; height: 22px">
+              </label>
+              <span style="font-size: 12px; color: #5B6470">An admin decides whether it goes on the main site.</span>
+            </sc-if>
+          </div>
+
+          <div style="background: #FFFFFF; border: 1px solid #E3E6EA; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+            <span style="font-size: 12px; font-weight: 600; color: #8A919B; letter-spacing: 0.06em">HIGHLIGHT</span>
+            <sc-if value="{{ isAdmin }}" hint-placeholder-val="{{ true }}">
+              <label style="display: flex; justify-content: space-between; align-items: center; font-size: 14px">Main site homepage
+                <input type="checkbox" style="width: 22px; height: 22px">
+              </label>
+            </sc-if>
+            <label style="display: flex; justify-content: space-between; align-items: center; font-size: 14px">CSE homepage
+              <input type="checkbox" checked="{{ true }}" style="width: 22px; height: 22px">
+            </label>
+            <label for="until" style="font-size: 14px">Highlight until</label>
+            <input id="until" type="date" style="padding: 10px; border: 1px solid #C7D5E8; border-radius: 8px; font-family: inherit">
+          </div>
+
+          <div style="background: #FFFFFF; border: 1px solid #E3E6EA; border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px">
+            <label for="cat" style="font-size: 12px; font-weight: 600; color: #8A919B; letter-spacing: 0.06em">CATEGORY</label>
+            <select id="cat" style="padding: 10px; border: 1px solid #C7D5E8; border-radius: 8px; font-family: inherit; font-size: 14px">
+              <option>[Exam]</option><option>[Admission]</option><option>[General]</option>
+            </select>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1100}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { role: 'admin', lang: 'en', active: true, mainSite: true, requested: false, saved: false };
+  }
+  renderVals() {
+    const pill = (on) => 'font-family: inherit; font-size: 13px; font-weight: 600; padding: 8px 12px; min-height: 40px; border-radius: 8px; cursor: pointer; border: 1px solid ' + (on ? '#034EA2' : '#C7D5E8') + '; background: ' + (on ? '#034EA2' : '#FFFFFF') + '; color: ' + (on ? '#FFFFFF' : '#1F2328');
+    const isAdmin = this.state.role === 'admin';
+    const en = this.state.lang === 'en';
+    return {
+      isAdmin,
+      isDept: !isAdmin,
+      context: isAdmin ? 'Main site' : 'CSE Department',
+      adminBtn: pill(isAdmin),
+      deptBtn: pill(!isAdmin),
+      asAdmin: () => this.setState({ role: 'admin', saved: false }),
+      asDept: () => this.setState({ role: 'dept', saved: false }),
+      langs: [
+        { label: 'English ●', style: pill(en), pick: () => this.setState({ lang: 'en' }) },
+        { label: 'বাংলা ○', style: pill(!en), pick: () => this.setState({ lang: 'bn' }) }
+      ],
+      titleReq: en ? '*' : '(optional)',
+      titleVal: en ? '[Notice title]' : '',
+      titlePh: en ? '' : '[বাংলা শিরোনাম — না দিলে English দেখাবে]',
+      active: this.state.active,
+      toggleActive: () => this.setState({ active: !this.state.active }),
+      mainSite: this.state.mainSite,
+      toggleMain: () => this.setState({ mainSite: !this.state.mainSite }),
+      requested: this.state.requested,
+      toggleReq: () => this.setState({ requested: !this.state.requested }),
+      saved: this.state.saved,
+      save: () => this.setState({ saved: true })
+    };
+  }
+}
+</script>
+</body>
+</html>

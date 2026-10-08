@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Department of CSE</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;800&amp;family=Manrope:wght@400;500;600;700&amp;family=Hind+Siliguri:wght@400;600&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;font-family:"Manrope","Hind Siliguri",sans-serif;color:#1E1E1E;background:#FFFFFF}
+a{color:#034EA2}a:hover{color:#002652}
+.ql{text-decoration:none;color:#002652;transition:background .2s, border-color .2s}
+.ql:hover{background:#EDF6FF;border-color:#034EA2}
+.pc{text-decoration:none;color:inherit;transition:transform .2s, box-shadow .2s}
+.pc:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,38,82,.12)}
+.dd a{display:block;color:#1E1E1E;text-decoration:none;font-size:14px;padding:10px 14px;border-radius:8px}
+.dd a:hover{background:#EDF6FF;color:#034EA2}
+.row-link{text-decoration:none;color:inherit}
+.row-link:hover h4{color:#034EA2}
+.foot a{color:#B7C3D6;text-decoration:none;font-size:14px}
+.foot a:hover{color:#FFFFFF}
+</style>
+</helmet>
+<div style="min-width: 0">
+
+  <!-- MAIN SITE STRIP (compact) -->
+  <div style="background: #002652; color: #B7C3D6; font-size: 13px">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 8px 32px; display: flex; flex-wrap: wrap; gap: 16px; justify-content: space-between">
+      <a href="Main.dc.html" style="color: #FFFFFF; text-decoration: none; font-weight: 600">← Daffodil International University</a>
+      <div style="display: flex; gap: 18px"><a href="#" style="color: #B7C3D6; text-decoration: none">Student Portal</a><a href="#" style="color: #B7C3D6; text-decoration: none">e-Learn</a><a href="#" style="color: #B7C3D6; text-decoration: none">Library</a><span>EN · বাংলা</span></div>
+    </div>
+  </div>
+
+  <!-- DEPARTMENT HEADER + OWN MENU -->
+  <div style="background: #FFFFFF; border-bottom: 1px solid #E6E7E8; position: relative; z-index: 5">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 12px 32px; display: flex; flex-wrap: wrap; gap: 18px; align-items: center; justify-content: space-between">
+      <a href="Microsite.dc.html" style="display: flex; gap: 14px; align-items: center; text-decoration: none">
+        <img src="/_blob/20e4fc74cb3d7032ec20a6d2263d6709" alt="Daffodil International University" style="height: 42px; width: auto">
+        <span style="width: 1px; height: 40px; background: #E6E7E8"></span>
+        <span style="display: flex; flex-direction: column">
+          <span style="font-family: Montserrat, sans-serif; font-weight: 800; color: #002652; font-size: 17px; line-height: 1.2">Department of Computer Science</span>
+          <span style="font-family: Montserrat, sans-serif; font-weight: 800; color: #002652; font-size: 17px; line-height: 1.2">and Engineering</span>
+        </span>
+      </a>
+      <nav aria-label="Department" style="display: flex; flex-wrap: wrap; gap: 4px; align-items: center">
+        <sc-for list="{{ menus }}" as="m" hint-placeholder-count="5">
+          <div style="position: relative">
+            <sc-if value="{{ m.hasChildren }}" hint-placeholder-val="{{ true }}">
+              <button onClick="{{ m.toggle }}" aria-expanded="{{ m.open }}" style="{{ m.btnStyle }}">{{ m.title }} <span aria-hidden="true">{{ m.caret }}</span></button>
+              <sc-if value="{{ m.open }}" hint-placeholder-val="{{ false }}">
+                <div class="dd" style="position: absolute; top: 48px; left: 0; min-width: 240px; background: #FFFFFF; border: 1px solid #E6E7E8; border-radius: 14px; box-shadow: 0 20px 48px rgba(0,38,82,0.16); padding: 8px">
+                  <sc-for list="{{ m.children }}" as="c" hint-placeholder-count="5">
+                    <a href="#">{{ c }}</a>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </sc-if>
+            <sc-if value="{{ m.isLink }}" hint-placeholder-val="{{ false }}">
+              <a href="#" style="display: inline-block; color: #1E1E1E; text-decoration: none; font-weight: 700; font-size: 15px; padding: 12px 14px">{{ m.title }}</a>
+            </sc-if>
+          </div>
+        </sc-for>
+        <a href="#" style="margin-left: 8px; background: linear-gradient(90deg,#034EA2,#002652); color: #FFFFFF; text-decoration: none; font-weight: 700; font-size: 14px; padding: 11px 18px; border-radius: 10px">Apply Now</a>
+      </nav>
+    </div>
+  </div>
+
+  <!-- HERO -->
+  <div style="position: relative; overflow: hidden; background: #002652">
+    <img src="/_blob/ec7d70b8e2698c120a1c14a9b7128aa2" alt="Students on campus" style="position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 70%">
+    <div style="position: absolute; inset: 0; background: linear-gradient(90deg, rgba(0,38,82,0.95) 0%, rgba(0,38,82,0.75) 50%, rgba(0,38,82,0.2) 100%)"></div>
+    <div style="position: relative; max-width: 1320px; margin: 0 auto; padding: 56px 32px 72px; color: #FFFFFF; display: flex; flex-direction: column; gap: 16px">
+      <nav aria-label="Breadcrumb" style="font-size: 14px; color: #C7D5E8; display: flex; gap: 8px; flex-wrap: wrap"><a href="Main.dc.html" style="color: #C7D5E8; text-decoration: none">Home</a><span>/</span><a href="Faculty.dc.html" style="color: #C7D5E8; text-decoration: none">FSIT</a><span>/</span><span aria-current="page" style="color: #FFFFFF">CSE</span></nav>
+      <h1 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 48px; line-height: 1.12; max-width: 780px">Department of Computer Science and Engineering</h1>
+      <p style="margin: 0; font-size: 18px; line-height: 1.6; color: #D5DEEA; max-width: 640px">Since its inception, CSE has been fostering academic excellence through industry–academia collaboration.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 12px">
+        <a href="#programs" style="background: #39B54A; color: #002652; text-decoration: none; font-weight: 800; padding: 14px 24px; border-radius: 10px">Explore programs</a>
+        <a href="#" style="border: 1.5px solid #FFFFFF; color: #FFFFFF; text-decoration: none; font-weight: 700; padding: 13px 22px; border-radius: 10px">Message from the Head</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUICK LINKS -->
+  <div style="max-width: 1320px; margin: 0 auto; padding: 40px 32px 0">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px">
+      <sc-for list="{{ quick }}" as="q" hint-placeholder-count="7">
+        <a href="#" class="ql" style="border: 1.5px solid #E6E7E8; border-radius: 14px; padding: 16px; display: flex; flex-direction: column; gap: 10px; font-weight: 700; font-size: 15px">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#034EA2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ q.icon }}"/></svg>
+          {{ q.label }}
+        </a>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div style="max-width: 1320px; margin: 0 auto; padding: 40px 32px 0">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px">
+      <div style="background: #F3F4F9; border-radius: 18px; padding: 22px"><div style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 36px; color: #034EA2">5</div><div style="font-size: 14px; color: #58595B">Programs (auto)</div></div>
+      <div style="background: #F3F4F9; border-radius: 18px; padding: 22px"><div style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 36px; color: #034EA2">[N]</div><div style="font-size: 14px; color: #58595B">Faculty members (auto)</div></div>
+      <div style="background: #F3F4F9; border-radius: 18px; padding: 22px"><div style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 36px; color: #034EA2">[N]</div><div style="font-size: 14px; color: #58595B">Labs (auto)</div></div>
+      <div style="background: #F3F4F9; border-radius: 18px; padding: 22px"><div style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 36px; color: #034EA2">[N]+</div><div style="font-size: 14px; color: #58595B">Students (manual)</div></div>
+    </div>
+  </div>
+
+  <!-- PROGRAMS -->
+  <div id="programs" style="max-width: 1320px; margin: 0 auto; padding: 72px 32px; display: flex; flex-direction: column; gap: 24px">
+    <div style="display: flex; flex-direction: column; gap: 10px; max-width: 720px">
+      <span style="color: #034EA2; font-weight: 700; font-size: 14px; letter-spacing: 0.08em">ACADEMICS</span>
+      <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 36px; color: #002652">Explore our academic programs</h2>
+      <p style="margin: 0; color: #58595B; font-size: 16px">Each card links to full program details — curriculum, admission requirements and faculty contacts.</p>
+    </div>
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px">
+      <sc-for list="{{ programs }}" as="p" hint-placeholder-count="5">
+        <a href="Program.dc.html" class="pc" style="border: 1px solid #E6E7E8; border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; background: #FFFFFF">
+          <div style="{{ p.band }}">
+            <span style="background: rgba(255,255,255,0.2); color: #FFFFFF; font-size: 12px; font-weight: 800; padding: 5px 10px; border-radius: 999px">{{ p.level }}</span>
+            <span style="font-family: Montserrat, sans-serif; font-weight: 800; font-size: 26px; color: rgba(255,255,255,0.92)">{{ p.code }}</span>
+          </div>
+          <div style="padding: 20px; display: flex; flex-direction: column; gap: 12px; flex: 1">
+            <h3 style="margin: 0; font-family: Montserrat, sans-serif; font-size: 18px; line-height: 1.35; color: #002652">{{ p.name }}</h3>
+            <span style="margin-top: auto; font-weight: 800; color: #034EA2; font-size: 14px">Program details →</span>
+          </div>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- NOTICES + NEWS -->
+  <div style="background: #F3F4F9">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 72px 32px; display: flex; flex-wrap: wrap; gap: 28px">
+      <div style="flex: 999 1 520px; min-width: 0; background: #FFFFFF; border-radius: 22px; padding: 28px; display: flex; flex-direction: column; gap: 4px">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 10px"><h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 26px; color: #002652">Academic notices &amp; announcements</h2><a href="#" style="font-weight: 700; text-decoration: none">Notice board →</a></div>
+        <sc-for list="{{ notices }}" as="n" hint-placeholder-count="5">
+          <a href="#" class="row-link" style="display: flex; gap: 16px; padding: 14px 0; border-bottom: 1px solid #E6E7E8; align-items: flex-start">
+            <span style="background: #EDF6FF; color: #034EA2; border-radius: 10px; min-width: 60px; text-align: center; padding: 6px 0; font-weight: 800; font-size: 13px">{{ n.date }}</span>
+            <div style="display: flex; flex-direction: column; gap: 4px; flex: 1">
+              <h4 style="margin: 0; font-size: 15px; font-weight: 700">{{ n.title }}</h4>
+              <span style="font-size: 13px; color: #58595B">{{ n.scope }}</span>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+      <div style="flex: 1 1 340px; min-width: 0; display: flex; flex-direction: column; gap: 16px">
+        <div style="background: #FFFFFF; border-radius: 22px; overflow: hidden">
+          <img src="/_blob/4b2ff64c38a5471214ee10367af87f72" alt="" style="width: 100%; height: 180px; object-fit: cover; display: block">
+          <div style="padding: 20px; display: flex; flex-direction: column; gap: 6px"><span style="font-size: 13px; color: #58595B">[Date] · Events</span><h4 style="margin: 0; font-family: Montserrat, sans-serif; font-size: 18px; color: #002652">[Upcoming CSE event]</h4><a href="#" style="font-weight: 700; text-decoration: none; font-size: 14px">All events →</a></div>
+        </div>
+        <div style="background: #FFFFFF; border-radius: 22px; padding: 20px; display: flex; gap: 14px; align-items: center">
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg,#034EA2,#002652); color: #FFFFFF; display: flex; align-items: center; justify-content: center; font-family: Montserrat, sans-serif; font-weight: 800; flex-shrink: 0">HD</div>
+          <div style="display: flex; flex-direction: column; gap: 4px"><span style="font-weight: 800; color: #002652">[Head&#39;s name]</span><span style="font-size: 13px; color: #58595B">Head, Department of CSE</span><a href="#" style="font-weight: 700; text-decoration: none; font-size: 14px">Message from the Head →</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESEARCH & LABS -->
+  <div style="max-width: 1320px; margin: 0 auto; padding: 72px 32px; display: flex; flex-wrap: wrap; gap: 40px; align-items: center">
+    <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 14px">
+      <span style="color: #034EA2; font-weight: 700; font-size: 14px; letter-spacing: 0.08em">CUTTING-EDGE RESEARCH &amp; LABS</span>
+      <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 36px; line-height: 1.2; color: #002652">Research that advances technology</h2>
+      <p style="margin: 0; font-size: 16px; line-height: 1.7; color: #3D3F42">Laboratory facilities, the CPC Club and industry linkages give students hands-on experience from the first semester.</p>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px">
+        <a href="#" style="background: linear-gradient(90deg,#034EA2,#002652); color: #FFFFFF; text-decoration: none; font-weight: 700; padding: 13px 20px; border-radius: 10px">Explore research and their work</a>
+        <a href="#" style="border: 1.5px solid #034EA2; color: #034EA2; text-decoration: none; font-weight: 700; padding: 12px 18px; border-radius: 10px">Laboratory facilities</a>
+      </div>
+    </div>
+    <div style="flex: 1 1 420px; min-width: 0; display: flex; flex-direction: column; gap: 12px">
+      <span style="font-weight: 700; color: #002652; font-size: 14px">Research &amp; innovation partners</span>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px">
+        <span style="border: 1px solid #E6E7E8; border-radius: 14px; padding: 18px 8px; text-align: center; font-family: Montserrat, sans-serif; font-weight: 700; color: #808285">Microsoft</span>
+        <span style="border: 1px solid #E6E7E8; border-radius: 14px; padding: 18px 8px; text-align: center; font-family: Montserrat, sans-serif; font-weight: 700; color: #808285">Google</span>
+        <span style="border: 1px solid #E6E7E8; border-radius: 14px; padding: 18px 8px; text-align: center; font-family: Montserrat, sans-serif; font-weight: 700; color: #808285">AWS</span>
+        <span style="border: 1px solid #E6E7E8; border-radius: 14px; padding: 18px 8px; text-align: center; font-family: Montserrat, sans-serif; font-weight: 700; color: #808285">IEEE</span>
+        <span style="border: 1px solid #E6E7E8; border-radius: 14px; padding: 18px 8px; text-align: center; font-family: Montserrat, sans-serif; font-weight: 700; color: #808285">WHO</span>
+        <span style="border: 1px solid #E6E7E8; border-radius: 14px; padding: 18px 8px; text-align: center; font-family: Montserrat, sans-serif; font-weight: 700; color: #808285">Nestlé</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WAIVER BAND -->
+  <div style="max-width: 1320px; margin: 0 auto; padding: 0 32px 72px">
+    <div style="position: relative; overflow: hidden; border-radius: 26px; background: linear-gradient(110deg,#002652,#034EA2); color: #FFFFFF; padding: 48px; display: flex; flex-wrap: wrap; gap: 28px; align-items: center; justify-content: space-between">
+      <div style="position: absolute; right: -90px; bottom: -90px; width: 300px; height: 300px; border-radius: 50%; background: rgba(57,181,74,0.22)"></div>
+      <div style="position: relative; display: flex; flex-direction: column; gap: 10px; max-width: 640px">
+        <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 36px; line-height: 1.15">Big ambitions? We&#39;ll cover the cost.</h2>
+        <p style="margin: 0; color: #D5DEEA; font-size: 17px; line-height: 1.6">Over 60% of DIU students qualify for a scholarship or waiver — some up to 100%. Check your savings in a minute.</p>
+      </div>
+      <div style="position: relative; display: flex; flex-wrap: wrap; gap: 12px">
+        <a href="#" style="background: #39B54A; color: #002652; text-decoration: none; font-weight: 800; padding: 14px 24px; border-radius: 10px">Estimate my waiver</a>
+        <a href="#" style="border: 1.5px solid #FFFFFF; color: #FFFFFF; text-decoration: none; font-weight: 700; padding: 13px 22px; border-radius: 10px">Apply for aid</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- CAMPUS SERVICES -->
+  <div style="background: #F3F4F9">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 72px 32px; display: flex; flex-direction: column; gap: 24px">
+      <div style="display: flex; flex-direction: column; gap: 10px; max-width: 720px">
+        <h2 style="margin: 0; font-family: Montserrat, sans-serif; font-weight: 800; font-size: 32px; color: #002652">Essential campus services</h2>
+        <p style="margin: 0; color: #58595B; font-size: 16px">Quick links to hostels, buses, financial aid and activities — because study is only part of the story.</p>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px">
+        <sc-for list="{{ services }}" as="s" hint-placeholder-count="4">
+          <a href="#" class="pc" style="background: #FFFFFF; border-radius: 20px; padding: 24px; display: flex; flex-direction: column; gap: 10px">
+            <span style="width: 48px; height: 48px; border-radius: 14px; background: #EDF6FF; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#034EA2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="{{ s.icon }}"/></svg></span>
+            <h3 style="margin: 0; font-family: Montserrat, sans-serif; font-size: 18px; color: #002652">{{ s.title }}</h3>
+            <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #3D3F42">{{ s.text }}</p>
+          </a>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot" style="background: #002652; color: #B7C3D6">
+    <div style="max-width: 1320px; margin: 0 auto; padding: 32px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: center">
+      <span style="color: #FFFFFF; font-weight: 700">Department of CSE · [Building, Daffodil Smart City] · [Email]</span>
+      <div style="display: flex; gap: 20px"><a href="#">Contact</a><a href="#">FAQ</a><a href="#">Service Charter</a></div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3600}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { open: null }; }
+  renderVals() {
+    const raw = [
+      { id: 'about', title: 'About Us', children: ['Message from the Head', 'Mission & Vision', 'Industrial Linkage', 'Takeoff Bulletin', 'Laboratory Facilities', 'CPC Club'] },
+      { id: 'admission', title: 'Admission', children: ['Admission Eligibility', 'Local Tuition', 'International Tuition', 'Admission Notice', 'Prospectus'] },
+      { id: 'student', title: 'Student', children: ['Notice Board', 'Events', 'Alumni', 'Visitor', 'FAQ', 'Service Charter'] },
+      { id: 'faculty', title: 'Faculty Members', children: [] },
+      { id: 'contact', title: 'Contact', children: [] }
+    ];
+    const menus = raw.map((m) => {
+      const open = this.state.open === m.id;
+      return {
+        title: m.title,
+        children: m.children,
+        hasChildren: m.children.length > 0,
+        isLink: m.children.length === 0,
+        open,
+        caret: open ? '▴' : '▾',
+        btnStyle: 'font-family: Manrope, sans-serif; font-weight: 700; font-size: 15px; padding: 12px 14px; min-height: 44px; border: 0; border-radius: 10px; cursor: pointer; background: ' + (open ? '#EDF6FF' : 'transparent') + '; color: ' + (open ? '#034EA2' : '#1E1E1E'),
+        toggle: () => this.setState({ open: open ? null : m.id })
+      };
+    });
+    const band = (c1, c2) => 'height: 110px; padding: 18px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; background: linear-gradient(135deg,' + c1 + ',' + c2 + ')';
+    return {
+      menus,
+      quick: [
+        { label: 'Admission Requirements', icon: 'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11' },
+        { label: 'Tuition Fees', icon: 'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+        { label: 'Transfer Credits', icon: 'M17 1l4 4-4 4M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4M21 13v2a4 4 0 0 1-4 4H3' },
+        { label: 'Waiver & Scholarship', icon: 'M20 12v10H4V12M2 7h20v5H2zM12 22V7M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7zM12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z' },
+        { label: 'Student Portal', icon: 'M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8z' },
+        { label: 'e-Learn', icon: 'M2 3h20v14H2zM8 21h8M12 17v4' },
+        { label: 'Library', icon: 'M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5zM4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5' }
+      ],
+      programs: [
+        { code: 'B.Sc', level: 'Undergraduate', name: 'B.Sc. in Computer Science and Engineering', band: band('#034EA2', '#002652') },
+        { code: 'B.Sc', level: 'Diploma holder', name: 'B.Sc. in Computer Science and Engineering (Diploma Holder)', band: band('#0861A7', '#193B63') },
+        { code: 'Honors', level: 'Undergraduate', name: 'Honors Program', band: band('#1E3A5F', '#002652') },
+        { code: 'M.Sc', level: 'Graduate', name: 'M.Sc. in Computer Science and Engineering (CSE)', band: band('#2F8F3E', '#1E5C2A') },
+        { code: 'M.Sc', level: 'Graduate', name: 'M.Sc. in Management Information Systems (MIS)', band: band('#034EA2', '#1E3A5F') }
+      ],
+      notices: [
+        { date: '[DD MON]', title: '[Pinned CSE notice]', scope: 'CSE · also on main site' },
+        { date: '[DD MON]', title: '[CSE notice title]', scope: 'CSE only' },
+        { date: '[DD MON]', title: '[CSE notice title]', scope: 'CSE only' },
+        { date: '[DD MON]', title: '[Notice for BSc in CSE]', scope: 'BSc in CSE (program)' },
+        { date: '[DD MON]', title: '[CSE notice title]', scope: 'CSE only' }
+      ],
+      services: [
+        { title: 'Transport Service', text: '25 AC buses covering Dhaka and nearby districts.', icon: 'M5 17h14V6a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2zM5 11h14M7 21v-4M17 21v-4' },
+        { title: 'Hostel Facility', text: 'Safe, smart residences five minutes from class.', icon: 'M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM9 22V12h6v10' },
+        { title: 'Scholarships & Waivers', text: 'Merit grants up to 100% plus a need-based aid calculator.', icon: 'M20 12v10H4V12M2 7h20v5H2zM12 22V7' },
+        { title: 'Student Life', text: '60+ clubs, festivals, sports and volunteering.', icon: 'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
