@@ -1,6 +1,6 @@
 # Handoff — University Website Management System
 
-Last updated: 2026-10-08. Read this first when continuing on another machine.
+Last updated: 2026-10-09. Read this first when continuing on another machine.
 
 ## Where we are (SDLC)
 
@@ -14,8 +14,18 @@ Last updated: 2026-10-08. Read this first when continuing on another machine.
 | 6 | [API Specification](06-API/01-API-Specification.md) | ✔ Approved — contract for Release 2 (no API in Release 1) |
 | 7 | Module & Theme Development Guide (Part A [Module](07-DevGuide/01-Module-Development-Guide.md), Part B [Theme](07-DevGuide/02-Theme-Development-Guide.md)) | ✔ Approved |
 | 8 | [Test Plan](08-Test/01-Test-Plan.md) | ✔ Approved |
-| 9 | **Deployment & Data Migration Plan** ([Deployment](09-Deployment/01-Deployment-Plan.md), [Data Migration](09-Deployment/02-Data-Migration-Plan.md)) | Drafted — awaiting confirmation |
-| 10 | User Manual | Pending |
+| 9 | Deployment & Data Migration Plan ([Deployment](09-Deployment/01-Deployment-Plan.md), [Data Migration](09-Deployment/02-Data-Migration-Plan.md)) | ✔ Approved |
+| 10 | User Manual ([A Basics](10-User-Manual/01-Manual-PartA-Basics.md), [B Content & Microsite](10-User-Manual/02-Manual-PartB-Content-Microsite.md), [C Admin](10-User-Manual/03-Manual-PartC-Admin.md)) | ✔ Approved — screenshots added during development |
+
+## Development
+
+| Phase | Scope | Status |
+|---|---|---|
+| **0** | Project setup + Shield POC-1..4 | ✔ Done 2026-10-09 — 13 Pest tests pass; results in SAD Part A §7.4 "POC ফলাফল" |
+| 1 | Kernel: BaseModel & traits, `platformColumns()`, Module Manager (install / activate / ZIP validator, `module:make-uwms`), Relation / Assignment / Scope engines, fallback resolver, `AppliesUserScope`; FAQ as reference module; CI | **Next** |
+| 2–6 | Core modules → Installable modules (Program, Fees & Waiver, Admission first) → Default theme → Migration & system test → UAT & go-live | Pending |
+
+Local dev (WSL Ubuntu 24.04): PHP 8.4, Composer 2.9, MySQL 8.0 (databases `university`, `university_test`), Redis 7, Node **26.11** via nvm (default; `.nvmrc` = 26). System `/usr/bin/node` is still 18 and non-interactive shells pick it up — scripts must load nvm first (`. ~/.nvm/nvm.sh && nvm use`). All Composer and npm packages were at their latest versions on 2026-10-09. Run commands via a script file: `wsl -d Ubuntu-24.04 -- bash script.sh` (inline `$VAR` gets mangled by PowerShell).
 
 Working style agreed with the project owner: one SDLC document at a time, each confirmed before the next; DB design module by module; documents written in Bangla with English technical terms; the owner chats in Banglish.
 
@@ -53,10 +63,10 @@ DIU public API used for real prototype data: `https://webbackend.daffodilvarsity
 * DMQ-01 resolved: legacy uploaded files are public at `https://webbackend.daffodilvarsity.edu.bd/{path}` (DB stores relative paths like `noticeFile/…`, `images/faculty/…`) — migration downloads over HTTPS, no server access needed; **not now** — files are downloaded later (before DR-2), development uses placeholders. DMQ-02 resolved: hosting is **AWS** (proposal: ap-south-1, EC2 + S3/CloudFront + SES, backups in another region). Open: DMQ-03 email (SES proposed), DMQ-07 MySQL on EC2 vs RDS, DMQ-04 SSL, DMQ-05 go-live month (outside admission season), DMQ-06 legacy admin freeze window.
 * Test Plan TPQ-03: legacy site Analytics export (top URLs). (TPQ-01 resolved: legacy waiver calculator is the golden-master oracle; TPQ-02 resolved: UAT with FSIT, CSE, BBA, Registrar.)
 * Most-visited pages (DIU): Admission, Waiver Calculator, Programs, Scholarship — highest test / performance priority (Test Plan §7.2).
-* SAD POC-1 to 4 (Test Plan §5, Phase 0): verify Filament Shield integration (per-module permission generation, scoped policies, entity-permission tab, inactive-module permissions).
+* ~~SAD POC-1 to 4~~ ✔ done 2026-10-09 (Phase 0). Original item: verify Filament Shield integration (per-module permission generation, scoped policies, entity-permission tab, inactive-module permissions).
 
 ## Next step
 
-Get the owner's confirmation on step 9 (**[Deployment](09-Deployment/01-Deployment-Plan.md)** + **[Data Migration](09-Deployment/02-Data-Migration-Plan.md)**; open questions DMQ-01..06). Then step 10 **User Manual (Admin)**.
+All 10 SDLC documents are approved and Phase 0 is done. Next: **Phase 1 — Kernel** (see Development table above). The owner wants steps followed in order and each confirmed before the next.
 
 Repository: private GitHub `codexaltadev/university` (branch `main`); commit as `codexalta <codexalta@gmail.com>`, push via SSH alias `git@github-codexalta:codexaltadev/university.git`; no AI attribution lines in commits. Filament resources follow the v5 default layout: `Resources/{PluralModel}/{Model}Resource.php` with `Pages/`, `Schemas/{Model}Form.php`, `Tables/{PluralModel}Table.php`.

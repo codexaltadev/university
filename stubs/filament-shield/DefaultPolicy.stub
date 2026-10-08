@@ -1,0 +1,14 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use {{ auth_model_fqcn }};
+use {{ model_fqcn }};
+use Platform\Policies\ScopedPolicy;
+
+class {{ modelPolicy }} extends ScopedPolicy
+{
+    {{ methods }}
+}

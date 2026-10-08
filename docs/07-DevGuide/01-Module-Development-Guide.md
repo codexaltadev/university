@@ -457,7 +457,7 @@ class FaqResource extends Resource
 }
 ```
 
-**Resource class নাম system-wide অনন্য** (Shield permission key class নাম থেকে তৈরি হয় — SAD Part A §7.4)। সাধারণ নাম হলে prefix দিন: `FaqCategoryResource`, শুধু `CategoryResource` নয়।
+**Model ও Resource class নাম system-wide অনন্য** (Shield resource permission key **model-এর নাম** থেকে তৈরি হয়, যেমন `Update:Faq` — SAD Part A §7.4, POC ফলাফল)। সাধারণ নাম হলে prefix দিন: model `FaqCategory` ও `FaqCategoryResource`, শুধু `Category` / `CategoryResource` নয়।
 
 ### 8.3 Form — platform component ব্যবহার করুন
 
@@ -967,7 +967,7 @@ Module ZIP দেওয়ার আগে:
 - [ ] সব table `table_prefix` দিয়ে; business table-এ `platformColumns()`; reference column-এ index
 - [ ] `down()` সব migration-এ কাজ করে
 - [ ] সব model `BaseModel`; frontend query শুধু `frontendVisible()`
-- [ ] Resource / page / widget class নাম system-wide অনন্য
+- [ ] Model / resource / page / widget class নাম system-wide অনন্য
 - [ ] Form-এ platform component (TranslatableTabs, PublishingPanel, RelatedToField …)
 - [ ] কোনো hardcoded রং / font নয়; view theme override-যোগ্য
 - [ ] Public Livewire action-এ rate limit; form-এ validation ও honeypot

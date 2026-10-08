@@ -552,8 +552,8 @@ BRD sign-off হওয়ার পর নিচের ক্রমে document 
 | 6 | API Specification ✔ Approved — Release 2-এর contract ([06-API](06-API/01-API-Specification.md)) | Public ও admin API endpoints |
 | 7 | Module ও Theme Development Guide ✔ Approved ([Part A: Module](07-DevGuide/01-Module-Development-Guide.md), [Part B: Theme](07-DevGuide/02-Theme-Development-Guide.md)) | নতুন module ও theme বানানোর developer documentation |
 | 8 | Test Plan ও Test Cases ✔ Approved ([08-Test](08-Test/01-Test-Plan.md)) | Module lifecycle, permission ও functional test |
-| 9 | Deployment ও Data Migration Plan ← *বর্তমান* ([Deployment](09-Deployment/01-Deployment-Plan.md), [Data Migration](09-Deployment/02-Data-Migration-Plan.md)) | Server requirement, installation, scheduler, backup, `project_diu` থেকে migration |
-| 10 | User Manual (Admin) | Non-technical admin-দের জন্য ব্যবহার নির্দেশিকা |
+| 9 | Deployment ও Data Migration Plan ✔ Approved ([Deployment](09-Deployment/01-Deployment-Plan.md), [Data Migration](09-Deployment/02-Data-Migration-Plan.md)) | Server requirement, installation, scheduler, backup, `project_diu` থেকে migration |
+| 10 | User Manual (Admin) ✔ Approved — screenshot development-এর সময় ([10-User-Manual](10-User-Manual/01-Manual-PartA-Basics.md)) | Non-technical admin-দের জন্য ব্যবহার নির্দেশিকা |
 
 ---
 

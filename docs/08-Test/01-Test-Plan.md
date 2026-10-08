@@ -119,6 +119,8 @@ Development শুরুর আগে Shield + Scope সংযোগের ঝ�
 | POC-3 | Dynamic entity permission Role UI-তে আলাদা tab | Office "Registrar" তৈরি → Role edit | "Entities" tab-এ "Manage: Registrar Office" checkbox; save-এ `Manage:Office#…` assign |
 | POC-4 | Inactive module-এর permission Role UI-তে আলাদা | FAQ deactivate → Role edit | FAQ permission ধূসর / "Inactive modules" অংশে; assign থাকা permission মুছে যায় না |
 
+**ফলাফল (2026-10-09): ✔ চারটিই pass** — `tests/Feature/Poc/ShieldScopePocTest.php`, ১৩টি test (POC-4-এর একটি control test সহ)। বিস্তারিত ও POC-4-এ পাওয়া ঝুঁকির সমাধান: SAD Part A §7.4 "POC ফলাফল"।
+
 POC fail হলে: SAD ADR-04-এর বিকল্প (নিজস্ব role editor) মূল্যায়ন করে SAD update, তারপর development।
 
 ---

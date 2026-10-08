@@ -1,0 +1,11 @@
+{
+    "name": "Office",
+    "alias": "office",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\Office\\Providers\\OfficeServiceProvider"
+    ],
+    "files": []
+}

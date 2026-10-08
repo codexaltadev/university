@@ -3,9 +3,9 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Deployment & Data Migration Plan — Part A: Deployment (SDLC ধাপ ৯) |
-| Version | 0.1 (Draft) |
+| Version | 1.0 |
 | Date | 2026-10-08 |
-| Status | Review-এর জন্য অপেক্ষমাণ |
+| Status | ✔ Approved |
 | Based on | SAD Part B §10–§14 (cache, queue, scheduler, security, deployment, ADR-12), SRS NFR, Test Plan (NFT, smoke test, §7.2 অগ্রাধিকার page) |
 | পাঠক | DevOps / server admin, technical lead; নতুন university-র IT team |
 
@@ -85,7 +85,7 @@ Scaled topology-তে যেতে হবে যদি: NFT-06 load test-এ �
 | Redis | 7 | Cache, queue, session — আলাদা DB number |
 | Nginx | stable | HTTP/2, gzip / brotli |
 | Supervisor | — | Horizon |
-| Node | 20 LTS | শুধু build server / CI-তে; production-এ লাগে না |
+| Node | 26 (`.nvmrc`) | শুধু build server / CI-তে; production-এ লাগে না। Node 18-এ Vite চলে না |
 | Composer | 2 | — |
 | Image tool | `jpegoptim`, `optipng`, `pngquant`, `cwebp` | Media conversion |
 | Search (ঐচ্ছিক) | Meilisearch | শুরুতে database driver; data বাড়লে Meilisearch (SAD) |

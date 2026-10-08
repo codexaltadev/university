@@ -3,9 +3,9 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Deployment & Data Migration Plan — Part B: Data Migration (SDLC ধাপ ৯) |
-| Version | 0.1 (Draft) |
+| Version | 1.0 |
 | Date | 2026-10-08 |
-| Status | Review-এর জন্য অপেক্ষমাণ |
+| Status | ✔ Approved |
 | Based on | DB-01 থেকে DB-06-এর "`project_diu` থেকে Migration Mapping" অংশ, Test Plan §9 (MIG-01 থেকে MIG-11) ও §7.1.1 (waiver golden master), BRD Q-21 / Q-26 |
 | পাঠক | Migration developer, technical lead, DIU content owner (manual review অংশ) |
 

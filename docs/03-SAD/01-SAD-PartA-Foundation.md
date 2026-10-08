@@ -514,7 +514,7 @@ final class DepartmentExtension implements ModuleExtension
 
 Shield permission key resource-এর class নাম থেকে তৈরি হয়, module slug থেকে নয়। তাই দুটি module-এ `CategoryResource` থাকলে key সংঘর্ষ হবে। নিয়ম:
 
-* **Resource, Page ও Widget-এর class নাম পুরো system-এ অনন্য** হতে হবে। সাধারণ নাম module prefix সহ: `NewsCategoryResource`, `NoticeCategoryResource` (শুধু `CategoryResource` নয়)।
+* **Model, Resource, Page ও Widget-এর class নাম পুরো system-এ অনন্য** হতে হবে (resource permission key model-এর নাম থেকে — POC ফলাফল দেখুন)। সাধারণ নাম module prefix সহ: `NewsCategoryResource`, `NoticeCategoryResource` (শুধু `CategoryResource` নয়)।
 * Install validator module-এর resource / page / widget class নাম ও generate হতে যাওয়া permission key বিদ্যমান key-এর সাথে মিলিয়ে দেখবে; মিললে install বাতিল।
 
 #### Proof of Concept (Development শুরুর আগে যাচাই)
@@ -527,6 +527,23 @@ Shield permission key resource-এর class নাম থেকে তৈরি 
 | POC-4 | Inactive module-এর permission Role UI-তে ধূসর / আলাদা | Admin বিভ্রান্ত হয় না |
 
 > কোনো POC ব্যর্থ হলে সেই অংশের জন্য বিকল্প (Shield-এর বাইরে নিজস্ব component) এই document-এ আবার নির্ধারণ হবে।
+
+#### POC ফলাফল (Phase 0, 2026-10-09) — ✔ চারটিই সফল
+
+Laravel 13.35, Filament 5.10, Shield 4.3.1, spatie/laravel-permission **8.3** (আগে ৭ লেখা ছিল), nwidart 13.0। Test: `tests/Feature/Poc/ShieldScopePocTest.php` — ১৩টি test pass।
+
+| # | ফল | বাস্তবায়ন |
+|---|---|---|
+| POC-1 | ✔ | `Platform\Modules\ModulePermissions::sync($module)` — module-এর resource class file থেকে খুঁজে (`app/Filament/Resources/**/*Resource.php`) `FilamentShield::getDefaultPermissionKeys()` দিয়ে key তৈরি; panel-এ register না থাকলেও (inactive module) কাজ করে। অন্য module-এর permission-এর id ও নাম অপরিবর্তিত |
+| POC-2 | ✔ | `stubs/filament-shield/{DefaultPolicy,MultiParamMethod,SingleParamMethod}.stub` override → generate করা policy `Platform\Policies\ScopedPolicy` extend করে ও `$this->allows()` ডাকে। Policy module-এর নিজের `app/Policies/`-এ তৈরি হয় ও Laravel নিজে খুঁজে পায়। CSE user EEE record-এর edit URL-এ 403, নিজের record-এ 200; faculty scope-এ অধীন department (hierarchy) |
+| POC-3 | ✔ | `Platform\Permissions\EntityPermissions` — Office তৈরি হলে `Manage:Office#{id}`; platform-এর `RoleResource` (Shield-এরটি extend) "Entity permissions" tab-এ "Manage: Registrar Office" দেখায় ও save করে; Office editor শুধু নিজের office |
+| POC-4 | ✔ (সংশোধনসহ) | Inactive module-এর permission "Inactive modules" tab-এ ধূসর (disabled)। **POC-এ পাওয়া ঝুঁকি:** Shield role save করার সময় শুধু form-এ থাকা permission রাখে (`syncPermissions`), আর inactive module-এর resource panel-এ নেই — তাই কোনো role save করলেই inactive module-এর permission মুছে যেত। সমাধান: platform-এর `EditRole::afterSave()` সেই role-এর inactive module permission রেখে দেয় (control test দিয়ে প্রমাণিত) |
+
+**POC থেকে সংশোধন:**
+
+* **Permission key model-এর নাম থেকে**, resource class থেকে নয় (Shield config `resources.subject = model`): `Update:Faq`, `ViewAny:NewsPost`। তাই **model class-এর নামও পুরো system-এ অনন্য** হতে হবে (যেমন `NewsCategory`, `NoticeCategory` — শুধু `Category` নয়); উপরের conflict নিয়মে resource-এর সাথে model-ও যুক্ত।
+* Shield-এর নিজস্ব RoleResource-এর বদলে `Platform\Filament\Resources\Roles\RoleResource` panel-এ register হয় (Shield তখন নিজেরটি যোগ করে না)।
+* Super Admin bypass `ScopedPolicy`-তে (`hasRole(super_admin)`); Shield-এর `define_via_gate = false` অপরিবর্তিত।
 
 ---
 
