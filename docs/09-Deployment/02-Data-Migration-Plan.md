@@ -1,0 +1,277 @@
+# Data Migration Plan
+
+| বিষয় | তথ্য |
+|---|---|
+| Document | Deployment & Data Migration Plan — Part B: Data Migration (SDLC ধাপ ৯) |
+| Version | 0.1 (Draft) |
+| Date | 2026-10-08 |
+| Status | Review-এর জন্য অপেক্ষমাণ |
+| Based on | DB-01 থেকে DB-06-এর "`project_diu` থেকে Migration Mapping" অংশ, Test Plan §9 (MIG-01 থেকে MIG-11) ও §7.1.1 (waiver golden master), BRD Q-21 / Q-26 |
+| পাঠক | Migration developer, technical lead, DIU content owner (manual review অংশ) |
+
+> **মূলনীতি:** `project_diu` শুধু **উৎস ও reference** — নতুন system-এর গঠন তার অনুকরণ নয়। Data নতুন standard-এ রূপান্তরিত হয়ে আসে; যা নতুন design-এ মানায় না, তা archive বা manual review-তে যায়।
+
+## সূচি
+
+1. [পরিধি](#1-পরিধি)
+2. [নিয়ম](#2-নিয়ম)
+3. [উৎস](#3-উৎস)
+4. [Migration tool](#4-migration-tool)
+5. [ধাপের ক্রম](#5-ধাপের-ক্রম)
+6. [যা migrate হবে না](#6-যা-migrate-হবে-না)
+7. [Manual কাজ](#7-manual-কাজ)
+8. [Dry-run](#8-dry-run)
+9. [Go-live (cutover)](#9-go-live-cutover)
+10. [Rollback](#10-rollback)
+11. [Go-live-এর পর](#11-go-live-এর-পর)
+12. [খোলা প্রশ্ন](#12-খোলা-প্রশ্ন)
+
+---
+
+## 1. পরিধি
+
+| উৎস | কী আসে |
+|---|---|
+| `project_diu` database | Academic, people, content, services — DB-01 থেকে DB-06-এর mapping অনুযায়ী (≈ ১২০টি legacy table) |
+| Upload করা file | `https://webbackend.daffodilvarsity.edu.bd/{path}` (DB-তে relative path, যেমন `noticeFile/…pdf`, `images/faculty/…webp`; notice file ৩,৫৩২টি সহ) → Media Library |
+| পুরনো website-এর URL | Sitemap + Analytics-এর শীর্ষ URL → 301 redirect |
+
+**নতুন করে entry (legacy-তে নেই):** Course, Curriculum, Faculty Member, Campus, Contact inquiry, News (BRD Q-21 — একটি blog post ছাড়া)।
+
+---
+
+## 2. নিয়ম
+
+| # | নিয়ম |
+|---|---|
+| M-1 | **Legacy শুধু পড়া:** আলাদা `legacy` DB connection, `SELECT`-only user; কখনো লেখা নয় |
+| M-2 | **Script দিয়ে, হাতে নয়:** সব রূপান্তর code-এ; manual সিদ্ধান্ত CSV / sheet-এ, script সেটি পড়ে প্রয়োগ করে |
+| M-3 | **Idempotent ও পুনরায় চালানো যায়:** প্রতিটি ধাপ `migration_id_map` (DB-01 §13) দেখে — আগে আনা row আবার তৈরি করে না, update করে। পুরো migration শূন্য থেকে বারবার চালানো যায় (MIG-08) |
+| M-4 | **নতুন নিয়ম মেনে:** সব record `BaseModel` দিয়ে তৈরি — `platformColumns()`, slug (`core_slugs`), relation (`core_relations`), media usage — নিজে table-এ সরাসরি insert নয় (event ও log বন্ধ রাখা যায়, নিচে দেখুন) |
+| M-5 | **Activity log ও notification বন্ধ:** Migration চলাকালীন activity log, reminder, newsletter email, search indexing — বন্ধ; শেষে একবারে index |
+| M-6 | **কিছু হারায় না:** যে field নতুন design-এ নেই কিন্তু তথ্য আছে, তা `note` / `role_label` / `overrides` বা archive report-এ (DB-04 §11.2 ধাপ ৫) |
+| M-7 | **প্রতিটি ধাপের report:** উৎসে কত (`SELECT COUNT(*)` — information_schema নয়), কত এল, কত বাদ ও কেন, কত manual review-এ |
+| M-8 | **`created_by`:** Legacy user migrate হলে তার নতুন id; না হলে "Legacy Import" system user |
+
+---
+
+## 3. উৎস
+
+| উৎস | কীভাবে পাওয়া | দায়িত্ব |
+|---|---|---|
+| Database | Live server থেকে `mysqldump --single-transaction` → নতুন server-এ `project_diu_snapshot` হিসেবে restore | DIU IT |
+| File | **HTTPS download:** DB-তে থাকা প্রতিটি path → `https://webbackend.daffodilvarsity.edu.bd/{path}` → নতুন server-এর `shared/legacy-files/{path}` (cache — পরের run-এ আবার নামায় না) | Migration developer (DMQ-01 ✔) |
+| URL তালিকা | Legacy `sitemap.xml` + Analytics-এর শীর্ষ URL (TPQ-03) | Web team |
+| Manual sheet | Role mapping, person merge, program review ইত্যাদি (Section 7) | Section 7-এর owner |
+
+> Local development copy-তে (`/home/Project/diu`) upload করা file নেই। File সব `webbackend.daffodilvarsity.edu.bd`-এ public-ভাবে পাওয়া যায় (যাচাই: notice PDF, faculty ও admin ছবি — HTTP 200, 2026-10-08), তাই server access ছাড়াই HTTPS-এ নামানো যায়।
+
+**কখন নামানো হবে (DIU সিদ্ধান্ত, 2026-10-08):** এখন (development ও DR-1) file নামানো **হবে না** — script শুধু path ও metadata নিয়ে Media record তৈরি করে, file-এর জায়গায় placeholder। আসল download পরে, `webbackend.daffodilvarsity.edu.bd` (মূল উৎস) থেকে — DR-2-এর আগে একবার পূর্ণ, তারপর cutover-এ শুধু নতুনগুলো। Command: `legacy:migrate --step=S03 --download-files`।
+
+**File download-এর নিয়ম:**
+
+| বিষয় | নিয়ম |
+|---|---|
+| কোন file | শুধু DB-তে reference থাকা path (column) **এবং** rich text-এর ভেতরের link (`<img src>`, `<a href>` যা `webbackend.daffodilvarsity.edu.bd` বা relative `images/`, `uploads/`, `noticeFile/` নির্দেশ করে) — HTML parse করে |
+| Live site-এর উপর চাপ | সর্বোচ্চ ৪টি একসাথে download, রাতে; `User-Agent: UWMS-Migration`; ব্যর্থ হলে ৩ বার retry |
+| পুনরায় চালানো | `shared/legacy-files/`-এ আগে থেকে থাকলে নামায় না (ETag / size মিলিয়ে); cutover-এ শুধু নতুন file |
+| পাওয়া যায়নি (404) | Report-এ (MIG-05) — record আসে, file ছাড়া; content owner জানবেন |
+| আকার | DR-1-এ শুধু HEAD request (download নয়) — `Content-Length` যোগ করে মোট আকার → Part A §2.2-এর media disk |
+| Rich text link | Import-এর পর body-র পুরনো URL নতুন Media URL-এ বদলানো — নইলে legacy বন্ধ হলে ছবি ভেঙে যাবে |
+
+Staging-এ snapshot restore করার পর **ব্যক্তিগত তথ্য mask** (Test Plan §3): subscriber email, phone, admission applicant serial।
+
+---
+
+## 4. Migration tool
+
+Migration code একটি **আলাদা package** — `tools/legacy-migration/` (repository-তে, কিন্তু core বা কোনো module-এর অংশ নয়, অন্য university-র installation-এ যায় না)।
+
+```
+tools/legacy-migration/
+├── src/
+│   ├── Steps/                 # প্রতিটি ধাপ একটি class (Section 5)
+│   │   ├── S01UsersAndRoles.php
+│   │   ├── S03Faculties.php
+│   │   └── …
+│   ├── Support/
+│   │   ├── IdMap.php          # migration_id_map
+│   │   ├── MediaImporter.php  # file → Media Library (hash দিয়ে duplicate বাদ)
+│   │   ├── PersonMatcher.php  # DB-04 §11.2
+│   │   └── Normalizer.php     # phone, email, বাংলা text, HTML পরিষ্কার
+│   └── Verify/                # MIG-01 থেকে MIG-11
+├── sheets/                    # manual সিদ্ধান্তের CSV (Section 7)
+└── reports/                   # প্রতিটি run-এর report (git-এ নয়)
+```
+
+```bash
+php artisan legacy:migrate --all                  # সব ধাপ ক্রমে
+php artisan legacy:migrate --step=S07 --step=S08  # নির্দিষ্ট ধাপ
+php artisan legacy:migrate --fresh                # নতুন DB-তে শূন্য থেকে (dry-run)
+php artisan legacy:verify                         # MIG-01 থেকে MIG-11 report
+php artisan legacy:redirects --import=sheets/redirects.csv
+```
+
+---
+
+## 5. ধাপের ক্রম
+
+Dependency অনুযায়ী — আগের ধাপের id পরের ধাপে লাগে (`migration_id_map`)।
+
+| ধাপ | বিষয় | Legacy উৎস (মূল) | Mapping | Manual input |
+|---|---|---|---|---|
+| S00 | প্রস্তুতি: নতুন DB `uwms:install`, সব bundled module install ও activate (Publications, Research সহ — data আসবে, পরে default অনুযায়ী inactive), Legacy Import user | — | — | — |
+| S01 | User, role, scope | `users`, `roles`, `model_has_roles`, `department_user` | DB-01 §13 | Role mapping sheet (৭.১) |
+| S02 | Vocabulary ও term | সব `*_categories` | DB-02 §18 + module অনুযায়ী | — |
+| S03 | **Media import** | `webbackend` থেকে HTTPS download (Section 3) | DB-02 §18 | — |
+| S04 | Faculty, Department | `faculties`, `departments` | DB-03 §15 | — |
+| S05 | Campus, Session | — (নতুন), `semesters` | DB-03 §15 | Campus তালিকা |
+| S06 | **Program** ও তার অংশ | `department_program_type`, `program_types`, majors, career paths, facilitators, eligibilities, variants … | DB-03 §15, §15.1 | Program review sheet (৭.৩) |
+| S07 | **Tuition, waiver, scholarship** | `tuition_categories`, `tuitions`, `boards`, `waiver_categories`, `waivers` + pivot, `scholarships` | DB-03 §15 | — (golden master দিয়ে যাচাই, Section 8) |
+| S08 | **Admission** | `admission_notices`, `admissions`, `admission_tests`, `admission_results`, `admission_contacts`, `admission_subscribers` | DB-03 §15 | — |
+| S09 | Academic Calendar | `calenders`, `calendar_events` | DB-03 §15 | তারিখ (৭.৬) |
+| S10 | Office, Section | `offices`, `sections` | DB-04 §11.1 | — |
+| S11 | **Person ও dedupe** | `admins`, `staff`, `alumnis` + `admin_id` ছাড়া row | DB-04 §11.2 | Merge review sheet (৭.২) |
+| S12 | Assignment | `contacts`, `coordination_officers`, `office_admins`, `support_contacts`, `section_employees`, `facilitators` | DB-04 §11.1 | — |
+| S13 | Committee | `committee_categories`, `committees`, `lab_committees` | DB-04 §11.1 | — |
+| S14 | Lab | `lab_facilities`, `lab_tools`, scopes, projects, products, `lab_mid_sections` | DB-06 §13 | — |
+| S15 | Page ও Menu | `*_articles`, `articles`, `registrar_offices`, `proctor_offices`, `*_menus`, `side_menus` | DB-02 §18 | — |
+| S16 | Notice, Event | `notices`, `notice_files`, `events`, `event_images` | DB-05 §18 | — |
+| S17 | Gallery, Slider, Documents, FAQ, Testimonial, Widget | `gallery_*`, `lab_galleries`, `documentaries`, `lecture_series`, `sliders`, `cover_photos`, `flipbooks`, `prospectuses`, `charter_guidebooks`, `policies`, `faqs`, `accordions`, `testimonials`, `greetings`, `news_tickers`, `countdown_timers` | DB-05 §18 | Flipbook PDF (৭.৭) |
+| S18 | Services | Transport, `facilities`, accreditation, rankings, international, `visitors`, `csrs`, `mps`, `discount_partners` | DB-06 §13 | Ranking parse, country, mps (৭.৮) |
+| S19 | Newsletter subscriber | `newsletters`, `admission_subscribers` | DB-06 §13 (DBQ-07: সরাসরি subscribed) | — |
+| S20 | **Main site ও highlight** | সব `is_home = 1` → `site:0` relation; `featured_partners`, `csrs.is_featured` → highlight | DB-05 §1, BRD Q-26 | — |
+| S21 | SEO meta, slug, redirect | `seo`, সব slug, পুরনো URL তালিকা | DB-02 §18 | Redirect sheet (৭.৯) |
+| S22 | Content Update Reminder rule | `notification_settings` | DB-02 §18 | — |
+| S23 | Stat set (manual মান) | `department_program_type`-এর count field | DB-03 §15 | — |
+| S24 | শেষ কাজ | — | — | Search index, sitemap, cache warm, view count, Research / Publications `default_active` অনুযায়ী inactive |
+| S25 | যাচাই | — | Test Plan MIG-01 থেকে MIG-11 | — |
+
+**অগ্রাধিকার:** S06–S08 (Programs, Waiver / Scholarship, Admission) সবচেয়ে বেশি দেখা page-এর data (Test Plan §7.2) — প্রতিটি dry-run-এ এগুলোর যাচাই প্রথমে।
+
+---
+
+## 6. যা migrate হবে না
+
+| Legacy | সিদ্ধান্ত | Ref |
+|---|---|---|
+| `audit_logs` (২২,৬৪৫) | Archive file (JSON, compressed) → offsite; নতুন log শূন্য থেকে | DBQ-02 |
+| News (পুরনো API site থেকে আসত) | নতুন system-এ নতুন করে শুরু; শুধু `blog_posts`-এর ১টি ও `lab_news`-এর ১টি | BRD Q-21 |
+| `notification_remembers` (০ row) | কিছু নেই | DB-02 §18 |
+| `program_types` "Proposed Programs" (id 12) | কোনো program ব্যবহার করে না | DB-03 §15.1 |
+| Legacy `roles` / `permissions` সরাসরি | Role mapping sheet দিয়ে নতুন Shield role-এ | DB-01 §13 |
+| Session, cache, job, password reset table | System table — প্রয়োজন নেই | — |
+| পূর্ণ legacy DB | Migration-এর পর পূর্ণ dump archive (ন্যূনতম ১ বছর, শুধু পড়া) | Part A §7 |
+
+---
+
+## 7. Manual কাজ
+
+এগুলো script দিয়ে সিদ্ধান্ত নেওয়া যায় না। প্রতিটির জন্য script একটি **sheet (CSV) তৈরি করে**, owner পূরণ করেন, পরের run sheet পড়ে প্রয়োগ করে।
+
+| # | কাজ | কী লাগবে | Owner (DIU) | কখন লাগবে |
+|---|---|---|---|---|
+| 7.1 | Role mapping | পুরনো ১৫টি role → নতুন role ও scope | Web team | Dry-run ১-এর আগে |
+| 7.2 | Person merge review | `admins`-এর ২১টি একই-নামের group, নাম + পদবি দিয়ে প্রস্তাবিত merge | HR বা Registrar (DBQ-04) | Dry-run ২-এর আগে |
+| 7.3 | Program review | `program_credit_duration` parse যাচাই; একাধিক `eligibilities` row-এর merge; `institutional_programs` ও `mba_programs`-এর level বা একত্রীকরণ; `tuitions.majors` text | Admission office + department | Dry-run ২-এর আগে |
+| 7.4 | Campus তালিকা | Campus নাম ও ঠিকানা; `admins.campus` text → campus match | Web team | Dry-run ১-এর আগে |
+| 7.5 | নতুন content | Course, Curriculum, Faculty Member — legacy-তে নেই | প্রতিটি department | Go-live-এর আগে (staging-এ entry, final run-এর পর production-এ — Section 9 দেখুন) |
+| 7.6 | Calendar তারিখ | `date_explanation` থেকে parse না হওয়া তারিখ | Registrar / Academic | Go-live-এর আগে (চলতি session শুধু) |
+| 7.7 | Flipbook PDF | ১৬টি flipbook-এর মূল PDF (legacy-তে ZIP) | Web team | Dry-run ২-এর আগে |
+| 7.8 | Services data | Ranking-এর agency / rank parse যাচাই; ২টি অমিল `country_id` (DBQ-05); ৪টি `mps_categories`-এর অর্থ (DBQ-06); `events.url`-এর ধরন | International Affairs, Web team | Dry-run ২-এর আগে |
+| 7.9 | Redirect | পুরনো শীর্ষ URL → নতুন URL; script স্বয়ংক্রিয় প্রস্তাব দেয় (slug মিলিয়ে), বাকিগুলো হাতে | Web team (TPQ-03) | Dry-run ৩-এর আগে |
+
+---
+
+## 8. Dry-run
+
+ন্যূনতম তিনবার, প্রতিবার **নতুন snapshot** দিয়ে শূন্য থেকে:
+
+| Dry-run | কোথায় | লক্ষ্য | Pass শর্ত |
+|---|---|---|---|
+| **DR-1** | Developer machine / staging | সব ধাপ শেষ পর্যন্ত চলে; সমস্যা খুঁজে বের করা — **file ছাড়া** (placeholder) | Crash নেই; report-এ বাদ পড়া row-এর কারণ আছে |
+| **DR-2** | Staging | সম্পূর্ণ, manual sheet সহ; যাচাই ও content owner review | MIG-01 থেকে MIG-11 pass (MIG-07 ছাড়া); **waiver golden master ১০০%** (Test Plan §7.1.1); content owner sign-off শুরু (MIG-10) |
+| **DR-3** | Staging (production-এর মতো server) | **Go-live-এর পূর্ণ মহড়া** — Section 9-এর timeline হুবহু, সময় মেপে | সব MIG pass; মোট সময় cutover window-এর মধ্যে; UAT এই data-তে |
+
+প্রতিটি dry-run-এর report (`reports/`): ধাপ অনুযায়ী count, সময়, warning, manual review বাকি। DR-3-এর সময় দেখে cutover window চূড়ান্ত হয়।
+
+**Waiver ও tuition:** S07-এর পর legacy app একই snapshot-এ চালিয়ে golden master (Test Plan §7.1.1) — DR-2 থেকে প্রতিটি run-এ।
+
+---
+
+## 9. Go-live (cutover)
+
+### 9.1 কখন
+
+* **Admission মৌসুমের বাইরে** (Test Plan §14 ঝুঁকি) — সঠিক মাস DIU Admission office ঠিক করবে (DMQ-05)।
+* সপ্তাহের কম traffic-এর দিন, রাতে।
+
+### 9.2 Content freeze
+
+Legacy admin panel-এ পরিবর্তন বন্ধ থাকে **final snapshot থেকে DNS switch পর্যন্ত** (DR-3-এর সময় অনুযায়ী, আনুমানিক কয়েক ঘণ্টা)। জরুরি notice এই সময়ে এলে: নতুন system-এ (switch-এর পর) সরাসরি entry।
+
+Faculty Member, Course, Curriculum (৭.৫) staging-এ entry করা হলে final run-এর পর একটি export / import command দিয়ে production-এ আনা হয় — legacy থেকে নয়, তাই freeze-এর প্রভাব নেই।
+
+### 9.3 Timeline
+
+| সময় | কাজ | কে |
+|---|---|---|
+| T−14 দিন | DR-3 সম্পন্ন ও pass; UAT sign-off; go / no-go meeting-এর তারিখ | Technical lead, Project Owner |
+| T−7 | Freeze-এর ঘোষণা সব content editor-কে; production server প্রস্তুত (Part A), smoke test খালি installation-এ | Web team, DevOps |
+| T−1 | সব file আগে থেকে download (production server-এর cache-এ; শেষে শুধু নতুনগুলো বাকি থাকে); DNS TTL কমিয়ে ৫ মিনিট | Migration developer, DevOps |
+| T−0, ২২:০০ | **Freeze শুরু** — legacy admin read-only (বা login বন্ধ) | DIU IT |
+| ২২:১৫ | Final DB dump; নতুন file-এর download (delta) migration-এর S03-এ | DIU IT, Migration developer |
+| ২২:৪৫ | `legacy:migrate --fresh --all` production-এ | Migration developer |
+| (DR-3 সময় অনুযায়ী) | `legacy:verify` — MIG-01..11; waiver golden master | Migration developer, QA |
+| তারপর | **Go / no-go** (Section 10-এর শর্ত) | Technical lead + Project Owner |
+| Go হলে | DNS / reverse proxy নতুন server-এ; Test Plan §10.4 production smoke test (অগ্রাধিকার page প্রথমে) | DevOps, QA |
+| T+0, সকাল | Content editor-দের নতুন admin panel-এ login (পুরনো password কাজ করে — DB-01 §13); freeze শেষ | Web team |
+| T+1 থেকে T+7 | **Hypercare:** কঠোর alert (Part A §8), দৈনিক review, 404 report থেকে redirect | সবাই |
+| T+30 | Legacy site বন্ধ (APIQ-04 সমাধান সাপেক্ষে — নিচে দেখুন); legacy DB ও file archive | DIU IT |
+
+### 9.4 পুরনো backend API (`webbackend.daffodilvarsity.edu.bd`)
+
+বর্তমান live website এই API থেকে data নেয়; অন্য কোনো system-ও নিতে পারে (APIQ-04 — এখনো অজানা)। তাই:
+
+* Go-live-এ শুধু **website domain** নতুন system-এ যায়; `webbackend` domain **চালু থাকে, read-only** (legacy admin বন্ধ)।
+* Rich text-এর পুরনো file link migration-এ নতুন Media URL-এ বদলানো হয় (Section 3), তাই webbackend বন্ধ হলেও নতুন site-এর ছবি ও file ভাঙবে না। তবু বাইরের site বা পুরনো email-এ থাকা file link-এর জন্য webbackend-এর `images/`, `uploads/`, `noticeFile/` path নতুন site-এ redirect করার নিয়ম (Nginx map, legacy path → নতুন media URL) রাখা হবে।
+* T+30-এর মধ্যে webbackend-এর access log দেখে কোন consumer আছে তা চিহ্নিত — তারপর বন্ধ, অথবা Release 2 API (API Spec) পর্যন্ত চালু।
+
+---
+
+## 10. Rollback
+
+**No-go শর্ত (switch-এর আগে):** যেকোনো MIG fail (নথিভুক্ত ব্যতিক্রম ছাড়া), waiver golden master < ১০০%, অগ্রাধিকার page-এর smoke fail, migration DR-3-এর সময়ের দ্বিগুণের বেশি নেয়।
+→ Freeze তুলে নিন, legacy চালু থাকে, কারণ ঠিক করে নতুন তারিখ। **কোনো data ক্ষতি নেই** (legacy-তে কিছু লেখা হয়নি — M-1)।
+
+**Switch-এর পর rollback (T+0 থেকে T+2 দিন):** S1 defect (Test Plan §4.1) যা কয়েক ঘণ্টায় ঠিক করা যায় না → DNS আবার legacy-তে, legacy admin খুলে দেওয়া।
+* এই সময়ে নতুন system-এ যা entry হয়েছে (notice ইত্যাদি) তার তালিকা activity log থেকে export → legacy-তে হাতে entry (সংখ্যা কম থাকবে)।
+* T+2 দিনের পর rollback নয় — fix forward।
+
+---
+
+## 11. Go-live-এর পর
+
+| কাজ | কখন |
+|---|---|
+| `migration_id_map` archive (CSV) ও table মুছে ফেলা | T+30 |
+| `LEGACY_DB_*` ও legacy DB user মুছে ফেলা; `tools/legacy-migration` production server থেকে সরানো | T+30 |
+| Legacy DB ও file-এর পূর্ণ archive (offsite, ১ বছর) | T+30 |
+| Faculty Member data এলে person matching আবার (DB-04 §11.2 ধাপ ৬) | Faculty Member module-এর data import-এর সময় |
+| Content Update Reminder চালু (migration-এর সময় বন্ধ ছিল) | T+7 (hypercare-এর পর, যাতে প্রথম দিনেই সবাইকে reminder না যায়) |
+| Migration-এর শিক্ষা — অন্য university-র জন্য সাধারণ "Import guide" (CSV import) User Manual-এ | ধাপ ১০ |
+
+---
+
+## 12. খোলা প্রশ্ন
+
+| # | প্রশ্ন | প্রস্তাব |
+|---|---|---|
+| DMQ-01 *(✔ সমাধান)* | Upload করা file কোথায়? | `https://webbackend.daffodilvarsity.edu.bd/{path}` (DIU confirmed; যাচাই করা) — HTTPS download, server access লাগে না; মোট আকার DR-1-এ মাপা হবে |
+| DMQ-05 | Go-live কোন মাসে (admission মৌসুমের বাইরে)? | Admission office-এর সাথে ঠিক করা |
+| DMQ-06 | Freeze-এর সময় (কয়েক ঘণ্টা, রাতে) legacy admin বন্ধ রাখা যাবে? | হ্যাঁ ধরে নেওয়া হয়েছে; DR-3-এর পর সঠিক সময় জানানো হবে |
+| DBQ-04 | Person merge review কে করবেন? | HR বা Registrar (৭.২) |
+| DBQ-05 | ২টি অমিল country id | International Affairs (৭.৮) |
+| DBQ-06 | `mps_categories`-এর অর্থ | Web team (৭.৮) |
+| TPQ-03 | Legacy site-এর Analytics (শীর্ষ URL) | Web team (৭.৯) |
+| APIQ-04 | `webbackend` API-র অন্য consumer আছে কি? | Access log দেখে (Section 9.4) |

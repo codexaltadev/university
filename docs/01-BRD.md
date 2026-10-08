@@ -551,8 +551,8 @@ BRD sign-off হওয়ার পর নিচের ক্রমে document 
 | 5 | UI/UX Design Document ✔ Approved (Part A, Part B, [Prototype v3](https://claude.ai/artifact/LYk8PswwPuktGYkXwFHLh5)) | Admin Panel flow, frontend theme ও layout wireframe |
 | 6 | API Specification ✔ Approved — Release 2-এর contract ([06-API](06-API/01-API-Specification.md)) | Public ও admin API endpoints |
 | 7 | Module ও Theme Development Guide ✔ Approved ([Part A: Module](07-DevGuide/01-Module-Development-Guide.md), [Part B: Theme](07-DevGuide/02-Theme-Development-Guide.md)) | নতুন module ও theme বানানোর developer documentation |
-| 8 | Test Plan ও Test Cases ← *বর্তমান* ([08-Test](08-Test/01-Test-Plan.md)) | Module lifecycle, permission ও functional test |
-| 9 | Deployment ও Data Migration Plan | Server requirement, installation, scheduler, backup, `project_diu` থেকে migration |
+| 8 | Test Plan ও Test Cases ✔ Approved ([08-Test](08-Test/01-Test-Plan.md)) | Module lifecycle, permission ও functional test |
+| 9 | Deployment ও Data Migration Plan ← *বর্তমান* ([Deployment](09-Deployment/01-Deployment-Plan.md), [Data Migration](09-Deployment/02-Data-Migration-Plan.md)) | Server requirement, installation, scheduler, backup, `project_diu` থেকে migration |
 | 10 | User Manual (Admin) | Non-technical admin-দের জন্য ব্যবহার নির্দেশিকা |
 
 ---

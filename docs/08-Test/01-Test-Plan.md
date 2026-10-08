@@ -3,9 +3,9 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Test Plan (SDLC ধাপ ৮) |
-| Version | 0.1 (Draft) |
+| Version | 1.0 |
 | Date | 2026-10-08 |
-| Status | Review-এর জন্য অপেক্ষমাণ |
+| Status | ✔ Approved |
 | Based on | BRD v1.8 (§11 Success Criteria), SRS (FR-GEN, NFR, প্রতিটি module-এর AC), SAD Part A §7.4 (POC), SAD Part B §14.4 (CI), DB-01 থেকে DB-06, UI/UX Part B §8, Development Guide Part A §14 / Part B §13 |
 | পাঠক | Developer, QA, Project Owner (UAT sign-off) |
 

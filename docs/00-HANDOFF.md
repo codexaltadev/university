@@ -13,8 +13,9 @@ Last updated: 2026-10-08. Read this first when continuing on another machine.
 | 5 | [UI/UX](05-UIUX/01-UIUX-PartA-Admin.md) (Part A, B) + prototype v3 | ✔ Approved |
 | 6 | [API Specification](06-API/01-API-Specification.md) | ✔ Approved — contract for Release 2 (no API in Release 1) |
 | 7 | Module & Theme Development Guide (Part A [Module](07-DevGuide/01-Module-Development-Guide.md), Part B [Theme](07-DevGuide/02-Theme-Development-Guide.md)) | ✔ Approved |
-| 8 | **[Test Plan](08-Test/01-Test-Plan.md)** | Drafted — awaiting confirmation |
-| 9–10 | Deployment & Migration Plan, User Manual | Pending |
+| 8 | [Test Plan](08-Test/01-Test-Plan.md) | ✔ Approved |
+| 9 | **Deployment & Data Migration Plan** ([Deployment](09-Deployment/01-Deployment-Plan.md), [Data Migration](09-Deployment/02-Data-Migration-Plan.md)) | Drafted — awaiting confirmation |
+| 10 | User Manual | Pending |
 
 Working style agreed with the project owner: one SDLC document at a time, each confirmed before the next; DB design module by module; documents written in Bangla with English technical terms; the owner chats in Banglish.
 
@@ -49,10 +50,13 @@ DIU public API used for real prototype data: `https://webbackend.daffodilvarsity
 * DBQ-04: who reviews the person-merge sheet (duplicate staff records)?
 * DBQ-05: two `country_id`s used by `international_linkages` are missing from `countries` (81 vs 79).
 * DBQ-06: meaning of the 4 `mps_categories`.
+* DMQ-01 resolved: legacy uploaded files are public at `https://webbackend.daffodilvarsity.edu.bd/{path}` (DB stores relative paths like `noticeFile/…`, `images/faculty/…`) — migration downloads over HTTPS, no server access needed; **not now** — files are downloaded later (before DR-2), development uses placeholders. DMQ-02 resolved: hosting is **AWS** (proposal: ap-south-1, EC2 + S3/CloudFront + SES, backups in another region). Open: DMQ-03 email (SES proposed), DMQ-07 MySQL on EC2 vs RDS, DMQ-04 SSL, DMQ-05 go-live month (outside admission season), DMQ-06 legacy admin freeze window.
 * Test Plan TPQ-03: legacy site Analytics export (top URLs). (TPQ-01 resolved: legacy waiver calculator is the golden-master oracle; TPQ-02 resolved: UAT with FSIT, CSE, BBA, Registrar.)
 * Most-visited pages (DIU): Admission, Waiver Calculator, Programs, Scholarship — highest test / performance priority (Test Plan §7.2).
 * SAD POC-1 to 4 (Test Plan §5, Phase 0): verify Filament Shield integration (per-module permission generation, scoped policies, entity-permission tab, inactive-module permissions).
 
 ## Next step
 
-Get the owner's confirmation on the **[Test Plan](08-Test/01-Test-Plan.md)** (step 8; open question TPQ-03). Then step 9 **Deployment & Data Migration Plan**. Filament resources follow the v5 default layout: `Resources/{PluralModel}/{Model}Resource.php` with `Pages/`, `Schemas/{Model}Form.php`, `Tables/{PluralModel}Table.php`.
+Get the owner's confirmation on step 9 (**[Deployment](09-Deployment/01-Deployment-Plan.md)** + **[Data Migration](09-Deployment/02-Data-Migration-Plan.md)**; open questions DMQ-01..06). Then step 10 **User Manual (Admin)**.
+
+Repository: private GitHub `codexaltadev/university` (branch `main`); commit as `codexalta <codexalta@gmail.com>`, push via SSH alias `git@github-codexalta:codexaltadev/university.git`; no AI attribution lines in commits. Filament resources follow the v5 default layout: `Resources/{PluralModel}/{Model}Resource.php` with `Pages/`, `Schemas/{Model}Form.php`, `Tables/{PluralModel}Table.php`.
