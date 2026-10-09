@@ -10,7 +10,7 @@ final class ModuleCommandOutput
 {
     public static function failed(Command $command, ModuleOperationFailed $e): int
     {
-        $command->components->error(ucfirst($e->operation).' refused — nothing was changed:');
+        $command->error(ucfirst($e->operation).' refused — nothing was changed:');
 
         foreach ($e->errors as $error) {
             $command->line("  • {$error}");

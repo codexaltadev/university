@@ -4,6 +4,7 @@ namespace Platform\Context;
 
 use Illuminate\Database\Eloquent\Model;
 use Platform\Concerns\HasSlug;
+use Platform\Models\BaseModel;
 use Platform\Registry\Registry;
 
 /**
@@ -58,7 +59,8 @@ class MicrositeResolver
 
         $found = $model::findBySlug($slug, $locale);
 
-        if ($found === null || ! $found[0]->is_active) {
+        // Inactive, scheduled (published_at in the future) or hidden-module entities have no microsite
+        if ($found === null || ! ($found[0] instanceof BaseModel ? $found[0]->isFrontendVisible() : $found[0]->is_active)) {
             return null;
         }
 

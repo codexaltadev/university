@@ -1,0 +1,58 @@
+{
+    "name": "Program",
+    "alias": "program",
+    "description": "Academic programs under a Department with their microsites, levels, tags, counters and listing — M-03",
+    "keywords": [
+        "academic",
+        "program"
+    ],
+    "priority": 52,
+    "providers": [
+        "Modules\\Program\\Providers\\ProgramServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "program",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "program_",
+        "dependencies": {
+            "department": "^1.0",
+            "faculty": "^1.0"
+        },
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "program.program": "Modules\\Program\\Models\\Program"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "relation_target": true,
+            "scopeable": true,
+            "microsite": true,
+            "assignable": true,
+            "vocabularies": [
+                "program.level",
+                "program.tag"
+            ],
+            "metrics": [
+                "program.count"
+            ],
+            "layouts": [
+                "program.listing"
+            ],
+            "homepage_sections": [
+                "program.featured",
+                "program.by-level"
+            ],
+            "searchable": true,
+            "sitemap": true
+        }
+    }
+}
