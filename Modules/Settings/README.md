@@ -14,8 +14,8 @@ A module adds its own tab with `$r->settings(FaqSettings::class)` (a `Platform\S
 the tab disappears while the module is inactive. Saving clears the group's cache (FR-SET-12) and fires
 `Platform\Events\SettingsUpdated`; every change is in the activity log (secrets masked).
 
-Not yet: default images, admin logos / favicon / login background (with the Media Library, Phase 2.5) and
-"copy website branding" (with Theme Management).
+Default images and admin logos / favicon are Media Library ids (`settings()->media('admin_branding.logo_light')`),
+recorded as usage. Not yet: login background and "copy website branding" (with Theme Management).
 
 ## Views
 

@@ -6,12 +6,10 @@ use BackedEnum;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\Icons\Heroicon;
+use Platform\Filament\Components\MediaPicker;
 use Platform\Settings\ModuleSettings;
 
-/**
- * FR-SET-06: upload rules. Default images (FR-SET-04) are added with the Media
- * Library (Phase 2.5), because they are picked from it.
- */
+/** FR-SET-06: upload rules; FR-SET-04: default images, picked from the Media Library. */
 class MediaSettings extends ModuleSettings
 {
     public function group(): string
@@ -43,9 +41,19 @@ class MediaSettings extends ModuleSettings
         ];
     }
 
+    public function media(): array
+    {
+        return ['placeholder_image', 'og_image', 'avatar'];
+    }
+
     public function schema(): array
     {
         return [
+            MediaPicker::make('placeholder_image')->label(__('settings::settings.fields.placeholder_image'))
+                ->helperText(__('settings::settings.help.placeholder_image'))->image()->storeIds(),
+            MediaPicker::make('og_image')->label(__('settings::settings.fields.og_image'))
+                ->helperText(__('settings::settings.help.og_image'))->image()->storeIds(),
+            MediaPicker::make('avatar')->label(__('settings::settings.fields.avatar'))->image()->storeIds(),
             TagsInput::make('allowed_types')->label(__('settings::settings.fields.allowed_types'))
                 ->helperText(__('settings::settings.help.allowed_types'))->required()->columnSpanFull(),
             TextInput::make('max_upload_mb')->label(__('settings::settings.fields.max_upload_mb'))

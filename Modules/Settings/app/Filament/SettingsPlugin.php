@@ -31,6 +31,10 @@ class SettingsPlugin implements Plugin
             ->brandName(fn (): string => settings('admin_branding.panel_name') ?: AdminBrandingSettings::NEUTRAL_NAME)
             ->colors(fn (): array => ['primary' => Color::hex(settings('admin_branding.primary_color') ?: AdminBrandingSettings::NEUTRAL_COLOR)])
             ->font(fn (): string => settings('admin_branding.font') ?: 'Inter')
+            ->brandLogo(fn (): ?string => settings()->media('admin_branding.logo_light')?->url())
+            ->darkModeBrandLogo(fn (): ?string => (settings()->media('admin_branding.logo_dark') ?? settings()->media('admin_branding.logo_light'))?->url())
+            ->brandLogoHeight(fn (): string => settings('admin_branding.logo_height') ?: '2rem')
+            ->favicon(fn (): ?string => settings()->media('admin_branding.favicon')?->url())
             ->renderHook(PanelsRenderHook::AUTH_LOGIN_FORM_BEFORE, function (): ?HtmlString {
                 $message = settings('admin_branding.login_message');
 

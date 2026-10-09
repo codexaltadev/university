@@ -34,6 +34,12 @@ it('indexes every *_id and *_type column (IX-2)', function () {
             ? substr($column->c, 0, -3).'_type'
             : substr($column->c, 0, -5).'_id';
 
+        // A *_type without its *_id is a plain value (mime_type), not a reference
+        $hasPartner = collect($columns)->contains(fn ($other) => $other->t === $column->t && $other->c === $partner);
+        if (str_ends_with($column->c, '_type') && ! $hasPartner) {
+            continue;
+        }
+
         $covered = $indexes->contains(function (array $cols, string $key) use ($column, $partner): bool {
             if (! str_starts_with($key, $column->t.'|')) {
                 return false;

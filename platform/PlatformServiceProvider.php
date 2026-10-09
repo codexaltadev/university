@@ -17,6 +17,8 @@ use Platform\Events\ModuleUninstalling;
 use Platform\Hierarchy\EntityHierarchy;
 use Platform\Localization\DatabaseTranslationLoader;
 use Platform\Localization\Languages;
+use Platform\Media\MediaLibrary;
+use Platform\Media\MediaUsages;
 use Platform\Modules\ModuleAutoloader;
 use Platform\Modules\ModuleManager;
 use Platform\Modules\ModulePermissions;
@@ -44,7 +46,7 @@ class PlatformServiceProvider extends ServiceProvider
             Registry::class, ExtensionLoader::class, ScopeResolver::class, EntityPermissions::class,
             EntityHierarchy::class, RelationEngine::class, AssignmentEngine::class, RoleCatalog::class,
             FallbackResolver::class, MicrositeResolver::class, Languages::class, Settings::class,
-            Vocabularies::class,
+            Vocabularies::class, MediaLibrary::class, MediaUsages::class,
         ] as $service) {
             $this->app->singleton($service);
         }
@@ -133,6 +135,7 @@ class PlatformServiceProvider extends ServiceProvider
             $this->app->make(AssignmentEngine::class)->forgetTypes($types);
             $this->app->make(Settings::class)->forgetGroup($event->manifest->slug());
             $this->app->make(Vocabularies::class)->forgetModule($event->manifest->slug(), $types);
+            $this->app->make(MediaUsages::class)->forgetTypes($types);
         });
     }
 

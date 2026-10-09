@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Crypt;
 use Platform\Events\SettingsUpdated;
 use Platform\Localization\Languages;
+use Platform\Media\MediaItem;
+use Platform\Media\MediaUsages;
 use Platform\Registry\Registry;
 
 /**
@@ -56,9 +58,10 @@ class Settings
      * @param  list<string>  $translatable
      * @param  list<string>  $encrypted
      * @param  list<string>  $private
+     * @param  list<string>  $media  keys holding Media Library ids
      * @return list<string> keys that changed
      */
-    public function save(string $group, array $values, array $translatable = [], array $encrypted = [], array $private = []): array
+    public function save(string $group, array $values, array $translatable = [], array $encrypted = [], array $private = [], array $media = []): array
     {
         $current = $this->rows($group);
         $defaults = $this->definition($group)?->defaults() ?? [];
@@ -77,13 +80,17 @@ class Settings
                 continue;   // unchanged, or still the default: nothing written, nothing logged
             }
 
-            Setting::query()->updateOrCreate(['group' => $group, 'key' => $key], [
+            $row = Setting::query()->updateOrCreate(['group' => $group, 'key' => $key], [
                 'value' => $isEncrypted && $value !== null ? Crypt::encryptString(json_encode($value)) : $value,
                 'is_translatable' => in_array($key, $translatable, true),
                 'is_encrypted' => $isEncrypted,
                 'is_public' => ! in_array($key, $private, true),
                 'updated_by' => auth()->id(),
             ]);
+
+            if (in_array($key, $media, true)) {
+                app(MediaUsages::class)->sync($row, 'value', (array) $value);
+            }
 
             $changed[] = $key;
         }
@@ -99,7 +106,7 @@ class Settings
     /** Save a tab by its definition (field types from the ModuleSettings class). */
     public function saveFor(ModuleSettings $definition, array $values): array
     {
-        return $this->save($definition->group(), $values, $definition->translatable(), $definition->encrypted(), $definition->private());
+        return $this->save($definition->group(), $values, $definition->translatable(), $definition->encrypted(), $definition->private(), $definition->media());
     }
 
     /** Remove a whole group: module uninstall with data, "Reset to neutral". */
@@ -127,6 +134,14 @@ class Settings
         }
 
         return collect($value)->first(fn ($v) => $v !== null && $v !== '');
+    }
+
+    /** A media setting's file (a Media Library id), e.g. settings()->media('admin_branding.logo_light'). */
+    public function media(string $path): ?MediaItem
+    {
+        $id = $this->get($path);
+
+        return $id ? MediaItem::query()->where('is_active', true)->find($id) : null;
     }
 
     /** FR-SET-05: an active module whose pages are hidden on the website (admin unchanged). */

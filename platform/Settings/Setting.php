@@ -3,6 +3,7 @@
 namespace Platform\Settings;
 
 use Illuminate\Database\Eloquent\Model;
+use Platform\Media\MediaUsages;
 use Spatie\Activitylog\Models\Concerns\LogsActivity;
 use Spatie\Activitylog\Support\LogOptions;
 
@@ -24,6 +25,12 @@ class Setting extends Model
     protected function casts(): array
     {
         return ['value' => 'json', 'is_translatable' => 'boolean', 'is_encrypted' => 'boolean', 'is_public' => 'boolean'];
+    }
+
+    protected static function booted(): void
+    {
+        // A removed setting no longer uses its file
+        static::deleted(fn (Setting $setting) => app(MediaUsages::class)->clear($setting));
     }
 
     public function getActivitylogOptions(): LogOptions

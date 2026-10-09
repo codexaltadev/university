@@ -5,6 +5,7 @@ namespace Platform\Console\Commands;
 use Illuminate\Console\Command;
 use Nwidart\Modules\Facades\Module;
 use Platform\Assignments\RoleCatalog;
+use Platform\Modules\Manifest;
 use Platform\Modules\ModuleManager;
 use Platform\Modules\ModulePermissions;
 use Platform\Registry\Registry;
@@ -21,6 +22,7 @@ class ModulesSyncCommand extends Command
 
         foreach (Module::allEnabled() as $module) {
             $permissions->sync($module->getName());
+            $permissions->syncCustom(Manifest::fromDirectory($module->getPath()));   // e.g. Update:Settings
         }
 
         foreach (collect($registry->all('attachable'))->groupBy('module') as $slug => $entries) {

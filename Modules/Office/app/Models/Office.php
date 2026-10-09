@@ -2,6 +2,7 @@
 
 namespace Modules\Office\Models;
 
+use Platform\Concerns\HasMediaUsage;
 use Platform\Concerns\HasSlug;
 use Platform\Concerns\IsAssignable;
 use Platform\Concerns\IsRelationTarget;
@@ -14,6 +15,7 @@ use Platform\Models\BaseModel;
  */
 class Office extends BaseModel implements HasEntityPermissions
 {
+    use HasMediaUsage;      // logo (Media Library)
     use HasSlug;            // microsite /office/{slug}
     use IsAssignable;
     use IsRelationTarget;

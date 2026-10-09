@@ -8,6 +8,8 @@ use Platform\Assignments\Assignment;
 use Platform\Assignments\ManualPerson;
 use Platform\Localization\Language;
 use Platform\Localization\Translation;
+use Platform\Media\MediaFolder;
+use Platform\Media\MediaItem;
 use Platform\Modules\ModuleRegistry;
 use Platform\Settings\Setting;
 use Platform\Taxonomy\Term;
@@ -30,6 +32,8 @@ class MorphMap
         'core.translation' => Translation::class,
         'core.vocabulary' => Vocabulary::class,
         'core.term' => Term::class,
+        'core.media-item' => MediaItem::class,   // also spatie media.model_type (DB-02 §3.3)
+        'core.media-folder' => MediaFolder::class,
     ];
 
     public static function register(ModuleRegistry $modules): void

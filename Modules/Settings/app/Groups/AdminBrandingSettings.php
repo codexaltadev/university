@@ -9,14 +9,15 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\Colors\Color;
 use Filament\Support\Icons\Heroicon;
+use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Settings\ModuleSettings;
 
 /**
  * FR-SET-13, UI/UX Part A §11: panel name, colour, font and login message over a
- * neutral default; layout and navigation never change. Logos, favicon and login
- * background come with the Media Library (Phase 2.5); "copy from website
- * branding" with Theme Management.
+ * neutral default; layout and navigation never change. Logos and favicon come
+ * from the Media Library. Login background and "copy from website branding"
+ * come with Theme Management.
  */
 class AdminBrandingSettings extends ModuleSettings
 {
@@ -51,6 +52,11 @@ class AdminBrandingSettings extends ModuleSettings
         return ['panel_name', 'login_message'];
     }
 
+    public function media(): array
+    {
+        return ['logo_light', 'logo_dark', 'favicon'];
+    }
+
     public function defaults(): array
     {
         return ['primary_color' => self::NEUTRAL_COLOR, 'font' => 'Inter'];
@@ -68,6 +74,11 @@ class AdminBrandingSettings extends ModuleSettings
                 ->hex()->regex('/^#[0-9a-fA-F]{6}$/')->required()->live()
                 ->hint(fn (?string $state): ?string => $state && ! static::readableOnWhite($state) ? __('settings::settings.help.low_contrast') : null)
                 ->hintColor('warning'),
+            MediaPicker::make('logo_light')->label(__('settings::settings.fields.logo_light'))->image()->storeIds(),
+            MediaPicker::make('logo_dark')->label(__('settings::settings.fields.logo_dark'))->image()->storeIds(),
+            MediaPicker::make('favicon')->label(__('settings::settings.fields.favicon'))->image()->storeIds(),
+            TextInput::make('logo_height')->label(__('settings::settings.fields.logo_height'))->placeholder('2rem')
+                ->regex('/^\d+(\.\d+)?(rem|px)$/')->maxLength(10),
             Select::make('font')->label(__('settings::settings.fields.font'))
                 ->options(array_combine(self::FONTS, self::FONTS))->required()->selectablePlaceholder(false),
         ];

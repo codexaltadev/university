@@ -1,0 +1,34 @@
+{
+    "name": "Media",
+    "alias": "media",
+    "description": "Media Library: uploads, folders, media picker, usage tracking — core module C-07",
+    "keywords": [
+        "system",
+        "media"
+    ],
+    "priority": 10,
+    "providers": [
+        "Modules\\Media\\Providers\\MediaServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "media",
+        "version": "1.0.0",
+        "type": "core",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "media_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {},
+        "custom_permissions": [
+            "ManageAll:MediaItem"
+        ],
+        "provides": {}
+    }
+}

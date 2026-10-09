@@ -66,6 +66,17 @@ abstract class ModuleSettings
         return $this->encrypted();
     }
 
+    /**
+     * Keys holding Media Library ids (MediaPicker::make(...)->storeIds()); they are
+     * recorded as usage, so the file warns before it is deleted.
+     *
+     * @return list<string>
+     */
+    public function media(): array
+    {
+        return [];
+    }
+
     /** Extra rule on top of the Settings page permission (e.g. Super Admin only). */
     public function canAccess(User $user): bool
     {
