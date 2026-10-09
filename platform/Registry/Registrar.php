@@ -1,0 +1,171 @@
+<?php
+
+namespace Platform\Registry;
+
+/**
+ * Passed to a module's Extension; records what the module provides
+ * (SAD Part A §7.2). One method per extension point. Each kind maps to a
+ * uwms.provides key in module.json, and the two must match (§10.2).
+ */
+class Registrar
+{
+    /** registrar kind => uwms.provides key */
+    public const PROVIDES = [
+        'relationTarget' => 'relation_target',
+        'attachable' => 'attachable',
+        'personSource' => 'person_source',
+        'assignable' => 'assignable',
+        'scopeable' => 'scopeable',
+        'micrositeEntity' => 'microsite',
+        'dynamicPermissions' => 'dynamic_permissions',
+        'layouts' => 'layouts',
+        'homepageSection' => 'homepage_sections',
+        'pageBlock' => 'page_blocks',
+        'entityTab' => 'entity_tabs',
+        'menuItemType' => 'menu_item_types',
+        'vocabulary' => 'vocabularies',
+        'metric' => 'metrics',
+        'searchable' => 'searchable',
+        'sitemap' => 'sitemap',
+        'apiResource' => 'api',
+        'settings' => 'settings',
+        'notification' => 'notifications',
+        'freshnessSource' => 'freshness_source',
+        'dashboardWidget' => 'dashboard_widgets',
+    ];
+
+    public function __construct(protected Registry $registry, public readonly string $module) {}
+
+    /** Admin resources, pages and widgets (§7.3). Not a provides key: every module may have one. */
+    public function filamentPlugin(string $pluginClass): static
+    {
+        return $this->add('filamentPlugin', ['class' => $pluginClass]);
+    }
+
+    /**
+     * Content can be attached to this model; it is a node of the entity hierarchy.
+     * $parent is the parent model class (a hard dependency), $parentKey its column,
+     * e.g. relationTarget(Department::class, parent: Faculty::class, parentKey: 'faculty_id').
+     */
+    public function relationTarget(string $model, ?string $parent = null, ?string $parentKey = null): static
+    {
+        return $this->add('relationTarget', compact('model', 'parent', 'parentKey'));
+    }
+
+    public function attachable(string $model): static
+    {
+        return $this->add('attachable', compact('model'));
+    }
+
+    public function personSource(string $model): static
+    {
+        return $this->add('personSource', compact('model'));
+    }
+
+    /**
+     * People can be assigned to this model in these roles. Keys come from the
+     * Standard Role Catalog (config/platform.php "role_catalog", DB-01 §8.4); list
+     * order is the role order on the website.
+     *
+     * @param  list<string>  $roles
+     */
+    public function assignable(string $model, array $roles = []): static
+    {
+        return $this->add('assignable', compact('model', 'roles'));
+    }
+
+    public function scopeable(string $model): static
+    {
+        return $this->add('scopeable', compact('model'));
+    }
+
+    public function micrositeEntity(string $model, string $routePrefix, ?string $parent = null): static
+    {
+        return $this->add('micrositeEntity', compact('model', 'routePrefix', 'parent'));
+    }
+
+    /** Model implements Platform\Contracts\HasEntityPermissions (subject, actions, label). */
+    public function dynamicPermissions(string $model): static
+    {
+        return $this->add('dynamicPermissions', compact('model'));
+    }
+
+    /** @param list<string> $layouts */
+    public function layouts(string $page, array $layouts): static
+    {
+        return $this->add('layouts', compact('page', 'layouts'));
+    }
+
+    public function homepageSection(string $sectionClass): static
+    {
+        return $this->add('homepageSection', ['class' => $sectionClass]);
+    }
+
+    public function pageBlock(string $blockClass): static
+    {
+        return $this->add('pageBlock', ['class' => $blockClass]);
+    }
+
+    public function entityTab(string $targetModel, string $tabClass): static
+    {
+        return $this->add('entityTab', ['target' => $targetModel, 'class' => $tabClass]);
+    }
+
+    public function menuItemType(string $model): static
+    {
+        return $this->add('menuItemType', compact('model'));
+    }
+
+    public function vocabulary(string $key, string $label, bool $hierarchical = false, bool $multiple = true): static
+    {
+        return $this->add('vocabulary', compact('key', 'label', 'hierarchical', 'multiple'));
+    }
+
+    public function metric(string $key, string $providerClass): static
+    {
+        return $this->add('metric', ['key' => $key, 'class' => $providerClass]);
+    }
+
+    public function searchable(string $model): static
+    {
+        return $this->add('searchable', compact('model'));
+    }
+
+    public function sitemap(string $model, ?string $route = null): static
+    {
+        return $this->add('sitemap', compact('model', 'route'));
+    }
+
+    public function apiResource(string $resourceClass): static
+    {
+        return $this->add('apiResource', ['class' => $resourceClass]);
+    }
+
+    public function settings(string $settingsClass): static
+    {
+        return $this->add('settings', ['class' => $settingsClass]);
+    }
+
+    public function notification(string $notificationClass): static
+    {
+        return $this->add('notification', ['class' => $notificationClass]);
+    }
+
+    public function freshnessSource(string $sourceClass): static
+    {
+        return $this->add('freshnessSource', ['class' => $sourceClass]);
+    }
+
+    public function dashboardWidget(string $widgetClass): static
+    {
+        return $this->add('dashboardWidget', ['class' => $widgetClass]);
+    }
+
+    /** @param array<string, mixed> $entry */
+    protected function add(string $kind, array $entry): static
+    {
+        $this->registry->add($kind, $this->module, $entry);
+
+        return $this;
+    }
+}

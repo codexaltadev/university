@@ -127,8 +127,9 @@ Modules/Faq/
 তারপর:
 
 ```bash
-php artisan uwms:module:install Faq --local     # development-এ ZIP ছাড়া install (validator একই)
+php artisan uwms:module:install Modules/Faq     # development-এ ZIP ছাড়া, folder থেকে (validator একই)
 php artisan uwms:module:activate faq
+# ZIP থেকে: php artisan uwms:module:install path/to/faq-1.0.0.zip
 ```
 
 ---
@@ -923,7 +924,7 @@ it('forbids editing a FAQ outside the user scope', function () {
 ### 15.1 ZIP তৈরি
 
 ```bash
-php artisan uwms:module:package faq      # → storage/app/module-packages/faq-1.0.0.zip
+php artisan uwms:module:package faq      # → faq-1.0.0.zip  (command আসছে; ততদিন module folder হাতে ZIP করুন, root-এ `Faq/`)
 ```
 
 Command যাচাই করে ও বাদ দেয়: `vendor/`, `node_modules/`, `.git/`, `tests/` (ঐচ্ছিক), symlink, `.env`। ZIP-এর root-এ `Faq/` folder থাকবে।

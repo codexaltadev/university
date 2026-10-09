@@ -24,5 +24,10 @@ class AppServiceProvider extends ServiceProvider
     {
         // Shield-generated policy outside Laravel's policy discovery
         Gate::policy(Role::class, RolePolicy::class);
+
+        // Test-only fixture tables for kernel tests
+        if ($this->app->runningUnitTests()) {
+            $this->loadMigrationsFrom(base_path('tests/Fixtures/migrations'));
+        }
     }
 }

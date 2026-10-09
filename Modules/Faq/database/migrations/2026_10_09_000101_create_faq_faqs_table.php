@@ -12,9 +12,12 @@ return new class extends Migration
             $table->id();
             $table->string('question', 500);
             $table->text('answer');
-            // POC stand-in for core_relations ("Show in"); replaced by IsAttachable in Phase 1
-            $table->unsignedBigInteger('department_id')->nullable()->index();
-            $table->timestamps();
+            // "Show in" lives in core_relations (IsAttachable), not in a column
+            $table->timestamp('published_at')->nullable();                      // HasPublishDate
+            $table->unsignedInteger('sort_order')->default(0)->index();         // IX-6
+            $table->platformColumns();
+
+            $table->index(['is_active', 'deleted_at', 'published_at']);          // IX-5
         });
     }
 

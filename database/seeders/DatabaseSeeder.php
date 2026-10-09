@@ -3,8 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Nwidart\Modules\Facades\Module;
-use Platform\Modules\ModulePermissions;
+use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,10 +12,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Shield permissions of every active module (POC-1 mechanism)
-        foreach (Module::allEnabled() as $module) {
-            app(ModulePermissions::class)->sync($module->getName());
-        }
+        // Bundled modules in core_modules, kernel and module permissions
+        Artisan::call('uwms:modules:sync');
 
         $this->call(SuperAdminSeeder::class);
     }

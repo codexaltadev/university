@@ -2,14 +2,23 @@
 
 namespace Modules\Office\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Platform\Concerns\IsAssignable;
+use Platform\Concerns\IsRelationTarget;
 use Platform\Contracts\HasEntityPermissions;
+use Platform\Models\BaseModel;
 
-class Office extends Model implements HasEntityPermissions
+/**
+ * Office access is permission-based ("Manage:Office#12", BRD Q-13/14), not data
+ * scope, so it is a relation target and assignable but not Scopeable.
+ */
+class Office extends BaseModel implements HasEntityPermissions
 {
+    use IsAssignable;
+    use IsRelationTarget;
+
     protected $table = 'office_offices';
 
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'is_active'];
 
     public static function entityPermissionSubject(): string
     {

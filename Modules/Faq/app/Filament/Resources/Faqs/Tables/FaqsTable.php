@@ -15,7 +15,6 @@ class FaqsTable
         return $table
             ->columns([
                 TextColumn::make('question')->searchable()->limit(80),
-                TextColumn::make('department_id')->label('Department'),
                 TextColumn::make('updated_at')->dateTime()->sortable(),
             ])
             ->recordActions([

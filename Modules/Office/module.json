@@ -1,11 +1,32 @@
 {
     "name": "Office",
     "alias": "office",
-    "description": "",
-    "keywords": [],
-    "priority": 0,
+    "description": "Offices (Registrar, Admission ...) with their own permissions",
+    "keywords": ["people", "office"],
+    "priority": 40,
     "providers": [
         "Modules\\Office\\Providers\\OfficeServiceProvider"
     ],
-    "files": []
+    "files": [],
+    "uwms": {
+        "slug": "office",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": { "name": "DIU Web Team", "email": "web@example.edu" },
+        "license": "proprietary",
+        "table_prefix": "office_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "office.office": "Modules\\Office\\Models\\Office"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "relation_target": true,
+            "assignable": true,
+            "dynamic_permissions": true
+        }
+    }
 }

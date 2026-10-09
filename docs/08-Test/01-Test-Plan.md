@@ -155,7 +155,7 @@ POC fail হলে: SAD ADR-04-এর বিকল্প (নিজস্ব rol
 |---|---|---|---|
 | TC-PERM-01 | `cse@test` Notice list | শুধু CSE ও CSE-এর program-এর notice | BR-SEC-04, FR-GEN-52 |
 | TC-PERM-02 | `fsit@test` Notice list | FSIT, তার সব department ও program-এর notice (hierarchical) | BRD Q-12 |
-| TC-PERM-03 | `cse@test` EEE-এর record-এর edit / delete / restore URL সরাসরি | 403 (UI-তে লুকানো যথেষ্ট নয়) | FR-GEN-52, BRD §11 |
+| TC-PERM-03 | `cse@test` EEE-এর record-এর edit / delete / restore URL সরাসরি | Panel-এ 404 (`AppliesUserScope` record-টি query থেকেই বাদ দেয়, অস্তিত্বও প্রকাশ পায় না); policy-স্তরে `can()` = false (UI-তে লুকানো যথেষ্ট নয়) | FR-GEN-52, BRD §11 |
 | TC-PERM-04 | `cse@test` নতুন record তৈরি | "Show in"-এ শুধু নিজের scope-এর entity, default নিজের entity; scope-এর বাইরের id POST করলে validation error | FR-GEN-51, SAD Part B §5.4 |
 | TC-PERM-05 | `cse@test` "Main site"-এ publish | Switch নেই; শুধু "Request main site" (P-23) | Q-26, FR-CNT-H09 |
 | TC-PERM-06 | `admin@test` request approve | `site:0` relation তৈরি, request "approved", requester notification | FR-CNT-H09 |

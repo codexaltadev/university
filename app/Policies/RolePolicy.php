@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use Illuminate\Foundation\Auth\User as AuthUser;
-use Spatie\Permission\Models\Role;
 use Platform\Policies\ScopedPolicy;
+use Spatie\Permission\Models\Role;
 
 class RolePolicy extends ScopedPolicy
 {
-    
     public function viewAny(AuthUser $authUser): bool
     {
         return $this->allows($authUser, 'ViewAny:Role');
@@ -70,5 +69,4 @@ class RolePolicy extends ScopedPolicy
     {
         return $this->allows($authUser, 'Reorder:Role');
     }
-
 }

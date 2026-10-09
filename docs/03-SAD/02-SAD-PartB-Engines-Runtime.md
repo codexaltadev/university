@@ -254,6 +254,18 @@ effective   = faculty:3 ∪ descendants(faculty:3)
 
 Scoped user নতুন content তৈরি করলে Related To-তে তাঁর scope-এর entity default হিসেবে select থাকে এবং অন্তত একটি বাধ্যতামূলক। এভাবে scoped user এমন record তৈরি করতে পারে না যা পরে নিজেই দেখতে পাবে না।
 
+### 5.5 বাস্তবায়নের নোট — Section 1.3 থেকে 5 (Phase 1C, 2026-10-09)
+
+| বিষয় | সিদ্ধান্ত |
+|---|---|
+| Entity key | সব engine-এ একই রূপ: `{morph alias}:{id}` — যেমন `department.department:12`; Main Site `site:0` |
+| Morph map | `Relation::enforceMorphMap` — module-এর `morph_aliases` (inactive সহ) + kernel: `core.user`, `core.manual-person`, `core.assignment`। Alias ছাড়া কোনো model polymorphic column-এ লিখলে exception |
+| Hierarchy | `Platform\Hierarchy\EntityHierarchy`; registrar-এর signature: `relationTarget(Model::class, parent: ParentModel::class, parentKey: 'parent_column')` (Part A §7.1-এর `parent: 'faculty'` উদাহরণের বদলে)। Snapshot একটি cache key-তে; target record save / delete / restore ও module activate / deactivate-এ মুছে যায় |
+| Relation | `Platform\Relations\RelationEngine` (`sync`, `publishToMainSite`, `requestMainSite`, `dismissRequest`, `expireHighlights`) ও `ContextQuery` (`latest`, `highlighted`, `highlightedFirst`, `manual`, `mode`, `includeDescendants`)। `PublishMain:{Model}` ও `HighlightMain:{Model}` attachable model-এর জন্য activate-এ তৈরি হয়। `uwms:highlights:expire` প্রতি ঘণ্টায় |
+| Assignment | `Platform\Assignments\AssignmentEngine` (`assign`, `people`, current / former); Role Catalog-এর default label ও single-holder `config/platform.php` → `role_catalog`; module key দেয় (`assignable(roles: [...])`), activate-এ seed হয়, পরে label বদলালে re-sync-এ অক্ষত থাকে। Manual person kernel-এর built-in person source |
+| Scope filter | `AppliesUserScope` → `UserScopeFilter`; path নিজে থেকে: `IsRelationTarget` = self, `IsAttachable` = relation, অথবা `$scopeColumns`। **শুধু admin panel-এর request-এ** প্রযোজ্য (public website-এ নয়)। Scope-এর বাইরের record-এর edit URL তাই **404** দেয় (অস্তিত্বও প্রকাশ পায় না); policy-স্তরে `can()` = false থাকে (Test Plan TC-PERM-03) |
+| Uninstall-এ kernel data | "Data সহ" uninstall-এ module-এর alias-এর relation, request, assignment ও role catalog মুছে যায়। **"Data রাখুন"-এ রেখে দেওয়া হয়** (Part A §10.4 থেকে পরিবর্তন) — নইলে পুনরায় install করলে data ফিরলেও "Show in" ও people হারিয়ে যেত |
+
 ---
 
 ## 6. Microsite Context ও Fallback Resolver

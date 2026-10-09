@@ -3,9 +3,7 @@
 namespace Modules\Office\Providers;
 
 use Illuminate\Console\Scheduling\Schedule;
-use Modules\Office\Models\Office;
 use Nwidart\Modules\Support\ModuleServiceProvider;
-use Platform\Permissions\EntityPermissions;
 
 class OfficeServiceProvider extends ModuleServiceProvider
 {
@@ -35,14 +33,6 @@ class OfficeServiceProvider extends ModuleServiceProvider
         EventServiceProvider::class,
         RouteServiceProvider::class,
     ];
-
-    public function boot(): void
-    {
-        parent::boot();
-
-        // Each office gets its own "Manage:Office#{id}" permission (FR-ROLE-07)
-        $this->app->make(EntityPermissions::class)->register(Office::class);
-    }
 
     /**
      * Define module schedules.

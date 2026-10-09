@@ -1,0 +1,9 @@
+{
+    "name": "test/{{slug}}",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\{{Name}}\\": "app/"
+        }
+    }
+}

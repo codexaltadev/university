@@ -1,11 +1,30 @@
 {
     "name": "Faq",
     "alias": "faq",
-    "description": "",
-    "keywords": [],
-    "priority": 0,
+    "description": "Frequently asked questions — reference module of the Module Development Guide",
+    "keywords": ["content", "faq"],
+    "priority": 50,
     "providers": [
         "Modules\\Faq\\Providers\\FaqServiceProvider"
     ],
-    "files": []
+    "files": [],
+    "uwms": {
+        "slug": "faq",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": { "name": "DIU Web Team", "email": "web@example.edu" },
+        "license": "proprietary",
+        "table_prefix": "faq_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "faq.faq": "Modules\\Faq\\Models\\Faq"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true
+        }
+    }
 }

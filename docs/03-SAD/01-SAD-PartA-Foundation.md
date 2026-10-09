@@ -415,7 +415,7 @@ final class DepartmentExtension implements ModuleExtension
 {
     public function register(Registrar $r): void
     {
-        $r->relationTarget(Models\Department::class, parent: 'faculty');
+        $r->relationTarget(Models\Department::class, parent: Faculty::class, parentKey: 'faculty_id');
         $r->micrositeEntity(Models\Department::class, routePrefix: 'department');
         $r->scopeable(Models\Department::class);
         $r->assignable(Models\Department::class, roles: ['head', 'coordinator']);
@@ -639,6 +639,20 @@ ZIP → install-এর একই validation → version নতুন কিন�
 ### 10.4 Uninstall
 
 শুধু inactive module। `ModuleUninstalling` (listener-রা kernel table থেকে এই module-এর relation, assignment, media usage, taxonomy, highlight, search index সরাবে) → "Data সহ" হলে module-এর migration rollback ও permission মুছে ফেলা → folder মুছে ফেলা। "Data রাখুন" হলে table থাকবে; পরে একই slug আবার install হলে data ফিরে পাবে।
+
+### 10.5 বাস্তবায়নের নোট (Phase 1B, 2026-10-09)
+
+| বিষয় | সিদ্ধান্ত |
+|---|---|
+| Status | `Platform\Modules\DatabaseActivator` (`core_modules`)। **Row না থাকলে** bundled module (`Modules/`-এ) manifest-এর `default_active` মানে, বাকিগুলো inactive — তাই নতুন installation, deploy ও test row ছাড়াই চলে। Bundled module data সহ uninstall হলে row থাকে `status = uninstalled` |
+| Runtime module-এর জায়গা (ADR-12 সংশোধন) | Symlink নয়: `config/platform.php` → `modules.runtime_path` (`UWMS_MODULE_RUNTIME_PATH`), nwidart `scan.paths`-এ যুক্ত। Production-এ shared folder-এ নির্দেশ করে |
+| Autoload (ADR-03) | `ModuleAutoloader` runtime module-এর PSR-4 Composer loader-এ যোগ করে। এজন্য nwidart auto-discovery বন্ধ (`composer.json` → `dont-discover`) এবং `bootstrap/providers.php`-এ kernel-এর **পরে** register — নইলে ZIP module-এর provider class পাওয়া যায় না |
+| Extension | `Platform\Registry\Registrar` (২১টি method + `filamentPlugin`), `Registry`, `ExtensionLoader`। Admin panel plugin এখন Extension-এর `filamentPlugin()` থেকে; Office-এর dynamic permission `dynamicPermissions()` থেকে |
+| `provides` key | `relation_target, attachable, person_source, assignable, scopeable, microsite, dynamic_permissions, layouts, homepage_sections, page_blocks, entity_tabs, menu_item_types, vocabularies, metrics, searchable, sitemap, api, settings, notifications, freshness_source, dashboard_widgets` — অচেনা key validator-এ বাতিল |
+| Table conflict | `migrate --pretend`-এর SQL থেকে table নাম; dry run-এ migration exception দিলে install সেখানেই বাতিল (কিছু migrate হওয়ার আগে) |
+| Database backup | Backup module (C-?) আসার আগে install / update-এ backup ধাপ `skipped` হিসেবে log হয় |
+| জানা সীমাবদ্ধতা | Laravel-এর Migrator একই PHP process-এ migration file path অনুযায়ী cache করে; long-running worker (queue, Octane)-এ module update করলে worker restart বাধ্যতামূলক (deploy-এর `horizon:terminate` ইতিমধ্যে আছে) |
+| Command | `module:make-uwms {Name}`, `uwms:module:install {zip|folder}`, `uwms:module:activate|deactivate {slug}`, `uwms:module:uninstall {slug} [--delete-data]`, `uwms:modules:sync` (bundled module + kernel ও module permission; `db:seed` চালায়) |
 
 ---
 

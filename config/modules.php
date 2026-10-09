@@ -258,10 +258,19 @@ return [
     | directory. This is useful if you host the package in packagist website.
     |
     */
+    // ZIP-installed modules live outside Modules/ (config/platform.php, ADR-12)
     'scan' => [
-        'enabled' => false,
+        'enabled' => true,
         'paths' => [
-            base_path('vendor/*/*'),
+            (static function (): string {
+                $path = env('UWMS_MODULE_RUNTIME_PATH');
+
+                return match (true) {
+                    ! $path => storage_path('app/modules-runtime'),
+                    str_starts_with($path, '/') => $path,
+                    default => base_path($path),
+                };
+            })(),
         ],
     ],
 
@@ -274,10 +283,10 @@ return [
     |
     */
     'composer' => [
-        'vendor' => env('MODULE_VENDOR', 'nwidart'),
+        'vendor' => env('MODULE_VENDOR', 'uwms'),
         'author' => [
-            'name' => env('MODULE_AUTHOR_NAME', 'Nicolas Widart'),
-            'email' => env('MODULE_AUTHOR_EMAIL', 'n.widart@gmail.com'),
+            'name' => env('MODULE_AUTHOR_NAME', 'DIU Web Team'),
+            'email' => env('MODULE_AUTHOR_EMAIL', 'web@example.edu'),
         ],
         'composer-output' => false,
     ],
@@ -309,12 +318,15 @@ return [
     'activators' => [
         'file' => [
             'class' => FileActivator::class,
-            // Tests use their own copy so enabling / disabling never touches the real file
-            'statuses-file' => base_path(env('MODULES_STATUSES_FILE', 'modules_statuses.json')),
+            'statuses-file' => base_path('modules_statuses.json'),
+        ],
+        // Status in core_modules (ADR-02)
+        'database' => [
+            'class' => Platform\Modules\DatabaseActivator::class,
         ],
     ],
 
-    'activator' => 'file',
+    'activator' => 'database',
 
     /*
     |--------------------------------------------------------------------------

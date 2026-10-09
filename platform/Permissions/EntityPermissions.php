@@ -4,7 +4,10 @@ namespace Platform\Permissions;
 
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Platform\Contracts\HasEntityPermissions;
+use Platform\Modules\ModuleRegistry;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 
@@ -42,9 +45,29 @@ class EntityPermissions
     /** @param Model&HasEntityPermissions $record */
     public function sync(Model $record): void
     {
-        foreach ($this->keysFor($record) as $key) {
-            Permission::findOrCreate($key, $this->guard());
+        $subject = $record::entityPermissionSubject();
+
+        foreach ($record::entityPermissionActions() as $action) {
+            $permission = Permission::findOrCreate(self::key($action, $subject, $record->getKey()), $this->guard());
+            $permission->forceFill([
+                'kind' => 'entity',
+                'module_slug' => app(ModuleRegistry::class)->slugForClass($record::class),
+            ])->save();
+
+            // P-10 map: which entity the permission belongs to (DB-01 §5.2)
+            DB::table('core_entity_permissions')->updateOrInsert(
+                ['permission_id' => $permission->getKey()],
+                [
+                    'entity_type' => $record->getMorphClass(),
+                    'entity_id' => $record->getKey(),
+                    'action' => Str::lower($action),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ],
+            );
         }
+
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 
     /** @param Model&HasEntityPermissions $record */

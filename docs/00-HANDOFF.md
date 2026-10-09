@@ -22,7 +22,11 @@ Last updated: 2026-10-09. Read this first when continuing on another machine.
 | Phase | Scope | Status |
 |---|---|---|
 | **0** | Project setup + Shield POC-1..4 | ✔ Done 2026-10-09 — 13 Pest tests pass; results in SAD Part A §7.4 "POC ফলাফল" |
-| 1 | Kernel: BaseModel & traits, `platformColumns()`, Module Manager (install / activate / ZIP validator, `module:make-uwms`), Relation / Assignment / Scope engines, fallback resolver, `AppliesUserScope`; FAQ as reference module; CI | **Next** |
+| 1A | Data foundation: `BaseModel` / `BasePivot`, traits (SoftDeletes, HasActiveFlag, Blameable, LogsPlatformActivity, GuardsParentDelete, HasPublishDate, HasExpiry, HasSortOrder), `frontendVisible()`, `platformColumns()` + `active_key`, users / permissions / roles / activity_log per DB-01, `core_entity_permissions` | ✔ Done 2026-10-09 — 29 tests pass |
+| 1B | Module system: `module.json` `uwms` block + validator, database activator, Extension registrar, `module:make-uwms`, Module Manager (install folder / ZIP, activate, deactivate, uninstall, rollback, operation log), ZIP security checks, conflict checks, kernel resource permissions | ✔ Done 2026-10-09 — 50 feature + 24 lifecycle tests pass; notes in SAD Part A §10.5 |
+| 1C | Engines: morph map, hierarchy, Relation (P-01: Show in, main site, highlights, requests, context queries), Assignment + Role Catalog (P-02), `AppliesUserScope`; FAQ uses the Relation engine, Office is a relation target and assignable | ✔ Done 2026-10-09 — 67 feature + 24 lifecycle tests pass; notes in SAD Part B §5.5 |
+| 1D | Microsite context + fallback resolver | **Next** |
+| 1E | CI (GitHub Actions), architecture & index tests | Pending |
 | 2–6 | Core modules → Installable modules (Program, Fees & Waiver, Admission first) → Default theme → Migration & system test → UAT & go-live | Pending |
 
 Local dev (WSL Ubuntu 24.04): PHP 8.4, Composer 2.9, MySQL 8.0 (databases `university`, `university_test`), Redis 7, Node **26.11** via nvm (default; `.nvmrc` = 26). System `/usr/bin/node` is still 18 and non-interactive shells pick it up — scripts must load nvm first (`. ~/.nvm/nvm.sh && nvm use`). All Composer and npm packages were at their latest versions on 2026-10-09. Run commands via a script file: `wsl -d Ubuntu-24.04 -- bash script.sh` (inline `$VAR` gets mangled by PowerShell).

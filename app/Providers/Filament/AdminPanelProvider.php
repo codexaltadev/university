@@ -20,8 +20,9 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Nwidart\Modules\Facades\Module;
 use Platform\Filament\Resources\Roles\RoleResource;
+use Platform\Registry\ExtensionLoader;
+use Platform\Registry\Registry;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -69,17 +70,17 @@ class AdminPanelProvider extends PanelProvider
     }
 
     /**
-     * Only active modules add their Filament plugin (ADR-05).
-     * Convention: Modules\{Name}\Filament\{Name}Plugin.
+     * Only active modules add their Filament plugin (ADR-05), as registered
+     * in their Extension: $r->filamentPlugin(FaqPlugin::class).
      *
      * @return list<Plugin>
      */
     protected function activeModulePlugins(): array
     {
-        return collect(Module::allEnabled())
-            ->map(fn ($module): string => config('modules.namespace')."\\{$module->getName()}\\Filament\\{$module->getName()}Plugin")
-            ->filter(fn (string $class): bool => class_exists($class))
-            ->map(fn (string $class): Plugin => $class::make())
+        app(ExtensionLoader::class)->reload();
+
+        return collect(app(Registry::class)->all('filamentPlugin'))
+            ->map(fn (array $entry): Plugin => $entry['class']::make())
             ->values()
             ->all();
     }

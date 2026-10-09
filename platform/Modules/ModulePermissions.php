@@ -5,41 +5,73 @@ namespace Platform\Modules;
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Facades\Module;
+use Platform\Filament\Resources\Roles\RoleResource;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 use Symfony\Component\Finder\Finder;
 
 /**
  * Shield permissions per module (SAD Part A §7.4, "Module Lifecycle").
- * Works from the module's own resource classes, so it does not depend on
- * which plugins the panel registered in the current request.
+ * Works from the module's own files, so it does not depend on which
+ * plugins the panel registered in the current request.
  */
 class ModulePermissions
 {
+    /** Kernel / app resources that are not part of any module. */
+    public const KERNEL_RESOURCES = [RoleResource::class];
+
     /**
-     * Create the Shield permissions of one module only (POC-1).
+     * Resource permissions of one module (on activate; POC-1).
      *
      * @return list<string> permission keys of the module
      */
     public function sync(string $module): array
     {
-        $keys = $this->keysFor($module);
+        $manifest = Manifest::fromDirectory(Module::getModulePath($module));
+        $keys = $this->keysForDirectory($manifest->path, $manifest->name());
 
-        foreach ($keys as $key) {
-            Permission::findOrCreate($key, $this->guard());
-        }
-
-        app(PermissionRegistrar::class)->forgetCachedPermissions();
+        $this->store($keys, $manifest->slug(), 'resource');
 
         return $keys;
     }
 
-    /** Uninstall with data: remove the module's permissions. */
-    public function remove(string $module): void
+    /** manifest custom_permissions (on install). */
+    public function syncCustom(Manifest $manifest): void
+    {
+        $this->store($manifest->customPermissions(), $manifest->slug(), 'custom');
+    }
+
+    /**
+     * PublishMain / HighlightMain per attachable model (BRD Q-26, SAD Part A §7.4):
+     * only holders decide what appears and is highlighted on the main site.
+     *
+     * @param  list<class-string>  $models
+     */
+    public function syncAttachable(?string $slug, array $models): void
+    {
+        $keys = [];
+        foreach ($models as $model) {
+            $keys[] = 'PublishMain:'.class_basename($model);
+            $keys[] = 'HighlightMain:'.class_basename($model);
+        }
+
+        $this->store($keys, $slug, 'custom');
+    }
+
+    /** Permissions of kernel resources (Role editor ...). */
+    public function syncKernel(): void
+    {
+        $this->store($this->keysForResources(self::KERNEL_RESOURCES), null, 'resource');
+    }
+
+    /** Uninstall with data: every permission the module owns (resource, custom, entity). */
+    public function removeAll(Manifest $manifest): void
     {
         Permission::query()
-            ->whereIn('name', $this->keysFor($module))
             ->where('guard_name', $this->guard())
+            ->where(fn ($q) => $q
+                ->where('module_slug', $manifest->slug())
+                ->orWhereIn('name', [...$this->keysForDirectory($manifest->path, $manifest->name()), ...$manifest->customPermissions()]))
             ->delete();
 
         app(PermissionRegistrar::class)->forgetCachedPermissions();
@@ -48,15 +80,13 @@ class ModulePermissions
     /** @return list<string> */
     public function keysFor(string $module): array
     {
-        $methods = config('filament-shield.policies.methods', []);
+        return $this->keysForDirectory(Module::getModulePath($module), $module);
+    }
 
-        return collect($this->resourcesOf($module))
-            ->flatMap(fn (string $resource): array => collect(FilamentShield::getDefaultPermissionKeys($resource, $methods))
-                ->pluck('key')
-                ->all())
-            ->unique()
-            ->values()
-            ->all();
+    /** @return list<string> */
+    public function keysForDirectory(string $directory, string $name): array
+    {
+        return $this->keysForResources($this->resourcesIn($directory, $name));
     }
 
     /**
@@ -75,13 +105,19 @@ class ModulePermissions
     /** @return list<class-string> Filament resource classes of the module (v5 layout). */
     public function resourcesOf(string $module): array
     {
-        $path = Module::getModulePath($module).'app/Filament/Resources';
+        return $this->resourcesIn(Module::getModulePath($module), $module);
+    }
+
+    /** @return list<class-string> */
+    public function resourcesIn(string $directory, string $name): array
+    {
+        $path = rtrim($directory, '/').'/app/Filament/Resources';
 
         if (! is_dir($path)) {
             return [];
         }
 
-        $namespace = config('modules.namespace', 'Modules')."\\{$module}\\Filament\\Resources\\";
+        $namespace = config('modules.namespace', 'Modules')."\\{$name}\\Filament\\Resources\\";
         $classes = [];
 
         foreach (Finder::create()->files()->in($path)->name('*Resource.php') as $file) {
@@ -95,6 +131,35 @@ class ModulePermissions
         sort($classes);
 
         return $classes;
+    }
+
+    /**
+     * @param  list<class-string>  $resources
+     * @return list<string>
+     */
+    protected function keysForResources(array $resources): array
+    {
+        $methods = config('filament-shield.policies.methods', []);
+
+        return collect($resources)
+            ->flatMap(fn (string $resource): array => collect(FilamentShield::getDefaultPermissionKeys($resource, $methods))
+                ->pluck('key')
+                ->all())
+            ->unique()
+            ->values()
+            ->all();
+    }
+
+    /** @param list<string> $keys */
+    protected function store(array $keys, ?string $slug, string $kind): void
+    {
+        foreach ($keys as $key) {
+            Permission::findOrCreate($key, $this->guard())
+                ->forceFill(['module_slug' => $slug, 'kind' => $kind])
+                ->save();
+        }
+
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
     }
 
     protected function guard(): string

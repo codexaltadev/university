@@ -1,0 +1,26 @@
+{
+    "name": "{{Name}}",
+    "alias": "{{lower}}",
+    "description": "Test module",
+    "keywords": [],
+    "priority": 60,
+    "providers": ["Modules\\{{Name}}\\Providers\\{{Name}}ServiceProvider"],
+    "files": [],
+    "uwms": {
+        "slug": "{{slug}}",
+        "version": "{{version}}",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": { "name": "Test", "email": "test@example.edu" },
+        "license": "proprietary",
+        "table_prefix": "{{prefix}}",
+        "dependencies": {{dependencies}},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "{{slug}}.item": "Modules\\{{Name}}\\Models\\{{Name}}Item"
+        },
+        "custom_permissions": ["Import:{{Name}}Item"],
+        "provides": {{provides}}
+    }
+}
