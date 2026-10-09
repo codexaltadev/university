@@ -195,7 +195,7 @@ FR-GEN-20 থেকে 23 বাতিল। Content-এর চালু / ব�
 |---|---|---|---|
 | FR-GEN-50 | Attachable content-এর form-এ "Related To" field থাকবে, যেখানে এক বা একাধিক target (Faculty, Department, Program ইত্যাদি) select করা যাবে। শুধু active target module-গুলো দেখাবে | BR-CNT-02 | Must |
 | FR-GEN-51 | Scoped user-এর form-এ "Related To" field-এ শুধু তার scope-এর entity দেখাবে, এবং অন্তত একটি বাধ্যতামূলক। Default হিসেবে তার নিজের entity select থাকবে | BR-SEC-04 | Must |
-| FR-GEN-52 | Admin list ও query automatically user-এর scope দিয়ে filter হবে। Scope-এর বাইরের record URL দিয়ে সরাসরি খুললেও 403 দেখাবে | BR-SEC-04 | Must |
+| FR-GEN-52 | Admin list ও query automatically user-এর scope দিয়ে filter হবে। Scope-এর বাইরের record URL দিয়ে সরাসরি খুললে **404** দেখাবে — record আছে কিনা তাও প্রকাশ পাবে না (permission-ই না থাকলে 403) *(v1.1, 2026-10-10)* | BR-SEC-04 | Must |
 | FR-GEN-53 | Entity scope-এর অধীন entity-ও scope-এ গণ্য হবে (Faculty → Department → Program) | Q-12 | Must |
 
 ### 3.7 Media ও Files

@@ -112,7 +112,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 
 ### Acceptance Criteria
 
-* **AC-DEPT-01:** CSE Department user শুধু CSE-এর profile edit করতে পারবে, অন্য Department-এর edit page 403।
+* **AC-DEPT-01:** CSE Department user শুধু CSE-এর profile edit করতে পারবে, অন্য Department-এর edit page খোলা যাবে না (404, FR-GEN-52)।
 * **AC-DEPT-02:** CSE-কে অন্য Faculty-তে স্থানান্তর করলে CSE-এর নিজস্ব menu না থাকলে নতুন Faculty-র menu দেখাবে।
 
 ---

@@ -115,7 +115,7 @@ Development শুরুর আগে Shield + Scope সংযোগের ঝ�
 | ID | যাচাই | ধাপ | প্রত্যাশিত ফল |
 |---|---|---|---|
 | POC-1 | Module activate-এ শুধু সেই module-এর Shield permission generate | FAQ activate → `permissions` table দেখা | শুধু `*:Faq` যুক্ত; অন্য module-এর permission-এর সংখ্যা ও id অপরিবর্তিত |
-| POC-2 | Generate করা policy `ScopedPolicy` extend করে | `cse@test` দিয়ে EEE-এর FAQ edit URL | 403; নিজের CSE FAQ-এ 200 |
+| POC-2 | Generate করা policy `ScopedPolicy` extend করে | `cse@test` দিয়ে EEE-এর FAQ edit URL | 404 (scope-এর বাইরে, FR-GEN-52); নিজের CSE FAQ-এ 200 |
 | POC-3 | Dynamic entity permission Role UI-তে আলাদা tab | Office "Registrar" তৈরি → Role edit | "Entities" tab-এ "Manage: Registrar Office" checkbox; save-এ `Manage:Office#…` assign |
 | POC-4 | Inactive module-এর permission Role UI-তে আলাদা | FAQ deactivate → Role edit | FAQ permission ধূসর / "Inactive modules" অংশে; assign থাকা permission মুছে যায় না |
 

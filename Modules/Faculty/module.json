@@ -1,0 +1,50 @@
+{
+    "name": "Faculty",
+    "alias": "faculty",
+    "description": "Faculties / Schools with their microsites, Dean, counters and listing — M-01",
+    "keywords": [
+        "academic",
+        "faculty"
+    ],
+    "priority": 50,
+    "providers": [
+        "Modules\\Faculty\\Providers\\FacultyServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "faculty",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "faculty_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "faculty.faculty": "Modules\\Faculty\\Models\\Faculty"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "relation_target": true,
+            "scopeable": true,
+            "microsite": true,
+            "assignable": true,
+            "metrics": [
+                "faculty.count"
+            ],
+            "layouts": [
+                "faculty.listing"
+            ],
+            "homepage_sections": [
+                "faculty.list"
+            ],
+            "searchable": true,
+            "sitemap": true
+        }
+    }
+}

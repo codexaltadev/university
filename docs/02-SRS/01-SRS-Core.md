@@ -165,7 +165,7 @@
 ### Acceptance Criteria
 
 * **AC-ROLE-01:** Engineering Faculty scope-এর user CSE Department ও BSc in CSE-এর news দেখতে পারবে, কিন্তু Business Faculty-র news দেখবে না।
-* **AC-ROLE-02:** CSE Department user EEE-এর একটি news-এর edit URL সরাসরি খুললে 403 পাবে।
+* **AC-ROLE-02:** CSE Department user EEE-এর একটি news-এর edit URL সরাসরি খুললে 404 পাবে (scope-এর বাইরের record দেখা যায় না, FR-GEN-52)।
 * **AC-ROLE-03:** "Registrar Office" তৈরি করলে `office.registrar-office.manage` permission role editor-এ দেখা যাবে।
 
 ---

@@ -79,9 +79,14 @@ class Registrar
         return $this->add('scopeable', compact('model'));
     }
 
-    public function micrositeEntity(string $model, string $routePrefix, ?string $parent = null): static
+    /**
+     * The model has a microsite at /{routePrefix}/{slug}. $home = the module's view of
+     * the microsite homepage until the entity builds its own (FR-FAC-06), e.g.
+     * 'faculty::microsite.home' (gets $entity and $context).
+     */
+    public function micrositeEntity(string $model, string $routePrefix, ?string $parent = null, ?string $home = null): static
     {
-        return $this->add('micrositeEntity', compact('model', 'routePrefix', 'parent'));
+        return $this->add('micrositeEntity', compact('model', 'routePrefix', 'parent', 'home'));
     }
 
     /** Model implements Platform\Contracts\HasEntityPermissions (subject, actions, label). */
