@@ -4,6 +4,7 @@ namespace Platform\Hierarchy;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
+use Platform\Events\EntityHierarchyChanged;
 use Platform\Registry\Registry;
 use Platform\Scope\UserScopeFilter;
 use Platform\Support\MorphMap;
@@ -21,6 +22,9 @@ class EntityHierarchy
 
     /** @var array<string, array{parent: ?string, ancestors: list<string>, descendants: list<string>}>|null */
     protected ?array $snapshot = null;
+
+    /** @var array<class-string, true> */
+    protected array $watched = [];
 
     public function __construct(protected Registry $registry) {}
 
@@ -70,16 +74,33 @@ class EntityHierarchy
         Cache::forget(self::CACHE_KEY);
     }
 
-    /** Keep the snapshot fresh when target records change. */
+    /** Keep the snapshot fresh when target records change; a new parent → EntityHierarchyChanged. */
     public function watch(): void
     {
         foreach ($this->registry->all('relationTarget') as $entry) {
             $model = $entry['model'];
 
+            if (isset($this->watched[$model])) {
+                continue;   // watch() runs again after late registrations
+            }
+
+            $this->watched[$model] = true;
+
             foreach (['saved', 'deleted', 'restored'] as $event) {
                 if (method_exists($model, $event)) {
                     $model::$event(fn () => $this->flush());
                 }
+            }
+
+            if (($parentKey = $entry['parentKey'] ?? null) && $entry['parent'] && method_exists($model, 'updated')) {
+                $parentType = MorphMap::alias($entry['parent']);
+
+                $model::updated(function (Model $record) use ($parentKey, $parentType): void {
+                    if ($record->wasChanged($parentKey)) {
+                        $key = fn (mixed $id): ?string => $id ? self::key($parentType, $id) : null;
+                        EntityHierarchyChanged::dispatch($record, $key($record->getOriginal($parentKey)), $key($record->getAttribute($parentKey)));
+                    }
+                });
             }
         }
     }

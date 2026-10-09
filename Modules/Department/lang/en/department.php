@@ -1,0 +1,47 @@
+<?php
+
+return [
+    'title' => 'Department',
+    'singular' => 'department',
+    'plural' => 'Departments',
+    'metric_count' => 'Number of departments',
+    'section_label' => 'Departments',
+    'view_all' => 'All departments',
+    'all_faculties' => 'All faculties',
+    'about' => 'About',
+    'head' => 'Head',
+    'head_message' => 'Message from the Head',
+    'contact' => 'Contact',
+    'visit_website' => 'Visit website',
+    'sections' => [
+        'department' => 'Department',
+        'pictures' => 'Pictures',
+    ],
+    'fields' => [
+        'faculty' => 'Faculty',
+        'name' => 'Name',
+        'short_name' => 'Short name',
+        'about_title' => 'About title',
+        'about' => 'About',
+        'head_message' => 'Head\'s message',
+        'location' => 'Location (building, room)',
+        'external_url' => 'Own website',
+        'email' => 'Email',
+        'phone' => 'Phone',
+        'show_in_listing' => 'Show in the department list',
+        'photo' => 'Photo',
+        'cover' => 'Cover picture',
+        'updated_at' => 'Updated',
+        'section_faculty' => 'Faculty',
+        'section_all_faculties' => 'All faculties (on a Faculty microsite: that Faculty)',
+        'section_limit' => 'How many',
+    ],
+    'help' => [
+        'faculty_move' => 'Moving to another Faculty changes who may edit it and which menu it inherits.',
+        'external_url' => 'If set, the department list links here instead of the microsite.',
+        'show_in_listing' => 'Off: not on /departments or in "Departments", but its own address still works.',
+    ],
+    'actions' => [
+        'view_site' => 'View microsite',
+    ],
+];

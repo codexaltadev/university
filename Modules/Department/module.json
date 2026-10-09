@@ -1,0 +1,52 @@
+{
+    "name": "Department",
+    "alias": "department",
+    "description": "Departments under a Faculty with their microsites, Head, counters and listing — M-02",
+    "keywords": [
+        "academic",
+        "department"
+    ],
+    "priority": 51,
+    "providers": [
+        "Modules\\Department\\Providers\\DepartmentServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "department",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "department_",
+        "dependencies": {
+            "faculty": "^1.0"
+        },
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "department.department": "Modules\\Department\\Models\\Department"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "relation_target": true,
+            "scopeable": true,
+            "microsite": true,
+            "assignable": true,
+            "metrics": [
+                "department.count"
+            ],
+            "layouts": [
+                "department.listing"
+            ],
+            "homepage_sections": [
+                "department.list"
+            ],
+            "searchable": true,
+            "sitemap": true
+        }
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "name": "uwms/department",
+    "description": "Department module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Department\\": "app/",
+            "Modules\\Department\\Database\\Factories\\": "database/factories/",
+            "Modules\\Department\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Department\\Tests\\": "tests/" }
+    }
+}

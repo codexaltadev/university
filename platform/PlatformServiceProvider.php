@@ -15,6 +15,7 @@ use Platform\Console\Commands;
 use Platform\Context\FallbackResolver;
 use Platform\Context\MicrositeResolver;
 use Platform\Context\MicrositeSetting;
+use Platform\Events\EntityHierarchyChanged;
 use Platform\Events\ModuleActivated;
 use Platform\Events\ModuleDeactivated;
 use Platform\Events\ModuleUninstalling;
@@ -183,6 +184,9 @@ class PlatformServiceProvider extends ServiceProvider
         };
 
         Event::listen([ModuleActivated::class, ModuleDeactivated::class], $refresh);
+
+        // FR-DEPT-08, AC-DEPT-02: a moved entity takes its new parent's scope and menu fallback
+        Event::listen(EntityHierarchyChanged::class, $refresh);
 
         // A module hidden on the website, a new language … (FR-SET-05)
         Event::listen(SettingsUpdated::class, fn () => Sitemap::flush());

@@ -1,0 +1,47 @@
+<?php
+
+return [
+    'title' => 'Department',
+    'singular' => 'department',
+    'plural' => 'Department সমূহ',
+    'metric_count' => 'Department-এর সংখ্যা',
+    'section_label' => 'Department সমূহ',
+    'view_all' => 'সব Department',
+    'all_faculties' => 'সব Faculty',
+    'about' => 'পরিচিতি',
+    'head' => 'Head',
+    'head_message' => 'Head-এর বার্তা',
+    'contact' => 'যোগাযোগ',
+    'visit_website' => 'Website দেখুন',
+    'sections' => [
+        'department' => 'Department',
+        'pictures' => 'ছবি',
+    ],
+    'fields' => [
+        'faculty' => 'Faculty',
+        'name' => 'নাম',
+        'short_name' => 'সংক্ষিপ্ত নাম',
+        'about_title' => 'পরিচিতির শিরোনাম',
+        'about' => 'পরিচিতি',
+        'head_message' => 'Head-এর বার্তা',
+        'location' => 'অবস্থান (ভবন, কক্ষ)',
+        'external_url' => 'নিজস্ব website',
+        'email' => 'Email',
+        'phone' => 'ফোন',
+        'show_in_listing' => 'Department তালিকায় দেখাবে',
+        'photo' => 'ছবি',
+        'cover' => 'Cover ছবি',
+        'updated_at' => 'Update',
+        'section_faculty' => 'Faculty',
+        'section_all_faculties' => 'সব Faculty (Faculty microsite-এ: সেই Faculty)',
+        'section_limit' => 'কয়টি',
+    ],
+    'help' => [
+        'faculty_move' => 'অন্য Faculty-তে সরালে কে edit করতে পারবে এবং কোন menu পাবে তা বদলে যাবে।',
+        'external_url' => 'থাকলে Department তালিকা microsite-এর বদলে এখানে নিয়ে যাবে।',
+        'show_in_listing' => 'বন্ধ: /departments ও "Department সমূহ"-তে থাকবে না, তবে নিজের address কাজ করবে।',
+    ],
+    'actions' => [
+        'view_site' => 'Microsite দেখুন',
+    ],
+];
