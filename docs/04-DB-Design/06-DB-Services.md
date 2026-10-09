@@ -319,7 +319,7 @@ Lab / Department / Program-এর partner → `core_relations` (FR-PRT-03)। Me
 |---|---|---|
 | [DB-01](01-DB-Core-Kernel.md) | Kernel ও System core | ১৮টি সারি (Laravel ও spatie-এর system table সহ; Standard Role Catalog যোগ) |
 | [DB-02](02-DB-Core-SiteBuilding.md) | Site-building core | ২৮টি সারি (`core_approvals` বাদ) |
-| [DB-03](03-DB-Academic.md) | Academic | ৪৪ |
+| [DB-03](03-DB-Academic.md) | Academic | ৪৫ (v1.1: `fee_waiver_category_includes`) |
 | [DB-04](04-DB-People.md) | People | ১০ |
 | [DB-05](05-DB-Content.md) | Content | ১৬ |
 | [DB-06](06-DB-Services.md) | Services, Reputation, Communication | ২৬ |

@@ -4,9 +4,9 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-03 |
-| Version | 0.1 (Draft) |
-| Date | 2026-10-08 |
-| Status | ✔ Confirmed |
+| Version | 1.1 (§11 Fee: legacy calculator-এর সাথে মিল) |
+| Date | 2026-10-10 (v1.0 confirmed 2026-10-08) |
+| Status | ✔ Confirmed — v1.1 approved 2026-10-10: entry করা rule ও data অক্ষত থাকবে; logic বদলানো যাবে যদি ফলাফল হুবহু একই থাকে (golden master দিয়ে প্রমাণ) |
 | Based on | [DB-01](01-DB-Core-Kernel.md) (conventions), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 2](../02-SRS/02-SRS-Academic.md), `project_diu` |
 
 > Convention, শ্রেণী (B / C / P / S / L), ⚙ (`platformColumns()`), `active_key` ও Main Site `('site', 0)` — DB-01 Section 1 ও DB-02 Section 1 অনুযায়ী।
@@ -314,26 +314,44 @@ UQ: `(employee_id, active_key)` (NULL employee_id একাধিক থাক�
 | Table | শ্রেণী | Column (⚙ ছাড়া) | Key | Ref |
 |---|---|---|---|---|
 | `fee_categories` | B | `name` (T) ("Local", "International"), `code` VARCHAR(20), `currency` CHAR(3) DEFAULT `BDT`, `sort_order` | UQ `(code, active_key)` | FR-FEE-01 |
-| `fee_tuitions` | B | `program_id` (FK program_programs restrict), `fee_category_id` (FK fee_categories restrict), `session_id` N (optional → index), `credit_min`, `credit_max` DECIMAL(6,1) N, `total_terms` TINYINT N, `duration_label` (T, N), `total_min`, `total_max` DECIMAL(12,2) N, `totals_overridden` TINYINT(1), `prospectus_url` N, `sort_order` | UQ `(program_id, fee_category_id, session_id, active_key)`; IX `(fee_category_id)` | FR-FEE-02/12 |
+| `fee_tuitions` | B | `program_id` (FK program_programs restrict), `fee_category_id` (FK fee_categories restrict), `session_id` N (optional → index), `label` (T, N) *(v1.1)*, `credit_min`, `credit_max` DECIMAL(6,1) N, `total_terms` TINYINT N, `duration_label` (T, N), `tuition_min`, `tuition_max` DECIMAL(12,2) N *(v1.1)*, `total_min`, `total_max` DECIMAL(12,2) N, `totals_overridden` TINYINT(1), `prospectus_url` N, `sort_order` | IX `(program_id, fee_category_id, session_id)` *(v1.1: UQ বাদ)*; IX `(fee_category_id)` | FR-FEE-02/12 |
 | `fee_tuition_lines` | B | `tuition_id` (FK cascade), `line_type` VARCHAR(20) (`admission` / `year` / `term` / `per_credit` / `other`), `label` (T) ("1st Year"), `amount` DECIMAL(12,2), `amount_max` DECIMAL(12,2) N, `sort_order` | IX `(tuition_id, sort_order)` | FR-FEE-02 |
 
 > বর্তমান `tuitions`-এর আলাদা column (`admission_fees`, `first_year` … `fourth_year`, `semester_cost`, `other_fee`) `fee_tuition_lines`-এর row হবে। ফলে ৫ বছরের program বা trimester-ভিত্তিক fee-ও schema পরিবর্তন ছাড়া রাখা যায় (BO-06)।
 > `total_min / total_max` line থেকে হিসাব হয়ে save হয়; `totals_overridden = 1` হলে manual মান থাকে (FR-FEE-02)।
+> *(v1.1)* `tuition_min / tuition_max` = মোটের যে অংশে waiver বসে (admission ও অন্যান্য fee ছাড়া; legacy `total_tuition_fees`): year line-এর যোগফল + term line × `total_terms` + per-credit line × credit। মোট = tuition + admission + other। Legacy-র অঙ্ক এই সূত্রে মেলে না (যেমন SWE: 78,000 × 12 ≠ 7,09,500) — তাই migrate হওয়া tuition `totals_overridden = 1`।
+> *(v1.1)* একই Program ও Fee Category-তে একাধিক tuition থাকতে পারে (DIU: MBA International "1 Year" ও "2 Years") — `label` দিয়ে আলাদা; তাই unique key নয়, index।
 
 ### 11.2 Waiver
 
 | Table | শ্রেণী | Column (⚙ ছাড়া) | Key | Ref |
 |---|---|---|---|---|
 | `fee_boards` | B | `level_term_id` (FK core_terms), `name` (T), `sort_order` | | FR-FEE-05 |
-| `fee_waiver_categories` | B | `level_term_id` (FK core_terms), `name` (T) ("Freedom Fighter", "Sibling"), `sort_order` | | FR-FEE-05 |
-| `fee_waiver_rules` | B | `name` (T), `level_term_id` (FK core_terms), `fee_category_id` (FK fee_categories, N), `ssc_min`, `ssc_max`, `hsc_min`, `hsc_max` DECIMAL(3,2) N, `require_ssc_golden`, `require_hsc_golden` TINYINT(1), `ug_cgpa_min`, `ug_cgpa_max` DECIMAL(3,2) N, `is_international` TINYINT(1) N, `waiver_percent` DECIMAL(5,2), `max_waiver_percent` DECIMAL(5,2) N, `message` (T, N), `priority` SMALLINT | IX `(level_term_id, fee_category_id, is_active)` | FR-FEE-05/06/07, BRL-FEE-01 |
+| `fee_waiver_categories` | B | `level_term_id` (FK core_terms), `name` (T) ("Freedom Fighter", "Sibling"), `uses_diploma_result` TINYINT(1) DEFAULT 0 *(v1.1)*, `sort_order` | | FR-FEE-05 |
+| `fee_waiver_rules` | B | `name` (T), `level_term_id` (FK core_terms), `fee_category_id` (FK fee_categories, N), `ssc_min`, `ssc_max`, `hsc_min`, `hsc_max` DECIMAL(3,2) N, `require_ssc_golden`, `require_hsc_golden` TINYINT(1), `ug_cgpa_min`, `ug_cgpa_max` DECIMAL(3,2) N, `is_international` TINYINT(1) N, `waiver_percent` DECIMAL(5,2), `improved_waiver_percent` DECIMAL(5,2) N *(v1.1)*, `max_waiver_percent` DECIMAL(5,2) N, `message` (T, N), `priority` SMALLINT | IX `(level_term_id, fee_category_id, is_active)` | FR-FEE-05/06/07, BRL-FEE-01 |
 | `fee_waiver_rule_boards` | P | `rule_id` (FK cascade), `board_id` (FK fee_boards cascade) | PK দুটি মিলে | BRL-FEE-04 |
-| `fee_waiver_rule_categories` | P | `rule_id`, `waiver_category_id` (FK cascade) | PK | |
+| `fee_waiver_rule_categories` | P | `rule_id`, `waiver_category_id` (FK cascade), `sort_order` *(v1.1)* | PK | প্রথমটির নাম ফলাফলের বার্তায় |
+| `fee_waiver_category_includes` *(v1.1)* | P | `category_id` (FK fee_waiver_categories cascade), `included_category_id` (FK fee_waiver_categories cascade) | PK দুটি মিলে | Category বাছলে অন্তর্ভুক্ত category-র rule-ও মেলে |
 | `fee_waiver_rule_genders` | P | `rule_id` (FK cascade), `gender` VARCHAR(10) (`male` / `female` / `other`) | PK | বর্তমান `gender_waiver` |
 | `fee_waiver_rule_faculties` | P | `rule_id`, `faculty_id` (FK faculty_faculties cascade) | PK | Faculty transitively hard dependency |
 | `fee_waiver_rule_tuitions` | P | `rule_id`, `tuition_id` (FK fee_tuitions cascade) | PK | |
 
 **Rule-matching নিয়ম:** pivot-এ কোনো row না থাকা = "সব"-এ প্রযোজ্য (যেমন কোনো board নির্বাচিত নেই → সব board)। একাধিক rule মিললে setting অনুযায়ী `highest` (default) বা `additive_with_cap` (FR-FEE-07); `priority` সমান হলে বেশি waiver আগে।
+
+**v1.1 — legacy calculator (golden master oracle, Test Plan §7.1.1) বিশ্লেষণের পর:**
+
+| # | পরিবর্তন | কারণ (`project_diu`) |
+|---|---|---|
+| 1 | `fee_waiver_category_includes` | Category বাছলে অন্তর্ভুক্ত category-র rule-ও মেলে: "Female", "Sibling / Spouse", "Physically Challenged" … → "Result Based" (legacy `waiver_categories.waiver_categories` JSON, ১৫টি category-তে) |
+| 2 | `improved_waiver_percent` | HSC GPA > SSC GPA হলে rule-এর এই হার (বেশি হলে)। Legacy-তে `max_waiver_rate`, code-এ category id 19 ও 21 hardcode (Daffodil college quota, rule 86: ২০% → ৩০%, rule 87: ১৫% → ২৫%) — এখন rule-এর নিজস্ব মান, id নয়। `max_waiver_percent` থাকে additive mode-এর সীমা হিসেবে |
+| 3 | `highest` mode-এ ক্রম | মূল `waiver_percent` বড় → `improved_waiver_percent` বড়; বেছে নেওয়ার **পরে** improved হার প্রয়োগ (legacy-র মতো) |
+| 4 | Rule-category `sort_order` | ফলাফলের বার্তায় rule-এর প্রথম category-র নাম ("… under Female quota") — legacy pivot-এর ক্রম |
+| 5 | Calculator-এর Level / Board / Category তালিকা | Active rule থেকে নির্ণয় — legacy-র hardcode (International-এ শুধু Graduate, board 8 শুধু International) data থেকেই আসে |
+| 6 | Faculty pivot migrate হবে না | Legacy calculator faculty দেখে না, আর `faculty_waiver`-এ Agriculture (faculty 9) নেই অথচ তার tuition আছে → migrate করলে সেই ছাত্ররা waiver হারাত। খালি = সব faculty |
+| 7 | Golden শর্ত | `require_*_golden` = "চাই"; legacy-র তিনটি case-এর সাথে বর্তমান data-য় সমতুল্য (SSC-only-golden rule নেই) |
+| 8 | `fee_waiver_categories.uses_diploma_result` | এই category-তে দ্বিতীয় ফলাফল HSC নয়, Diploma CGPA (০–৪), golden নেই — legacy form-এ category 18 "Diploma Holders" hardcode (`checkIfWaiverCategoryIs18`); তার rule-এর `hsc_*` পরিসর ৩.০–৪.০ |
+
+যাচাই (2026-10-10): legacy-র দুটি পথ — website-এর API `POST /calculate` (WaiverApiController) ও পুরনো Blade form-এর `waivers/check-waiver` (WaiverController::waiverCheck) — একই data ও নিয়ম ব্যবহার করে। Golden logic লেখায় আলাদা (Blade পথ golden মিললে GPA পরিসর দেখে না), কিন্তু form-এর আচরণে (golden box শুধু GPA ঠিক ৫ হলে চালু, না টিক দিলে মান যায় না) দুটির ফল একই। Golden master-এর oracle API পথ (Test Plan §7.1.1)। ফলাফলে "Payable during admission" (admission fee, প্রথম semester fee থেকে) ও range থাকলে credit-এর পরিসরের বার্তাও দেখায়।
 
 Gender আলাদা master table নয়: মাত্র তিনটি স্থির মান, application enum (বর্তমান `genders` table-এর ২টি row)।
 
@@ -394,9 +412,9 @@ Program-এর সাথে সম্পর্ক audience term দিয়ে 
 | Faculty Member | faculty_member_profiles, faculty_member_departments, faculty_member_profile_items | ৩ |
 | Campus | campus_campuses, campus_buildings | ২ |
 | Admission | admission_circulars, admission_highlights, admission_steps, admission_contact_groups, admission_result_batches, admission_results, admission_subscribers | ৭ |
-| Fee | fee_categories, fee_tuitions, fee_tuition_lines, fee_boards, fee_waiver_categories, fee_waiver_rules, 5টি waiver pivot, fee_scholarships | ১২ |
+| Fee | fee_categories, fee_tuitions, fee_tuition_lines, fee_boards, fee_waiver_categories, fee_waiver_category_includes *(v1.1)*, fee_waiver_rules, 5টি waiver pivot, fee_scholarships | ১৩ |
 | Calendar | calendar_calendars, calendar_events | ২ |
-| **মোট** | | **৪৪** |
+| **মোট** | | **৪৫** |
 
 ---
 

@@ -15,6 +15,9 @@ use Legacy\Migration\Support\IdMap;
 use Legacy\Migration\Support\Normalizer;
 use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
+use Modules\Fee\Models\FeeCategory;
+use Modules\Fee\Models\Tuition;
+use Modules\Fee\Models\TuitionLine;
 use Modules\Program\Database\Seeders\ProgramDatabaseSeeder;
 use Modules\Program\Models\Program;
 use Modules\Program\Models\ProgramFacilitator;
@@ -53,6 +56,8 @@ function legacySchema(): void
         'program_facilitators' => fn (Blueprint $t) => [$t->unsignedBigInteger('department_program_type_id'), $t->string('name'), $t->string('designation')->nullable(), $t->string('organization')->nullable(), $t->string('type')->nullable(), $t->string('image')->nullable(), $t->string('profile_link')->nullable(), $t->string('linkedin')->nullable(), $t->string('email')->nullable(), $t->string('mobile')->nullable(), $t->integer('serial')->nullable(), $t->tinyInteger('publication_status')->nullable()],
         'program_materials' => fn (Blueprint $t) => [$t->unsignedBigInteger('department_program_type_id'), $t->string('title'), $t->string('material_link')->nullable(), $t->string('support_document')->nullable(), $t->integer('sort_order')->nullable()],
         'program_professional_memberships' => fn (Blueprint $t) => [$t->unsignedBigInteger('department_program_type_id'), $t->string('title'), $t->text('short_description')->nullable(), $t->string('image')->nullable()],
+        'tuition_categories' => fn (Blueprint $t) => [$t->string('category_name'), $t->string('category_code'), $t->tinyInteger('publication_status')->default(1)],
+        'tuitions' => fn (Blueprint $t) => [$t->unsignedBigInteger('department_program_type_id'), $t->unsignedBigInteger('tuition_category_id'), $t->text('majors')->nullable(), $t->string('credit_hours')->nullable(), $t->integer('max_credit')->nullable(), $t->string('total_semester')->nullable(), $t->string('year')->nullable(), $t->string('admission_fees')->nullable(), $t->integer('first_year')->nullable(), $t->integer('second_year')->nullable(), $t->integer('third_year')->nullable(), $t->integer('fourth_year')->nullable(), $t->string('semester_cost')->nullable(), $t->string('total_tuition_fees')->nullable(), $t->integer('max_tuition_fees')->nullable(), $t->string('other_fee')->nullable(), $t->string('total_fees')->nullable(), $t->integer('max_total_fees')->nullable(), $t->integer('tuition_serial')->nullable(), $t->string('prospectus_link')->nullable(), $t->string('publication_status')->default('1')],
         'program_variants' => fn (Blueprint $t) => [$t->unsignedBigInteger('department_program_type_id'), $t->unsignedBigInteger('related_program_id')->nullable(), $t->string('title')->nullable(), $t->text('short_description')->nullable(), $t->string('action_button_text')->nullable(), $t->string('action_button_url')->nullable(), $t->string('image')->nullable(), $t->longText('full_details')->nullable()],
     ];
 
@@ -111,6 +116,20 @@ beforeEach(function () {
     $l->table('program_facilitators')->insert([['department_program_type_id' => 44, 'name' => 'Ayesha Rahman', 'designation' => 'CTO', 'organization' => 'Example Ltd', 'type' => 'industrial', 'image' => 'images/a.jpg', 'profile_link' => 'not a url', 'linkedin' => 'https://linkedin.com/in/ayesha', 'email' => 'ayesha@example.com', 'mobile' => '+8801700000000', 'serial' => 1, 'publication_status' => 1]]);
     $l->table('program_materials')->insert([['department_program_type_id' => 44, 'title' => 'Hand Books', 'material_link' => null, 'support_document' => 'program_materials/handbook.pdf', 'sort_order' => 1]]);
     $l->table('program_professional_memberships')->insert([['department_program_type_id' => 44, 'title' => 'IEB', 'short_description' => 'Accredited.', 'image' => null]]);
+    $l->table('tuition_categories')->insert([
+        ['id' => 1, 'category_name' => 'Local Tuition Fee', 'category_code' => 'local-tuition', 'publication_status' => 1],
+        ['id' => 2, 'category_name' => 'International Tuition Fee', 'category_code' => 'international-tuition', 'publication_status' => 1],
+    ]);
+    $tuition = fn (array $row) => ['majors' => null, 'semester_cost' => null, 'max_credit' => 0, 'total_semester' => '12', 'year' => '4 Years', 'first_year' => null, 'second_year' => null, 'third_year' => null, 'fourth_year' => null, 'max_tuition_fees' => 0, 'other_fee' => null, 'max_total_fees' => 0, 'tuition_serial' => 5, 'prospectus_link' => null, 'publication_status' => '1', ...$row];
+    $l->table('tuitions')->insert([
+        $tuition(['id' => 4, 'department_program_type_id' => 44, 'tuition_category_id' => 1, 'credit_hours' => '147', 'admission_fees' => '61750', 'semester_cost' => '78,000', 'total_tuition_fees' => '709500', 'total_fees' => '952,500', 'majors' => 'AI, Data Science']),
+        $tuition(['id' => 44, 'department_program_type_id' => 44, 'tuition_category_id' => 2, 'credit_hours' => '147', 'total_semester' => '8', 'admission_fees' => '1514', 'first_year' => 2664, 'second_year' => 2300, 'third_year' => 2300, 'fourth_year' => 2462, 'semester_cost' => '1216', 'total_tuition_fees' => '7271', 'other_fee' => '2181', 'total_fees' => '9726']),
+        // A range the legacy calculator shows: max total, max tuition and max credit
+        $tuition(['id' => 7, 'department_program_type_id' => 45, 'tuition_category_id' => 1, 'credit_hours' => '42', 'max_credit' => 63, 'total_semester' => '4 - 6', 'year' => '1.5 - 2 Years', 'admission_fees' => '28750', 'semester_cost' => '40,000', 'total_tuition_fees' => '99000', 'max_tuition_fees' => 162000, 'total_fees' => '173,500', 'max_total_fees' => 249000]),
+        // Two of one program and category: told apart by the duration
+        $tuition(['id' => 61, 'department_program_type_id' => 45, 'tuition_category_id' => 2, 'credit_hours' => '40', 'year' => '1 Year', 'admission_fees' => '1118', 'total_tuition_fees' => '1485', 'total_fees' => '2021']),
+        $tuition(['id' => 80, 'department_program_type_id' => 45, 'tuition_category_id' => 2, 'credit_hours' => '69', 'year' => '2 Years', 'admission_fees' => '1118', 'total_tuition_fees' => '2475', 'total_fees' => '3383']),
+    ]);
     $l->table('program_variants')->insert([
         ['department_program_type_id' => 44, 'related_program_id' => 45, 'title' => 'Go further: M.Sc.', 'short_description' => 'One more year.', 'action_button_text' => 'See M.Sc.', 'action_button_url' => null, 'image' => null, 'full_details' => null],
         ['department_program_type_id' => 44, 'related_program_id' => 44, 'title' => 'Itself', 'short_description' => 'x', 'action_button_text' => null, 'action_button_url' => null, 'image' => null, 'full_details' => null],
@@ -183,6 +202,41 @@ it('migrates programs with level, tag, eligibility, counters and their parts (S0
         ->and($variants[1]->related_program_id)->toBeNull();                                    // pointing at itself
 
     $this->get('/program/bsc-in-swe')->assertOk()->assertSee('Build software.')->assertSee('Data Science')->assertSee('Ayesha Rahman');
+});
+
+it('migrates tuition fees with DIU\'s totals, lines, ranges and labels (S07)', function () {
+    $this->artisan('legacy:migrate', ['--all' => true, '--no-report' => true])->assertSuccessful();
+
+    expect(FeeCategory::query()->orderBy('sort_order')->get()->map(fn ($c) => [$c->code, $c->currency])->all())->toBe([['local', 'BDT'], ['international', 'USD']]);
+
+    $bsc = Program::findBySlug('bsc-in-swe', 'en')[0];
+    $local = Tuition::query()->where('program_id', $bsc->id)->whereHas('category', fn ($q) => $q->where('code', 'local'))->sole();
+    expect($local->totals_overridden)->toBeTrue()
+        ->and((float) $local->tuition_min)->toBe(709500.0)
+        ->and((float) $local->total_min)->toBe(952500.0)                                       // "952,500"
+        ->and($local->total_max)->toBeNull()
+        ->and($local->lines->pluck('line_type')->all())->toBe(['admission', 'term'])
+        ->and($local->admissionFee())->toBe(61750.0)
+        ->and($local->otherFees())->toBe(243000.0);                                            // total − tuition (no other fee entered)
+
+    $intl = Tuition::query()->where('program_id', $bsc->id)->whereHas('category', fn ($q) => $q->where('code', 'international'))->sole();
+    expect($intl->lines->pluck('line_type')->all())->toBe(['admission', 'year', 'year', 'year', 'year', 'term', 'other'])
+        ->and($intl->otherFees())->toBe(2181.0);
+
+    $msc = Program::findBySlug('msc-in-swe', 'en')[0];
+    $ranged = Tuition::query()->where('program_id', $msc->id)->whereHas('category', fn ($q) => $q->where('code', 'local'))->sole();
+    expect($ranged->creditsText())->toBe('42 – 63')
+        ->and((float) $ranged->total_max)->toBe(249000.0)
+        ->and((float) $ranged->tuition_max)->toBe(162000.0)
+        ->and($ranged->total_terms)->toBeNull();                                               // "4 - 6" stays in the duration
+
+    expect(Tuition::query()->where('program_id', $msc->id)->whereHas('category', fn ($q) => $q->where('code', 'international'))->get()
+        ->map(fn ($t) => $t->getTranslation('label', 'en'))->sort()->values()->all())->toBe(['1 Year', '2 Years']);
+
+    // A second run changes nothing
+    $this->artisan('legacy:migrate', ['--step' => ['S07'], '--no-report' => true])->assertSuccessful();
+    expect(Tuition::query()->count())->toBe(5)
+        ->and(TuitionLine::query()->count())->toBe(13);   // 2 + 7 + 2 + 1 + 1
 });
 
 it('updates on a second run instead of duplicating, and takes over a record entered by hand (M-3)', function () {

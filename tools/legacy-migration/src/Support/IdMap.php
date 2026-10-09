@@ -22,6 +22,11 @@ class IdMap
         return $id === null ? null : (int) $id;
     }
 
+    public function forget(string $legacyTable, int|string $legacyId): void
+    {
+        DB::table(self::TABLE)->where('legacy_table', $legacyTable)->where('legacy_id', (int) $legacyId)->delete();
+    }
+
     /** @return list<int> new ids of one type already mapped from this legacy table */
     public function ownedIds(string $legacyTable, string $newType): array
     {

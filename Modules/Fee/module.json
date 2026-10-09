@@ -1,0 +1,48 @@
+{
+    "name": "Fee",
+    "alias": "fee",
+    "description": "Tuition fees, waiver rules with the Waiver Calculator, and scholarships — M-10",
+    "keywords": [
+        "academic",
+        "tuition",
+        "waiver",
+        "scholarship"
+    ],
+    "priority": 60,
+    "providers": [
+        "Modules\\Fee\\Providers\\FeeServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "fee",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "fee_",
+        "dependencies": {
+            "program": "^1.0",
+            "department": "^1.0",
+            "faculty": "^1.0"
+        },
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "fee.category": "Modules\\Fee\\Models\\FeeCategory",
+            "fee.tuition": "Modules\\Fee\\Models\\Tuition",
+            "fee.tuition-line": "Modules\\Fee\\Models\\TuitionLine"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "scopeable": true,
+            "entity_tabs": true,
+            "layouts": [
+                "fee.tuition-table"
+            ]
+        }
+    }
+}

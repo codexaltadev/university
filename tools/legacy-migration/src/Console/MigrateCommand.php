@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\File;
 use Legacy\Migration\Steps\S02Vocabularies;
 use Legacy\Migration\Steps\S04FacultiesDepartments;
 use Legacy\Migration\Steps\S06Programs;
+use Legacy\Migration\Steps\S07Fees;
 use Legacy\Migration\Steps\Step;
 use Platform\Modules\ModuleRegistry;
 use Spatie\Activitylog\Support\ActivityLogStatus;
@@ -25,7 +26,7 @@ class MigrateCommand extends Command
     protected $description = 'Migrate DIU data from the legacy database (project_diu)';
 
     /** In the order of the plan (§5). */
-    public const STEPS = [S02Vocabularies::class, S04FacultiesDepartments::class, S06Programs::class];
+    public const STEPS = [S02Vocabularies::class, S04FacultiesDepartments::class, S06Programs::class, S07Fees::class];
 
     public function handle(): int
     {
