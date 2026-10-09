@@ -228,6 +228,21 @@ class RelationEngine
      */
     protected function validateTargets(array $targets, ?Authenticatable $user): void
     {
+        $errors = $this->targetErrors($targets, $user);
+
+        if ($errors !== []) {
+            throw new RelationRejected($errors);
+        }
+    }
+
+    /**
+     * The same rules for form validation, before anything is saved.
+     *
+     * @param  list<string>  $targets
+     * @return list<string> problems, empty when fine
+     */
+    public function targetErrors(array $targets, ?Authenticatable $user): array
+    {
         $errors = [];
         $models = collect($this->registry->all('relationTarget'))
             ->mapWithKeys(fn (array $entry): array => [MorphMap::alias($entry['model']) => $entry['model']]);
@@ -256,9 +271,42 @@ class RelationEngine
             }
         }
 
-        if ($errors !== []) {
-            throw new RelationRejected($errors);
-        }
+        return $errors;
+    }
+
+    /** May this user highlight the content in this context (main site: HighlightMain; entities: own scope)? */
+    public function mayHighlightIn(?Authenticatable $user, Model $content, string $context): bool
+    {
+        return $this->mayHighlight($user, $content, $context);
+    }
+
+    /** May this user put the content on the main site (PublishMain)? */
+    public function mayPublishMain(?Authenticatable $user, Model|string $content): bool
+    {
+        return $this->can($user, 'PublishMain', is_string($content) ? new $content : $content);
+    }
+
+    /** @return array<string, array{order: int, until: ?string}> context key => highlight, current ones only */
+    public function highlightsOf(Model $content): array
+    {
+        return $this->relationsOf($content)->where('is_highlighted', true)->get()
+            ->mapWithKeys(fn (ContentRelation $r): array => [$r->targetKey() => [
+                'order' => (int) $r->highlight_order,
+                'until' => $r->highlight_until?->toDateString(),
+            ]])->all();
+    }
+
+    public function hasPendingRequest(Model $content): bool
+    {
+        return MainSiteRequest::query()->where('content_type', $content->getMorphClass())
+            ->where('content_id', $content->getKey())->where('decision', MainSiteRequest::PENDING)->exists();
+    }
+
+    /** The entity user changed their mind: the open request is withdrawn. */
+    public function withdrawRequest(Model $content): void
+    {
+        MainSiteRequest::query()->where('content_type', $content->getMorphClass())
+            ->where('content_id', $content->getKey())->where('decision', MainSiteRequest::PENDING)->delete();
     }
 
     protected function mayHighlight(?Authenticatable $user, Model $content, string $context): bool

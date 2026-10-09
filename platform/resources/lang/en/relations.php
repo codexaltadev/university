@@ -1,0 +1,24 @@
+<?php
+
+return [
+    'main_site' => 'Main site',
+    'publishing' => 'Publishing',
+    'active' => 'Active',
+    'published_at' => 'Publish date',
+    'published_at_help' => 'A future date keeps it hidden until then (scheduled).',
+    'expires_at' => 'Expires',
+    'show_in' => 'Show in',
+    'show_in_placeholder' => 'Faculty, department, office …',
+    'show_in_help' => 'Where this appears besides its own listing.',
+    'show_in_required' => 'Choose at least one of your entities.',
+    'on_main_site' => 'Show on the main site',
+    'on_main_site_help' => 'Main site listings and homepage.',
+    'request_main_site' => 'Ask the Admin to show it on the main site',
+    'request_main_site_help' => 'The Admin decides; you will see it in the main site listing once published.',
+    'highlight' => 'Highlight',
+    'highlight_help' => 'Highlighted items come first in that place, in this order, until the date.',
+    'highlight_none' => 'Choose where it is shown first.',
+    'order' => 'Order',
+    'until' => 'Until',
+    'scheduled' => 'Scheduled',
+];

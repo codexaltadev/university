@@ -1,0 +1,24 @@
+<?php
+
+return [
+    'main_site' => 'Main site',
+    'publishing' => 'প্রকাশ',
+    'active' => 'চালু',
+    'published_at' => 'প্রকাশের তারিখ',
+    'published_at_help' => 'ভবিষ্যতের তারিখ দিলে সেই সময় পর্যন্ত লুকানো থাকবে (scheduled)।',
+    'expires_at' => 'মেয়াদ শেষ',
+    'show_in' => 'যেখানে দেখাবে',
+    'show_in_placeholder' => 'Faculty, department, office …',
+    'show_in_help' => 'নিজের তালিকা ছাড়াও কোথায় দেখাবে।',
+    'show_in_required' => 'আপনার অন্তত একটি entity বাছাই করুন।',
+    'on_main_site' => 'Main site-এ দেখাবে',
+    'on_main_site_help' => 'Main site-এর তালিকা ও homepage।',
+    'request_main_site' => 'Main site-এ দেখানোর জন্য Admin-কে অনুরোধ',
+    'request_main_site_help' => 'সিদ্ধান্ত Admin-এর; প্রকাশ হলে main site-এর তালিকায় দেখবেন।',
+    'highlight' => 'Highlight',
+    'highlight_help' => 'Highlight করা content সেই জায়গায় আগে দেখায়, এই ক্রমে, তারিখ পর্যন্ত।',
+    'highlight_none' => 'আগে বাছাই করুন কোথায় দেখাবে।',
+    'order' => 'ক্রম',
+    'until' => 'পর্যন্ত',
+    'scheduled' => 'Scheduled',
+];
