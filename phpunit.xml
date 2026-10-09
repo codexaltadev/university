@@ -40,6 +40,7 @@
         <env name="UWMS_MODULE_RUNTIME_PATH" value="storage/framework/testing/modules-runtime"/>
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
+        <env name="UWMS_BACKUP_BEFORE_CHANGE" value="false"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>

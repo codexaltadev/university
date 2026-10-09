@@ -1,0 +1,16 @@
+{
+    "name": "uwms/backup",
+    "description": "Backup module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Backup\\": "app/",
+            "Modules\\Backup\\Database\\Factories\\": "database/factories/",
+            "Modules\\Backup\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Backup\\Tests\\": "tests/" }
+    }
+}

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\HtmlString;
 use Nwidart\Modules\Facades\Module;
+use Platform\Backup\Backups;
 use RuntimeException;
 
 /**
@@ -226,6 +227,12 @@ class Themes
 
             if ($existing && version_compare($manifest->version(), $existing->version, '<')) {
                 throw new RuntimeException("Version {$manifest->version()} is older than the installed {$existing->version}.");
+            }
+
+            // FR-BKP-03: database backup before the theme changes
+            $backup = app(Backups::class)->beforeChange("theme {$manifest->slug()} {$manifest->version()}");
+            if ($backup['status'] === 'failed') {
+                throw new RuntimeException('Database backup failed: '.$backup['message']);
             }
 
             $target = rtrim(config('platform.themes.runtime_path'), '/').'/'.$manifest->slug();

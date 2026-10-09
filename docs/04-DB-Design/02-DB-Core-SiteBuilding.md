@@ -542,6 +542,7 @@ UQ: `(rule_id, entity_type, entity_id)`; IX: `(entity_type, entity_id)` (dashboa
 | path | VARCHAR(500) | N | |
 | size_bytes | BIGINT UNSIGNED | N | |
 | error | TEXT | N | |
+| reason | VARCHAR(255) | N | কেন: "install news 1.2.0", "theme campus 1.1.0" … *(v1.2, Phase 2.12)* |
 | triggered_by | BIGINT UNSIGNED | N, FK users | Null = scheduler |
 | started_at, finished_at | TIMESTAMP | N | |
 

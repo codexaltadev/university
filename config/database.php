@@ -62,6 +62,12 @@ return [
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
+            // Backups (C-19): a consistent InnoDB snapshot without locking the website's tables
+            'dump' => [
+                'use_single_transaction' => true,
+                'skip_lock_tables' => true,
+                'timeout' => 60 * 10,
+            ],
         ],
 
         'mariadb' => [

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Nwidart\Modules\Facades\Module;
 use Platform\Assignments\RoleCatalog;
+use Platform\Backup\Backups;
 use Platform\Events\ModuleActivated;
 use Platform\Events\ModuleDeactivated;
 use Platform\Events\ModuleInstalled;
@@ -118,8 +119,13 @@ class ModuleManager
         }
         $op->step('conflicts and dependencies checked');
 
-        // Database backup is taken by the Backup module (C-?) once it exists; logged as skipped until then.
-        $op->step('database backup', 'skipped', 'Backup module not installed yet');
+        // FR-BKP-03 / BR-MOD-07: database backup first; a failed backup stops the install
+        $backup = app(Backups::class)->beforeChange("install {$manifest->slug()} {$manifest->version()}");
+        $op->step('database backup', $backup['status'] === 'success' ? 'ok' : $backup['status'], $backup['message']);
+
+        if ($backup['status'] === 'failed') {
+            return $this->undoInstall($manifest, $op, ['Database backup failed: '.$backup['message']], $removeFolderOnFailure, migrated: false);
+        }
 
         try {
             if (is_dir($manifest->migrationsPath())) {

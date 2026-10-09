@@ -1,0 +1,41 @@
+{
+    "name": "Backup",
+    "alias": "backup",
+    "description": "Scheduled and manual database / full backups, backup before installs, retention and health — core module C-19",
+    "keywords": [
+        "backup",
+        "maintenance"
+    ],
+    "priority": 20,
+    "providers": [
+        "Modules\\Backup\\Providers\\BackupServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "backup",
+        "version": "1.0.0",
+        "type": "core",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "backup_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "backup.run": "Modules\\Backup\\Models\\BackupRun"
+        },
+        "custom_permissions": [
+            "View:Backup",
+            "Create:Backup",
+            "Download:Backup"
+        ],
+        "provides": {
+            "settings": true,
+            "notifications": true
+        }
+    }
+}

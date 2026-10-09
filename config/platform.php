@@ -74,6 +74,14 @@ return [
     | Website themes (C-06, SAD Part B §8). Bundled themes live in themes/ (git);
     | ZIP-installed ones in a folder that survives deploys (ADR-12).
     */
+    /*
+    | FR-BKP-03: database backup before module / theme install. Off in tests
+    | (phpunit.xml) — the Backup module's own tests switch it on.
+    */
+    'backup' => [
+        'before_change' => (bool) env('UWMS_BACKUP_BEFORE_CHANGE', true),
+    ],
+
     'themes' => [
         'default' => 'default',                 // BRL-THEME-01: never uninstalled
 

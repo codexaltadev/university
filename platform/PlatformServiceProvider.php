@@ -10,6 +10,7 @@ use Illuminate\Support\ServiceProvider;
 use Livewire\Livewire;
 use Platform\Assignments\AssignmentEngine;
 use Platform\Assignments\RoleCatalog;
+use Platform\Backup\Backups;
 use Platform\Console\Commands;
 use Platform\Context\FallbackResolver;
 use Platform\Context\MicrositeResolver;
@@ -71,7 +72,7 @@ class PlatformServiceProvider extends ServiceProvider
             FallbackResolver::class, MicrositeResolver::class, Languages::class, Settings::class,
             Vocabularies::class, MediaLibrary::class, MediaUsages::class, Targets::class, MainSiteQueue::class, Statistics::class,
             Themes::class, DesignTokens::class, LayoutResolver::class, SiteData::class,
-            Seo::class, Sitemap::class, Website::class, SearchIndex::class, Notifications::class,
+            Seo::class, Sitemap::class, Website::class, SearchIndex::class, Notifications::class, Backups::class,
         ] as $service) {
             $this->app->singleton($service);
         }
