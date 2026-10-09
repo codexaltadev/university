@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'owner' => 'যার',
     'main_site' => 'Main site',
     'publishing' => 'প্রকাশ',
     'active' => 'চালু',

@@ -1,0 +1,60 @@
+<?php
+
+return [
+    'page' => 'Page',
+    'pages' => 'Page',
+    'top_level' => 'সবার উপরে',
+    'copy_suffix' => '(কপি)',
+    'sections' => [
+        'page' => 'Page',
+        'files' => 'ছবি ও file',
+    ],
+    'fields' => [
+        'title' => 'শিরোনাম',
+        'excerpt' => 'সংক্ষিপ্ত বিবরণ',
+        'content' => 'বিষয়বস্তু',
+        'parent' => 'যে page-এর ভেতরে',
+        'template' => 'Layout',
+        'web_address' => 'Web ঠিকানা',
+        'featured_image' => 'প্রধান ছবি',
+        'attachments' => 'Download',
+        'caption' => 'Caption',
+        'columns' => 'Column',
+        'heading' => 'শিরোনাম',
+        'body' => 'লেখা',
+        'tab' => 'Tab',
+        'url' => 'Link',
+        'label' => 'লেখা',
+        'style' => 'ধরন',
+    ],
+    'templates' => [
+        'default' => 'সাধারণ',
+        'full-width' => 'পূর্ণ প্রস্থ',
+        'with-sidebar' => 'Sidebar সহ',
+        'landing' => 'Landing',
+    ],
+    'blocks' => [
+        'text' => 'লেখা',
+        'image' => 'ছবি',
+        'gallery' => 'Gallery',
+        'accordion' => 'Accordion',
+        'tabs' => 'Tab',
+        'files' => 'File',
+        'embed' => 'ভিডিও / ম্যাপ',
+        'button' => 'Button',
+    ],
+    'styles' => [
+        'primary' => 'প্রধান',
+        'secondary' => 'সাধারণ',
+    ],
+    'help' => [
+        'web_address' => 'শিরোনাম থেকে তৈরি; এখানে বদলানো যায়। পুরনো ঠিকানাও কাজ করবে।',
+        'attachments' => 'Page-এর শেষে download তালিকায় দেখাবে।',
+        'embed' => 'YouTube, Vimeo, Google Maps বা Facebook ভিডিওর link।',
+        'button_url' => 'পূর্ণ link (https://…) অথবা এই website-এর ঠিকানা (/admission)।',
+    ],
+    'actions' => [
+        'add_block' => 'Block যোগ করুন',
+        'duplicate' => 'কপি করুন',
+    ],
+];

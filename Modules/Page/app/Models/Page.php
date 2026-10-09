@@ -1,0 +1,108 @@
+<?php
+
+namespace Modules\Page\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Page\Blocks\PageBlocks;
+use Modules\Page\Database\Factories\PageFactory;
+use Platform\Concerns\AppliesUserScope;
+use Platform\Concerns\HasExpiry;
+use Platform\Concerns\HasMediaUsage;
+use Platform\Concerns\HasOwner;
+use Platform\Concerns\HasPublishDate;
+use Platform\Concerns\HasSlug;
+use Platform\Contracts\Scopeable;
+use Platform\Models\BaseModel;
+use Spatie\Translatable\HasTranslations;
+
+/**
+ * A page of the main site or of an entity's microsite (C-11, page_pages): About,
+ * History, Lab Facilities … Content is a list of blocks per language. Address:
+ * owner's microsite + parent pages + own slug, e.g. /department/cse/about/history.
+ */
+class Page extends BaseModel implements Scopeable
+{
+    use AppliesUserScope;   // entity users: pages of their entities only (owner path)
+    use HasExpiry;
+
+    /** @use HasFactory<PageFactory> */
+    use HasFactory;
+
+    use HasMediaUsage;      // featured_image, attachments, and pictures / files inside blocks ("content")
+    use HasOwner;
+    use HasPublishDate;
+    use HasSlug;
+    use HasTranslations;
+
+    public const TEMPLATES = ['default', 'full-width', 'with-sidebar', 'landing'];
+
+    public static string $titleAttribute = 'title';
+
+    protected $table = 'page_pages';
+
+    protected $fillable = ['parent_id', 'title', 'excerpt', 'content', 'template', 'published_at', 'expires_at', 'sort_order', 'is_active'];
+
+    public array $translatable = ['title', 'excerpt', 'content'];
+
+    protected string $slugSource = 'title';
+
+    protected array $guardedChildren = ['children'];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Page $page): void {
+            $page->sort_order ??= (int) static::withTrashed()->where('owner_type', $page->owner_type)->where('owner_id', $page->owner_id)
+                ->where('parent_id', $page->parent_id)->max('sort_order') + 1;
+        });
+
+        // Pictures and files chosen inside blocks count as usage (FR-MEDIA-09)
+        static::saved(function (Page $page): void {
+            if ($page->wasChanged('content') || $page->wasRecentlyCreated) {
+                $page->syncMedia('content', PageBlocks::mediaIds($page->getTranslations('content')));
+            }
+        });
+    }
+
+    public function parent(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function children(): HasMany
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
+
+    /** Public address (FR-PAGE-03/05, AC-PAGE-01). */
+    public function url(?string $locale = null): string
+    {
+        $slugs = [];
+
+        for ($page = $this; $page !== null; $page = $page->parent) {
+            array_unshift($slugs, $page->slug($locale));
+        }
+
+        return $this->ownerUrlPrefix($locale).'/'.implode('/', array_filter($slugs));
+    }
+
+    /** @return list<int> this page and every page below it */
+    public function descendantIds(): array
+    {
+        $ids = [$this->id];
+        $level = [$this->id];
+
+        while ($level !== []) {
+            $level = static::withTrashed()->whereIn('parent_id', $level)->pluck('id')->all();
+            $ids = [...$ids, ...$level];
+        }
+
+        return $ids;
+    }
+
+    protected static function newFactory(): PageFactory
+    {
+        return PageFactory::new();
+    }
+}

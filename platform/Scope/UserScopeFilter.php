@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Scope;
 use Illuminate\Support\Facades\Auth;
+use Platform\Concerns\HasOwner;
 use Platform\Concerns\IsAttachable;
 use Platform\Concerns\IsRelationTarget;
 
@@ -48,6 +49,7 @@ class UserScopeFilter implements Scope
         match (true) {
             is_array($columns = static::pathOf($model)) => $this->byColumns($builder, $model, $columns, $ids),
             $columns === 'self' => $builder->whereKey($ids[$model->getMorphClass()] ?? []),
+            $columns === 'owner' => $this->byOwner($builder, $model, $ids),
             $columns === 'relation' => $builder->shownIn(array_merge(...array_map(
                 fn (string $type, array $list): array => array_map(fn (int $id): string => "{$type}:{$id}", $list),
                 array_keys($ids), $ids,
@@ -57,7 +59,7 @@ class UserScopeFilter implements Scope
     }
 
     /**
-     * Scope path of a model (§5.3): "self", "relation", column map or "none".
+     * Scope path of a model (§5.3): "owner", "self", "relation", column map or "none".
      *
      * @return string|array<string, string>
      */
@@ -70,10 +72,30 @@ class UserScopeFilter implements Scope
         $traits = class_uses_recursive($model);
 
         return match (true) {
+            in_array(HasOwner::class, $traits, true) => 'owner',
             in_array(IsRelationTarget::class, $traits, true) => 'self',
             in_array(IsAttachable::class, $traits, true) => 'relation',
             default => 'none',
         };
+    }
+
+    /**
+     * HasOwner: records owned by an entity of the scope; main-site records are
+     * the Admin's (P-04 … P-08).
+     *
+     * @param  array<string, list<int>>  $ids
+     */
+    protected function byOwner(Builder $builder, Model $model, array $ids): void
+    {
+        $builder->where(function (Builder $q) use ($ids, $model): void {
+            foreach ($ids as $type => $list) {
+                $q->orWhere(fn (Builder $o) => $o->where($model->qualifyColumn('owner_type'), $type)->whereIn($model->qualifyColumn('owner_id'), $list));
+            }
+
+            if ($ids === []) {
+                $q->whereRaw('1 = 0');
+            }
+        });
     }
 
     /**

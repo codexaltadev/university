@@ -56,6 +56,41 @@ class ContentFilters
             });
     }
 
+    /** HasOwner records (pages, menus …): the main site's or an entity's. */
+    public static function owner(): SelectFilter
+    {
+        return SelectFilter::make('owner')
+            ->label(__('platform::relations.owner'))
+            ->searchable()
+            ->options(fn (): array => static::ownerOptions())
+            ->query(fn (Builder $query, array $data): Builder => filled($data['value'] ?? null) ? $query->ownedBy($data['value']) : $query);
+    }
+
+    /**
+     * Owners this user may choose: the main site for unscoped users, then the
+     * entities of their scope, grouped by kind.
+     *
+     * @return array<string, string|array<string, string>>
+     */
+    public static function ownerOptions(): array
+    {
+        $user = Auth::user();
+        $unscoped = $user === null || $user->isSuperAdmin() || app(Targets::class)->highlightableFor($user) === null;
+
+        return [
+            ...($unscoped ? [RelationEngine::SITE_KEY => '🌐 '.__('platform::relations.main_site')] : []),
+            ...app(Targets::class)->options($user),
+        ];
+    }
+
+    /** @return list<string> every owner key of ownerOptions() */
+    public static function ownerKeys(): array
+    {
+        return collect(static::ownerOptions())
+            ->flatMap(fn ($value, $key): array => is_array($value) ? array_keys($value) : [$key])
+            ->values()->all();
+    }
+
     /** On the main site, or only in entities (FR-CNT-H07). */
     public static function mainSite(): TernaryFilter
     {

@@ -1,0 +1,60 @@
+<?php
+
+return [
+    'page' => 'Page',
+    'pages' => 'Pages',
+    'top_level' => 'Top level',
+    'copy_suffix' => '(copy)',
+    'sections' => [
+        'page' => 'Page',
+        'files' => 'Pictures & files',
+    ],
+    'fields' => [
+        'title' => 'Title',
+        'excerpt' => 'Short description',
+        'content' => 'Content',
+        'parent' => 'Inside page',
+        'template' => 'Layout',
+        'web_address' => 'Web address',
+        'featured_image' => 'Main picture',
+        'attachments' => 'Downloads',
+        'caption' => 'Caption',
+        'columns' => 'Columns',
+        'heading' => 'Heading',
+        'body' => 'Text',
+        'tab' => 'Tab',
+        'url' => 'Link',
+        'label' => 'Label',
+        'style' => 'Style',
+    ],
+    'templates' => [
+        'default' => 'Default',
+        'full-width' => 'Full width',
+        'with-sidebar' => 'With sidebar',
+        'landing' => 'Landing',
+    ],
+    'blocks' => [
+        'text' => 'Text',
+        'image' => 'Picture',
+        'gallery' => 'Gallery',
+        'accordion' => 'Accordion',
+        'tabs' => 'Tabs',
+        'files' => 'Files',
+        'embed' => 'Video / map',
+        'button' => 'Button',
+    ],
+    'styles' => [
+        'primary' => 'Main',
+        'secondary' => 'Plain',
+    ],
+    'help' => [
+        'web_address' => 'Made from the title; change it here. The old address keeps working.',
+        'attachments' => 'Listed for download at the end of the page.',
+        'embed' => 'YouTube, Vimeo, Google Maps or Facebook video link.',
+        'button_url' => 'A full link (https://…) or an address on this website (/admission).',
+    ],
+    'actions' => [
+        'add_block' => 'Add block',
+        'duplicate' => 'Duplicate',
+    ],
+];

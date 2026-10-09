@@ -1,0 +1,34 @@
+{
+    "name": "Page",
+    "alias": "page",
+    "description": "Main site and microsite pages with content blocks — core module C-11",
+    "keywords": [
+        "content",
+        "pages"
+    ],
+    "priority": 20,
+    "providers": [
+        "Modules\\Page\\Providers\\PageServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "page",
+        "version": "1.0.0",
+        "type": "core",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "page_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "page.page": "Modules\\Page\\Models\\Page"
+        },
+        "custom_permissions": [],
+        "provides": {}
+    }
+}

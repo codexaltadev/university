@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'owner' => 'Belongs to',
     'main_site' => 'Main site',
     'publishing' => 'Publishing',
     'active' => 'Active',
