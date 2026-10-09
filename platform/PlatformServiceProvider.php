@@ -16,6 +16,7 @@ use Platform\Context\MicrositeSetting;
 use Platform\Events\ModuleActivated;
 use Platform\Events\ModuleDeactivated;
 use Platform\Events\ModuleUninstalling;
+use Platform\Events\SettingsUpdated;
 use Platform\Hierarchy\EntityHierarchy;
 use Platform\Localization\DatabaseTranslationLoader;
 use Platform\Localization\Languages;
@@ -33,6 +34,8 @@ use Platform\Relations\MainSiteQueue;
 use Platform\Relations\RelationEngine;
 use Platform\Relations\Targets;
 use Platform\Scope\ScopeResolver;
+use Platform\Seo\Seo;
+use Platform\Seo\Sitemap;
 use Platform\Settings\Settings;
 use Platform\Statistics\Statistics;
 use Platform\Support\BlueprintMacros;
@@ -45,6 +48,8 @@ use Platform\Theme\LayoutResolver;
 use Platform\Theme\SiteData;
 use Platform\Theme\ThemeBlade;
 use Platform\Theme\Themes;
+use Platform\Website\Website;
+use Platform\Website\WebsiteController;
 
 /**
  * Platform kernel. Registered before nwidart's provider (bootstrap/providers.php),
@@ -61,6 +66,7 @@ class PlatformServiceProvider extends ServiceProvider
             FallbackResolver::class, MicrositeResolver::class, Languages::class, Settings::class,
             Vocabularies::class, MediaLibrary::class, MediaUsages::class, Targets::class, MainSiteQueue::class, Statistics::class,
             Themes::class, DesignTokens::class, LayoutResolver::class, SiteData::class,
+            Seo::class, Sitemap::class, Website::class,
         ] as $service) {
             $this->app->singleton($service);
         }
@@ -134,8 +140,11 @@ class PlatformServiceProvider extends ServiceProvider
 
         if (! $this->app->routesAreCached()) {
             Route::middleware('web')->group(function (): void {
-                Route::get('/', HomeController::class)->name('home');
+                Route::get('/', [WebsiteController::class, 'home'])->name('home');
+                Route::get('/sitemap.xml', [WebsiteController::class, 'sitemap'])->name('sitemap');     // FR-SEO-02
+                Route::get('/robots.txt', [WebsiteController::class, 'robots'])->name('robots');        // FR-SEO-03
                 Route::get('/theme-preview/stop', [HomeController::class, 'stopPreview'])->name('theme.preview.stop');
+                Route::fallback([WebsiteController::class, 'resolve']);   // microsites and module pages (Website handlers)
             });
         }
     }
@@ -160,14 +169,19 @@ class PlatformServiceProvider extends ServiceProvider
             $this->app->make(FallbackResolver::class)->flush();
             $this->app->make(Vocabularies::class)->flush();
             $this->app->make(Themes::class)->flush();   // module override folders
+            Sitemap::flush();                            // AC-SEO-02
         };
 
         Event::listen([ModuleActivated::class, ModuleDeactivated::class], $refresh);
+
+        // A module hidden on the website, a new language … (FR-SET-05)
+        Event::listen(SettingsUpdated::class, fn () => Sitemap::flush());
 
         // FR-STAT-05: published / changed / deleted content → counters counted again
         Event::listen(['eloquent.saved: *', 'eloquent.deleted: *', 'eloquent.restored: *'], function (string $event, array $models): void {
             if (($models[0] ?? null) instanceof BaseModel) {
                 Statistics::flush();
+                Sitemap::flush();   // FR-SEO-02
             }
         });
 

@@ -11,6 +11,7 @@ use Platform\Localization\Translation;
 use Platform\Media\MediaFolder;
 use Platform\Media\MediaItem;
 use Platform\Modules\ModuleRegistry;
+use Platform\Seo\SeoMeta;
 use Platform\Settings\Setting;
 use Platform\Statistics\StatItem;
 use Platform\Statistics\StatSet;
@@ -40,6 +41,7 @@ class MorphMap
         'core.stat-set' => StatSet::class,
         'core.stat-item' => StatItem::class,
         'core.theme' => Theme::class,            // activity log subject (theme activated)
+        'core.seo-meta' => SeoMeta::class,       // media usage (og_image)
     ];
 
     public static function register(ModuleRegistry $modules): void

@@ -1,22 +1,49 @@
-{{-- <x-platform::head :title="…" :description="…" /> — title, meta, favicon, fonts and the design-token CSS (SAD Part B §8.4) --}}
+{{--
+    <x-platform::head :title="…" :description="…" /> — title, SEO tags (C-12), favicon, fonts and the
+    design-token CSS (SAD Part B §8.4). The record of the page comes from Platform\Seo\Seo.
+--}}
 @props(['title' => null, 'description' => null])
 @php
     $themes = app(\Platform\Theme\Themes::class);
     $tokens = app(\Platform\Theme\DesignTokens::class);
     $theme = $themes->current();
-    $siteName = settings('general.site_name');
-    $description ??= settings('general.tagline');
+    $seo = app(\Platform\Seo\Seo::class)->tags($title, $description);
     $favicon = settings()->media('branding.favicon');
     $fonts = $tokens->fontsUrl($theme);
     $analytics = settings('code.google_analytics_id');
 @endphp
-<title>{{ $title ? $title.' | '.$siteName : $siteName }}</title>
-@if ($description)
-    <meta name="description" content="{{ $description }}">
+<title>{{ $seo['title'] }}</title>
+@if ($seo['description'])
+    <meta name="description" content="{{ $seo['description'] }}">
 @endif
-@if ($themes->previewing())
-    <meta name="robots" content="noindex, nofollow">
+@if ($seo['robots'])
+    <meta name="robots" content="{{ $seo['robots'] }}">
 @endif
+<link rel="canonical" href="{{ $seo['canonical'] }}">
+@foreach ($seo['alternates'] as $hreflang => $href)
+    <link rel="alternate" hreflang="{{ $hreflang }}" href="{{ $href }}">
+@endforeach
+<meta property="og:type" content="{{ $seo['type'] }}">
+<meta property="og:title" content="{{ $seo['og_title'] }}">
+<meta property="og:site_name" content="{{ $seo['site_name'] }}">
+<meta property="og:url" content="{{ $seo['canonical'] }}">
+<meta property="og:locale" content="{{ $seo['locale'] }}">
+@if ($seo['description'])
+    <meta property="og:description" content="{{ $seo['description'] }}">
+@endif
+@if ($seo['image'])
+    <meta property="og:image" content="{{ $seo['image'] }}">
+    <meta name="twitter:card" content="summary_large_image">
+@endif
+@if ($seo['google'])
+    <meta name="google-site-verification" content="{{ $seo['google'] }}">
+@endif
+@if ($seo['bing'])
+    <meta name="msvalidate.01" content="{{ $seo['bing'] }}">
+@endif
+@foreach ($seo['jsonld'] as $block)
+    <script type="application/ld+json">{!! json_encode($block, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>
+@endforeach
 @if ($favicon)
     <link rel="icon" href="{{ $favicon->url() }}">
 @endif

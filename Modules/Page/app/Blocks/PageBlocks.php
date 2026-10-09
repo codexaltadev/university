@@ -4,6 +4,8 @@ namespace Modules\Page\Blocks;
 
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
+use Illuminate\Support\HtmlString;
 use Platform\Pages\PageBlock;
 use Platform\Registry\Registry;
 
@@ -44,6 +46,34 @@ class PageBlocks
     public static function richText(string $name): RichEditor
     {
         return RichEditor::make($name)->fileAttachments(false);
+    }
+
+    /**
+     * The blocks of one language as website HTML: each block's view (theme override
+     * first); a block whose module is off is skipped.
+     *
+     * @param  list<array{type: string, data: array}>  $blocks
+     */
+    public static function render(array $blocks, string $locale): HtmlString
+    {
+        $catalogue = static::all();
+        $html = '';
+
+        foreach ($blocks as $block) {
+            $class = $catalogue[$block['type'] ?? ''] ?? null;
+
+            if ($class && view()->exists($class::view())) {
+                $html .= view($class::view(), ['data' => (array) ($block['data'] ?? []), 'locale' => $locale])->render();
+            }
+        }
+
+        return new HtmlString($html);
+    }
+
+    /** Rich text of a block, rendered and sanitised (FR-PAGE-02). */
+    public static function html(mixed $value): HtmlString
+    {
+        return new HtmlString(blank($value) ? '' : RichContentRenderer::make($value)->toHtml());
     }
 
     /**

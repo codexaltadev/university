@@ -14,6 +14,7 @@ use Modules\Page\Blocks\PageBlocks;
 use Modules\Page\Models\Page;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\PublishingPanel;
+use Platform\Filament\Components\SeoPanel;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Filament\Components\WebAddressField;
 use Platform\Filament\Tables\ContentFilters;
@@ -57,6 +58,7 @@ class PageForm
                         MediaPicker::make('attachments')->label(__('page::page.fields.attachments'))->multiple()
                             ->helperText(__('page::page.help.attachments')),
                     ]),
+                    SeoPanel::make(),
                 ]),
             ]),
         ]);

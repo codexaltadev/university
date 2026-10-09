@@ -1,0 +1,80 @@
+<?php
+
+return [
+    'settings' => [
+        'tab' => 'SEO',
+        'title_pattern' => 'Page title pattern',
+        'title_pattern_help' => 'Use {title} and {site_name}, e.g. "{title} | {site_name}".',
+        'organization_type' => 'Organisation type (structured data)',
+        'default_description' => 'Default description',
+        'og_image' => 'Default picture when shared',
+        'og_image_help' => 'Used when a page has no picture of its own. 1200 × 630 works best.',
+        'google_verification' => 'Google Search Console code',
+        'bing_verification' => 'Bing Webmaster code',
+        'robots_help' => 'Empty = everything except the admin panel may be crawled. The sitemap line is added automatically.',
+    ],
+    'redirects' => [
+        'label' => 'redirect',
+        'plural' => 'Redirects',
+        'missing_target' => 'record removed or hidden',
+    ],
+    'not_found' => [
+        'label' => '404 address',
+        'plural' => '404 log',
+    ],
+    'fields' => [
+        'source_path' => 'Old address',
+        'kind' => 'Send visitors to',
+        'destination_url' => 'New address',
+        'destination' => 'Goes to',
+        'target' => 'Page or record',
+        'status_code' => 'Type',
+        'hits' => 'Visits',
+        'last_hit_at' => 'Last used',
+        'source' => 'Made by',
+        'csv' => 'CSV file',
+        'path' => 'Address',
+        'last_seen_at' => 'Last seen',
+        'first_seen_at' => 'First seen',
+        'last_referrer' => 'Came from',
+        'is_resolved' => 'Redirected',
+    ],
+    'kinds' => [
+        'url' => 'An address',
+        'record' => 'A page or record of this website',
+    ],
+    'status' => [
+        '301' => '301 — moved for good',
+        '302' => '302 — for now',
+    ],
+    'sources' => [
+        'manual' => 'Admin',
+        'import' => 'CSV import',
+        '404' => '404 log',
+        'slug' => 'Address change',
+    ],
+    'help' => [
+        'source_path' => 'The address on this website without the domain, e.g. /admission/old-notice. Letters are matched without case.',
+        'destination_url' => 'A path on this website (/about) or a full address (https://…).',
+        'target' => 'Follows the record even if its address changes later.',
+        'import' => 'Columns: old address, new address, and optionally 301 or 302. A first row with headings is skipped; an old address that already has a redirect is updated.',
+    ],
+    'actions' => [
+        'import' => 'Import CSV',
+        'create_redirect' => 'Redirect',
+    ],
+    'import' => [
+        'done' => ':created added, :updated updated, :skipped skipped',
+        'line' => 'Line :line: :reason',
+    ],
+    'errors' => [
+        'reserved' => 'This address cannot be redirected.',
+        'taken' => 'This old address already has a redirect.',
+        'loop' => 'This would send visitors in a circle.',
+        'no_destination' => 'Where should visitors go?',
+        'bad_destination' => 'Use a path starting with / or a full address starting with http(s)://.',
+    ],
+    'notifications' => [
+        'redirect_created' => 'Redirect created.',
+    ],
+];

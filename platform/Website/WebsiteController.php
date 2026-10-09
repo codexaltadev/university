@@ -1,0 +1,88 @@
+<?php
+
+namespace Platform\Website;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\View;
+use Platform\Context\FallbackResolver;
+use Platform\Context\MicrositeResolver;
+use Platform\Context\SiteContext;
+use Platform\Localization\Languages;
+use Platform\Seo\Seo;
+use Platform\Seo\Sitemap;
+use Platform\Theme\Themes;
+use Symfony\Component\HttpFoundation\Response;
+
+/**
+ * Public website: homepage, language prefix (/bn/…, FR-GEN-33), microsite homepages,
+ * module handlers (pages), sitemap.xml and robots.txt.
+ */
+class WebsiteController
+{
+    public function home(): Response
+    {
+        View::share('context', SiteContext::site());
+        app(Seo::class)->set(['home' => true]);
+
+        return response()->view('theme::home');
+    }
+
+    /** Everything without its own route. */
+    public function resolve(Request $request): Response
+    {
+        $path = '/'.ltrim($request->path(), '/');
+        $first = explode('/', ltrim($path, '/'))[0];
+        $languages = app(Languages::class);
+
+        if ($first !== '' && in_array($first, $languages->activeCodes(), true)) {
+            app()->setLocale($first);
+        }
+
+        $resolved = app(MicrositeResolver::class)->resolve($path, app()->getLocale());
+        abort_if($resolved === null, 404);
+
+        if ($resolved['redirect']) {
+            return redirect($resolved['redirect'], 301);   // old slug of the entity (FR-GEN-32)
+        }
+
+        $context = $resolved['context'];
+        View::share('context', $context);
+
+        if ($resolved['rest'] === '') {
+            return $context->isMicrosite() ? $this->micrositeHome($context) : $this->home();
+        }
+
+        return app(Website::class)->respond($resolved['rest'], $context, app()->getLocale()) ?? abort(404);
+    }
+
+    public function sitemap(): Response
+    {
+        return response(app(Sitemap::class)->xml(), 200, ['Content-Type' => 'application/xml; charset=UTF-8']);
+    }
+
+    /** FR-SEO-03: the admin's text, else allow everything but the admin panel. */
+    public function robots(): Response
+    {
+        $text = trim((string) settings('seo.robots_txt')) ?: "User-agent: *\nDisallow: /admin\n";
+
+        if (! str_contains(strtolower($text), 'sitemap:')) {
+            $text .= "\nSitemap: ".url('/sitemap.xml');
+        }
+
+        return response($text."\n", 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
+    }
+
+    /** BR-MS-05: the entity's microsite template wraps its homepage. */
+    protected function micrositeHome(SiteContext $context): Response
+    {
+        $templates = app(Themes::class)->manifest()->micrositeTemplates();
+        $chosen = app(FallbackResolver::class)->resolve('template', null, $context);
+        $template = in_array($chosen, $templates, true) ? $chosen : $templates[0];
+
+        $context->entity && method_exists($context->entity, 'seo')
+            ? app(Seo::class)->forRecord($context->entity)
+            : app(Seo::class)->set(['title' => $context->entity?->name]);
+
+        return response()->view(view()->exists("theme::microsite-templates.{$template}") ? "theme::microsite-templates.{$template}" : 'theme::microsite-templates.standard');
+    }
+}

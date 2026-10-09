@@ -4,6 +4,7 @@ namespace Platform\Theme\Http;
 
 use Closure;
 use Illuminate\Http\Request;
+use Platform\Seo\Seo;
 use Platform\Theme\Themes;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -15,6 +16,8 @@ class ApplyTheme
 {
     public function handle(Request $request, Closure $next): Response
     {
+        app(Seo::class)->reset();   // SEO of this request only (queue workers, tests)
+
         $preview = $request->hasSession() ? $request->session()->get(Themes::PREVIEW_SESSION) : null;
 
         app(Themes::class)->usePreview(

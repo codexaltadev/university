@@ -17,5 +17,6 @@ final class PageExtension implements ModuleExtension
     {
         $r->filamentPlugin(PagePlugin::class);
         $r->menuItemType(Page::class);   // menus can link pages
+        $r->sitemap(Page::class);        // sitemap.xml (FR-SEO-02)
     }
 }

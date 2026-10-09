@@ -12,9 +12,11 @@ use Platform\Concerns\HasExpiry;
 use Platform\Concerns\HasMediaUsage;
 use Platform\Concerns\HasOwner;
 use Platform\Concerns\HasPublishDate;
+use Platform\Concerns\HasSeo;
 use Platform\Concerns\HasSlug;
 use Platform\Contracts\Scopeable;
 use Platform\Models\BaseModel;
+use Platform\Seo\Seo;
 use Spatie\Translatable\HasTranslations;
 
 /**
@@ -33,6 +35,7 @@ class Page extends BaseModel implements Scopeable
     use HasMediaUsage;      // featured_image, attachments, and pictures / files inside blocks ("content")
     use HasOwner;
     use HasPublishDate;
+    use HasSeo;             // SEO panel (FR-GEN-70/71)
     use HasSlug;
     use HasTranslations;
 
@@ -85,6 +88,17 @@ class Page extends BaseModel implements Scopeable
         }
 
         return $this->ownerUrlPrefix($locale).'/'.implode('/', array_filter($slugs));
+    }
+
+    /** FR-SEO-08: a WebPage in schema.org terms. */
+    protected function jsonLd(string $locale): array
+    {
+        return array_filter([
+            '@type' => 'WebPage',
+            'name' => $this->getTranslation('title', $locale, true),
+            'url' => Seo::absolute(Seo::localized($this->url($locale), $locale)),
+            'dateModified' => $this->updated_at?->toAtomString(),
+        ]);
     }
 
     /** @return list<int> this page and every page below it */

@@ -4,25 +4,11 @@ namespace Platform\Theme\Http;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\View;
-use Illuminate\View\View as ViewResult;
-use Platform\Context\SiteContext;
 use Platform\Theme\Themes;
 
-/**
- * The main homepage through the active theme (theme::home). Microsite and module
- * pages come with their modules.
- */
+/** Leave the theme preview (FR-THEME-03). The website itself: Platform\Website\WebsiteController. */
 class HomeController
 {
-    public function __invoke(): ViewResult
-    {
-        View::share('context', SiteContext::site());
-
-        return view('theme::home');
-    }
-
-    /** Leave the theme preview (FR-THEME-03). */
     public function stopPreview(Request $request): RedirectResponse
     {
         $request->session()->forget(Themes::PREVIEW_SESSION);

@@ -30,7 +30,8 @@
         },
         "custom_permissions": [],
         "provides": {
-            "menu_item_types": true
+            "menu_item_types": true,
+            "sitemap": true
         }
     }
 }

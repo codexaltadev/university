@@ -38,6 +38,15 @@ abstract class PageBlock
         return [];
     }
 
+    /**
+     * Website view of the block; gets $data (the block's fields) and $locale. The
+     * active theme may override it (views/modules/{module}/blocks/{name}.blade.php).
+     */
+    public static function view(): string
+    {
+        return 'page::blocks.'.static::name();
+    }
+
     public static function make(): Block
     {
         return Block::make(static::name())->label(static::label())->icon(static::icon())->schema(static::schema());
