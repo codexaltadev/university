@@ -5,9 +5,11 @@ namespace Platform\Website;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\View;
 use Platform\Context\FallbackResolver;
+use Platform\Context\MicrositeOwners;
 use Platform\Context\MicrositeResolver;
 use Platform\Context\SiteContext;
 use Platform\Localization\Languages;
+use Platform\Search\SearchIndex;
 use Platform\Seo\Seo;
 use Platform\Seo\Sitemap;
 use Platform\Theme\Themes;
@@ -53,6 +55,31 @@ class WebsiteController
         }
 
         return app(Website::class)->respond($resolved['rest'], $context, app()->getLocale()) ?? abort(404);
+    }
+
+    /** FR-SRCH-02/06: grouped results, module filter, "only in this entity", pagination. */
+    public function search(Request $request): Response
+    {
+        View::share('context', SiteContext::site());
+        app(Seo::class)->set(['title' => __('platform::search.title'), 'noindex' => true]);
+
+        $module = $request->string('module')->toString() ?: null;
+        $scope = $request->string('in')->toString() ?: null;
+        $results = app(SearchIndex::class)->search(
+            $request->string('q')->toString(),
+            module: $module,
+            ownerKey: $scope,
+            page: max(1, $request->integer('page', 1)),
+        );
+
+        $results['items']->withPath(route('search'))->appends(array_filter(['q' => $results['query'], 'module' => $module, 'in' => $scope]));
+
+        return response()->view('theme::search', [
+            'results' => $results,
+            'module' => $module,
+            'scope' => $scope,
+            'scopeLabel' => $scope ? MicrositeOwners::label($scope) : null,
+        ]);
     }
 
     public function sitemap(): Response

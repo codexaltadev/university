@@ -18,5 +18,6 @@ final class PageExtension implements ModuleExtension
         $r->filamentPlugin(PagePlugin::class);
         $r->menuItemType(Page::class);   // menus can link pages
         $r->sitemap(Page::class);        // sitemap.xml (FR-SEO-02)
+        $r->searchable(Page::class, label: 'page::page.search_group', weight: 6);   // website search (FR-SRCH-01)
     }
 }

@@ -5,6 +5,7 @@ return [
     'pages' => 'Page',
     'top_level' => 'সবার উপরে',
     'copy_suffix' => '(কপি)',
+    'search_group' => 'Page',
     'sections' => [
         'page' => 'Page',
         'files' => 'ছবি ও file',

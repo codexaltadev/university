@@ -360,6 +360,7 @@ Loop প্রতিরোধ (FR-SEO-09) application-এ save-এর সময�
 | searchable_type, searchable_id | VARCHAR(100), BIGINT UNSIGNED | | |
 | locale | VARCHAR(10) | | প্রতিটি ভাষার জন্য আলাদা row (ADR-07) |
 | module_slug | VARCHAR(100) | IX | Group ও filter (FR-SRCH-02) |
+| owner_key | VARCHAR(150) | N, IX | Record-এর মালিক entity (`department.department:12`); "শুধু এই Department-এ" (FR-SRCH-06)। Main site = NULL *(v1.2, Phase 2.10)* |
 | title | VARCHAR(500) | | |
 | body | MEDIUMTEXT | | HTML বাদ দেওয়া plain text |
 | url | VARCHAR(2048) | | |

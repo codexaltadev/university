@@ -5,6 +5,7 @@ return [
     'pages' => 'Pages',
     'top_level' => 'Top level',
     'copy_suffix' => '(copy)',
+    'search_group' => 'Pages',
     'sections' => [
         'page' => 'Page',
         'files' => 'Pictures & files',

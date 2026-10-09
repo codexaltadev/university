@@ -126,9 +126,14 @@ class Registrar
         return $this->add('metric', ['key' => $key, 'class' => $providerClass]);
     }
 
-    public function searchable(string $model): static
+    /**
+     * Records of this model are in the website search (C-17, FR-SRCH-01); the model
+     * uses IsSearchable and has url($locale). $label = the result group (a translation
+     * key or text), $weight = 1–10, higher ranks first.
+     */
+    public function searchable(string $model, ?string $label = null, int $weight = 5): static
     {
-        return $this->add('searchable', compact('model'));
+        return $this->add('searchable', compact('model', 'label', 'weight'));
     }
 
     public function sitemap(string $model, ?string $route = null): static

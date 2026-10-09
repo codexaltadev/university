@@ -14,6 +14,7 @@ use Platform\Concerns\HasOwner;
 use Platform\Concerns\HasPublishDate;
 use Platform\Concerns\HasSeo;
 use Platform\Concerns\HasSlug;
+use Platform\Concerns\IsSearchable;
 use Platform\Contracts\Scopeable;
 use Platform\Models\BaseModel;
 use Platform\Seo\Seo;
@@ -38,6 +39,7 @@ class Page extends BaseModel implements Scopeable
     use HasSeo;             // SEO panel (FR-GEN-70/71)
     use HasSlug;
     use HasTranslations;
+    use IsSearchable;       // website search (FR-SRCH-01)
 
     public const TEMPLATES = ['default', 'full-width', 'with-sidebar', 'landing'];
 
@@ -88,6 +90,26 @@ class Page extends BaseModel implements Scopeable
         }
 
         return $this->ownerUrlPrefix($locale).'/'.implode('/', array_filter($slugs));
+    }
+
+    /** Search: title, summary and the text of every block in that language. */
+    public function toSearchDocument(string $locale): ?array
+    {
+        $title = $this->getTranslation('title', $locale, false);
+
+        return blank($title) ? null : [
+            'title' => $title,
+            'body' => static::plainText([
+                $this->getTranslation('excerpt', $locale, false),
+                array_column((array) $this->getTranslation('content', $locale, false), 'data'),   // block fields, not block types
+            ]),
+        ];
+    }
+
+    /** "Only in this department" (FR-SRCH-06): the entity that owns the page. */
+    public function searchOwnerKey(): ?string
+    {
+        return $this->isMainSiteOwned() ? null : $this->ownerKey();
     }
 
     /** FR-SEO-08: a WebPage in schema.org terms. */

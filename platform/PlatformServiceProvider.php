@@ -7,6 +7,7 @@ use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
+use Livewire\Livewire;
 use Platform\Assignments\AssignmentEngine;
 use Platform\Assignments\RoleCatalog;
 use Platform\Console\Commands;
@@ -34,6 +35,9 @@ use Platform\Relations\MainSiteQueue;
 use Platform\Relations\RelationEngine;
 use Platform\Relations\Targets;
 use Platform\Scope\ScopeResolver;
+use Platform\Search\Livewire\InstantSearch;
+use Platform\Search\RebuildSearchIndex;
+use Platform\Search\SearchIndex;
 use Platform\Seo\Seo;
 use Platform\Seo\Sitemap;
 use Platform\Settings\Settings;
@@ -66,7 +70,7 @@ class PlatformServiceProvider extends ServiceProvider
             FallbackResolver::class, MicrositeResolver::class, Languages::class, Settings::class,
             Vocabularies::class, MediaLibrary::class, MediaUsages::class, Targets::class, MainSiteQueue::class, Statistics::class,
             Themes::class, DesignTokens::class, LayoutResolver::class, SiteData::class,
-            Seo::class, Sitemap::class, Website::class,
+            Seo::class, Sitemap::class, Website::class, SearchIndex::class,
         ] as $service) {
             $this->app->singleton($service);
         }
@@ -121,6 +125,8 @@ class PlatformServiceProvider extends ServiceProvider
                 Commands\ThemeSyncCommand::class,
                 Commands\ThemeActivateCommand::class,
                 Commands\ThemeCheckCommand::class,
+                Commands\SearchRebuildCommand::class,
+                Commands\SearchScheduledCommand::class,
             ]);
         }
     }
@@ -132,6 +138,7 @@ class PlatformServiceProvider extends ServiceProvider
     protected function registerTheme(): void
     {
         ThemeBlade::register();
+        Livewire::component('platform.instant-search', InstantSearch::class);   // FR-SRCH-05
 
         $this->app->make(HttpKernel::class)->appendMiddlewareToGroup('web', ApplyTheme::class);
 
@@ -143,6 +150,7 @@ class PlatformServiceProvider extends ServiceProvider
                 Route::get('/', [WebsiteController::class, 'home'])->name('home');
                 Route::get('/sitemap.xml', [WebsiteController::class, 'sitemap'])->name('sitemap');     // FR-SEO-02
                 Route::get('/robots.txt', [WebsiteController::class, 'robots'])->name('robots');        // FR-SEO-03
+                Route::get('/search', [WebsiteController::class, 'search'])->name('search');            // FR-SRCH-02
                 Route::get('/theme-preview/stop', [HomeController::class, 'stopPreview'])->name('theme.preview.stop');
                 Route::fallback([WebsiteController::class, 'resolve']);   // microsites and module pages (Website handlers)
             });
@@ -177,6 +185,10 @@ class PlatformServiceProvider extends ServiceProvider
         // A module hidden on the website, a new language … (FR-SET-05)
         Event::listen(SettingsUpdated::class, fn () => Sitemap::flush());
 
+        // FR-SRCH-03/09: an inactive module's records leave the search; activation brings them back
+        Event::listen(fn (ModuleDeactivated $event) => $this->app->make(SearchIndex::class)->forgetModule($event->slug()));
+        Event::listen(fn (ModuleActivated $event) => dispatch(new RebuildSearchIndex($event->slug())));
+
         // FR-STAT-05: published / changed / deleted content → counters counted again
         Event::listen(['eloquent.saved: *', 'eloquent.deleted: *', 'eloquent.restored: *'], function (string $event, array $models): void {
             if (($models[0] ?? null) instanceof BaseModel) {
@@ -197,6 +209,7 @@ class PlatformServiceProvider extends ServiceProvider
             $this->app->make(Settings::class)->forgetGroup($event->manifest->slug());
             $this->app->make(Vocabularies::class)->forgetModule($event->manifest->slug(), $types);
             $this->app->make(MediaUsages::class)->forgetTypes($types);
+            $this->app->make(SearchIndex::class)->forgetTypes($types);
         });
     }
 
@@ -206,6 +219,7 @@ class PlatformServiceProvider extends ServiceProvider
             $schedule = $this->app->make(Schedule::class);
             $schedule->command('uwms:highlights:expire')->hourly();           // SAD Part B §3.5
             $schedule->command('uwms:activity:clean')->dailyAt('03:00');      // FR-LOG-07
+            $schedule->command('uwms:search:scheduled')->everyMinute()->withoutOverlapping();   // FR-SRCH-09
         });
     }
 }

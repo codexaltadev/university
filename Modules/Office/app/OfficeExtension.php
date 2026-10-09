@@ -18,5 +18,6 @@ final class OfficeExtension implements ModuleExtension
         $r->micrositeEntity(Office::class, routePrefix: 'office'); // /office/{slug}; no parent: office → main site
         $r->assignable(Office::class, roles: ['head', 'team']);   // Standard Role Catalog (DB-01 §8.4)
         $r->dynamicPermissions(Office::class);                    // "Manage:Office#{id}" per office (FR-ROLE-07)
+        $r->searchable(Office::class, label: 'office::office.search_group', weight: 7);   // website search (FR-SRCH-01)
     }
 }

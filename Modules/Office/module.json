@@ -34,6 +34,7 @@
             "microsite": true,
             "assignable": true,
             "dynamic_permissions": true,
+            "searchable": true,
             "metrics": [
                 "office.count"
             ]
