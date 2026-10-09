@@ -3,6 +3,7 @@
 namespace Modules\Page;
 
 use Modules\Page\Filament\PagePlugin;
+use Modules\Page\Models\Page;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
 
@@ -15,5 +16,6 @@ final class PageExtension implements ModuleExtension
     public function register(Registrar $r): void
     {
         $r->filamentPlugin(PagePlugin::class);
+        $r->menuItemType(Page::class);   // menus can link pages
     }
 }

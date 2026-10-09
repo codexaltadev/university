@@ -29,6 +29,8 @@
             "page.page": "Modules\\Page\\Models\\Page"
         },
         "custom_permissions": [],
-        "provides": {}
+        "provides": {
+            "menu_item_types": true
+        }
     }
 }

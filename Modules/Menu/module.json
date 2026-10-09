@@ -1,0 +1,38 @@
+{
+    "name": "Menu",
+    "alias": "menu",
+    "description": "Menus of the main site and every microsite with fallback — core module C-08",
+    "keywords": [
+        "appearance",
+        "menu"
+    ],
+    "priority": 20,
+    "providers": [
+        "Modules\\Menu\\Providers\\MenuServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "menu",
+        "version": "1.0.0",
+        "type": "core",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "menu_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "menu.menu": "Modules\\Menu\\Models\\Menu",
+            "menu.item": "Modules\\Menu\\Models\\MenuItem"
+        },
+        "custom_permissions": [
+            "Manage:Menu",
+            "ManageMain:Menu"
+        ],
+        "provides": {}
+    }
+}
