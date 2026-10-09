@@ -31,6 +31,13 @@ return [
         'heading' => 'Heading (no link)',
     ],
     'fields' => [
+        'style' => 'Opens as',
+        'display' => 'This item opens as',
+        'columns' => 'Columns',
+        'panel_image' => 'Picture in the panel',
+        'panel_text' => 'Text in the panel',
+        'cta_label' => 'Button text',
+        'cta_url' => 'Button link',
         'type' => 'Link to',
         'record_type' => 'Kind',
         'record' => 'Item',
@@ -44,6 +51,8 @@ return [
         'new_tab' => 'Open in new tab',
     ],
     'help' => [
+        'style' => 'How the website opens this menu; each top item can differ under "Display".',
+        'columns' => 'Second-level items become column headings, third-level items the links under them.',
         'title' => 'Empty: the linked page\'s own title.',
         'module_page' => 'Listing pages such as News or Notices appear here when their modules are installed.',
         'delete_own' => 'This place will use its parent\'s or the main site\'s menu again.',
@@ -53,10 +62,27 @@ return [
         'none' => 'No menu here yet; the theme\'s default is shown.',
     ],
     'problems' => [
+        'mega_flat' => 'mega panel without links under its columns',
         'inactive' => 'switched off',
         'hidden' => 'not published',
         'missing' => 'deleted',
         'module_off' => 'module off',
+    ],
+    'styles' => [
+        'dropdown' => 'Dropdown',
+        'multilevel' => 'Multi-level dropdown',
+        'mega' => 'Mega menu',
+    ],
+    'displays' => [
+        'auto' => 'Follow the menu',
+        'mega' => 'Mega panel',
+        'dropdown' => 'Plain dropdown',
+    ],
+    'sections' => [
+        'display' => 'Display',
+    ],
+    'badges' => [
+        'mega' => 'Mega · :columns columns',
     ],
     'actions' => [
         'create_own' => 'Create own menu',

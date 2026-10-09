@@ -198,6 +198,7 @@ PK: `(term_id, termable_type, termable_id)`; IX: `(termable_type, termable_id)`�
 | name | VARCHAR(191) | | Admin-এর জন্য |
 | owner_type, owner_id | VARCHAR(100), BIGINT UNSIGNED | | `site, 0` অথবা microsite entity |
 | location | VARCHAR(50) | | `primary`, `topbar`, `footer-1` ... `quick-links`, `quick-links-icon`, `sidebar` |
+| style | VARCHAR(20) | | `dropdown` (default) / `multilevel` / `mega` — website-এ menu কীভাবে খুলবে *(v1.1)* |
 | ⚙ | | | |
 
 UQ: `(owner_type, owner_id, location, active_key)` (BRL-MENU-03)।
@@ -217,10 +218,12 @@ UQ: `(owner_type, owner_id, location, active_key)` (BRL-MENU-03)।
 | icon | VARCHAR(100) | N | | Quick links (icon) |
 | open_in_new_tab | TINYINT(1) | | 0 | |
 | css_class | VARCHAR(100) | N | | Mega menu / style |
+| options | JSON | N | | শুধু উপরের item *(v1.1)*: `display` (`mega` / `dropdown`; না থাকলে menu-র style), `columns` (২–৬), `image` (Media id, usage `mega_image`), `description` ও `cta_label` (ভাষা অনুযায়ী), `cta_url` |
 | sort_order | INT UNSIGNED | | 0 | |
 | ⚙ | | | | |
 
 IX: `(menu_id, parent_id, sort_order)`।
+Nested ৪ স্তর পর্যন্ত (multi-level dropdown); mega panel-এ দ্বিতীয় স্তর = কলামের শিরোনাম, তৃতীয় স্তর = link *(v1.1)*।
 Visibility (FR-MENU-10/11) render-এর সময় linked record-এর `frontendVisible()` ও module status দিয়ে; DB-তে আলাদা flag নয়।
 
 ---

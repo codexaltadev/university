@@ -31,6 +31,13 @@ return [
         'heading' => 'শিরোনাম (link নেই)',
     ],
     'fields' => [
+        'style' => 'যেভাবে খুলবে',
+        'display' => 'এই item যেভাবে খুলবে',
+        'columns' => 'কলাম',
+        'panel_image' => 'Panel-এর ছবি',
+        'panel_text' => 'Panel-এর লেখা',
+        'cta_label' => 'Button-এর লেখা',
+        'cta_url' => 'Button-এর link',
         'type' => 'Link',
         'record_type' => 'ধরন',
         'record' => 'Item',
@@ -44,6 +51,8 @@ return [
         'new_tab' => 'নতুন tab-এ খুলবে',
     ],
     'help' => [
+        'style' => 'Website-এ menu কীভাবে খুলবে; প্রতিটি উপরের item "প্রদর্শন"-এ আলাদা হতে পারে।',
+        'columns' => 'দ্বিতীয় স্তরের item কলামের শিরোনাম, তৃতীয় স্তরের item তার নিচের link।',
         'title' => 'খালি রাখলে link করা page-এর শিরোনাম।',
         'module_page' => 'News, Notice-এর মতো তালিকা page তাদের module install হলে এখানে আসবে।',
         'delete_own' => 'এই জায়গা আবার parent বা main site-এর menu ব্যবহার করবে।',
@@ -53,10 +62,27 @@ return [
         'none' => 'এখনো কোনো menu নেই; theme-এর default দেখাবে।',
     ],
     'problems' => [
+        'mega_flat' => 'mega panel-এর কলামের নিচে কোনো link নেই',
         'inactive' => 'বন্ধ',
         'hidden' => 'প্রকাশিত নয়',
         'missing' => 'মুছে ফেলা',
         'module_off' => 'module বন্ধ',
+    ],
+    'styles' => [
+        'dropdown' => 'Dropdown',
+        'multilevel' => 'বহুস্তর dropdown',
+        'mega' => 'Mega menu',
+    ],
+    'displays' => [
+        'auto' => 'Menu অনুযায়ী',
+        'mega' => 'Mega panel',
+        'dropdown' => 'সাধারণ dropdown',
+    ],
+    'sections' => [
+        'display' => 'প্রদর্শন',
+    ],
+    'badges' => [
+        'mega' => 'Mega · :columnsটি কলাম',
     ],
     'actions' => [
         'create_own' => 'নিজের menu তৈরি',

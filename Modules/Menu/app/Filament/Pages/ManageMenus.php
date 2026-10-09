@@ -130,6 +130,10 @@ class ManageMenus extends Page
             Section::make(fn (): string => __('menu::menu.structure', ['location' => MenuEditor::locations()[$this->location] ?? $this->location]))
                 ->visible(fn (): bool => $this->ownMenu() !== null)
                 ->schema([
+                    Select::make('style')->label(__('menu::menu.fields.style'))
+                        ->options(collect(Menu::STYLES)->mapWithKeys(fn (string $s): array => [$s => __("menu::menu.styles.{$s}")])->all())
+                        ->helperText(__('menu::menu.help.style'))
+                        ->default('dropdown')->selectablePlaceholder(false)->required()->live(),
                     static::itemsRepeater('items', 1),
                 ])
                 ->footerActions([
@@ -209,11 +213,45 @@ class ManageMenus extends Page
                 Toggle::make('open_in_new_tab')->label(__('menu::menu.fields.new_tab')),
                 Toggle::make('is_active')->label(__('platform::relations.active'))->default(true),
             ]),
+            ...($depth === 1 ? [static::displaySection()] : []),
             ...($depth < MenuItem::MAX_DEPTH ? [static::itemsRepeater('children', $depth + 1)] : []),
         ];
     }
 
-    /** Title, or the linked record; ⚠ when the website hides it (FR-MENU-10). */
+    /**
+     * Top item: plain dropdown or mega panel (columns, picture, text, "view all").
+     * "Follow the menu" uses the menu's style.
+     */
+    protected static function displaySection(): Section
+    {
+        $mega = fn (Get $get): bool => match ($get('options.display') ?? 'auto') {
+            'mega' => true,
+            'dropdown' => false,
+            default => $get('../../style') === 'mega',
+        };
+
+        return Section::make(__('menu::menu.sections.display'))->compact()->collapsible()->collapsed()
+            ->schema([
+                Grid::make(2)->schema([
+                    Select::make('options.display')->label(__('menu::menu.fields.display'))
+                        ->options(collect(MenuItem::DISPLAYS)->mapWithKeys(fn (string $d): array => [$d => __("menu::menu.displays.{$d}")])->all())
+                        ->default('auto')->selectablePlaceholder(false)->live(),
+                    Select::make('options.columns')->label(__('menu::menu.fields.columns'))
+                        ->options(array_combine(range(2, 6), range(2, 6)))->default(4)
+                        ->helperText(__('menu::menu.help.columns'))
+                        ->visible($mega),
+                ]),
+                MediaPicker::make('options.image')->label(__('menu::menu.fields.panel_image'))->image()->storeIds()->visible($mega),
+                Grid::make(2)->visible($mega)->schema(TranslatableTabs::inline(fn (string $locale, bool $isDefault, string $language): array => [
+                    TextInput::make("options.description.{$locale}")->label(__('menu::menu.fields.panel_text')." ({$language})")->maxLength(255),
+                    TextInput::make("options.cta_label.{$locale}")->label(__('menu::menu.fields.cta_label')." ({$language})")->maxLength(60),
+                ])),
+                TextInput::make('options.cta_url')->label(__('menu::menu.fields.cta_url'))
+                    ->regex('#^(https?://|/)#')->maxLength(2000)->visible($mega),
+            ]);
+    }
+
+    /** Title, or the linked record; ⚠ when the website hides it (FR-MENU-10); the top item's display. */
     protected static function itemLabel(array $state): string
     {
         $default = collect((array) ($state['title'] ?? []))->filter()->first();
@@ -221,7 +259,16 @@ class ManageMenus extends Page
         $label = $default ?: ($item ? app(MenuLinks::class)->label($item) : __('menu::menu.types.'.($state['type'] ?? 'url')));
         $problem = $item ? app(MenuLinks::class)->problem($item) : null;
 
-        return $problem ? "⚠ {$label} — ".__("menu::menu.problems.{$problem}") : $label;
+        $display = $state['options']['display'] ?? 'auto';
+        $badge = $display === 'mega'
+            ? ' · '.__('menu::menu.badges.mega', ['columns' => $state['options']['columns'] ?? 4])
+            : ($display === 'dropdown' ? ' · '.__('menu::menu.displays.dropdown') : '');
+
+        // A mega panel needs columns (2nd level) with links under them (3rd level)
+        $flat = $display === 'mega' && collect($state['children'] ?? [])->every(fn ($child): bool => empty($child['children'] ?? []));
+        $warning = $flat && ! empty($state['children'] ?? []) ? ' — '.__('menu::menu.problems.mega_flat') : '';
+
+        return ($problem ? "⚠ {$label} — ".__("menu::menu.problems.{$problem}") : $label).$badge.$warning;
     }
 
     public function switchTo(?string $owner = null, ?string $location = null): void
@@ -241,7 +288,7 @@ class ManageMenus extends Page
     protected function load(): void
     {
         $menu = $this->ownMenu();
-        $this->form->fill(['items' => $menu ? $this->editor()->tree($menu) : []]);
+        $this->form->fill(['style' => $menu?->style ?? 'dropdown', 'items' => $menu ? $this->editor()->tree($menu) : []]);
     }
 
     /** Livewire-callable: the owner is always one of the user's (mount / switchTo). */
@@ -259,7 +306,8 @@ class ManageMenus extends Page
     {
         $this->guardOwner();
         $menu = $this->ownMenu() ?? abort(404);
-        $this->editor()->save($menu, $this->form->getState()['items'] ?? []);
+        $state = $this->form->getState();
+        $this->editor()->save($menu, $state['items'] ?? [], $state['style'] ?? null);
         $this->load();
 
         Notification::make()->success()->title(__('menu::menu.notifications.saved'))->send();

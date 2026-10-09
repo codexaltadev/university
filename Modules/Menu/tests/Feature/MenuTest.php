@@ -7,6 +7,8 @@
 
 use Filament\Facades\Filament;
 use Illuminate\Database\QueryException;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Modules\Menu\Filament\Pages\ManageMenus;
 use Modules\Menu\Models\Menu;
@@ -16,6 +18,7 @@ use Modules\Menu\Support\MenuLinks;
 use Modules\Menu\Support\MenuTree;
 use Modules\Page\Models\Page;
 use Platform\Context\SiteContext;
+use Platform\Media\MediaLibrary;
 use Spatie\Permission\Models\Permission;
 
 beforeEach(function () {
@@ -118,6 +121,51 @@ it('builds, copies and deletes menus on screen', function () {
 
     $page->call('deleteOwn');
     expect(titlesOf($this->tree->forLocation('primary', SiteContext::for($this->cse))))->toBe(['Engineering Home', 'Departments']);
+});
+
+it('opens as dropdown, multi-level or mega menu; each top item may differ', function () {
+    Storage::fake('public');
+    $picture = app(MediaLibrary::class)->store(UploadedFile::fake()->image('campus.jpg'));
+    $menu = $this->editor->create('site:0', 'primary');
+    $link = fn (string $t, array $children = []) => ['type' => 'url', 'url' => '/'.strtolower($t), 'title' => ['en' => $t], 'children' => $children];
+
+    $this->editor->save($menu, [
+        [...$link('Academics', [$link('Faculties', [$link('Engineering')]), $link('Programs', [$link('BSc in CSE')])]),
+            'options' => ['columns' => 3, 'image' => $picture->id, 'description' => ['en' => 'Study with us'], 'cta_label' => ['en' => 'All programs'], 'cta_url' => '/programs']],
+        [...$link('About', [$link('History')]), 'options' => ['display' => 'dropdown']],
+        $link('Deep', [$link('L2', [$link('L3', [$link('L4', [$link('L5')])])])]),
+    ], style: 'mega');
+
+    $menu->refresh();
+    $tree = $this->tree->of($menu, 'en');
+    expect($menu->style)->toBe('mega')
+        ->and($tree[0])->toMatchArray(['mega' => true, 'columns' => 3, 'description' => 'Study with us', 'cta' => ['label' => 'All programs', 'url' => '/programs']])
+        ->and($tree[0]['image'])->toBe($picture->url('medium'))
+        ->and($tree[1]['mega'])->toBeFalse()                                                     // this item stays a dropdown
+        ->and($tree[0]['children'][0]['children'][0]['title'])->toBe('Engineering')             // column → links
+        ->and($tree[2]['children'][0]['children'][0]['children'][0]['title'])->toBe('L4')      // four levels …
+        ->and($tree[2]['children'][0]['children'][0]['children'][0]['children'])->toBe([])     // … not five
+        ->and($picture->refresh()->usage_count)->toBe(1);
+
+    $this->editor->save($menu, $this->editor->tree($menu), style: 'multilevel');
+    expect($this->tree->of($menu->refresh(), 'en')[0]['mega'])->toBeFalse()                      // follows the menu again
+        ->and($this->tree->menuAt('primary', SiteContext::site(), 'en')['style'])->toBe('multilevel')
+        ->and($this->editor->create(($this->k)($this->cse), 'primary', $menu)->style)->toBe('multilevel');   // copies keep the style
+});
+
+it('saves the menu style from the screen', function () {
+    $this->actingAs(superAdmin());
+    $this->editor->create('site:0', 'primary');
+
+    Livewire::withQueryParams(['owner' => 'site:0', 'location' => 'primary'])->test(ManageMenus::class)
+        ->assertSet('data.style', 'dropdown')
+        ->set('data.style', 'mega')
+        ->set('data.items', [['type' => 'url', 'url' => '/a', 'title' => ['en' => 'A'], 'is_active' => true, 'options' => ['display' => 'auto', 'columns' => 5], 'children' => []]])
+        ->call('save');
+
+    $menu = $this->editor->own('site:0', 'primary');
+    expect($menu->style)->toBe('mega')
+        ->and($menu->items()->first()->options)->toBe(['columns' => 5]);
 });
 
 it('lets entity users manage only their entities\' menus (BRL-MENU-02)', function () {

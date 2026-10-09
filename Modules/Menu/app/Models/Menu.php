@@ -20,7 +20,12 @@ class Menu extends BaseModel implements Scopeable
 
     protected $table = 'menu_menus';
 
-    protected $fillable = ['name', 'location', 'is_active'];
+    /** How the menu opens on the website; the theme draws it. */
+    public const STYLES = ['dropdown', 'multilevel', 'mega'];
+
+    protected $fillable = ['name', 'location', 'style', 'is_active'];
+
+    protected $attributes = ['style' => 'dropdown'];
 
     public function items(): HasMany
     {

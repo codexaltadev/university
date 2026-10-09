@@ -62,7 +62,7 @@ class MenuEditor
     public function create(string $ownerKey, string $location, ?Menu $copyOf = null): Menu
     {
         return DB::transaction(function () use ($ownerKey, $location, $copyOf): Menu {
-            $menu = (new Menu(['name' => $this->ownerLabel($ownerKey).' — '.(static::locations()[$location] ?? $location), 'location' => $location]))
+            $menu = (new Menu(['name' => $this->ownerLabel($ownerKey).' — '.(static::locations()[$location] ?? $location), 'location' => $location, 'style' => $copyOf?->style ?? 'dropdown']))
                 ->setOwnerKey($ownerKey);
             $menu->save();
 
@@ -124,6 +124,7 @@ class MenuEditor
                 'icon' => $item->icon,
                 'open_in_new_tab' => $item->open_in_new_tab,
                 'css_class' => $item->css_class,
+                'options' => (array) $item->options,
                 'is_active' => $item->is_active,
                 'children' => $build($item->id),
             ])->values()->all();
@@ -137,9 +138,13 @@ class MenuEditor
      *
      * @param  array<int|string, array<string, mixed>>  $tree
      */
-    public function save(Menu $menu, array $tree): void
+    public function save(Menu $menu, array $tree, ?string $style = null): void
     {
-        DB::transaction(function () use ($menu, $tree): void {
+        DB::transaction(function () use ($menu, $tree, $style): void {
+            if ($style !== null && in_array($style, Menu::STYLES, true)) {
+                $menu->update(['style' => $style]);
+            }
+
             $kept = [];
             $this->saveLevel($menu, array_values($tree), null, 1, $kept);
 
@@ -173,17 +178,42 @@ class MenuEditor
                 'icon' => $data['icon'] ?? null,
                 'open_in_new_tab' => (bool) ($data['open_in_new_tab'] ?? false),
                 'css_class' => $data['css_class'] ?? null,
+                'options' => $depth === 1 ? static::cleanOptions((array) ($data['options'] ?? [])) : null,
                 'is_active' => (bool) ($data['is_active'] ?? true),
                 'sort_order' => $position + 1,
             ]);
             $item->menu_id = $menu->id;
             $item->save();
+            $item->syncMedia('mega_image', array_filter([$item->options['image'] ?? null]));
             $kept[] = $item->id;
 
             if ($depth < MenuItem::MAX_DEPTH) {
                 $this->saveLevel($menu, array_values((array) ($data['children'] ?? [])), $item->id, $depth + 1, $kept);
             }
         }
+    }
+
+    /**
+     * Top item display options (mega panel): display auto / mega / dropdown, 2–6
+     * columns, a Media Library picture, text and a "view all" link per language.
+     *
+     * @param  array<string, mixed>  $options
+     * @return array<string, mixed>|null
+     */
+    public static function cleanOptions(array $options): ?array
+    {
+        $texts = fn ($value): ?array => ($t = array_filter((array) $value, fn ($v): bool => filled($v))) === [] ? null : $t;
+
+        $clean = array_filter([
+            'display' => in_array($options['display'] ?? 'auto', MenuItem::DISPLAYS, true) && ($options['display'] ?? 'auto') !== 'auto' ? $options['display'] : null,
+            'columns' => isset($options['columns']) ? max(2, min(6, (int) $options['columns'])) : null,
+            'image' => filled($options['image'] ?? null) ? (int) $options['image'] : null,
+            'description' => $texts($options['description'] ?? null),
+            'cta_label' => $texts($options['cta_label'] ?? null),
+            'cta_url' => filled($options['cta_url'] ?? null) ? (string) $options['cta_url'] : null,
+        ], fn ($v): bool => $v !== null);
+
+        return $clean === [] ? null : $clean;
     }
 
     public function ownerLabel(string $ownerKey): string
