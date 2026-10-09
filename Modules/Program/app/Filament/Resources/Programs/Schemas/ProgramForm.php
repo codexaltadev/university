@@ -34,6 +34,9 @@ use Platform\Taxonomy\Vocabularies;
  */
 class ProgramForm
 {
+    /** Page sections with an optional intro text (section_intros). */
+    public const INTRO_SECTIONS = ['majors', 'career_path', 'industry', 'facilitators', 'materials', 'memberships', 'variants'];
+
     public static function configure(Schema $schema): Schema
     {
         $profileOnly = fn (string $operation): bool => $operation === 'edit' && static::profileOnly();
@@ -59,6 +62,12 @@ class ProgramForm
                             Textarea::make("ai_summary.{$locale}")->label(__('program::program.fields.ai_summary'))->rows(4),
                         ]),
                     ]),
+                    Section::make(__('program::program.sections.intros'))->description(__('program::program.help.intros'))
+                        ->collapsible()->collapsed()->compact()->schema([
+                            TranslatableTabs::make()->schema(fn (string $locale): array => collect(self::INTRO_SECTIONS)
+                                ->map(fn (string $key) => Textarea::make("section_intros.{$locale}.{$key}")->label(__("program::program.items.{$key}"))->rows(2)->maxLength(1000))
+                                ->all()),
+                        ]),
                     Section::make(__('program::program.sections.admission'))->compact()->columns(2)->schema([
                         DatePicker::make('next_intake_on')->label(__('program::program.fields.next_intake_on')),
                         TextInput::make('application_url')->label(__('program::program.fields.application_url'))->url()->maxLength(2048),

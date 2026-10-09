@@ -2,7 +2,8 @@
     A Program's page / microsite home until it builds its own (FR-PROG-13): hero with key facts and
     Apply / brochure buttons, overview, statistics, objective, eligibility, then the tabs other modules
     add (Curriculum, Tuition … — FR-PROG-18; an inactive module's tab simply is not there, AC-PROG-02).
-    Majors, Career, Facilitators come with the program sub-items; News / Events / Notices / FAQ from
+    Majors, Options, Career / Industries, Facilitators, Materials and Memberships come from
+    program::microsite.items; News / Events / Notices / FAQ from
     those modules' homepage sections once the Program builds its homepage.
     Contract: $entity (Program), $context
 --}}
@@ -86,6 +87,9 @@
     </x-theme::section>
 @endif
 
+@include('program::microsite.items', ['part' => 'majors'])
+@include('program::microsite.items', ['part' => 'variants'])
+
 @if (filled($entity->eligibility_general) || filled($entity->eligibility_english_medium))
     <x-theme::section :section="new \Illuminate\Support\Fluent(['anchor' => 'eligibility', 'title' => __('program::program.eligibility'), 'subheading' => null, 'style' => 'alt'])">
         <div style="display:grid;gap:var(--space-6, 24px);grid-template-columns:repeat(auto-fit, minmax(280px, 1fr))">
@@ -101,6 +105,9 @@
         </div>
     </x-theme::section>
 @endif
+
+@include('program::microsite.items', ['part' => 'careers'])
+@include('program::microsite.items', ['part' => 'people'])
 
 @foreach ($tabs as $tab)
     <x-theme::section :section="new \Illuminate\Support\Fluent(['anchor' => str_replace('.', '-', $tab['key']), 'title' => $tab['label'], 'subheading' => null, 'style' => $loop->odd ? null : 'alt'])">

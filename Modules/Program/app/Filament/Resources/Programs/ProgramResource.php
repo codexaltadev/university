@@ -12,6 +12,13 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Modules\Program\Filament\Resources\Programs\Pages\CreateProgram;
 use Modules\Program\Filament\Resources\Programs\Pages\EditProgram;
 use Modules\Program\Filament\Resources\Programs\Pages\ListPrograms;
+use Modules\Program\Filament\Resources\Programs\RelationManagers\CareerPathsRelationManager;
+use Modules\Program\Filament\Resources\Programs\RelationManagers\FacilitatorsRelationManager;
+use Modules\Program\Filament\Resources\Programs\RelationManagers\IndustriesRelationManager;
+use Modules\Program\Filament\Resources\Programs\RelationManagers\MajorsRelationManager;
+use Modules\Program\Filament\Resources\Programs\RelationManagers\MaterialsRelationManager;
+use Modules\Program\Filament\Resources\Programs\RelationManagers\MembershipsRelationManager;
+use Modules\Program\Filament\Resources\Programs\RelationManagers\VariantsRelationManager;
 use Modules\Program\Filament\Resources\Programs\Schemas\ProgramForm;
 use Modules\Program\Filament\Resources\Programs\Tables\ProgramsTable;
 use Modules\Program\Models\Program;
@@ -59,7 +66,17 @@ class ProgramResource extends Resource
 
     public static function getRelations(): array
     {
-        return [ActivityRelationManager::class];   // FR-GEN-83
+        // BRL-PROG-04: sub-items are edited on the Program's page
+        return [
+            MajorsRelationManager::class,
+            CareerPathsRelationManager::class,
+            IndustriesRelationManager::class,
+            FacilitatorsRelationManager::class,
+            MaterialsRelationManager::class,
+            MembershipsRelationManager::class,
+            VariantsRelationManager::class,
+            ActivityRelationManager::class,   // FR-GEN-83
+        ];
     }
 
     public static function getPages(): array

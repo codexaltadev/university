@@ -5,6 +5,7 @@ namespace Modules\Program\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
 use Modules\Program\Database\Factories\ProgramFactory;
@@ -96,6 +97,42 @@ class Program extends BaseModel implements Scopeable
         return $this->belongsTo(Term::class, 'level_term_id');
     }
 
+    /** FR-PROG-04 */
+    public function majors(): HasMany
+    {
+        return $this->hasMany(ProgramMajor::class)->ordered();
+    }
+
+    /** FR-PROG-05: career paths and industries */
+    public function listItems(): HasMany
+    {
+        return $this->hasMany(ProgramListItem::class)->ordered();
+    }
+
+    /** FR-PROG-06 */
+    public function facilitators(): HasMany
+    {
+        return $this->hasMany(ProgramFacilitator::class)->ordered();
+    }
+
+    /** FR-PROG-07 */
+    public function materials(): HasMany
+    {
+        return $this->hasMany(ProgramMaterial::class)->ordered();
+    }
+
+    /** FR-PROG-08 */
+    public function memberships(): HasMany
+    {
+        return $this->hasMany(ProgramMembership::class)->ordered();
+    }
+
+    /** FR-PROG-09 */
+    public function variants(): HasMany
+    {
+        return $this->hasMany(ProgramVariant::class)->ordered();
+    }
+
     /** FR-PROG-01: always the Department's Faculty, never stored. */
     public function faculty(): ?Faculty
     {
@@ -134,6 +171,14 @@ class Program extends BaseModel implements Scopeable
     public function url(?string $locale = null): ?string
     {
         return app(MicrositeResolver::class)->urlFor($this, $locale);
+    }
+
+    /** The intro text above a page section (section_intros), in the current language. */
+    public function intro(string $section, ?string $locale = null): ?string
+    {
+        $intros = $this->getTranslation('section_intros', $locale ?? app()->getLocale(), true);
+
+        return is_array($intros) && filled($intros[$section] ?? null) ? $intros[$section] : null;
     }
 
     /** "144.0" → "144", "3.5" → "3.5" for credits and years. */

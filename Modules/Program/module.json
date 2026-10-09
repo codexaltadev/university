@@ -29,7 +29,13 @@
         },
         "optional_dependencies": [],
         "morph_aliases": {
-            "program.program": "Modules\\Program\\Models\\Program"
+            "program.program": "Modules\\Program\\Models\\Program",
+            "program.major": "Modules\\Program\\Models\\ProgramMajor",
+            "program.list-item": "Modules\\Program\\Models\\ProgramListItem",
+            "program.facilitator": "Modules\\Program\\Models\\ProgramFacilitator",
+            "program.material": "Modules\\Program\\Models\\ProgramMaterial",
+            "program.membership": "Modules\\Program\\Models\\ProgramMembership",
+            "program.variant": "Modules\\Program\\Models\\ProgramVariant"
         },
         "custom_permissions": [],
         "provides": {
@@ -39,10 +45,13 @@
             "assignable": true,
             "vocabularies": [
                 "program.level",
-                "program.tag"
+                "program.tag",
+                "program.major-category"
             ],
             "metrics": [
-                "program.count"
+                "program.count",
+                "program.majors",
+                "program.industry-experts"
             ],
             "layouts": [
                 "program.listing"

@@ -4,6 +4,8 @@ namespace Modules\Program;
 
 use Modules\Department\Models\Department;
 use Modules\Program\Filament\ProgramPlugin;
+use Modules\Program\Metrics\IndustryExpertCount;
+use Modules\Program\Metrics\MajorCount;
 use Modules\Program\Metrics\ProgramCount;
 use Modules\Program\Models\Program;
 use Modules\Program\Sections\FeaturedProgramsSection;
@@ -26,7 +28,10 @@ final class ProgramExtension implements ModuleExtension
         $r->assignable(Program::class, roles: ['coordinator', 'officer', 'contact', 'industry_expert']);
         $r->vocabulary('program.level', label: 'Program level', multiple: false);   // FR-PROG-03
         $r->vocabulary('program.tag', label: 'Program tag');                         // FR-PROG-03a
+        $r->vocabulary('program.major-category', label: 'Major category', multiple: false);   // FR-PROG-04
         $r->metric('program.count', ProgramCount::class);
+        $r->metric('program.majors', MajorCount::class);                   // FR-PROG-11
+        $r->metric('program.industry-experts', IndustryExpertCount::class);
         $r->layouts('program.listing', ['card', 'list', 'table', 'detailed']);     // FR-PROG-12
         $r->homepageSection(FeaturedProgramsSection::class);                        // FR-PROG-16
         $r->homepageSection(ProgramsByLevelSection::class);

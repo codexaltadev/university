@@ -20,5 +20,6 @@ class ProgramDatabaseSeeder extends Seeder
     {
         Vocabularies::ensureTerms('program.level', self::LEVELS);
         app(Vocabularies::class)->find('program.tag');
+        app(Vocabularies::class)->find('program.major-category');
     }
 }
