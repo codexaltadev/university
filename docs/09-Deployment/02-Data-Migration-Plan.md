@@ -87,6 +87,8 @@ Staging-এ snapshot restore করার পর **ব্যক্তিগত �
 
 Migration code একটি **আলাদা package** — `tools/legacy-migration/` (repository-তে, কিন্তু core বা কোনো module-এর অংশ নয়, অন্য university-র installation-এ যায় না)।
 
+> **অগ্রগতি (2026-10-10):** module তৈরির সাথে সাথে ধাপগুলো তৈরি হচ্ছে, যাতে development-এ আসল data থাকে। তৈরি: **S02** (শুধু program major category ও program tag), **S04**, **S06** — বিস্তারিত ও সীমাবদ্ধতা [`tools/legacy-migration/README.md`](../../tools/legacy-migration/README.md)-এ। S04-এর সিদ্ধান্ত: legacy-র "Office" ও "Institutional Programs" faculty (`is_optional = 1`) academic নয় — এদের ১১টি "department" (Registrar, Exam, Accounts, Transport, Campus, Hall, HRDI, DIL, YSBC …) S10-এ Office module-এ যাবে।
+
 ```
 tools/legacy-migration/
 ├── src/

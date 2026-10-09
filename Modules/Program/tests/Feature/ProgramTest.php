@@ -311,6 +311,15 @@ it('offers "Featured Programs" and "Programs by Level", search and sitemap (FR-P
     $this->get('/sitemap.xml')->assertSee(url($this->bsc->url()), false);
 });
 
+it('lists programs whose rich text is very large (DIU pages up to 1.4 MB: MySQL sort buffer)', function () {
+    Program::factory()->create(['department_id' => $this->cse->id, 'name' => ['en' => 'BSc with a huge page'], 'summary' => ['en' => '<table>'.str_repeat('<tr><td style="mso-line-height-rule:exactly">Physics I</td></tr>', 25000).'</table>']]);
+
+    $this->get('/programs')->assertOk()->assertSee('BSc with a huge page');
+
+    $this->actingAs(superAdmin());
+    $this->get(ProgramResource::getUrl())->assertOk()->assertSee('BSc with a huge page');
+});
+
 it('lets only permitted users into the program screens', function () {
     $this->actingAs(makeUser());
     $this->get(ProgramResource::getUrl())->assertForbidden();

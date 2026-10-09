@@ -11,6 +11,7 @@ return [
     'learn_more' => 'Learn more',
     'items' => [
         'majors' => 'Majors & Specializations',
+        'careers' => 'Career Paths & Industries',
         'career_path' => 'Career Paths',
         'industry' => 'Industries',
         'facilitators' => 'Facilitators & Industry Experts',

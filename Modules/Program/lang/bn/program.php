@@ -11,6 +11,7 @@ return [
     'learn_more' => 'বিস্তারিত',
     'items' => [
         'majors' => 'Major ও Specialization',
+        'careers' => 'Career Path ও Industry',
         'career_path' => 'Career Path',
         'industry' => 'Industry',
         'facilitators' => 'Facilitator ও Industry Expert',

@@ -181,6 +181,7 @@ Queue (SAD Part B §11): `default`, `media` (image conversion), `mail`, `search`
 | Character set | `utf8mb4` / `utf8mb4_unicode_ci` (বাংলা) |
 | `innodb_buffer_pool_size` | RAM-এর ৫০% (একই server-এ app থাকলে) |
 | `slow_query_log` | চালু, `long_query_time = 1` |
+| `sort_buffer_size` | App প্রতিটি connection-এ session-এ 8 MB করে (`DB_SORT_BUFFER_SIZE`, `config/database.php`) — DIU-র কিছু Program page-এর rich text 1.4 MB পর্যন্ত; 256 KB default-এ MySQL 8 এমন row `ORDER BY` করতে পারে না (error 1038)। MySQL 8 শুধু যতটুকু লাগে ততটুকু নেয়; server-এ আলাদা কিছু লাগে না |
 | Application user | শুধু নিজের database-এ `SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, INDEX, DROP, REFERENCES` |
 | Legacy (`project_diu`) user | **শুধু `SELECT`** — migration-এর সময় (Part B) |
 | Remote access | বন্ধ (localhost / private network) |

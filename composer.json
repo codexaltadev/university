@@ -38,6 +38,7 @@
         "psr-4": {
             "App\\": "app/",
             "Platform\\": "platform/",
+            "Legacy\\Migration\\": "tools/legacy-migration/src/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
         },

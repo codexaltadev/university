@@ -52,7 +52,7 @@
 @if ($part === 'careers')
     @php($lists = $entity->listItems()->frontendVisible()->get()->groupBy('list_type'))
     @if ($lists->isNotEmpty())
-        <x-theme::section :section="$section('careers', __('program::program.items.career_path'))">
+        <x-theme::section :section="$section('careers', __('program::program.items.careers'))">
             <div style="display:grid;gap:var(--space-8, 32px);grid-template-columns:repeat(auto-fit, minmax(280px, 1fr))">
                 @foreach (\Modules\Program\Models\ProgramListItem::TYPES as $type)
                     @if ($lists->has($type))

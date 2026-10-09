@@ -36,6 +36,7 @@
         <env name="CACHE_STORE" value="array"/>
         <env name="DB_CONNECTION" value="mysql"/>
         <env name="DB_DATABASE" value="university_test"/>
+        <env name="LEGACY_DB_DATABASE" value="university_legacy_test"/>
         <env name="DB_URL" value=""/>
         <env name="UWMS_MODULE_RUNTIME_PATH" value="storage/framework/testing/modules-runtime"/>
         <env name="MAIL_MAILER" value="array"/>

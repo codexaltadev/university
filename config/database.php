@@ -44,6 +44,20 @@ return [
             'transaction_mode' => 'DEFERRED',
         ],
 
+        // Data migration (Deployment Part B §2, M-1): the old DIU database, read only
+        'legacy' => [
+            'driver' => 'mysql',
+            'host' => env('LEGACY_DB_HOST', env('DB_HOST', '127.0.0.1')),
+            'port' => env('LEGACY_DB_PORT', env('DB_PORT', '3306')),
+            'database' => env('LEGACY_DB_DATABASE', 'project_diu'),
+            'username' => env('LEGACY_DB_USERNAME', env('DB_USERNAME', 'root')),
+            'password' => env('LEGACY_DB_PASSWORD', env('DB_PASSWORD', '')),
+            'charset' => 'utf8mb4',
+            'collation' => 'utf8mb4_unicode_ci',
+            'prefix' => '',
+            'strict' => false,
+        ],
+
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DB_URL'),
@@ -61,6 +75,10 @@ return [
             'engine' => null,
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+                // Rich text can be large (DIU program pages up to 1.4 MB of HTML): with the 256 KB
+                // default, MySQL 8 cannot ORDER BY such rows ("1038 Out of sort memory").
+                // MySQL 8 grows the buffer only as far as a sort needs.
+                Mysql::ATTR_INIT_COMMAND => 'SET SESSION sort_buffer_size = '.(int) env('DB_SORT_BUFFER_SIZE', 8 * 1024 * 1024),
             ]) : [],
             // Backups (C-19): a consistent InnoDB snapshot without locking the website's tables
             'dump' => [
