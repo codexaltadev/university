@@ -2,7 +2,9 @@
 
 namespace Platform\Relations;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 /**
@@ -26,6 +28,11 @@ class MainSiteRequest extends Model
     protected function casts(): array
     {
         return ['requested_at' => 'datetime', 'decided_at' => 'datetime'];
+    }
+
+    public function requester(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'requested_by');
     }
 
     public function content(): MorphTo

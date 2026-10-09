@@ -20,6 +20,9 @@ use Platform\Support\MorphMap;
  */
 class Targets
 {
+    /** @var array<string, string> key => label, per request (list columns ask for the same places again and again) */
+    protected array $labels = [];
+
     public function __construct(protected Registry $registry, protected ScopeResolver $scope) {}
 
     /** @return array<string, class-string<Model>> morph alias => model */
@@ -69,6 +72,11 @@ class Targets
 
     /** "Department: CSE" (or the key itself when the record is gone). */
     public function label(string $key): string
+    {
+        return $this->labels[$key] ??= $this->resolveLabel($key);
+    }
+
+    protected function resolveLabel(string $key): string
     {
         if ($key === RelationEngine::SITE_KEY) {
             return __('platform::relations.main_site');

@@ -7,6 +7,8 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Modules\Faq\Filament\Resources\Faqs\Pages\CreateFaq;
 use Modules\Faq\Filament\Resources\Faqs\Pages\EditFaq;
 use Modules\Faq\Filament\Resources\Faqs\Pages\ListFaqs;
@@ -27,6 +29,12 @@ class FaqResource extends Resource
     protected static ?int $navigationSort = 90;
 
     protected static ?string $recordTitleAttribute = 'question';
+
+    /** Trash tab and restore need soft-deleted rows (FR-GEN-02). */
+    public static function getRecordRouteBindingEloquentQuery(): Builder
+    {
+        return parent::getRecordRouteBindingEloquentQuery()->withoutGlobalScopes([SoftDeletingScope::class]);
+    }
 
     public static function form(Schema $schema): Schema
     {

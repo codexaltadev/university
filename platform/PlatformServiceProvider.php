@@ -26,7 +26,9 @@ use Platform\Modules\ModuleRegistry;
 use Platform\Permissions\EntityPermissions;
 use Platform\Registry\ExtensionLoader;
 use Platform\Registry\Registry;
+use Platform\Relations\MainSiteQueue;
 use Platform\Relations\RelationEngine;
+use Platform\Relations\Targets;
 use Platform\Scope\ScopeResolver;
 use Platform\Settings\Settings;
 use Platform\Support\BlueprintMacros;
@@ -46,7 +48,7 @@ class PlatformServiceProvider extends ServiceProvider
             Registry::class, ExtensionLoader::class, ScopeResolver::class, EntityPermissions::class,
             EntityHierarchy::class, RelationEngine::class, AssignmentEngine::class, RoleCatalog::class,
             FallbackResolver::class, MicrositeResolver::class, Languages::class, Settings::class,
-            Vocabularies::class, MediaLibrary::class, MediaUsages::class,
+            Vocabularies::class, MediaLibrary::class, MediaUsages::class, Targets::class, MainSiteQueue::class,
         ] as $service) {
             $this->app->singleton($service);
         }

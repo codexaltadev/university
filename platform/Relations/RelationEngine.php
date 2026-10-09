@@ -178,6 +178,47 @@ class RelationEngine
 
     // ── Housekeeping ─────────────────────────────────────────────────────────
 
+    // ── Highlights view (FR-CNT-H06) ──────────────────────────────────────────
+
+    /**
+     * New order of the highlights of one context, first = 1.
+     *
+     * @param  list<int|string>  $relationIds  core_relations ids in the wanted order
+     */
+    public function reorderHighlights(string $context, array $relationIds): void
+    {
+        [$type, $id] = explode(':', $context, 2);
+        $changed = [];
+
+        DB::transaction(function () use ($relationIds, $type, $id, &$changed): void {
+            foreach (array_values($relationIds) as $position => $relationId) {
+                $relation = ContentRelation::query()->whereKey($relationId)
+                    ->where('target_type', $type)->where('target_id', (int) $id)->where('is_highlighted', true)->first();
+
+                if ($relation && $relation->highlight_order !== $position + 1) {
+                    $relation->update(['highlight_order' => $position + 1]);
+                    $changed[$relation->content_type.':'.$relation->content_id] = $relation;
+                }
+            }
+        });
+
+        foreach ($changed as $relation) {
+            if ($content = $relation->content) {
+                ContentHighlightChanged::dispatch($content);
+            }
+        }
+    }
+
+    /** Take a content off one context's highlights; it stays shown there. */
+    public function unhighlight(ContentRelation $relation): void
+    {
+        $relation->update(['is_highlighted' => false, 'highlight_order' => 0, 'highlight_until' => null]);
+
+        if ($content = $relation->content) {
+            ContentHighlightChanged::dispatch($content);
+        }
+    }
+
     /** Hourly job (§3.5): switch off expired highlights. */
     public function expireHighlights(): int
     {

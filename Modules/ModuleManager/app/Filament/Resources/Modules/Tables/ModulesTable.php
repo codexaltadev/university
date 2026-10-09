@@ -16,6 +16,9 @@ class ModulesTable
     {
         return $table
             ->defaultSort('name')
+            // ~60 modules at most: one page shows the whole platform
+            ->paginated([25, 50, 100])
+            ->defaultPaginationPageOption(25)
             ->columns([
                 TextColumn::make('name')->label(__('modulemanager::manager.fields.name'))
                     ->description(fn (CoreModule $record): ?string => $record->manifest['description'] ?? null)

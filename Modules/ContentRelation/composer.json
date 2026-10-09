@@ -1,0 +1,16 @@
+{
+    "name": "uwms/content-relation",
+    "description": "Content Relation module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\ContentRelation\\": "app/",
+            "Modules\\ContentRelation\\Database\\Factories\\": "database/factories/",
+            "Modules\\ContentRelation\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\ContentRelation\\Tests\\": "tests/" }
+    }
+}

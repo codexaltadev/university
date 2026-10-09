@@ -1,0 +1,32 @@
+{
+    "name": "ContentRelation",
+    "alias": "contentrelation",
+    "description": "Main Site Queue and Highlights screens of the Content Relation Engine — core module C-13",
+    "keywords": [
+        "system",
+        "content"
+    ],
+    "priority": 10,
+    "providers": [
+        "Modules\\ContentRelation\\Providers\\ContentRelationServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "content-relation",
+        "version": "1.0.0",
+        "type": "core",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "content_relation_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {},
+        "custom_permissions": [],
+        "provides": {}
+    }
+}
