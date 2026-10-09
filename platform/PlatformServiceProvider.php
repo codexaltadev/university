@@ -19,6 +19,7 @@ use Platform\Localization\DatabaseTranslationLoader;
 use Platform\Localization\Languages;
 use Platform\Media\MediaLibrary;
 use Platform\Media\MediaUsages;
+use Platform\Models\BaseModel;
 use Platform\Modules\ModuleAutoloader;
 use Platform\Modules\ModuleManager;
 use Platform\Modules\ModulePermissions;
@@ -31,6 +32,7 @@ use Platform\Relations\RelationEngine;
 use Platform\Relations\Targets;
 use Platform\Scope\ScopeResolver;
 use Platform\Settings\Settings;
+use Platform\Statistics\Statistics;
 use Platform\Support\BlueprintMacros;
 use Platform\Support\MorphMap;
 use Platform\Taxonomy\Vocabularies;
@@ -48,7 +50,7 @@ class PlatformServiceProvider extends ServiceProvider
             Registry::class, ExtensionLoader::class, ScopeResolver::class, EntityPermissions::class,
             EntityHierarchy::class, RelationEngine::class, AssignmentEngine::class, RoleCatalog::class,
             FallbackResolver::class, MicrositeResolver::class, Languages::class, Settings::class,
-            Vocabularies::class, MediaLibrary::class, MediaUsages::class, Targets::class, MainSiteQueue::class,
+            Vocabularies::class, MediaLibrary::class, MediaUsages::class, Targets::class, MainSiteQueue::class, Statistics::class,
         ] as $service) {
             $this->app->singleton($service);
         }
@@ -125,6 +127,13 @@ class PlatformServiceProvider extends ServiceProvider
         };
 
         Event::listen([ModuleActivated::class, ModuleDeactivated::class], $refresh);
+
+        // FR-STAT-05: published / changed / deleted content → counters counted again
+        Event::listen(['eloquent.saved: *', 'eloquent.deleted: *', 'eloquent.restored: *'], function (string $event, array $models): void {
+            if (($models[0] ?? null) instanceof BaseModel) {
+                Statistics::flush();
+            }
+        });
 
         // Uninstall with data: remove the module's rows from kernel tables (SAD Part A §10.4)
         Event::listen(function (ModuleUninstalling $event): void {

@@ -1,0 +1,16 @@
+{
+    "name": "uwms/statistics",
+    "description": "Statistics module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Statistics\\": "app/",
+            "Modules\\Statistics\\Database\\Factories\\": "database/factories/",
+            "Modules\\Statistics\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Statistics\\Tests\\": "tests/" }
+    }
+}

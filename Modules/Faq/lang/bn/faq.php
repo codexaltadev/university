@@ -3,6 +3,8 @@
 return [
     'title' => 'প্রায়শ জিজ্ঞাসিত প্রশ্ন',
 
+    'metric_count' => 'প্রশ্নের সংখ্যা',
+
     'fields' => [
         'question' => 'প্রশ্ন',
         'answer' => 'উত্তর',

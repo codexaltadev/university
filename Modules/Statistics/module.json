@@ -1,0 +1,35 @@
+{
+    "name": "Statistics",
+    "alias": "statistics",
+    "description": "Counters of the main site and every entity, manual or counted by module metrics — core module C-20",
+    "keywords": [
+        "appearance",
+        "statistics"
+    ],
+    "priority": 20,
+    "providers": [
+        "Modules\\Statistics\\Providers\\StatisticsServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "statistics",
+        "version": "1.0.0",
+        "type": "core",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "statistics_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {},
+        "custom_permissions": [
+            "Manage:Statistic",
+            "ManageMain:Statistic"
+        ],
+        "provides": {}
+    }
+}

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Query\Builder as QueryBuilder;
+use Platform\Context\SiteContext;
+use Platform\Hierarchy\EntityHierarchy;
 use Platform\Relations\ContentRelation;
 use Platform\Relations\RelationEngine;
 
@@ -43,6 +45,21 @@ trait IsAttachable
     public function isOnMainSite(): bool
     {
         return app(RelationEngine::class)->isOnMainSite($this);
+    }
+
+    /**
+     * Content of one context (metrics, Module Guide §11.2): everything for the main
+     * site; for an entity what is shown in it, and with $descendants in what is below it.
+     */
+    public function scopeInContext(Builder $query, SiteContext $context, bool $descendants = true): Builder
+    {
+        if (! $context->isMicrosite()) {
+            return $query;
+        }
+
+        $keys = $descendants ? app(EntityHierarchy::class)->withDescendants([$context->key()]) : [$context->key()];
+
+        return $query->shownIn($keys);
     }
 
     /** Admin queries: records shown in any of these entities. */

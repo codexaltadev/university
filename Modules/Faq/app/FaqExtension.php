@@ -3,6 +3,7 @@
 namespace Modules\Faq;
 
 use Modules\Faq\Filament\FaqPlugin;
+use Modules\Faq\Metrics\FaqCount;
 use Modules\Faq\Models\Faq;
 use Modules\Faq\Settings\FaqSettings;
 use Platform\Contracts\ModuleExtension;
@@ -16,5 +17,6 @@ final class FaqExtension implements ModuleExtension
         $r->attachable(Faq::class);   // "Show in" any entity, main site, highlight
         $r->settings(FaqSettings::class);   // Settings › FAQ tab
         $r->vocabulary('faq.category', label: 'FAQ category', hierarchical: true, multiple: false);
+        $r->metric('faq.count', FaqCount::class);   // Statistics counter
     }
 }

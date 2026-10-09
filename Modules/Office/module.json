@@ -2,7 +2,10 @@
     "name": "Office",
     "alias": "office",
     "description": "Offices (Registrar, Admission ...) with their own permissions",
-    "keywords": ["people", "office"],
+    "keywords": [
+        "people",
+        "office"
+    ],
     "priority": 40,
     "providers": [
         "Modules\\Office\\Providers\\OfficeServiceProvider"
@@ -14,7 +17,10 @@
         "type": "installable",
         "requires_core": "^1.0",
         "default_active": true,
-        "author": { "name": "DIU Web Team", "email": "web@example.edu" },
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
         "license": "proprietary",
         "table_prefix": "office_",
         "dependencies": {},
@@ -27,7 +33,10 @@
             "relation_target": true,
             "microsite": true,
             "assignable": true,
-            "dynamic_permissions": true
+            "dynamic_permissions": true,
+            "metrics": [
+                "office.count"
+            ]
         }
     }
 }

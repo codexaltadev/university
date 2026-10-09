@@ -22,14 +22,41 @@ class UserScopeFilter implements Scope
 {
     protected static bool $forced = false;
 
+    protected static bool $suspended = false;
+
     /** Apply the filter outside the panel too (tests, exports run for a user). */
     public static function enforce(bool $on = true): void
     {
         static::$forced = $on;
     }
 
+    /**
+     * Run without the filter: website numbers (metrics) count everything visible,
+     * even when an entity user previews them in the admin panel.
+     *
+     * @template T
+     *
+     * @param  \Closure(): T  $callback
+     * @return T
+     */
+    public static function withoutScope(\Closure $callback): mixed
+    {
+        $before = static::$suspended;
+        static::$suspended = true;
+
+        try {
+            return $callback();
+        } finally {
+            static::$suspended = $before;
+        }
+    }
+
     public function apply(Builder $builder, Model $model): void
     {
+        if (static::$suspended) {
+            return;
+        }
+
         $user = Auth::user();
 
         if (! $user || ! (static::$forced || Filament::isServing())) {
