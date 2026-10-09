@@ -1,0 +1,38 @@
+{
+    "name": "HeaderFooter",
+    "alias": "headerfooter",
+    "description": "Top bar, header and footer of the main site and every microsite with fallback — core module C-09",
+    "keywords": [
+        "appearance",
+        "header",
+        "footer"
+    ],
+    "priority": 20,
+    "providers": [
+        "Modules\\HeaderFooter\\Providers\\HeaderFooterServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "header-footer",
+        "version": "1.0.0",
+        "type": "core",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "header_footer_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "header-footer.region": "Modules\\HeaderFooter\\Models\\Region"
+        },
+        "custom_permissions": [
+            "Manage:HeaderFooter",
+            "ManageMain:HeaderFooter"
+        ],
+        "provides": {}
+    }
+}

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Platform\Models\BaseModel;
 use Platform\Models\BasePivot;
+use Platform\Models\ConfigModel;
 use Platform\Modules\Manifest;
 use Platform\Modules\ManifestValidator;
 use Platform\Policies\ScopedPolicy;
@@ -88,11 +89,12 @@ it('modules query only their own tables, never another module\'s or the kernel\'
 
 // ─── R-4: models extend the platform bases ─────────────────────────────────
 
-it('module models extend BaseModel or BasePivot (R-4)', function (Manifest $manifest) {
+it('module models extend BaseModel, BasePivot or ConfigModel (R-4)', function (Manifest $manifest) {
     $wrong = array_filter(
         classesIn($manifest->path.'/app/Models', $manifest->namespace().'\\Models'),
         fn (string $class): bool => is_subclass_of($class, Model::class)
-            && ! is_subclass_of($class, BaseModel::class) && ! is_subclass_of($class, BasePivot::class),
+            && ! is_subclass_of($class, BaseModel::class) && ! is_subclass_of($class, BasePivot::class)
+            && ! is_subclass_of($class, ConfigModel::class),   // configuration (C) tables, DB-01 §1.1
     );
 
     expect($wrong)->toBe([]);

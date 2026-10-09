@@ -1,0 +1,68 @@
+<?php
+
+return [
+    'title' => 'Header & Footer',
+    'region' => 'Region',
+    'regions' => [
+        'topbar' => 'Top bar',
+        'header' => 'Header',
+        'footer' => 'Footer',
+    ],
+    'variants' => [
+        'default' => 'Default',
+        'classic' => 'Classic',
+        'centered' => 'Centered',
+        'minimal' => 'Minimal',
+        'columns' => 'Columns',
+        'compact' => 'Compact',
+    ],
+    'blocks' => [
+        'about_text' => 'About text',
+        'menu' => 'Menu',
+        'contact' => 'Contact',
+        'social' => 'Social links',
+        'newsletter' => 'Newsletter form',
+        'custom_html' => 'Custom HTML',
+    ],
+    'fields' => [
+        'variant' => 'Design',
+        'copyright' => 'Copyright line',
+        'columns' => 'Columns',
+        'heading' => 'Heading',
+        'blocks' => 'Blocks',
+        'block' => 'Block',
+        'text' => 'Text',
+        'menu_location' => 'Menu',
+        'html' => 'HTML',
+        'show_phone' => 'Phone',
+        'show_email' => 'Email',
+        'show_quick_links' => 'Quick links',
+        'show_language_switcher' => 'Language switch',
+        'show_social' => 'Social icons',
+        'show_login' => 'Login link',
+        'show_search' => 'Search',
+        'sticky' => 'Stays on top when scrolling',
+        'show_announcement_bar' => 'Announcement / notice ticker',
+    ],
+    'help' => [
+        'copyright' => '{year} becomes the current year.',
+        'menu' => 'The menu at this location, with its own fallback.',
+        'delete_own' => 'This place will use its parent\'s or the main site\'s again.',
+    ],
+    'fallback' => [
+        'uses' => 'This place has none of its own; it uses :owner\'s.',
+        'none' => 'Nothing set yet; the theme\'s default is shown.',
+    ],
+    'actions' => [
+        'create_own' => 'Create own',
+        'copy' => 'Copy :owner\'s and edit',
+        'save' => 'Save',
+        'delete_own' => 'Delete own',
+        'add_column' => 'Add column',
+    ],
+    'notifications' => [
+        'created' => 'Created',
+        'saved' => 'Saved',
+        'deleted' => 'Own version deleted',
+    ],
+];

@@ -3,20 +3,14 @@
 namespace Modules\Menu\Support;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 use Modules\Menu\Models\Menu;
 use Modules\Menu\Models\MenuItem;
 use Platform\Context\FallbackResolver;
+use Platform\Context\MicrositeOwners;
 use Platform\Context\MicrositeSetting;
 use Platform\Context\SiteContext;
-use Platform\Registry\Registry;
-use Platform\Relations\RelationEngine;
-use Platform\Relations\Targets;
 use Platform\Scope\UserScopeFilter;
-use Platform\Support\MorphMap;
 
 /**
  * What the Menus screen does (FR-MENU-01/02/06/08/09): find an owner's own menu,
@@ -41,25 +35,13 @@ class MenuEditor
      */
     public static function ownerOptions(?User $user): array
     {
-        if ($user === null) {
-            return [];
-        }
-
-        $mayMain = $user->isSuperAdmin() || $user->can('ManageMain:Menu');
-        $mayEntities = $user->isSuperAdmin() || $user->can('Manage:Menu');
-        $microsites = collect(app(Registry::class)->all('micrositeEntity'))->map(fn (array $e): string => MorphMap::alias($e['model']))->all();
-
-        $entities = $mayEntities ? collect(app(Targets::class)->options($user))
-            ->map(fn (array $items): array => array_filter($items, fn (string $label, string $key): bool => in_array(Str::before($key, ':'), $microsites, true), ARRAY_FILTER_USE_BOTH))
-            ->filter()->all() : [];
-
-        return [...($mayMain ? [RelationEngine::SITE_KEY => '🌐 '.__('platform::relations.main_site')] : []), ...$entities];
+        return MicrositeOwners::options($user, 'Menu');
     }
 
     /** @return list<string> */
     public static function ownerKeys(?User $user): array
     {
-        return collect(static::ownerOptions($user))->flatMap(fn ($v, $k): array => is_array($v) ? array_keys($v) : [$k])->values()->all();
+        return MicrositeOwners::keys($user, 'Menu');
     }
 
     public function own(string $ownerKey, string $location): ?Menu
@@ -206,19 +188,11 @@ class MenuEditor
 
     public function ownerLabel(string $ownerKey): string
     {
-        return $ownerKey === RelationEngine::SITE_KEY ? __('platform::relations.main_site') : Str::after(app(Targets::class)->label($ownerKey), ': ');
+        return MicrositeOwners::label($ownerKey);
     }
 
     public function context(string $ownerKey): SiteContext
     {
-        if ($ownerKey === RelationEngine::SITE_KEY) {
-            return SiteContext::site();
-        }
-
-        [$type, $id] = explode(':', $ownerKey, 2);
-        $model = Relation::getMorphedModel($type);
-        $entity = $model ? $model::query()->withoutGlobalScope(UserScopeFilter::class)->find($id) : null;
-
-        return $entity instanceof Model ? SiteContext::for($entity) : SiteContext::site();
+        return MicrositeOwners::context($ownerKey);
     }
 }

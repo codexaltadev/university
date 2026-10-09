@@ -1,0 +1,16 @@
+{
+    "name": "uwms/header-footer",
+    "description": "Header Footer module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\HeaderFooter\\": "app/",
+            "Modules\\HeaderFooter\\Database\\Factories\\": "database/factories/",
+            "Modules\\HeaderFooter\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\HeaderFooter\\Tests\\": "tests/" }
+    }
+}

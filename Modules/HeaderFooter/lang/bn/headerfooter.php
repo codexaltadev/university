@@ -1,0 +1,68 @@
+<?php
+
+return [
+    'title' => 'Header ও Footer',
+    'region' => 'অংশ',
+    'regions' => [
+        'topbar' => 'উপরের বার',
+        'header' => 'Header',
+        'footer' => 'Footer',
+    ],
+    'variants' => [
+        'default' => 'সাধারণ',
+        'classic' => 'Classic',
+        'centered' => 'মাঝখানে',
+        'minimal' => 'সংক্ষিপ্ত',
+        'columns' => 'কলাম',
+        'compact' => 'ছোট',
+    ],
+    'blocks' => [
+        'about_text' => 'পরিচিতি',
+        'menu' => 'Menu',
+        'contact' => 'যোগাযোগ',
+        'social' => 'Social link',
+        'newsletter' => 'Newsletter form',
+        'custom_html' => 'নিজস্ব HTML',
+    ],
+    'fields' => [
+        'variant' => 'Design',
+        'copyright' => 'Copyright লেখা',
+        'columns' => 'কলাম',
+        'heading' => 'শিরোনাম',
+        'blocks' => 'Block',
+        'block' => 'Block',
+        'text' => 'লেখা',
+        'menu_location' => 'Menu',
+        'html' => 'HTML',
+        'show_phone' => 'ফোন',
+        'show_email' => 'Email',
+        'show_quick_links' => 'Quick links',
+        'show_language_switcher' => 'ভাষা বদল',
+        'show_social' => 'Social icon',
+        'show_login' => 'Login link',
+        'show_search' => 'খোঁজ',
+        'sticky' => 'Scroll করলেও উপরে থাকবে',
+        'show_announcement_bar' => 'ঘোষণা / notice ticker',
+    ],
+    'help' => [
+        'copyright' => '{year} বর্তমান সাল হয়ে যাবে।',
+        'menu' => 'এই জায়গার menu, তার নিজের fallback সহ।',
+        'delete_own' => 'এই জায়গা আবার parent বা main site-এরটা ব্যবহার করবে।',
+    ],
+    'fallback' => [
+        'uses' => 'এখানে নিজের নেই; :owner-এরটা ব্যবহার হচ্ছে।',
+        'none' => 'এখনো কিছু ঠিক করা নেই; theme-এর default দেখাবে।',
+    ],
+    'actions' => [
+        'create_own' => 'নিজেরটা তৈরি',
+        'copy' => ':owner-এরটা কপি করে edit',
+        'save' => 'সংরক্ষণ',
+        'delete_own' => 'নিজেরটা মুছুন',
+        'add_column' => 'কলাম যোগ',
+    ],
+    'notifications' => [
+        'created' => 'তৈরি হয়েছে',
+        'saved' => 'সংরক্ষিত',
+        'deleted' => 'নিজেরটা মুছে ফেলা হয়েছে',
+    ],
+];
