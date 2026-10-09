@@ -2,6 +2,7 @@
 
 use Nwidart\Modules\Activators\FileActivator;
 use Nwidart\Modules\Providers\ConsoleServiceProvider;
+use Platform\Modules\DatabaseActivator;
 
 return [
 
@@ -322,7 +323,7 @@ return [
         ],
         // Status in core_modules (ADR-02)
         'database' => [
-            'class' => Platform\Modules\DatabaseActivator::class,
+            'class' => DatabaseActivator::class,
         ],
     ],
 

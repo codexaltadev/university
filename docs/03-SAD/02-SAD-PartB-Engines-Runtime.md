@@ -312,6 +312,16 @@ resolve(resource, location, context):
 | Template / Logo / Banner | P-09 | template, logo, banner | BR-MS-05/06, FR-SLD-06 |
 
 * **Location অনুযায়ী আলাদা resolve:** CSE-এর নিজস্ব Primary menu আছে কিন্তু Footer নেই → Footer আসবে Engineering বা Main Site থেকে।
+
+**বাস্তবায়ন (Phase 1D, 2026-10-09):**
+
+| অংশ | Class | নোট |
+|---|---|---|
+| Context | `Platform\Context\SiteContext` | `site()` / `for($entity)`; `key()`, `chain()` (entity → ancestors → `site:0`), `settings()` |
+| URL → context | `Platform\Context\MicrositeResolver` | `micrositeEntity(Model::class, routePrefix: 'department')`-এর prefix; ঐচ্ছিক locale segment; slug `core_slugs` থেকে; পুরনো slug হলে `redirect` (301-এর URL); inactive বা অজানা entity → `null` (404) |
+| Slug | `Platform\Concerns\HasSlug` | প্রতিটি ভাষায় তৈরি (`config('platform.locales')`), একই type-এ অনন্য (`-2` suffix), পরিবর্তনে পুরনোটি history |
+| Resolver | `Platform\Context\FallbackResolver` | Core module প্রতিটি resource-এর জন্য একটি **store** register করে: `store('menu', fn ($type, $id, $location) => …, themeDefault)`। `resolve()` item দেয়, `source()` বলে কোথা থেকে এসেছে ("Inherited from …" indicator)। Mode `core_microsite_settings.fallback_modes`-এ (`own` / `inherit` / `main`, default `inherit`)। `template` store kernel-এরই (settings table থেকে) |
+| Cache | — | এখন request-ভিত্তিক memo; persistent cache (`fallback:{resource}:{location}:{entity}:{locale}`) ও invalidation আসবে store-গুলোর সাথে (Phase 2) |
 * Lab ও Office-এর chain: `[entity, site]` (parent Office থাকলে ও "inherit" হলে `[office, parentOffice, site]`)।
 * ফলাফল cache: key `fallback:{resource}:{location}:{entity}:{locale}`; invalidate: সংশ্লিষ্ট resource-এর পরিবর্তন, `EntityHierarchyChanged`।
 

@@ -1,10 +1,15 @@
 <?php
 
+use App\Providers\AppServiceProvider;
+use App\Providers\Filament\AdminPanelProvider;
+use Nwidart\Modules\LaravelModulesServiceProvider;
+use Platform\PlatformServiceProvider;
+
 return [
     // Kernel first: ZIP-installed modules must be autoloadable before nwidart registers them
-    Platform\PlatformServiceProvider::class,
+    PlatformServiceProvider::class,
     // Not auto-discovered (composer.json "dont-discover") so it runs after the kernel
-    Nwidart\Modules\LaravelModulesServiceProvider::class,
-    App\Providers\AppServiceProvider::class,
-    App\Providers\Filament\AdminPanelProvider::class,
+    LaravelModulesServiceProvider::class,
+    AppServiceProvider::class,
+    AdminPanelProvider::class,
 ];

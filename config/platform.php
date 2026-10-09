@@ -70,6 +70,9 @@ return [
         'helper' => ['Helper', false],
     ],
 
+    /* Website languages (BRD Q-01); the first is the default. Managed by Localization (C-15) later. */
+    'locales' => array_filter(explode(',', env('UWMS_LOCALES', 'en,bn'))),
+
     /* Main Site pseudo-target in core_relations: ("site", 0) means "published on the main site" (ADR-15). */
     'main_site' => ['type' => 'site', 'id' => 0],
 ];

@@ -25,6 +25,7 @@
         "custom_permissions": [],
         "provides": {
             "relation_target": true,
+            "microsite": true,
             "assignable": true,
             "dynamic_permissions": true
         }

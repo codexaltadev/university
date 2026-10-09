@@ -1,0 +1,52 @@
+name: Nightly
+
+# Slow suites: real module installs, ZIP checks and uninstalls (tests/Lifecycle).
+# Also runnable by hand from the Actions tab.
+
+on:
+  schedule:
+    - cron: '0 20 * * *'   # 02:00 Asia/Dhaka
+  workflow_dispatch:
+
+jobs:
+  lifecycle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: university_test
+        ports: ['3306:3306']
+        options: >-
+          --health-cmd="mysqladmin ping -proot"
+          --health-interval=5s --health-timeout=5s --health-retries=20
+
+    env:
+      DB_CONNECTION: mysql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 3306
+      DB_USERNAME: root
+      DB_PASSWORD: root
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: intl, gd, redis, zip, bcmath, exif, pdo_mysql, pcntl
+          coverage: none
+
+      - name: Composer install
+        run: composer install --no-interaction --no-progress --prefer-dist
+
+      - name: Environment
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Module lifecycle tests
+        run: vendor/bin/pest tests/Lifecycle

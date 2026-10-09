@@ -2,8 +2,8 @@
 
 /*
 | Phase 1B — module lifecycle through the Module Manager (SAD Part A §10,
-| Test Plan TC-MOD-01..12). Real migrations run, so each test starts from a
-| freshly migrated database instead of a transaction.
+| Test Plan TC-MOD-01..12). Real migrations run, so each test resets the
+| database itself (Tests\Support\LifecycleDatabase) instead of a transaction.
 */
 
 use Illuminate\Support\Facades\Artisan;
@@ -17,6 +17,7 @@ use Platform\Modules\ModuleManager;
 use Platform\Modules\ModuleOperationFailed;
 use Platform\Modules\ModuleRegistry;
 use Spatie\Permission\Models\Permission;
+use Tests\Support\LifecycleDatabase;
 use Tests\Support\ModuleBuilder;
 
 beforeEach(function () {
@@ -29,7 +30,7 @@ beforeEach(function () {
         File::deleteDirectory(storage_path("framework/testing/{$dir}"));
     }
 
-    Artisan::call('migrate:fresh', ['--force' => true]);
+    LifecycleDatabase::reset();
     app(ModuleRegistry::class)->refresh();
 });
 

@@ -2,6 +2,7 @@
 
 namespace Modules\Office\Models;
 
+use Platform\Concerns\HasSlug;
 use Platform\Concerns\IsAssignable;
 use Platform\Concerns\IsRelationTarget;
 use Platform\Contracts\HasEntityPermissions;
@@ -13,6 +14,7 @@ use Platform\Models\BaseModel;
  */
 class Office extends BaseModel implements HasEntityPermissions
 {
+    use HasSlug;            // microsite /office/{slug}
     use IsAssignable;
     use IsRelationTarget;
 

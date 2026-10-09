@@ -27,6 +27,8 @@ abstract class TestCase extends BaseTestCase
             $r->relationTarget(FixtureParent::class);
             $r->relationTarget(FixtureChild::class, parent: FixtureParent::class, parentKey: 'parent_id');
             $r->assignable(FixtureChild::class, roles: ['head', 'coordinator', 'officer']);
+            $r->micrositeEntity(FixtureParent::class, routePrefix: 'test-faculty');
+            $r->micrositeEntity(FixtureChild::class, routePrefix: 'test-dept', parent: FixtureParent::class);
         });
 
         $this->app->make(EntityHierarchy::class)->watch();

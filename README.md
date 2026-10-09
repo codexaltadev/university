@@ -47,5 +47,16 @@ php artisan migrate
 php artisan db:seed        # permissions + first Super Admin (SUPER_ADMIN_* in .env;
                            # empty password → random one printed once)
 php artisan serve          # admin panel: http://localhost:8000/admin
-./vendor/bin/pest          # tests use the university_test database
+```
+
+## Tests
+
+Tests use the `university_test` database. CI (`.github/workflows/ci.yml`) runs the first
+three on every push; the lifecycle suite runs nightly (`nightly.yml`).
+
+```bash
+vendor/bin/pint --test                 # code style
+vendor/bin/pest tests/Architecture     # module isolation rules (R-1..R-5)
+vendor/bin/pest tests/Feature          # kernel, engines, POC
+vendor/bin/pest tests/Lifecycle        # real module install / uninstall (~1.5 min)
 ```

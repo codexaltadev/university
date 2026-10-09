@@ -8,6 +8,9 @@ use Illuminate\Support\ServiceProvider;
 use Platform\Assignments\AssignmentEngine;
 use Platform\Assignments\RoleCatalog;
 use Platform\Console\Commands;
+use Platform\Context\FallbackResolver;
+use Platform\Context\MicrositeResolver;
+use Platform\Context\MicrositeSetting;
 use Platform\Events\ModuleActivated;
 use Platform\Events\ModuleDeactivated;
 use Platform\Events\ModuleUninstalling;
@@ -36,6 +39,7 @@ class PlatformServiceProvider extends ServiceProvider
             ModuleRegistry::class, ModuleAutoloader::class, ModuleManager::class, ModulePermissions::class,
             Registry::class, ExtensionLoader::class, ScopeResolver::class, EntityPermissions::class,
             EntityHierarchy::class, RelationEngine::class, AssignmentEngine::class, RoleCatalog::class,
+            FallbackResolver::class, MicrositeResolver::class,
         ] as $service) {
             $this->app->singleton($service);
         }
@@ -58,6 +62,7 @@ class PlatformServiceProvider extends ServiceProvider
         }
 
         $this->app->make(EntityHierarchy::class)->watch();
+        $this->registerFallbackStores();
         $this->registerListeners();
         $this->registerSchedule();
 
@@ -74,11 +79,24 @@ class PlatformServiceProvider extends ServiceProvider
         }
     }
 
+    /**
+     * The kernel owns the microsite template (core_microsite_settings.template);
+     * menu, header, footer, homepage, stats, logo and banner stores come from the
+     * core modules that own those tables.
+     */
+    protected function registerFallbackStores(): void
+    {
+        $this->app->make(FallbackResolver::class)->store('template', fn (string $type, int $id): ?string => $type === RelationEngine::SITE_TYPE
+            ? null   // the main site's template is a theme setting (C-06)
+            : MicrositeSetting::query()->where('owner_type', $type)->where('owner_id', $id)->value('template'));
+    }
+
     protected function registerListeners(): void
     {
         $refresh = function (): void {
             $this->app->make(EntityHierarchy::class)->flush();
             $this->app->make(ScopeResolver::class)->forget();
+            $this->app->make(FallbackResolver::class)->flush();
         };
 
         Event::listen([ModuleActivated::class, ModuleDeactivated::class], $refresh);

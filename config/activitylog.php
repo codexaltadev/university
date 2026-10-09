@@ -1,5 +1,7 @@
 <?php
 
+use Platform\Activity\Activity;
+use Platform\Activity\LogActivityAction;
 use Spatie\Activitylog\Actions\CleanActivityLogAction;
 
 return [
@@ -38,7 +40,7 @@ return [
      * It should implement the Spatie\Activitylog\Contracts\Activity interface
      * and extend Illuminate\Database\Eloquent\Model.
      */
-    'activity_model' => Platform\Activity\Activity::class,
+    'activity_model' => Activity::class,
 
     /*
      * These attributes will be excluded from logging for all models.
@@ -65,7 +67,7 @@ return [
      * are logged and cleaned. Your custom classes must extend the originals.
      */
     'actions' => [
-        'log_activity' => Platform\Activity\LogActivityAction::class,   // adds module_slug, ip, user agent
+        'log_activity' => LogActivityAction::class,   // adds module_slug, ip, user agent
         'clean_log' => CleanActivityLogAction::class,
     ],
 ];
