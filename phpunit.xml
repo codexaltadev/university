@@ -21,6 +21,10 @@
         <testsuite name="Lifecycle">
             <directory>tests/Lifecycle</directory>
         </testsuite>
+        <!-- Slow: every golden-master case against the legacy answers (Test Plan §7.1.1); nightly -->
+        <testsuite name="Golden">
+            <directory>tests/Golden</directory>
+        </testsuite>
     </testsuites>
     <source>
         <include>

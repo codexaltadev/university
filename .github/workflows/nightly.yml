@@ -50,3 +50,7 @@ jobs:
 
       - name: Module lifecycle tests
         run: vendor/bin/pest tests/Lifecycle
+
+      # Test Plan §7.1.1: all 27,648 legacy calculator answers, 100% match
+      - name: Waiver Calculator golden master
+        run: vendor/bin/pest tests/Golden

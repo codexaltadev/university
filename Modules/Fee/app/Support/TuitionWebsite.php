@@ -23,8 +23,16 @@ class TuitionWebsite
 {
     public const PAGE = 'tuition-fees';
 
+    public const CALCULATOR = 'waiver-calculator';
+
     public function respond(string $rest, SiteContext $context, string $locale): ?Response
     {
+        if (! $context->isMicrosite() && trim($rest, '/') === self::CALCULATOR) {   // FR-FEE-06
+            app(Seo::class)->set(['title' => __('fee::fee.calculator.title'), 'path' => '/'.self::CALCULATOR]);
+
+            return response()->view('fee::calculator.page');
+        }
+
         if ($context->isMicrosite() || trim($rest, '/') !== self::PAGE) {
             return null;
         }

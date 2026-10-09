@@ -34,12 +34,16 @@
         "morph_aliases": {
             "fee.category": "Modules\\Fee\\Models\\FeeCategory",
             "fee.tuition": "Modules\\Fee\\Models\\Tuition",
-            "fee.tuition-line": "Modules\\Fee\\Models\\TuitionLine"
+            "fee.tuition-line": "Modules\\Fee\\Models\\TuitionLine",
+            "fee.board": "Modules\\Fee\\Models\\Board",
+            "fee.waiver-category": "Modules\\Fee\\Models\\WaiverCategory",
+            "fee.waiver-rule": "Modules\\Fee\\Models\\WaiverRule"
         },
         "custom_permissions": [],
         "provides": {
             "scopeable": true,
             "entity_tabs": true,
+            "settings": true,
             "layouts": [
                 "fee.tuition-table"
             ]

@@ -16,7 +16,7 @@ use Tests\TestCase;
 */
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
-    ->in('Feature', '../Modules/*/tests');
+    ->in('Feature', '../Modules/*/tests', 'Golden');
 
 /*
 | Module install / uninstall runs real migrations (DDL commits in MySQL),

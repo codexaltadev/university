@@ -326,6 +326,8 @@ SRS-এর প্রতিটি module-এ **Acceptance Criteria (AC)** আছ�
 | 4 | নতুন Tuition / Waiver module-এর calculator service একই input-এ → golden file-এর সাথে তুলনা (Pest dataset) |
 | 5 | পার্থক্য পাওয়া গেলে: migration mapping-এর ভুল কিনা দেখা; legacy-র ইচ্ছাকৃত আচরণ হলে নতুনটি ঠিক করা। Legacy-র আচরণ থেকে সচেতনভাবে সরে যেতে হলে (যেমন legacy-র bug) DIU Admission office-এর লিখিত অনুমোদন, golden file-এ নোট সহ |
 
+**বাস্তবায়ন (2026-10-10):** ধাপ ২–৩ `tools/legacy-migration/golden/waiver-golden.php` (legacy app-এর ভেতরে চলে) → `tests/Fixtures/waiver-golden.json.gz` (২৭,৬৪৮টি case); CI-র জন্য legacy table-এর ছোট snapshot `tests/Fixtures/legacy-fee-snapshot.sql.gz` (`legacy-snapshot.php`); ধাপ ৪ `tests/Golden/WaiverGoldenTest.php` (nightly, সব case) ও `tests/Feature/Legacy/WaiverGoldenSampleTest.php` (প্রতি push, প্রতি ২৫টির একটি)। ফল: **১০০% মিল**।
+
 Pass শর্ত: **১০০% মিল** (অনুমোদিত ব্যতিক্রম ছাড়া)। Waiver data বা rule admin-এ বদলালে golden file নতুন করে তৈরি নয় — বরং সেই পরিবর্তনের জন্য আলাদা test যোগ হয়; golden master শুধু migration-এর সঠিকতা প্রমাণ করে।
 
 Tuition fee-র হিসাবও একই পদ্ধতিতে (legacy `tuition-fees` endpoint বনাম নতুন)।

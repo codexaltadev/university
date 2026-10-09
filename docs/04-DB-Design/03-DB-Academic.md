@@ -344,12 +344,14 @@ UQ: `(employee_id, active_key)` (NULL employee_id একাধিক থাক�
 |---|---|---|
 | 1 | `fee_waiver_category_includes` | Category বাছলে অন্তর্ভুক্ত category-র rule-ও মেলে: "Female", "Sibling / Spouse", "Physically Challenged" … → "Result Based" (legacy `waiver_categories.waiver_categories` JSON, ১৫টি category-তে) |
 | 2 | `improved_waiver_percent` | HSC GPA > SSC GPA হলে rule-এর এই হার (বেশি হলে)। Legacy-তে `max_waiver_rate`, code-এ category id 19 ও 21 hardcode (Daffodil college quota, rule 86: ২০% → ৩০%, rule 87: ১৫% → ২৫%) — এখন rule-এর নিজস্ব মান, id নয়। `max_waiver_percent` থাকে additive mode-এর সীমা হিসেবে |
-| 3 | `highest` mode-এ ক্রম | মূল `waiver_percent` বড় → `improved_waiver_percent` বড়; বেছে নেওয়ার **পরে** improved হার প্রয়োগ (legacy-র মতো) |
+| 3 | `highest` mode-এ ক্রম | মূল `waiver_percent` বড় → `improved_waiver_percent` বড় → **সমান হলে অন্তর্ভুক্ত category-র (Result Based) rule আগে**, বাছাই করা quota-র নিজের rule পরে → পুরনো rule আগে; বেছে নেওয়ার **পরে** improved হার প্রয়োগ (legacy-র মতো)। সমতার নিয়মটি golden master থেকে পাওয়া (legacy-র SQL-এ ক্রম অনির্দিষ্ট, ফল এভাবে মেলে: quota-র নাম আসে শুধু যখন সেটি বেশি দেয়) |
 | 4 | Rule-category `sort_order` | ফলাফলের বার্তায় rule-এর প্রথম category-র নাম ("… under Female quota") — legacy pivot-এর ক্রম |
 | 5 | Calculator-এর Level / Board / Category তালিকা | Active rule থেকে নির্ণয় — legacy-র hardcode (International-এ শুধু Graduate, board 8 শুধু International) data থেকেই আসে |
 | 6 | Faculty pivot migrate হবে না | Legacy calculator faculty দেখে না, আর `faculty_waiver`-এ Agriculture (faculty 9) নেই অথচ তার tuition আছে → migrate করলে সেই ছাত্ররা waiver হারাত। খালি = সব faculty |
 | 7 | Golden শর্ত | `require_*_golden` = "চাই"; legacy-র তিনটি case-এর সাথে বর্তমান data-য় সমতুল্য (SSC-only-golden rule নেই) |
 | 8 | `fee_waiver_categories.uses_diploma_result` | এই category-তে দ্বিতীয় ফলাফল HSC নয়, Diploma CGPA (০–৪), golden নেই — legacy form-এ category 18 "Diploma Holders" hardcode (`checkIfWaiverCategoryIs18`); তার rule-এর `hsc_*` পরিসর ৩.০–৪.০ |
+
+**Golden master (2026-10-10):** legacy app-এর `WaiverApiController::calculate()`-এর ২৭,৬৪৮টি উত্তর (form যা পাঠাতে পারে — প্রতিটি rule-এর সীমার নিচে / উপরে, golden / non-golden, সব published tuition ও category) বনাম নতুন calculator, migrate করা data-য় — **১০০% মিল** (waiver %, category নাম, মোট, tuition, অন্যান্য, ভর্তি fee, waiver, পরের খরচ, range)। `tests/Golden` (nightly), নমুনা প্রতি ২৫টির একটি `tests/Feature/Legacy` (প্রতি push)।
 
 যাচাই (2026-10-10): legacy-র দুটি পথ — website-এর API `POST /calculate` (WaiverApiController) ও পুরনো Blade form-এর `waivers/check-waiver` (WaiverController::waiverCheck) — একই data ও নিয়ম ব্যবহার করে। Golden logic লেখায় আলাদা (Blade পথ golden মিললে GPA পরিসর দেখে না), কিন্তু form-এর আচরণে (golden box শুধু GPA ঠিক ৫ হলে চালু, না টিক দিলে মান যায় না) দুটির ফল একই। Golden master-এর oracle API পথ (Test Plan §7.1.1)। ফলাফলে "Payable during admission" (admission fee, প্রথম semester fee থেকে) ও range থাকলে credit-এর পরিসরের বার্তাও দেখায়।
 

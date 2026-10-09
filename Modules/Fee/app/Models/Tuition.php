@@ -168,6 +168,8 @@ class Tuition extends BaseModel implements Scopeable
 
     public static function plain(mixed $value): ?string
     {
-        return $value === null ? null : rtrim(rtrim((string) $value, '0'), '.');
+        $value = $value === null ? null : (string) $value;
+
+        return $value === null || ! str_contains($value, '.') ? $value : rtrim(rtrim($value, '0'), '.');   // "50" stays "50"
     }
 }

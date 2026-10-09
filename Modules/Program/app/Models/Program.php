@@ -184,7 +184,9 @@ class Program extends BaseModel implements Scopeable
     /** "144.0" → "144", "3.5" → "3.5" for credits and years. */
     public static function plainNumber(mixed $value): ?string
     {
-        return $value === null ? null : rtrim(rtrim((string) $value, '0'), '.');
+        $value = $value === null ? null : (string) $value;
+
+        return $value === null || ! str_contains($value, '.') ? $value : rtrim(rtrim($value, '0'), '.');   // "150" stays "150"
     }
 
     /** "4 Years (12 Semesters)" as entered, else the number of years. */
