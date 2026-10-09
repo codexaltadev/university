@@ -71,3 +71,6 @@ jobs:
 
       - name: Feature tests
         run: vendor/bin/pest tests/Feature
+
+      - name: Module tests
+        run: vendor/bin/pest Modules

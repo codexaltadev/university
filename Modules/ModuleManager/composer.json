@@ -1,0 +1,16 @@
+{
+    "name": "uwms/module-manager",
+    "description": "Module Manager module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\ModuleManager\\": "app/",
+            "Modules\\ModuleManager\\Database\\Factories\\": "database/factories/",
+            "Modules\\ModuleManager\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\ModuleManager\\Tests\\": "tests/" }
+    }
+}

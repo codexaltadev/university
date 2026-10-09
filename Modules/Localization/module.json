@@ -1,0 +1,34 @@
+{
+    "name": "Localization",
+    "alias": "localization",
+    "description": "Website languages, interface text overrides and admin language — core module C-15",
+    "keywords": [
+        "system",
+        "language"
+    ],
+    "priority": 10,
+    "providers": [
+        "Modules\\Localization\\Providers\\LocalizationServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "localization",
+        "version": "1.0.0",
+        "type": "core",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "localization_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {},
+        "custom_permissions": [
+            "Update:InterfaceText"
+        ],
+        "provides": {}
+    }
+}

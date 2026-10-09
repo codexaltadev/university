@@ -13,12 +13,11 @@ class ModulesSyncCommand extends Command
 {
     protected $signature = 'uwms:modules:sync';
 
-    protected $description = 'Record bundled modules; create kernel and module permissions and the role catalog';
+    protected $description = 'Record bundled modules; create module permissions and the role catalog';
 
     public function handle(ModuleManager $manager, ModulePermissions $permissions, Registry $registry, RoleCatalog $roles): int
     {
         $added = $manager->syncBundled();
-        $permissions->syncKernel();
 
         foreach (Module::allEnabled() as $module) {
             $permissions->sync($module->getName());

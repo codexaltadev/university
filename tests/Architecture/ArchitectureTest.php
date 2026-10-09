@@ -89,20 +89,22 @@ it('modules query only their own tables, never another module\'s or the kernel\'
 // ─── R-4: models extend the platform bases ─────────────────────────────────
 
 it('module models extend BaseModel or BasePivot (R-4)', function (Manifest $manifest) {
-    foreach (classesIn($manifest->path.'/app/Models', $manifest->namespace().'\\Models') as $class) {
-        if (! is_subclass_of($class, Model::class)) {
-            continue;
-        }
+    $wrong = array_filter(
+        classesIn($manifest->path.'/app/Models', $manifest->namespace().'\\Models'),
+        fn (string $class): bool => is_subclass_of($class, Model::class)
+            && ! is_subclass_of($class, BaseModel::class) && ! is_subclass_of($class, BasePivot::class),
+    );
 
-        expect(is_subclass_of($class, BaseModel::class) || is_subclass_of($class, BasePivot::class))
-            ->toBeTrue("{$class} must extend Platform\\Models\\BaseModel or BasePivot");
-    }
+    expect($wrong)->toBe([]);
 })->with(fn () => bundledManifests());
 
 it('module policies extend ScopedPolicy (SAD Part A §7.4)', function (Manifest $manifest) {
-    foreach (classesIn($manifest->path.'/app/Policies', $manifest->namespace().'\\Policies') as $class) {
-        expect(is_subclass_of($class, ScopedPolicy::class))->toBeTrue("{$class} must extend ScopedPolicy");
-    }
+    $wrong = array_filter(
+        classesIn($manifest->path.'/app/Policies', $manifest->namespace().'\\Policies'),
+        fn (string $class): bool => ! is_subclass_of($class, ScopedPolicy::class),
+    );
+
+    expect($wrong)->toBe([]);
 })->with(fn () => bundledManifests());
 
 // ─── R-5: no composer dependencies in modules ──────────────────────────────

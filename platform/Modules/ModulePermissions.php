@@ -5,7 +5,6 @@ namespace Platform\Modules;
 use BezhanSalleh\FilamentShield\Facades\FilamentShield;
 use Illuminate\Support\Str;
 use Nwidart\Modules\Facades\Module;
-use Platform\Filament\Resources\Roles\RoleResource;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 use Symfony\Component\Finder\Finder;
@@ -17,9 +16,6 @@ use Symfony\Component\Finder\Finder;
  */
 class ModulePermissions
 {
-    /** Kernel / app resources that are not part of any module. */
-    public const KERNEL_RESOURCES = [RoleResource::class];
-
     /**
      * Resource permissions of one module (on activate; POC-1).
      *
@@ -56,12 +52,6 @@ class ModulePermissions
         }
 
         $this->store($keys, $slug, 'custom');
-    }
-
-    /** Permissions of kernel resources (Role editor ...). */
-    public function syncKernel(): void
-    {
-        $this->store($this->keysForResources(self::KERNEL_RESOURCES), null, 'resource');
     }
 
     /** Uninstall with data: every permission the module owns (resource, custom, entity). */
@@ -139,10 +129,19 @@ class ModulePermissions
      */
     protected function keysForResources(array $resources): array
     {
-        $methods = config('filament-shield.policies.methods', []);
+        $defaults = config('filament-shield.policies.methods', []);
+        $managed = config('filament-shield.resources.manage', []);
+        $merge = (bool) config('filament-shield.policies.merge', true);
+        $excluded = config('filament-shield.resources.exclude', []);
+
+        // Same rule as Shield: resources.manage lists a resource's own methods
+        $methodsFor = fn (string $resource): array => isset($managed[$resource])
+            ? ($merge ? array_values(array_unique([...$defaults, ...$managed[$resource]])) : $managed[$resource])
+            : $defaults;
 
         return collect($resources)
-            ->flatMap(fn (string $resource): array => collect(FilamentShield::getDefaultPermissionKeys($resource, $methods))
+            ->reject(fn (string $resource): bool => in_array($resource, $excluded, true))
+            ->flatMap(fn (string $resource): array => collect(FilamentShield::getDefaultPermissionKeys($resource, $methodsFor($resource)))
                 ->pluck('key')
                 ->all())
             ->unique()

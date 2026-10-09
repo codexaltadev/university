@@ -5,6 +5,7 @@ namespace Platform\Concerns;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Str;
+use Platform\Localization\Languages;
 use Platform\Slugs\Slug;
 
 /**
@@ -83,7 +84,7 @@ trait HasSlug
     /** @return list<string> */
     protected function slugLocales(): array
     {
-        return config('platform.locales', [config('app.locale')]);
+        return app(Languages::class)->codes();
     }
 
     protected function slugBase(string $locale): string
@@ -91,7 +92,7 @@ trait HasSlug
         $source = $this->slugSource ?? 'name';
 
         if (method_exists($this, 'getTranslation') && in_array($source, $this->translatable ?? [], true)) {
-            return (string) ($this->getTranslation($source, $locale, false) ?: $this->getTranslation($source, config('app.fallback_locale')));
+            return (string) ($this->getTranslation($source, $locale, false) ?: $this->getTranslation($source, app(Languages::class)->default()));
         }
 
         return (string) $this->getAttribute($source);

@@ -1,0 +1,16 @@
+{
+    "name": "uwms/activity-log",
+    "description": "Activity Log module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\ActivityLog\\": "app/",
+            "Modules\\ActivityLog\\Database\\Factories\\": "database/factories/",
+            "Modules\\ActivityLog\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\ActivityLog\\Tests\\": "tests/" }
+    }
+}

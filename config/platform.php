@@ -70,7 +70,21 @@ return [
         'helper' => ['Helper', false],
     ],
 
-    /* Website languages (BRD Q-01); the first is the default. Managed by Localization (C-15) later. */
+    /*
+    | Admin sign-in (NFR-SEC-03/04). Moves to Website Settings (C-05) later.
+    */
+    'security' => [
+        'login_max_attempts' => 5,          // failed passwords per account …
+        'login_lockout_minutes' => 15,      // … then locked this long
+        'super_admin_requires_2fa' => (bool) env('UWMS_SUPER_ADMIN_REQUIRES_2FA', false),
+        // Invitation and password-reset links share Laravel's broker: config/auth.php passwords.users.expire
+    ],
+
+    /*
+    | Languages before Localization (C-15) has rows: first install, seeding, tests.
+    | The first is the default. Also the admin interface languages (user profile).
+    | After install, website languages are managed in Site › Languages.
+    */
     'locales' => array_filter(explode(',', env('UWMS_LOCALES', 'en,bn'))),
 
     /* Main Site pseudo-target in core_relations: ("site", 0) means "published on the main site" (ADR-15). */

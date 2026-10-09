@@ -300,6 +300,11 @@ class ModuleManager
                 'activated_at' => $manifest->defaultActive() ? now() : null,
             ]);
             $added[] = $manifest->slug();
+
+            // Bundled modules are migrated with the app; their default data comes now (ADR-06)
+            if (class_exists($manifest->seederClass())) {
+                Artisan::call('db:seed', ['--class' => $manifest->seederClass(), '--force' => true]);
+            }
         }
 
         $this->modules->refresh();

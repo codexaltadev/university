@@ -20,7 +20,6 @@ use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use Platform\Filament\Resources\Roles\RoleResource;
 use Platform\Registry\ExtensionLoader;
 use Platform\Registry\Registry;
 
@@ -34,7 +33,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Amber,
+                'primary' => Color::Slate,   // neutral; Settings › Admin branding overrides
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
@@ -57,12 +56,11 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->resources([
-                RoleResource::class,   // platform role editor; Shield skips its own when one is registered
-            ])
             ->plugins([
-                FilamentShieldPlugin::make(),
+                // Module plugins first: the Role core module registers its RoleResource,
+                // so Shield does not add its own
                 ...$this->activeModulePlugins(),
+                FilamentShieldPlugin::make(),
             ])
             ->authMiddleware([
                 Authenticate::class,

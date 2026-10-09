@@ -3,7 +3,7 @@
 namespace Modules\Faq\Providers;
 
 use Illuminate\Console\Scheduling\Schedule;
-use Nwidart\Modules\Support\ModuleServiceProvider;
+use Platform\Modules\ModuleServiceProvider;
 
 class FaqServiceProvider extends ModuleServiceProvider
 {

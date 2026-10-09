@@ -13,6 +13,8 @@ use Nwidart\Modules\Facades\Module;
 use Platform\Models\CoreModule;
 use Platform\Modules\Manifest;
 use Platform\Modules\ManifestValidator;
+use Platform\Modules\ModuleManager;
+use Platform\Modules\ModuleOperationFailed;
 use Platform\Modules\ModulePermissions;
 use Platform\Modules\ModuleRegistry;
 use Platform\Registry\ExtensionLoader;
@@ -31,7 +33,7 @@ function manifestWith(array $uwms): Manifest
 
 it('accepts the bundled manifests', function (string $module) {
     expect(app(ManifestValidator::class)->validate(Manifest::fromDirectory(base_path("Modules/{$module}"))))->toBe([]);
-})->with(['Faq', 'Office']);
+})->with(['Faq', 'Office', 'Role', 'User']);
 
 it('rejects invalid manifest fields with a readable reason', function (array $uwms, string $expected) {
     expect(implode("\n", app(ManifestValidator::class)->validate(manifestWith($uwms))))->toContain($expected);
@@ -106,15 +108,20 @@ it('inactive modules register nothing, and their panel plugin disappears', funct
 
 it('bundled manifests match what their Extensions register', function (string $module) {
     expect(app(ExtensionLoader::class)->mismatches(Manifest::fromDirectory(base_path("Modules/{$module}"))))->toBe([]);
-})->with(['Faq', 'Office']);
+})->with(['Faq', 'Office', 'Role', 'User']);
 
-// ─── Kernel permissions ────────────────────────────────────────────────────
+// ─── Core modules ──────────────────────────────────────────────────────────
 
-it('creates permissions for kernel resources (Role editor)', function () {
-    app(ModulePermissions::class)->syncKernel();
+it('the role editor lives in the Role core module and gets its permissions from it', function () {
+    app(ModulePermissions::class)->sync('Role');
 
     expect(Permission::where('name', 'Update:Role')->first())
         ->not->toBeNull()
-        ->module_slug->toBeNull()
+        ->module_slug->toBe('role')
         ->kind->toBe('resource');
 });
+
+it('core modules cannot be deactivated or uninstalled', function (string $slug) {
+    expect(fn () => app(ModuleManager::class)->deactivate($slug))
+        ->toThrow(ModuleOperationFailed::class, 'Core modules cannot be deactivated');
+})->with(['role', 'user']);

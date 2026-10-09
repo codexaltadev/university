@@ -1,0 +1,38 @@
+{
+    "name": "Settings",
+    "alias": "settings",
+    "description": "Website settings, module settings tabs, mail, maintenance and admin branding — core module C-05",
+    "keywords": [
+        "system",
+        "settings"
+    ],
+    "priority": 10,
+    "providers": [
+        "Modules\\Settings\\Providers\\SettingsServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "settings",
+        "version": "1.0.0",
+        "type": "core",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "settings_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {},
+        "custom_permissions": [
+            "View:Settings",
+            "Update:Settings",
+            "Advanced:Settings"
+        ],
+        "provides": {
+            "settings": true
+        }
+    }
+}

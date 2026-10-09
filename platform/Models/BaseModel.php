@@ -10,6 +10,7 @@ use Platform\Concerns\GuardsParentDelete;
 use Platform\Concerns\HasActiveFlag;
 use Platform\Concerns\LogsPlatformActivity;
 use Platform\Modules\ModuleRegistry;
+use Platform\Settings\Settings;
 
 /**
  * Base of every business (B) model (SAD Part A §6.1–6.4).
@@ -28,12 +29,12 @@ abstract class BaseModel extends Model
 
     /**
      * The only definition of "visible on the website" (FR-GEN-12):
-     * active, not deleted, module active, plus each opt-in trait's rule
+     * active, not deleted, module active and not hidden, plus each opt-in trait's rule
      * (HasPublishDate, HasExpiry ...). Never write these conditions by hand.
      */
     public function scopeFrontendVisible(Builder $query): Builder
     {
-        if (! static::moduleIsActive()) {
+        if (! static::moduleIsActive() || static::moduleHiddenOnWebsite()) {
             return $query->whereRaw('1 = 0');
         }
 
@@ -60,6 +61,14 @@ abstract class BaseModel extends Model
     public static function moduleSlug(): ?string
     {
         return app(ModuleRegistry::class)->slugForClass(static::class);
+    }
+
+    /** Website Settings › Modules: active, but its pages are hidden on the website (FR-SET-05). */
+    public static function moduleHiddenOnWebsite(): bool
+    {
+        $slug = static::moduleSlug();
+
+        return $slug !== null && app(Settings::class)->moduleHiddenOnWebsite($slug);
     }
 
     public static function moduleIsActive(): bool

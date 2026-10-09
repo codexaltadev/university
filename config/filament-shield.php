@@ -140,7 +140,9 @@ return [
 
     'policies' => [
         'path' => app_path('Policies'),
-        'merge' => true,
+        // false: a resource listed under resources.manage gets exactly those methods
+        // (e.g. the activity log only has viewAny / view), not the defaults plus them
+        'merge' => false,
         'generate' => true,
         'methods' => [
             'viewAny', 'view', 'create', 'update', 'delete', 'deleteAny', 'restore',

@@ -1,0 +1,16 @@
+{
+    "name": "uwms/localization",
+    "description": "Localization module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Localization\\": "app/",
+            "Modules\\Localization\\Database\\Factories\\": "database/factories/",
+            "Modules\\Localization\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Localization\\Tests\\": "tests/" }
+    }
+}

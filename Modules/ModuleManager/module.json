@@ -1,0 +1,24 @@
+{
+    "name": "ModuleManager",
+    "alias": "modulemanager",
+    "description": "Install, activate, deactivate and uninstall modules — core module C-01",
+    "keywords": ["system", "module"],
+    "priority": 10,
+    "providers": ["Modules\\ModuleManager\\Providers\\ModuleManagerServiceProvider"],
+    "files": [],
+    "uwms": {
+        "slug": "module-manager",
+        "version": "1.0.0",
+        "type": "core",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": { "name": "DIU Web Team", "email": "web@example.edu" },
+        "license": "proprietary",
+        "table_prefix": "module_manager_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {},
+        "custom_permissions": [],
+        "provides": {}
+    }
+}

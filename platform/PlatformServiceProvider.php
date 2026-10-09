@@ -15,6 +15,8 @@ use Platform\Events\ModuleActivated;
 use Platform\Events\ModuleDeactivated;
 use Platform\Events\ModuleUninstalling;
 use Platform\Hierarchy\EntityHierarchy;
+use Platform\Localization\DatabaseTranslationLoader;
+use Platform\Localization\Languages;
 use Platform\Modules\ModuleAutoloader;
 use Platform\Modules\ModuleManager;
 use Platform\Modules\ModulePermissions;
@@ -24,6 +26,7 @@ use Platform\Registry\ExtensionLoader;
 use Platform\Registry\Registry;
 use Platform\Relations\RelationEngine;
 use Platform\Scope\ScopeResolver;
+use Platform\Settings\Settings;
 use Platform\Support\BlueprintMacros;
 use Platform\Support\MorphMap;
 
@@ -39,18 +42,32 @@ class PlatformServiceProvider extends ServiceProvider
             ModuleRegistry::class, ModuleAutoloader::class, ModuleManager::class, ModulePermissions::class,
             Registry::class, ExtensionLoader::class, ScopeResolver::class, EntityPermissions::class,
             EntityHierarchy::class, RelationEngine::class, AssignmentEngine::class, RoleCatalog::class,
-            FallbackResolver::class, MicrositeResolver::class,
+            FallbackResolver::class, MicrositeResolver::class, Languages::class, Settings::class,
         ] as $service) {
             $this->app->singleton($service);
         }
 
         BlueprintMacros::register();
 
-        $this->app->make(ModuleAutoloader::class)->registerRuntimeModules(config('platform.modules.runtime_path'));
+        // lang/ files plus the admin's interface-string overrides (FR-LANG-03)
+        $this->app->extend('translation.loader', fn ($files) => new DatabaseTranslationLoader($files));
+
+        // ZIP-installed modules, and bundled ones not yet in composer's autoload
+        // (a fresh module:make-uwms must work without "composer dump-autoload")
+        $autoloader = $this->app->make(ModuleAutoloader::class);
+        $autoloader->registerRuntimeModules(config('platform.modules.runtime_path'));
+        $autoloader->registerRuntimeModules(base_path('Modules'));
     }
 
     public function boot(): void
     {
+        // Shared admin components' views (platform::…)
+        $this->loadViewsFrom(base_path('platform/resources/views'), 'platform');
+        $this->loadTranslationsFrom(base_path('platform/resources/lang'), 'platform');
+
+        // Missing translations fall back to the default website language (FR-LANG-05)
+        $this->app->make(Languages::class)->applyFallback();
+
         // Polymorphic columns hold aliases, never class names (ADR-17)
         MorphMap::register($this->app->make(ModuleRegistry::class));
 
@@ -75,6 +92,7 @@ class PlatformServiceProvider extends ServiceProvider
                 Commands\ModuleUninstallCommand::class,
                 Commands\ModulesSyncCommand::class,
                 Commands\ExpireHighlightsCommand::class,
+                Commands\CleanActivityLogCommand::class,
             ]);
         }
     }
@@ -110,13 +128,16 @@ class PlatformServiceProvider extends ServiceProvider
             $types = array_keys($event->manifest->morphAliases());
             $this->app->make(RelationEngine::class)->forgetTypes($types);
             $this->app->make(AssignmentEngine::class)->forgetTypes($types);
+            $this->app->make(Settings::class)->forgetGroup($event->manifest->slug());
         });
     }
 
     protected function registerSchedule(): void
     {
         $this->app->booted(function (): void {
-            $this->app->make(Schedule::class)->command('uwms:highlights:expire')->hourly();   // SAD Part B §3.5
+            $schedule = $this->app->make(Schedule::class);
+            $schedule->command('uwms:highlights:expire')->hourly();           // SAD Part B §3.5
+            $schedule->command('uwms:activity:clean')->dailyAt('03:00');      // FR-LOG-07
         });
     }
 }

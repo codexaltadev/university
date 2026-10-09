@@ -13,6 +13,7 @@ use Modules\Faq\Filament\Resources\Faqs\Pages\ListFaqs;
 use Modules\Faq\Filament\Resources\Faqs\Schemas\FaqForm;
 use Modules\Faq\Filament\Resources\Faqs\Tables\FaqsTable;
 use Modules\Faq\Models\Faq;
+use Platform\Filament\RelationManagers\ActivityRelationManager;
 use UnitEnum;
 
 class FaqResource extends Resource
@@ -35,6 +36,11 @@ class FaqResource extends Resource
     public static function table(Table $table): Table
     {
         return FaqsTable::configure($table);
+    }
+
+    public static function getRelations(): array
+    {
+        return [ActivityRelationManager::class];   // FR-GEN-83
     }
 
     public static function getPages(): array

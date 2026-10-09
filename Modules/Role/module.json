@@ -1,0 +1,24 @@
+{
+    "name": "Role",
+    "alias": "role",
+    "description": "Roles and permissions editor (Filament Shield) with entity and inactive-module tabs — core module C-03",
+    "keywords": ["system", "role", "permission"],
+    "priority": 10,
+    "providers": ["Modules\\Role\\Providers\\RoleServiceProvider"],
+    "files": [],
+    "uwms": {
+        "slug": "role",
+        "version": "1.0.0",
+        "type": "core",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": { "name": "DIU Web Team", "email": "web@example.edu" },
+        "license": "proprietary",
+        "table_prefix": "role_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {},
+        "custom_permissions": [],
+        "provides": {}
+    }
+}

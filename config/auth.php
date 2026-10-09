@@ -96,7 +96,7 @@ return [
         'users' => [
             'provider' => 'users',
             'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
-            'expire' => 60,
+            'expire' => 1440,   // minutes; also the life of a new user's invitation link (FR-USER-07)
             'throttle' => 60,
         ],
     ],

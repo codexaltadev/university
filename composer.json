@@ -36,7 +36,10 @@
             "Platform\\": "platform/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "platform/helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
@@ -82,7 +85,9 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": ["nwidart/laravel-modules"]
+            "dont-discover": [
+                "nwidart/laravel-modules"
+            ]
         },
         "merge-plugin": {
             "include": [

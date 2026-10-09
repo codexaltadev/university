@@ -13,6 +13,7 @@ use Modules\Office\Filament\Resources\Offices\Pages\ListOffices;
 use Modules\Office\Filament\Resources\Offices\Schemas\OfficeForm;
 use Modules\Office\Filament\Resources\Offices\Tables\OfficesTable;
 use Modules\Office\Models\Office;
+use Platform\Filament\RelationManagers\ActivityRelationManager;
 use UnitEnum;
 
 class OfficeResource extends Resource
@@ -33,6 +34,11 @@ class OfficeResource extends Resource
     public static function table(Table $table): Table
     {
         return OfficesTable::configure($table);
+    }
+
+    public static function getRelations(): array
+    {
+        return [ActivityRelationManager::class];   // FR-GEN-83
     }
 
     public static function getPages(): array

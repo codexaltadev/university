@@ -6,7 +6,10 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Platform\Assignments\Assignment;
 use Platform\Assignments\ManualPerson;
+use Platform\Localization\Language;
+use Platform\Localization\Translation;
 use Platform\Modules\ModuleRegistry;
+use Platform\Settings\Setting;
 
 /**
  * Fixed aliases in polymorphic columns instead of class names (SAD Part B §1.3,
@@ -20,6 +23,9 @@ class MorphMap
         'core.user' => User::class,
         'core.manual-person' => ManualPerson::class,
         'core.assignment' => Assignment::class,
+        'core.setting' => Setting::class,          // activity log subjects
+        'core.language' => Language::class,
+        'core.translation' => Translation::class,
     ];
 
     public static function register(ModuleRegistry $modules): void

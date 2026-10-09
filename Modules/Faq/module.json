@@ -2,7 +2,10 @@
     "name": "Faq",
     "alias": "faq",
     "description": "Frequently asked questions — reference module of the Module Development Guide",
-    "keywords": ["content", "faq"],
+    "keywords": [
+        "content",
+        "faq"
+    ],
     "priority": 50,
     "providers": [
         "Modules\\Faq\\Providers\\FaqServiceProvider"
@@ -14,7 +17,10 @@
         "type": "installable",
         "requires_core": "^1.0",
         "default_active": true,
-        "author": { "name": "DIU Web Team", "email": "web@example.edu" },
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
         "license": "proprietary",
         "table_prefix": "faq_",
         "dependencies": {},
@@ -24,7 +30,8 @@
         },
         "custom_permissions": [],
         "provides": {
-            "attachable": true
+            "attachable": true,
+            "settings": true
         }
     }
 }

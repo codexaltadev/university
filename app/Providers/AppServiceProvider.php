@@ -2,10 +2,7 @@
 
 namespace App\Providers;
 
-use App\Policies\RolePolicy;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
-use Spatie\Permission\Models\Role;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,9 +19,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Shield-generated policy outside Laravel's policy discovery
-        Gate::policy(Role::class, RolePolicy::class);
-
         // Test-only fixture tables for kernel tests
         if ($this->app->runningUnitTests()) {
             $this->loadMigrationsFrom(base_path('tests/Fixtures/migrations'));

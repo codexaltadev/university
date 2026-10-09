@@ -2,7 +2,7 @@
 
 namespace Modules\{{Name}}\Providers;
 
-use Nwidart\Modules\Support\ModuleServiceProvider;
+use Platform\Modules\ModuleServiceProvider;
 
 class {{Name}}ServiceProvider extends ModuleServiceProvider
 {
