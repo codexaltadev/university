@@ -2,7 +2,6 @@
 
 namespace Modules\Page\Filament\Resources\Pages\Schemas;
 
-use Closure;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -16,8 +15,8 @@ use Modules\Page\Models\Page;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\PublishingPanel;
 use Platform\Filament\Components\TranslatableTabs;
+use Platform\Filament\Components\WebAddressField;
 use Platform\Filament\Tables\ContentFilters;
-use Platform\Localization\Languages;
 
 /** Standard content form (UI/UX Part A §5.2): blocks per language left; publishing and page settings right. */
 class PageForm
@@ -51,23 +50,7 @@ class PageForm
                         Select::make('template')->label(__('page::page.fields.template'))
                             ->options(collect(Page::TEMPLATES)->mapWithKeys(fn (string $t): array => [$t => __("page::page.templates.{$t}")])->all())
                             ->default('default')->required()->selectablePlaceholder(false),
-                        TextInput::make('web_address')->label(__('page::page.fields.web_address'))
-                            ->prefix(fn (Get $get, ?Page $record): string => static::addressPrefix($get, $record))
-                            ->helperText(__('page::page.help.web_address'))
-                            ->rules([fn (): Closure => function (string $attribute, mixed $value, Closure $fail): void {
-                                if (filled($value) && Str::slug($value) === '') {
-                                    $fail(__('page::page.help.web_address'));
-                                }
-                            }])
-                            ->dehydrated(false)
-                            ->afterStateHydrated(fn (TextInput $component, ?Page $record) => $record?->exists ? $component->state($record->slug(app(Languages::class)->default())) : null)
-                            // FR-GEN-30/32: the old address stays as history and redirects
-                            ->saveRelationshipsUsing(function (Page $record, ?string $state): void {
-                                $locale = app(Languages::class)->default();
-                                if (filled($state) && Str::slug($state) !== $record->slug($locale)) {
-                                    $record->changeSlug($locale, $state);
-                                }
-                            }),
+                        WebAddressField::make(prefix: fn (Get $get, ?Page $record): string => static::addressPrefix($get, $record)),
                     ]),
                     Section::make(__('page::page.sections.files'))->compact()->schema([
                         MediaPicker::make('featured_image')->label(__('page::page.fields.featured_image'))->image(),

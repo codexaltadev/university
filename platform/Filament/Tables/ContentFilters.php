@@ -13,6 +13,7 @@ use Illuminate\Database\Query\Builder as QueryBuilder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Platform\Hierarchy\EntityHierarchy;
+use Platform\Localization\Languages;
 use Platform\Relations\RelationEngine;
 use Platform\Relations\Targets;
 use Platform\Taxonomy\Term;
@@ -89,6 +90,35 @@ class ContentFilters
         return collect(static::ownerOptions())
             ->flatMap(fn ($value, $key): array => is_array($value) ? array_keys($value) : [$key])
             ->values()->all();
+    }
+
+    /**
+     * "Missing বাংলা" (UI/UX Part A §9): records whose translatable attribute has no
+     * text in that language (the default language is always required).
+     */
+    public static function missingTranslation(string $attribute): SelectFilter
+    {
+        $languages = app(Languages::class);
+
+        return SelectFilter::make("missing_{$attribute}")
+            ->label(__('platform::relations.missing_translation'))
+            ->options(fn (): array => collect($languages->labels())
+                ->except($languages->default())
+                ->map(fn (string $label): string => __('platform::relations.missing_in', ['language' => $label]))
+                ->all())
+            ->query(function (Builder $query, array $data) use ($attribute): Builder {
+                $code = $data['value'] ?? null;
+
+                if (blank($code) || ! preg_match('/^[a-z]{2,3}(-[a-z0-9]+)?$/i', $code)) {
+                    return $query;
+                }
+
+                $column = $query->getModel()->qualifyColumn($attribute);
+
+                return $query->where(fn (Builder $q) => $q
+                    ->whereNull("{$column}->{$code}")
+                    ->orWhere("{$column}->{$code}", ''));
+            });
     }
 
     /** On the main site, or only in entities (FR-CNT-H07). */

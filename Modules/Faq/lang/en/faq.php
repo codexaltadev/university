@@ -3,6 +3,7 @@
 return [
     'title' => 'FAQ',
 
+    'section_label' => 'Selected questions',
     'metric_count' => 'Number of FAQs',
 
     'fields' => [

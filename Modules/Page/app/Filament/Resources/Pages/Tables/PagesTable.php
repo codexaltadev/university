@@ -46,6 +46,7 @@ class PagesTable
             ])
             ->filters([
                 ContentFilters::owner(),
+                ContentFilters::missingTranslation('title'),
                 SelectFilter::make('template')->label(__('page::page.fields.template'))
                     ->options(collect(Page::TEMPLATES)->mapWithKeys(fn (string $t): array => [$t => __("page::page.templates.{$t}")])->all()),
                 TernaryFilter::make('is_active')->label(__('platform::relations.active')),

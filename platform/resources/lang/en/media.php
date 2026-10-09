@@ -12,5 +12,6 @@ return [
     'shared' => 'Shared with everyone',
     'alt_text' => 'Alternative text',
     'alt_text_help' => 'Optional. Describes the picture for screen readers and search engines.',
+    'no_alt' => 'No alternative text on :count picture(s) — add it in the Media Library',
     'file' => 'File',
 ];

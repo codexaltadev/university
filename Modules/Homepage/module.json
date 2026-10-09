@@ -1,0 +1,38 @@
+{
+    "name": "Homepage",
+    "alias": "homepage",
+    "description": "Homepage builder for the main site and every microsite — core module C-10",
+    "keywords": [
+        "appearance",
+        "homepage"
+    ],
+    "priority": 20,
+    "providers": [
+        "Modules\\Homepage\\Providers\\HomepageServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "homepage",
+        "version": "1.0.0",
+        "type": "core",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "homepage_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "homepage.layout": "Modules\\Homepage\\Models\\Layout",
+            "homepage.section": "Modules\\Homepage\\Models\\HomeSection"
+        },
+        "custom_permissions": [
+            "Manage:Homepage",
+            "ManageMain:Homepage"
+        ],
+        "provides": {}
+    }
+}

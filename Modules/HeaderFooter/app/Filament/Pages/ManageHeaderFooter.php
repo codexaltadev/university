@@ -11,12 +11,10 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\EmbeddedSchema;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Text;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -26,6 +24,7 @@ use Modules\HeaderFooter\Models\Region;
 use Modules\HeaderFooter\Support\Regions;
 use Platform\Context\FallbackResolver;
 use Platform\Context\MicrositeOwners;
+use Platform\Filament\Components\FallbackIndicator;
 use Platform\Filament\Components\TranslatableTabs;
 
 /**
@@ -112,20 +111,11 @@ class ManageHeaderFooter extends Page
     public function form(Schema $schema): Schema
     {
         return $schema->statePath('data')->components([
-            Section::make()
-                ->visible(fn (): bool => $this->ownRegion() === null)
-                ->schema([
-                    Text::make(fn (): string => $this->fallbackText()),
-                    Actions::make([
-                        Action::make('createOwn')->label(__('headerfooter::headerfooter.actions.create_own'))
-                            ->icon(Heroicon::OutlinedPlus)
-                            ->action(fn () => $this->createOwn(false)),
-                        Action::make('copyCurrent')->label(fn (): string => __('headerfooter::headerfooter.actions.copy', ['owner' => $this->currentOwnerLabel()]))
-                            ->icon(Heroicon::OutlinedDocumentDuplicate)->color('gray')
-                            ->visible(fn (): bool => $this->regions()->current($this->owner, $this->region)['region'] instanceof Region)
-                            ->action(fn () => $this->createOwn(true)),
-                    ]),
-                ]),
+            FallbackIndicator::make(
+                from: fn (): ?string => $this->regions()->current($this->owner, $this->region)['from'],
+                createOwn: fn () => $this->createOwn(false),
+                copy: fn () => $this->createOwn(true),
+            )->visible(fn (): bool => $this->ownRegion() === null),
             Section::make(fn (): string => __("headerfooter::headerfooter.regions.{$this->region}"))
                 ->visible(fn (): bool => $this->ownRegion() !== null)
                 ->schema([
@@ -296,22 +286,6 @@ class ManageHeaderFooter extends Page
     protected function ownRegion(): ?Region
     {
         return $this->owner ? $this->regions()->own($this->owner, $this->region) : null;
-    }
-
-    protected function fallbackText(): string
-    {
-        $from = $this->regions()->current($this->owner, $this->region)['from'];
-
-        return $from === null
-            ? __('headerfooter::headerfooter.fallback.none')
-            : __('headerfooter::headerfooter.fallback.uses', ['owner' => MicrositeOwners::label($from)]);
-    }
-
-    protected function currentOwnerLabel(): string
-    {
-        $from = $this->regions()->current($this->owner, $this->region)['from'];
-
-        return $from ? MicrositeOwners::label($from) : '';
     }
 
     protected function regions(): Regions

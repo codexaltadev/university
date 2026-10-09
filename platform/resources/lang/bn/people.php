@@ -1,0 +1,24 @@
+<?php
+
+return [
+    'title' => 'লোকজন',
+    'add' => 'ব্যক্তি যোগ',
+    'add_new' => 'নতুন ব্যক্তি যোগ',
+    'person' => 'ব্যক্তি',
+    'role' => 'ভূমিকা',
+    'role_label' => 'নিজস্ব ভূমিকার নাম',
+    'role_label_help' => 'খালি রাখলে catalog-এর নাম (যেমন "Head")।',
+    'starts_on' => 'থেকে',
+    'ends_on' => 'পর্যন্ত',
+    'is_public' => 'Website-এ দেখাবে',
+    'phone' => 'ফোন',
+    'extension' => 'Extension',
+    'email' => 'Email',
+    'name' => 'নাম',
+    'designation' => 'পদবি',
+    'organization' => 'প্রতিষ্ঠান',
+    'manual' => 'হাতে যোগ করা',
+    'former' => 'পূর্বতন',
+    'hidden' => 'লুকানো',
+    'one_holder' => ':role একসাথে একজনই থাকতে পারেন — আগেরজনের শেষ তারিখ দিন।',
+];

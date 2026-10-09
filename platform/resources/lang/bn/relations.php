@@ -24,5 +24,15 @@ return [
     'highlight_none' => 'আগে বাছাই করুন কোথায় দেখাবে।',
     'order' => 'ক্রম',
     'until' => 'পর্যন্ত',
+    'web_address' => 'Web ঠিকানা',
+    'web_address_help' => 'শিরোনাম থেকে তৈরি; এখানে বদলানো যায়। পুরনো ঠিকানাও কাজ করবে।',
+    'fallback' => [
+        'uses' => 'এখানে নিজের নেই; :owner-এরটা ব্যবহার হচ্ছে।',
+        'none' => 'এখনো কিছু ঠিক করা নেই; theme-এর default দেখাবে।',
+        'create_own' => 'নিজেরটা তৈরি',
+        'copy' => ':owner-এরটা কপি করে edit',
+    ],
+    'missing_translation' => 'অনুবাদ',
+    'missing_in' => ':language নেই',
     'scheduled' => 'Scheduled',
 ];

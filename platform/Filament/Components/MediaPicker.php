@@ -9,6 +9,7 @@ use Filament\Forms\Components\Toggle;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
+use Platform\Localization\Languages;
 use Platform\Media\MediaItem;
 use Platform\Media\MediaLibrary;
 use Platform\Media\MediaRejected;
@@ -84,6 +85,14 @@ class MediaPicker extends Select
     {
         $this->onlyImages = $condition;
 
+        // FR-GEN-61: pictures need a description for screen readers and search engines
+        $this->live()
+            ->hint(fn (MediaPicker $component): ?string => $component->onlyImages && $component->withoutAltText() !== []
+                ? __('platform::media.no_alt', ['count' => count($component->withoutAltText())])
+                : null)
+            ->hintIcon(fn (MediaPicker $component): ?string => $component->onlyImages && $component->withoutAltText() !== [] ? 'heroicon-o-exclamation-triangle' : null)
+            ->hintColor('warning');
+
         return $this;
     }
 
@@ -93,6 +102,16 @@ class MediaPicker extends Select
         $this->storesIds = $condition;
 
         return $this;
+    }
+
+    /** @return list<int> chosen pictures without alt text in the default language */
+    public function withoutAltText(): array
+    {
+        $ids = array_filter(array_map('intval', (array) $this->getState()));
+
+        return $ids === [] ? [] : MediaItem::query()->whereKey($ids)->get()
+            ->filter(fn (MediaItem $item): bool => blank($item->getTranslation('alt_text', app(Languages::class)->default(), false)))
+            ->pluck('id')->all();
     }
 
     public function query(): Builder

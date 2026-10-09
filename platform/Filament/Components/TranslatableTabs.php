@@ -7,6 +7,7 @@ use Filament\Forms\Components\Field;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Contracts\Support\Htmlable;
 use Illuminate\Support\Str;
@@ -50,7 +51,13 @@ class TranslatableTabs extends Tabs
                 ->map(fn ($field): ?string => $field instanceof Field ? Str::beforeLast($field->getName(), '.') : null)
                 ->filter()->implode('-');
 
-            $tabs[] = Tab::make($label)->key("{$base}-{$code}")->schema($fields);
+            // ● written in this language, ○ not yet (UI/UX Part A §9)
+            $names = collect($fields)->filter(fn ($f): bool => $f instanceof Field)->map(fn (Field $f): string => $f->getName())->all();
+            $written = fn (Get $get): bool => collect($names)->contains(fn (string $name): bool => filled(is_string($v = $get($name)) ? strip_tags($v) : $v));
+
+            $tabs[] = Tab::make($label)->key("{$base}-{$code}")->schema($fields)
+                ->badge(fn (Get $get): string => $written($get) ? '●' : '○')
+                ->badgeColor(fn (Get $get): string => $written($get) ? 'success' : 'gray');
         }
 
         return $this->key($base)->tabs($tabs);

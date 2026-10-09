@@ -37,6 +37,9 @@
             ],
             "metrics": [
                 "faq.count"
+            ],
+            "homepage_sections": [
+                "faq.highlights"
             ]
         }
     }

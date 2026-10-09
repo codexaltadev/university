@@ -5,6 +5,7 @@ namespace Modules\Faq;
 use Modules\Faq\Filament\FaqPlugin;
 use Modules\Faq\Metrics\FaqCount;
 use Modules\Faq\Models\Faq;
+use Modules\Faq\Sections\FaqHighlightsSection;
 use Modules\Faq\Settings\FaqSettings;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
@@ -18,5 +19,6 @@ final class FaqExtension implements ModuleExtension
         $r->settings(FaqSettings::class);   // Settings › FAQ tab
         $r->vocabulary('faq.category', label: 'FAQ category', hierarchical: true, multiple: false);
         $r->metric('faq.count', FaqCount::class);   // Statistics counter
+        $r->homepageSection(FaqHighlightsSection::class);
     }
 }

@@ -24,5 +24,15 @@ return [
     'highlight_none' => 'Choose where it is shown first.',
     'order' => 'Order',
     'until' => 'Until',
+    'web_address' => 'Web address',
+    'web_address_help' => 'Made from the title; change it here. The old address keeps working.',
+    'fallback' => [
+        'uses' => 'This place has none of its own here; it uses :owner\'s.',
+        'none' => 'Nothing set here yet; the theme\'s default is shown.',
+        'create_own' => 'Create own',
+        'copy' => 'Copy :owner\'s and edit',
+    ],
+    'missing_translation' => 'Translation',
+    'missing_in' => 'Missing :language',
     'scheduled' => 'Scheduled',
 ];

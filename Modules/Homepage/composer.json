@@ -1,0 +1,16 @@
+{
+    "name": "uwms/homepage",
+    "description": "Homepage module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Homepage\\": "app/",
+            "Modules\\Homepage\\Database\\Factories\\": "database/factories/",
+            "Modules\\Homepage\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Homepage\\Tests\\": "tests/" }
+    }
+}

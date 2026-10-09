@@ -1,0 +1,24 @@
+<?php
+
+return [
+    'title' => 'People',
+    'add' => 'Add person',
+    'add_new' => 'Add a new person',
+    'person' => 'Person',
+    'role' => 'Role',
+    'role_label' => 'Own role name',
+    'role_label_help' => 'Empty: the catalog name (e.g. "Head").',
+    'starts_on' => 'From',
+    'ends_on' => 'Until',
+    'is_public' => 'Show on the website',
+    'phone' => 'Phone',
+    'extension' => 'Extension',
+    'email' => 'Email',
+    'name' => 'Name',
+    'designation' => 'Designation',
+    'organization' => 'Organization',
+    'manual' => 'added by hand',
+    'former' => 'former',
+    'hidden' => 'hidden',
+    'one_holder' => ':role can have one current holder only — give the previous one an end date.',
+];

@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Number;
 use Modules\Media\Filament\Resources\MediaItems\MediaActions;
+use Platform\Filament\Tables\ContentFilters;
 use Platform\Media\MediaFolder;
 use Platform\Media\MediaItem;
 
@@ -189,6 +190,7 @@ class MediaItemsTable
             Filter::make('unused')->label(__('media::media.filters.unused'))->toggle()
                 ->query(fn (Builder $query): Builder => $query->where('usage_count', 0)),
             TernaryFilter::make('is_shared')->label(__('media::media.fields.shared')),
+            ContentFilters::missingTranslation('alt_text'),
             TrashedFilter::make(),
         ];
     }

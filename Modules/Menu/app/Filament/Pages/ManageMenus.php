@@ -11,7 +11,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Notifications\Notification;
 use Filament\Pages\Page;
-use Filament\Schemas\Components\Actions;
 use Filament\Schemas\Components\EmbeddedSchema;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -25,6 +24,7 @@ use Modules\Menu\Models\Menu;
 use Modules\Menu\Models\MenuItem;
 use Modules\Menu\Support\MenuEditor;
 use Modules\Menu\Support\MenuLinks;
+use Platform\Filament\Components\FallbackIndicator;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Relations\RelationEngine;
@@ -112,21 +112,12 @@ class ManageMenus extends Page
     public function form(Schema $schema): Schema
     {
         return $schema->statePath('data')->components([
-            // FallbackIndicator (UI/UX Part A §6)
-            Section::make()
-                ->visible(fn (): bool => $this->ownMenu() === null)
-                ->schema([
-                    Text::make(fn (): string => $this->fallbackText()),
-                    Actions::make([
-                        Action::make('createOwn')->label(__('menu::menu.actions.create_own'))
-                            ->icon(Heroicon::OutlinedPlus)
-                            ->action(fn () => $this->createOwn(copy: false)),
-                        Action::make('copyCurrent')->label(fn (): string => __('menu::menu.actions.copy', ['owner' => $this->currentOwnerLabel()]))
-                            ->icon(Heroicon::OutlinedDocumentDuplicate)->color('gray')
-                            ->visible(fn (): bool => $this->editor()->current($this->owner, $this->location)['menu'] instanceof Menu)
-                            ->action(fn () => $this->createOwn(copy: true)),
-                    ]),
-                ]),
+            FallbackIndicator::make(
+                from: fn (): ?string => $this->editor()->current($this->owner, $this->location)['from'],
+                createOwn: fn () => $this->createOwn(copy: false),
+                copy: fn () => $this->createOwn(copy: true),
+                createLabel: __('menu::menu.actions.create_own'),
+            )->visible(fn (): bool => $this->ownMenu() === null),
             Section::make(fn (): string => __('menu::menu.structure', ['location' => MenuEditor::locations()[$this->location] ?? $this->location]))
                 ->visible(fn (): bool => $this->ownMenu() !== null)
                 ->schema([
@@ -332,22 +323,6 @@ class ManageMenus extends Page
     protected function ownMenu(): ?Menu
     {
         return $this->owner ? $this->editor()->own($this->owner, $this->location) : null;
-    }
-
-    protected function fallbackText(): string
-    {
-        $from = $this->editor()->current($this->owner, $this->location)['from'];
-
-        return $from === null
-            ? __('menu::menu.fallback.none')
-            : __('menu::menu.fallback.uses', ['owner' => $this->editor()->ownerLabel($from)]);
-    }
-
-    protected function currentOwnerLabel(): string
-    {
-        $from = $this->editor()->current($this->owner, $this->location)['from'];
-
-        return $from ? $this->editor()->ownerLabel($from) : '';
     }
 
     protected function editor(): MenuEditor
