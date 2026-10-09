@@ -6,6 +6,7 @@ use Nwidart\Modules\Facades\Module;
 use Platform\Assignments\ManualPerson;
 use Platform\Contracts\ModuleExtension;
 use Platform\Modules\Manifest;
+use Platform\Taxonomy\Vocabularies;
 
 /**
  * Runs the Extension of every active module once per request (SAD Part A §7.1).
@@ -39,6 +40,9 @@ class ExtensionLoader
 
         // The kernel's own registrations (ADR-14: manual persons are a person source)
         $this->registry->add('personSource', 'core', ['model' => ManualPerson::class]);
+
+        // Shared "Tags" any HasTaxonomy content may use (FR-TAX-03)
+        $this->registry->add('vocabulary', 'core', ['key' => Vocabularies::SHARED_TAGS, 'label' => 'Tags', 'hierarchical' => false, 'multiple' => true]);
 
         foreach (Module::allEnabled() as $module) {
             $this->loadOne(Manifest::fromDirectory($module->getPath()));

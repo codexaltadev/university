@@ -15,5 +15,6 @@ final class FaqExtension implements ModuleExtension
         $r->filamentPlugin(FaqPlugin::class);
         $r->attachable(Faq::class);   // "Show in" any entity, main site, highlight
         $r->settings(FaqSettings::class);   // Settings › FAQ tab
+        $r->vocabulary('faq.category', label: 'FAQ category', hierarchical: true, multiple: false);
     }
 }

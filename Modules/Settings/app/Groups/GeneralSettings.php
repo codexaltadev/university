@@ -6,7 +6,7 @@ use BackedEnum;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\Icons\Heroicon;
-use Platform\Filament\Forms\TranslatableTabs;
+use Platform\Filament\Components\TranslatableTabs;
 use Platform\Localization\Languages;
 use Platform\Settings\ModuleSettings;
 
@@ -52,11 +52,11 @@ class GeneralSettings extends ModuleSettings
     public function schema(): array
     {
         return [
-            TranslatableTabs::make(fn (string $locale, bool $default): array => [
+            TranslatableTabs::make()->schema(fn (string $locale, bool $default): array => [
                 TextInput::make("site_name.{$locale}")->label(__('settings::settings.fields.site_name'))->required($default)->maxLength(150),
                 TextInput::make("tagline.{$locale}")->label(__('settings::settings.fields.tagline'))->maxLength(255),
                 TextInput::make("university_name.{$locale}")->label(__('settings::settings.fields.university_name'))->maxLength(255),
-            ], 'general-names'),
+            ]),
             TextInput::make('established_year')->label(__('settings::settings.fields.established_year'))
                 ->numeric()->minValue(1000)->maxValue((int) date('Y')),
             Select::make('timezone')->label(__('settings::settings.fields.timezone'))

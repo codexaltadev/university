@@ -7,6 +7,7 @@ use Modules\Faq\Database\Factories\FaqFactory;
 use Platform\Concerns\AppliesUserScope;
 use Platform\Concerns\HasPublishDate;
 use Platform\Concerns\HasSortOrder;
+use Platform\Concerns\HasTaxonomy;
 use Platform\Concerns\IsAttachable;
 use Platform\Contracts\Scopeable;
 use Platform\Models\BaseModel;
@@ -20,6 +21,7 @@ class Faq extends BaseModel implements Scopeable
 
     use HasPublishDate;
     use HasSortOrder;
+    use HasTaxonomy;        // faq.category
     use IsAttachable;       // "Show in", main site, highlight (core_relations)
 
     public static string $titleAttribute = 'question';

@@ -10,6 +10,8 @@ use Platform\Localization\Language;
 use Platform\Localization\Translation;
 use Platform\Modules\ModuleRegistry;
 use Platform\Settings\Setting;
+use Platform\Taxonomy\Term;
+use Platform\Taxonomy\Vocabulary;
 
 /**
  * Fixed aliases in polymorphic columns instead of class names (SAD Part B §1.3,
@@ -26,6 +28,8 @@ class MorphMap
         'core.setting' => Setting::class,          // activity log subjects
         'core.language' => Language::class,
         'core.translation' => Translation::class,
+        'core.vocabulary' => Vocabulary::class,
+        'core.term' => Term::class,
     ];
 
     public static function register(ModuleRegistry $modules): void

@@ -54,6 +54,10 @@ trait HasSlug
 
         $existing = $this->slugs()->where('locale', $locale)->where('slug', $slug)->first();
 
+        if ($existing?->is_current) {
+            return $slug;   // already the current address
+        }
+
         $this->slugs()->where('locale', $locale)->where('is_current', true)->update(['is_current' => false]);
 
         $existing

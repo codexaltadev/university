@@ -8,7 +8,7 @@ use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\Icons\Heroicon;
-use Platform\Filament\Forms\TranslatableTabs;
+use Platform\Filament\Components\TranslatableTabs;
 use Platform\Settings\ModuleSettings;
 use Platform\Settings\Settings;
 
@@ -51,9 +51,9 @@ class ContactSettings extends ModuleSettings
         return [
             TextInput::make('phone')->label(__('settings::settings.fields.phone'))->tel()->maxLength(50),
             TextInput::make('email')->label(__('settings::settings.fields.email'))->email()->maxLength(150),
-            TranslatableTabs::make(fn (string $locale): array => [
+            TranslatableTabs::make()->schema(fn (string $locale): array => [
                 TextInput::make("office_hours.{$locale}")->label(__('settings::settings.fields.office_hours'))->maxLength(255),
-            ], 'contact-hours'),
+            ]),
             Repeater::make('campuses')->label(__('settings::settings.fields.campuses'))
                 ->schema([
                     ...TranslatableTabs::inline(fn (string $locale, bool $default, string $language): array => [

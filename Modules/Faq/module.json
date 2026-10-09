@@ -31,7 +31,10 @@
         "custom_permissions": [],
         "provides": {
             "attachable": true,
-            "settings": true
+            "settings": true,
+            "vocabularies": [
+                "faq.category"
+            ]
         }
     }
 }

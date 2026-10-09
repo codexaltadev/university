@@ -9,7 +9,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Support\Colors\Color;
 use Filament\Support\Icons\Heroicon;
-use Platform\Filament\Forms\TranslatableTabs;
+use Platform\Filament\Components\TranslatableTabs;
 use Platform\Settings\ModuleSettings;
 
 /**
@@ -59,11 +59,11 @@ class AdminBrandingSettings extends ModuleSettings
     public function schema(): array
     {
         return [
-            TranslatableTabs::make(fn (string $locale): array => [
+            TranslatableTabs::make()->schema(fn (string $locale): array => [
                 TextInput::make("panel_name.{$locale}")->label(__('settings::settings.fields.panel_name'))
                     ->placeholder(self::NEUTRAL_NAME)->maxLength(60),
                 Textarea::make("login_message.{$locale}")->label(__('settings::settings.fields.login_message'))->rows(2)->maxLength(500),
-            ], 'branding-texts'),
+            ]),
             ColorPicker::make('primary_color')->label(__('settings::settings.fields.primary_color'))
                 ->hex()->regex('/^#[0-9a-fA-F]{6}$/')->required()->live()
                 ->hint(fn (?string $state): ?string => $state && ! static::readableOnWhite($state) ? __('settings::settings.help.low_contrast') : null)

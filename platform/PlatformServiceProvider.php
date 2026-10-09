@@ -29,6 +29,7 @@ use Platform\Scope\ScopeResolver;
 use Platform\Settings\Settings;
 use Platform\Support\BlueprintMacros;
 use Platform\Support\MorphMap;
+use Platform\Taxonomy\Vocabularies;
 
 /**
  * Platform kernel. Registered before nwidart's provider (bootstrap/providers.php),
@@ -43,6 +44,7 @@ class PlatformServiceProvider extends ServiceProvider
             Registry::class, ExtensionLoader::class, ScopeResolver::class, EntityPermissions::class,
             EntityHierarchy::class, RelationEngine::class, AssignmentEngine::class, RoleCatalog::class,
             FallbackResolver::class, MicrositeResolver::class, Languages::class, Settings::class,
+            Vocabularies::class,
         ] as $service) {
             $this->app->singleton($service);
         }
@@ -115,6 +117,7 @@ class PlatformServiceProvider extends ServiceProvider
             $this->app->make(EntityHierarchy::class)->flush();
             $this->app->make(ScopeResolver::class)->forget();
             $this->app->make(FallbackResolver::class)->flush();
+            $this->app->make(Vocabularies::class)->flush();
         };
 
         Event::listen([ModuleActivated::class, ModuleDeactivated::class], $refresh);
@@ -129,6 +132,7 @@ class PlatformServiceProvider extends ServiceProvider
             $this->app->make(RelationEngine::class)->forgetTypes($types);
             $this->app->make(AssignmentEngine::class)->forgetTypes($types);
             $this->app->make(Settings::class)->forgetGroup($event->manifest->slug());
+            $this->app->make(Vocabularies::class)->forgetModule($event->manifest->slug(), $types);
         });
     }
 

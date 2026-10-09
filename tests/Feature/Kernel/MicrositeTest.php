@@ -54,6 +54,9 @@ it('gives every language a unique slug and keeps old slugs as history', function
     $this->cse->changeSlug('en', 'Computer Science');
     expect($this->cse->slug('en'))->toBe('computer-science');
 
+    $this->cse->changeSlug('en', 'computer-science');                          // same again: stays current
+    expect($this->cse->slug('en'))->toBe('computer-science');
+
     [$found, $current] = $this->cse::findBySlug('cse', 'en');
     expect($found->is($this->cse))->toBeTrue()->and($current)->toBeFalse();   // old URL still finds it
 

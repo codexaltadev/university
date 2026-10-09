@@ -8,7 +8,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\Toggle;
 use Filament\Support\Icons\Heroicon;
 use Modules\Settings\Support\SettingsAccess;
-use Platform\Filament\Forms\TranslatableTabs;
+use Platform\Filament\Components\TranslatableTabs;
 use Platform\Settings\ModuleSettings;
 
 /** FR-SET-08: visitors see a message; signed-in admins still see the website. */
@@ -54,10 +54,10 @@ class MaintenanceSettings extends ModuleSettings
         return [
             Toggle::make('enabled')->label(__('settings::settings.fields.maintenance_enabled'))
                 ->helperText(__('settings::settings.help.maintenance_enabled')),
-            TranslatableTabs::make(fn (string $locale): array => [
+            TranslatableTabs::make()->schema(fn (string $locale): array => [
                 Textarea::make("message.{$locale}")->label(__('settings::settings.fields.maintenance_message'))
                     ->placeholder(__('frontend.maintenance', locale: $locale))->rows(3)->maxLength(1000),
-            ], 'maintenance-message'),
+            ]),
         ];
     }
 }

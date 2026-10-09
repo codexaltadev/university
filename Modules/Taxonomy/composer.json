@@ -1,0 +1,16 @@
+{
+    "name": "uwms/taxonomy",
+    "description": "Taxonomy module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Taxonomy\\": "app/",
+            "Modules\\Taxonomy\\Database\\Factories\\": "database/factories/",
+            "Modules\\Taxonomy\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Taxonomy\\Tests\\": "tests/" }
+    }
+}

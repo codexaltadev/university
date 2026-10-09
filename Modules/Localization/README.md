@@ -16,5 +16,5 @@ Core module C-15 (SRS Part 1). Website languages and admin overrides of interfac
 * Admin panel language comes from the user's profile (`users.locale`, `SetAdminLocale`).
 
 Kernel side (`platform/Localization`): `Languages` (cached list, default, fallback), `DatabaseTranslationLoader`,
-`Numerals::localize()` (FR-LANG-08), form component `Platform\Filament\Forms\TranslatableTabs` (FR-LANG-02).
+`Numerals::localize()` (FR-LANG-08), form component `Platform\Filament\Components\TranslatableTabs` (FR-LANG-02).
 Language switcher, `/bn/` URLs and browser-language redirect (FR-LANG-04/06) come with the website theme.
