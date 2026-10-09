@@ -3,6 +3,7 @@
 namespace Modules\Faq;
 
 use Modules\Faq\Filament\FaqPlugin;
+use Modules\Faq\Freshness\FaqFreshness;
 use Modules\Faq\Metrics\FaqCount;
 use Modules\Faq\Models\Faq;
 use Modules\Faq\Sections\FaqHighlightsSection;
@@ -21,5 +22,6 @@ final class FaqExtension implements ModuleExtension
         $r->metric('faq.count', FaqCount::class);   // Statistics counter
         $r->homepageSection(FaqHighlightsSection::class);
         $r->layouts('faq.listing', ['accordion', 'grouped']);   // Appearance › Layouts (FR-THEME-08); first = default
+        $r->freshnessSource(FaqFreshness::class);               // Content Update Reminder (FR-NOTI-10)
     }
 }

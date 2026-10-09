@@ -28,6 +28,7 @@ use Platform\Modules\ModuleAutoloader;
 use Platform\Modules\ModuleManager;
 use Platform\Modules\ModulePermissions;
 use Platform\Modules\ModuleRegistry;
+use Platform\Notifications\Notifications;
 use Platform\Permissions\EntityPermissions;
 use Platform\Registry\ExtensionLoader;
 use Platform\Registry\Registry;
@@ -70,7 +71,7 @@ class PlatformServiceProvider extends ServiceProvider
             FallbackResolver::class, MicrositeResolver::class, Languages::class, Settings::class,
             Vocabularies::class, MediaLibrary::class, MediaUsages::class, Targets::class, MainSiteQueue::class, Statistics::class,
             Themes::class, DesignTokens::class, LayoutResolver::class, SiteData::class,
-            Seo::class, Sitemap::class, Website::class, SearchIndex::class,
+            Seo::class, Sitemap::class, Website::class, SearchIndex::class, Notifications::class,
         ] as $service) {
             $this->app->singleton($service);
         }

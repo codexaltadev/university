@@ -1,0 +1,41 @@
+{
+    "name": "Notification",
+    "alias": "notification",
+    "description": "Admin notifications in the bell and by email, preferences, templates and the content update reminder — core module C-18",
+    "keywords": [
+        "notification",
+        "email",
+        "reminder"
+    ],
+    "priority": 20,
+    "providers": [
+        "Modules\\Notification\\Providers\\NotificationServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "notification",
+        "version": "1.0.0",
+        "type": "core",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "notification_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "notification.template": "Modules\\Notification\\Models\\Template",
+            "notification.preference": "Modules\\Notification\\Models\\Preference",
+            "notification.reminder-rule": "Modules\\Notification\\Models\\ReminderRule"
+        },
+        "custom_permissions": [
+            "Manage:NotificationTemplate"
+        ],
+        "provides": {
+            "notifications": true
+        }
+    }
+}

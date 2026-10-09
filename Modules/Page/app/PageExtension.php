@@ -3,6 +3,7 @@
 namespace Modules\Page;
 
 use Modules\Page\Filament\PagePlugin;
+use Modules\Page\Freshness\PageFreshness;
 use Modules\Page\Models\Page;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
@@ -19,5 +20,6 @@ final class PageExtension implements ModuleExtension
         $r->menuItemType(Page::class);   // menus can link pages
         $r->sitemap(Page::class);        // sitemap.xml (FR-SEO-02)
         $r->searchable(Page::class, label: 'page::page.search_group', weight: 6);   // website search (FR-SRCH-01)
+        $r->freshnessSource(PageFreshness::class);                                  // Content Update Reminder (FR-NOTI-10)
     }
 }

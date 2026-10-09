@@ -32,7 +32,8 @@
         "provides": {
             "menu_item_types": true,
             "sitemap": true,
-            "searchable": true
+            "searchable": true,
+            "freshness_source": true
         }
     }
 }

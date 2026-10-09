@@ -43,7 +43,8 @@
             ],
             "layouts": [
                 "faq.listing"
-            ]
+            ],
+            "freshness_source": true
         }
     }
 }
