@@ -10,6 +10,7 @@ use Livewire\Livewire;
 use Modules\HeaderFooter\Filament\Pages\ManageHeaderFooter;
 use Modules\HeaderFooter\Models\Region;
 use Modules\HeaderFooter\Support\Regions;
+use Platform\Context\FallbackResolver;
 use Platform\Context\MicrositeOwners;
 use Platform\Context\SiteContext;
 use Spatie\Permission\Models\Permission;
@@ -92,4 +93,23 @@ it('lets entity users edit only their entities\' regions', function () {
 
     Livewire::withQueryParams(['owner' => 'site:0'])->test(ManageHeaderFooter::class)->assertSet('owner', ($this->k)($this->cse));
     expect(Region::count())->toBe(0);
+});
+
+it('draws the region\'s header variant on the website; one the theme lacks falls back (FR-HF-01, C-06)', function () {
+    expect(array_keys(Regions::variants('header')))->toBe(['classic', 'centered', 'minimal']);    // from theme.json
+
+    $this->get('/')->assertOk()->assertSee('site-header--classic', false);                     // nothing set: theme default
+
+    $header = $this->regions->create('site:0', 'header');
+    $header->update(['variant' => 'centered']);
+    $this->get('/')->assertSee('site-header--centered', false);
+
+    $header->update(['variant' => 'gone-in-this-theme']);
+    app(FallbackResolver::class)->flush();                                                     // as the screen does after saving
+    $this->get('/')->assertSee('site-header--classic', false);
+
+    $footer = $this->regions->create('site:0', 'footer');
+    $footer->update(['config' => ['columns' => [['heading' => ['en' => 'About us'], 'blocks' => [['type' => 'about_text', 'text' => ['en' => 'A green campus.']]]]]],
+        'copyright' => ['en' => '© {year} Test University']]);
+    $this->get('/')->assertSee('About us')->assertSee('A green campus.')->assertSee('© '.now()->year.' Test University');
 });

@@ -6,8 +6,10 @@ use Modules\HeaderFooter\Filament\Pages\ManageHeaderFooter;
 use Modules\HeaderFooter\Models\Region;
 use Modules\HeaderFooter\Support\Regions;
 use Platform\Context\FallbackResolver;
+use Platform\Context\SiteContext;
 use Platform\Modules\ModuleServiceProvider;
 use Platform\Scope\UserScopeFilter;
+use Platform\Theme\SiteData;
 
 class HeaderFooterServiceProvider extends ModuleServiceProvider
 {
@@ -36,5 +38,8 @@ class HeaderFooterServiceProvider extends ModuleServiceProvider
                 ->where('owner_type', $type)->where('owner_id', $id)->where('region', $region)
                 ->where('is_active', true)->first());
         }
+
+        // <x-platform::slot name="header|footer|topbar"> on the website (C-06)
+        $this->app->make(SiteData::class)->provide('region', fn (string $region, SiteContext $context): ?array => $this->app->make(Regions::class)->forContext($region, $context));
     }
 }

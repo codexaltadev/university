@@ -2,11 +2,14 @@
 
 namespace Modules\HeaderFooter\Support;
 
+use Illuminate\Support\Facades\Lang;
+use Illuminate\Support\Str;
 use Modules\HeaderFooter\Models\Region;
 use Platform\Context\FallbackResolver;
 use Platform\Context\MicrositeOwners;
 use Platform\Context\SiteContext;
 use Platform\Scope\UserScopeFilter;
+use Platform\Theme\Themes;
 
 /**
  * Top bar, header and footer for the website and the admin screen (C-09): the region
@@ -16,11 +19,13 @@ use Platform\Scope\UserScopeFilter;
  */
 class Regions
 {
-    /** @return array<string, string> variant => label, of the active theme (FR-HF-01; theme module adds its own later) */
+    /** @return array<string, string> variant => label, of the active theme (FR-HF-01, theme.json "{region}_variants") */
     public static function variants(string $region): array
     {
-        return collect(config("headerfooter.variants.{$region}", ['default']))
-            ->mapWithKeys(fn (string $v): array => [$v => __("headerfooter::headerfooter.variants.{$v}")])
+        $variants = app(Themes::class)->variants($region) ?: config("headerfooter.variants.{$region}", ['default']);
+
+        return collect($variants)
+            ->mapWithKeys(fn (string $v): array => [$v => Lang::has("headerfooter::headerfooter.variants.{$v}") ? __("headerfooter::headerfooter.variants.{$v}") : Str::headline($v)])
             ->all();
     }
 

@@ -3,7 +3,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Development Guide — Part B: Theme |
-| Version | 1.0 |
+| Version | 1.1 (kernel API মিলিয়ে, Phase 2.8a) |
 | Date | 2026-10-08 |
 | Status | ✔ Approved |
 | Based on | SAD Part B (§6 fallback resolver, §8 theme engine, §8.6 Blade + Livewire), UI/UX Part B (§2 token, §4 layout, §6 component, §8 checklist, §9 Theme Developer Contract), SRS C-06 (FR-THEME, FR-MENU, FR-HF, FR-PAGE-04) |
@@ -232,7 +232,7 @@ Kernel প্রতিটি page-কে layout-এর **নির্দিষ�
 </html>
 ```
 
-`<x-platform::slot>` প্রথমে theme-এর `partials/{slot}.blade.php` (বা variant) খোঁজে, না পেলে kernel-এর minimal default দেখায়। Slot-এর data (menu, logo, entity) fallback resolver থেকে আসে (SAD Part B §6.2) — theme নিজে খুঁজবে না।
+`<x-platform::slot>` প্রথমে theme-এর `partials/{slot}.blade.php` (বা variant) খোঁজে, না পেলে kernel-এর minimal default দেখায়। Header / footer: `partials/headers/{variant}`, `partials/footers/{variant}` — variant region-এর নির্বাচন, theme-এ না থাকলে theme-এর প্রথম variant। Partial পায় `$region` (null = theme default), `$config` (region-এর switch / footer column) ও `$context`। Slot-এর data (menu, logo, entity) fallback resolver থেকে আসে (SAD Part B §6.2) — theme নিজে খুঁজবে না।
 
 **`microsite.blade.php`** একই, শুধু `header`-এর পরে `<x-platform::slot name="microsite-bar" />`; microsite-এর menu, header, footer automatically entity → parent → main resolve হয়।
 
@@ -391,7 +391,7 @@ Block view না থাকলে kernel-এর default markup। `newsletter` b
     <div class="mx-auto max-w-container grid gap-8 lg:grid-cols-[1fr_320px] py-12">
         <article class="prose-theme">
             <h1 class="font-heading text-4xl">{{ $page->title }}</h1>
-            {!! $page->renderedBody !!}             {{-- Page builder block, kernel render করে ও sanitize করে --}}
+            {!! $body !!}                           {{-- Page builder block, kernel render করে ও sanitize করে --}}
         </article>
         <aside><x-platform::slot name="sidebar" /></aside>
     </div>

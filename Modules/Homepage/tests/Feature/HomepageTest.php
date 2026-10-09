@@ -177,3 +177,17 @@ it('creates the main homepage\'s default sections once (FR-HOME-12)', function (
     expect(HomeSection::pluck('section_type')->all())
         ->toBe(['core.hero', 'core.statistics', 'program.list', 'news.latest', 'event.upcoming', 'notice.board', 'testimonial.list', 'partner.list']);
 });
+
+it('renders the homepage sections through the active theme; none → the theme\'s default (C-06, FR-HOME-08)', function () {
+    $this->get('/')->assertOk()->assertSee(settings('general.site_name'));                     // theme default homepage
+
+    ($this->layoutWith)('site:0', [
+        ['section_type' => 'faq.highlights', 'heading' => ['en' => 'Common questions'], 'subheading' => ['en' => 'Asked most often']],
+        ['section_type' => 'core.spacer'],
+    ]);
+    Faq::factory()->create(['question' => 'How do I apply?', 'published_at' => now()->subDay()]);
+
+    $this->get('/')->assertOk()
+        ->assertSeeInOrder(['Common questions', 'Asked most often'])
+        ->assertSee('home-section', false);
+});

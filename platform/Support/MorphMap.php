@@ -16,6 +16,7 @@ use Platform\Statistics\StatItem;
 use Platform\Statistics\StatSet;
 use Platform\Taxonomy\Term;
 use Platform\Taxonomy\Vocabulary;
+use Platform\Theme\Theme;
 
 /**
  * Fixed aliases in polymorphic columns instead of class names (SAD Part B §1.3,
@@ -38,6 +39,7 @@ class MorphMap
         'core.media-folder' => MediaFolder::class,
         'core.stat-set' => StatSet::class,
         'core.stat-item' => StatItem::class,
+        'core.theme' => Theme::class,            // activity log subject (theme activated)
     ];
 
     public static function register(ModuleRegistry $modules): void

@@ -4,6 +4,7 @@ namespace Modules\Menu\Support;
 
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Lang;
 use Modules\Menu\Models\Menu;
 use Modules\Menu\Models\MenuItem;
 use Platform\Context\FallbackResolver;
@@ -11,6 +12,7 @@ use Platform\Context\MicrositeOwners;
 use Platform\Context\MicrositeSetting;
 use Platform\Context\SiteContext;
 use Platform\Scope\UserScopeFilter;
+use Platform\Theme\Themes;
 
 /**
  * What the Menus screen does (FR-MENU-01/02/06/08/09): find an owner's own menu,
@@ -19,11 +21,15 @@ use Platform\Scope\UserScopeFilter;
  */
 class MenuEditor
 {
-    /** @return array<string, string> location => label (FR-MENU-01; themes add more later) */
+    /** @return array<string, string> location => label (FR-MENU-01) */
     public static function locations(): array
     {
-        return collect(config('menu.locations', []))
-            ->mapWithKeys(fn (string $key): array => [$key => __("menu::menu.locations.{$key}")])
+        // Standard locations, then the ones the active theme adds (C-06)
+        $theme = app(Themes::class)->menuLocations();
+
+        return collect([...config('menu.locations', []), ...array_keys($theme)])
+            ->unique()
+            ->mapWithKeys(fn (string $key): array => [$key => Lang::has("menu::menu.locations.{$key}") ? __("menu::menu.locations.{$key}") : ($theme[$key] ?? $key)])
             ->all();
     }
 

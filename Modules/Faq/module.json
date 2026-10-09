@@ -40,6 +40,9 @@
             ],
             "homepage_sections": [
                 "faq.highlights"
+            ],
+            "layouts": [
+                "faq.listing"
             ]
         }
     }

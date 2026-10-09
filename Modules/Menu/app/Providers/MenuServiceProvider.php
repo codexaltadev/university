@@ -9,9 +9,11 @@ use Modules\Menu\Support\MenuEditor;
 use Modules\Menu\Support\MenuLinks;
 use Modules\Menu\Support\MenuTree;
 use Platform\Context\FallbackResolver;
+use Platform\Context\SiteContext;
 use Platform\Models\BaseModel;
 use Platform\Modules\ModuleServiceProvider;
 use Platform\Scope\UserScopeFilter;
+use Platform\Theme\SiteData;
 
 class MenuServiceProvider extends ModuleServiceProvider
 {
@@ -40,6 +42,9 @@ class MenuServiceProvider extends ModuleServiceProvider
             ->withoutGlobalScope(UserScopeFilter::class)
             ->where('owner_type', $type)->where('owner_id', $id)->where('location', $location)
             ->where('is_active', true)->first());
+
+        // <x-platform::menu> on the website (C-06)
+        $this->app->make(SiteData::class)->provide('menu', fn (string $location, SiteContext $context): array => $this->app->make(MenuTree::class)->menuAt($location, $context));
 
         // FR-MENU-12, AC-MENU-03: a menu or a linked page / record changed → fresh menus
         Event::listen(['eloquent.saved: *', 'eloquent.deleted: *', 'eloquent.restored: *'], function (string $event, array $models): void {

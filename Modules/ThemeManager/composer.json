@@ -1,0 +1,16 @@
+{
+    "name": "uwms/theme-manager",
+    "description": "ThemeManager module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\ThemeManager\\": "app/",
+            "Modules\\ThemeManager\\Database\\Factories\\": "database/factories/",
+            "Modules\\ThemeManager\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\ThemeManager\\Tests\\": "tests/" }
+    }
+}

@@ -71,6 +71,24 @@ return [
     ],
 
     /*
+    | Website themes (C-06, SAD Part B §8). Bundled themes live in themes/ (git);
+    | ZIP-installed ones in a folder that survives deploys (ADR-12).
+    */
+    'themes' => [
+        'default' => 'default',                 // BRL-THEME-01: never uninstalled
+
+        'runtime_path' => (static function (): string {
+            $path = env('UWMS_THEME_RUNTIME_PATH');
+
+            return match (true) {
+                ! $path => storage_path('app/themes-runtime'),
+                str_starts_with($path, '/') => $path,
+                default => base_path($path),
+            };
+        })(),
+    ],
+
+    /*
     | Admin sign-in (NFR-SEC-03/04). Moves to Website Settings (C-05) later.
     */
     'security' => [

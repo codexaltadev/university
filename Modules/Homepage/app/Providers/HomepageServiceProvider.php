@@ -5,8 +5,10 @@ namespace Modules\Homepage\Providers;
 use Illuminate\Support\Facades\Event;
 use Modules\Homepage\Filament\Pages\ManageHomepage;
 use Modules\Homepage\Support\Homepages;
+use Platform\Context\SiteContext;
 use Platform\Models\BaseModel;
 use Platform\Modules\ModuleServiceProvider;
+use Platform\Theme\SiteData;
 
 class HomepageServiceProvider extends ModuleServiceProvider
 {
@@ -34,5 +36,8 @@ class HomepageServiceProvider extends ModuleServiceProvider
                 Homepages::flush();
             }
         });
+
+        // <x-platform::homepage> on the website (C-06); null = the theme's default
+        $this->app->make(SiteData::class)->provide('homepage', fn (SiteContext $context): ?array => $this->app->make(Homepages::class)->forOwner($context->key()));
     }
 }

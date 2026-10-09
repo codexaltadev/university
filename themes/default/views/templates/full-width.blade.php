@@ -1,0 +1,9 @@
+{{-- Page template "full-width" (FR-PAGE-04). Contract: $page (title), $body (rendered blocks, sanitised by the kernel) --}}
+<x-theme::layout :title="$page->title">
+    <article @class(['page', 'container' => 'full-width' !== 'full-width', 'page--full-width'])>
+        @if ('full-width' !== 'landing')
+            <h1 class="page__title">{{ $page->title }}</h1>
+        @endif
+        <div class="prose">{!! $body !!}</div>
+    </article>
+</x-theme::layout>

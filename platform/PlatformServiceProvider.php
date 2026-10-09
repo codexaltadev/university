@@ -3,7 +3,9 @@
 namespace Platform;
 
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Platform\Assignments\AssignmentEngine;
 use Platform\Assignments\RoleCatalog;
@@ -36,6 +38,13 @@ use Platform\Statistics\Statistics;
 use Platform\Support\BlueprintMacros;
 use Platform\Support\MorphMap;
 use Platform\Taxonomy\Vocabularies;
+use Platform\Theme\DesignTokens;
+use Platform\Theme\Http\ApplyTheme;
+use Platform\Theme\Http\HomeController;
+use Platform\Theme\LayoutResolver;
+use Platform\Theme\SiteData;
+use Platform\Theme\ThemeBlade;
+use Platform\Theme\Themes;
 
 /**
  * Platform kernel. Registered before nwidart's provider (bootstrap/providers.php),
@@ -51,6 +60,7 @@ class PlatformServiceProvider extends ServiceProvider
             EntityHierarchy::class, RelationEngine::class, AssignmentEngine::class, RoleCatalog::class,
             FallbackResolver::class, MicrositeResolver::class, Languages::class, Settings::class,
             Vocabularies::class, MediaLibrary::class, MediaUsages::class, Targets::class, MainSiteQueue::class, Statistics::class,
+            Themes::class, DesignTokens::class, LayoutResolver::class, SiteData::class,
         ] as $service) {
             $this->app->singleton($service);
         }
@@ -87,6 +97,7 @@ class PlatformServiceProvider extends ServiceProvider
         }
 
         $this->app->make(EntityHierarchy::class)->watch();
+        $this->registerTheme();
         $this->registerFallbackStores();
         $this->registerListeners();
         $this->registerSchedule();
@@ -101,7 +112,31 @@ class PlatformServiceProvider extends ServiceProvider
                 Commands\ModulesSyncCommand::class,
                 Commands\ExpireHighlightsCommand::class,
                 Commands\CleanActivityLogCommand::class,
+                Commands\ThemeSyncCommand::class,
+                Commands\ThemeActivateCommand::class,
+                Commands\ThemeCheckCommand::class,
             ]);
+        }
+    }
+
+    /**
+     * Theme engine (C-06): Blade helpers, the theme of each web request (with the
+     * admin's preview), and the website homepage route.
+     */
+    protected function registerTheme(): void
+    {
+        ThemeBlade::register();
+
+        $this->app->make(HttpKernel::class)->appendMiddlewareToGroup('web', ApplyTheme::class);
+
+        // Module views are registered by now; point theme:: and the overrides at the active theme
+        $this->app->booted(fn () => $this->app->make(Themes::class)->apply());
+
+        if (! $this->app->routesAreCached()) {
+            Route::middleware('web')->group(function (): void {
+                Route::get('/', HomeController::class)->name('home');
+                Route::get('/theme-preview/stop', [HomeController::class, 'stopPreview'])->name('theme.preview.stop');
+            });
         }
     }
 
@@ -124,6 +159,7 @@ class PlatformServiceProvider extends ServiceProvider
             $this->app->make(ScopeResolver::class)->forget();
             $this->app->make(FallbackResolver::class)->flush();
             $this->app->make(Vocabularies::class)->flush();
+            $this->app->make(Themes::class)->flush();   // module override folders
         };
 
         Event::listen([ModuleActivated::class, ModuleDeactivated::class], $refresh);

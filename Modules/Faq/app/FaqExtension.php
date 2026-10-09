@@ -20,5 +20,6 @@ final class FaqExtension implements ModuleExtension
         $r->vocabulary('faq.category', label: 'FAQ category', hierarchical: true, multiple: false);
         $r->metric('faq.count', FaqCount::class);   // Statistics counter
         $r->homepageSection(FaqHighlightsSection::class);
+        $r->layouts('faq.listing', ['accordion', 'grouped']);   // Appearance › Layouts (FR-THEME-08); first = default
     }
 }

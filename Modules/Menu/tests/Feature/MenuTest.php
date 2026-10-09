@@ -179,3 +179,18 @@ it('lets entity users manage only their entities\' menus (BRL-MENU-02)', functio
     Livewire::withQueryParams(['owner' => 'site:0'])->test(ManageMenus::class)
         ->assertSet('owner', ($this->k)($this->cse));                                            // falls back to their own
 });
+
+it('shows the menu on the website in the theme\'s markup for its style (C-06)', function () {
+    $menu = menuWith('site:0', 'primary', ['Admission', 'Research']);
+
+    $this->get('/')->assertOk()
+        ->assertSee('nav--dropdown', false)
+        ->assertSeeInOrder(['Admission', 'Research'])
+        ->assertSee('href="/admission"', false);
+
+    $this->editor->save($menu, $this->editor->tree($menu), style: 'multilevel');
+    $this->get('/')->assertSee('nav--multilevel', false);
+
+    // Locations of the active theme (theme.json "menu_locations")
+    expect(MenuEditor::locations())->toHaveKeys(['primary', 'footer-1', 'quick-links-icon']);
+});

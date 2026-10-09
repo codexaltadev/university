@@ -1,0 +1,46 @@
+{
+    "slug": "default",
+    "name": "University Default",
+    "version": "1.0.0",
+    "requires_core": "^1.0",
+    "author": { "name": "DIU Web Team", "email": "web@example.edu" },
+    "license": "proprietary",
+    "description": "The bundled website theme: clean header with the primary menu, column footer and token-based colours.",
+    "screenshot": "screenshot.png",
+
+    "layouts": {},
+
+    "menu_locations": {
+        "primary": "Primary (header)",
+        "topbar": "Top bar",
+        "footer-1": "Footer column 1",
+        "footer-2": "Footer column 2",
+        "footer-3": "Footer column 3",
+        "footer-4": "Footer column 4",
+        "quick-links": "Quick links",
+        "quick-links-icon": "Quick links (icon tiles)",
+        "sidebar": "Sidebar"
+    },
+
+    "topbar_variants": ["default"],
+    "header_variants": ["classic", "centered", "minimal"],
+    "footer_variants": ["columns", "compact"],
+
+    "page_templates": ["default", "full-width", "with-sidebar", "landing"],
+    "microsite_templates": ["standard"],
+
+    "tokens": {
+        "color-primary": "#034EA2",
+        "color-secondary": "#002652",
+        "color-accent": "#39B54A",
+        "color-surface": "#F3F4F9",
+        "font-heading": "Montserrat",
+        "font-body": "Manrope",
+        "font-bn": "Hind Siliguri"
+    },
+
+    "options": [
+        { "key": "sticky_header", "type": "toggle", "label": "Sticky header", "default": true },
+        { "key": "hero_height", "type": "select", "label": "Hero height", "options": ["medium", "tall"], "default": "tall" }
+    ]
+}
