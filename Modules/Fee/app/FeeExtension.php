@@ -4,7 +4,6 @@ namespace Modules\Fee;
 
 use Modules\Fee\Filament\FeePlugin;
 use Modules\Fee\Filament\Hub\ProgramTuitions;
-use Modules\Fee\Filament\Hub\ProgramWaiverRules;
 use Modules\Fee\Models\Tuition;
 use Modules\Fee\Settings\FeeSettings;
 use Modules\Fee\Tabs\TuitionTab;
@@ -24,7 +23,6 @@ final class FeeExtension implements ModuleExtension
         $r->scopeable(Tuition::class);                                   // through the program
         $r->entityTab(Program::class, TuitionTab::class);                // FR-FEE-04, FR-PROG-18
         $r->entityPage(Program::class, ProgramTuitions::class);          // Program Hub › Fees (FR-GEN-86)
-        $r->entityPage(Program::class, ProgramWaiverRules::class);       // read only (UI/UX Part A §4.3)
         $r->layouts('fee.tuition-table', ['grouped', 'compact']);        // FR-FEE-03
         $r->settings(FeeSettings::class);                                // Settings › Fees: waiver mode, disclaimer
     }

@@ -3,7 +3,7 @@
 /*
 | Program Hub › Fees (FR-GEN-86, UI/UX Part A §4.3, SRS M-10 v1.1): Tuition Fees — edited
 | by who has the tuition permissions (Admission Office), read by entity users in their
-| scope; Waiver rules — read only, for who may view waiver rules (Waiver Office).
+| scope. Waiver rules stay in the Waiver Calculator menu only, not in the Program Hub.
 */
 
 use Filament\Facades\Filament;
@@ -11,7 +11,6 @@ use Livewire\Livewire;
 use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
 use Modules\Fee\Filament\Hub\ProgramTuitions;
-use Modules\Fee\Filament\Hub\ProgramWaiverRules;
 use Modules\Fee\Filament\Resources\Tuitions\Pages\CreateTuition;
 use Modules\Fee\Models\FeeCategory;
 use Modules\Fee\Models\Tuition;
@@ -50,7 +49,6 @@ it('lets the Admission Office manage the program\'s tuition from the Hub', funct
 
     $this->get(ProgramTuitions::getUrl(['record' => $this->bsc]))->assertOk()
         ->assertSeeInOrder(['Fees', 'Tuition Fees'])
-        ->assertDontSee(ProgramWaiverRules::getUrl(['record' => $this->bsc]), false)                  // no waiver permission
         ->assertSee('৳ 952,500')->assertDontSee('৳ 700,000')
         ->assertSee('/admin/tuitions/create?program='.$this->bsc->id, false);
 
@@ -79,15 +77,12 @@ it('shows a program user their tuition read only', function () {
     $this->get(ProgramTuitions::getUrl(['record' => $this->other]))->assertNotFound();                   // another program
 });
 
-it('lists the waiver rules that apply to the program, read only, for the Waiver Office', function () {
+it('keeps waiver rules out of the Program Hub: they live in the Waiver Calculator menu', function () {
     $waiverOffice = makeUser(['ViewAny:Program', 'View:Program', 'ViewAny:WaiverRule', 'View:WaiverRule', 'Update:WaiverRule']);
     $this->actingAs($waiverOffice);
 
-    $this->get(ProgramWaiverRules::getUrl(['record' => $this->bsc]))->assertOk()
-        ->assertSee('GPA 5 here')->assertDontSee('Only for EEE')
-        ->assertSee('/admin/waiver-rules/'.$this->ruleHere->id.'/edit', false)                          // editing opens the rule itself
-        ->assertDontSee('/admin/waiver-rules/create', false);
-
-    $this->actingAs(makeUser(['ViewAny:Program', 'View:Program', 'ViewAny:Tuition']));
-    $this->get(ProgramWaiverRules::getUrl(['record' => $this->bsc]))->assertForbidden();
+    $this->get(ProgramResource::getUrl('view', ['record' => $this->bsc]))->assertOk()
+        ->assertDontSee('/admin/programs/'.$this->bsc->id.'/waiver-rules', false);
+    $this->get('/admin/programs/'.$this->bsc->id.'/waiver-rules')->assertNotFound();
+    $this->get('/admin/waiver-rules')->assertOk()->assertSee('GPA 5 here')->assertSee('Only for EEE');
 });
