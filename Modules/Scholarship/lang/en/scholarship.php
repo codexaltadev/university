@@ -1,0 +1,45 @@
+<?php
+
+return [
+    'singular' => 'scholarship',
+    'plural' => 'Scholarships',
+    'intro' => 'Scholarships, exchange programs and other support for students.',
+    'details' => 'Details',
+    'apply' => 'Apply',
+    'open' => 'Open',
+    'closed' => 'Closed',
+    'opportunities' => 'Calls and opportunities',
+    'none' => 'No scholarship is listed right now.',
+    'top_level' => '— A scholarship (top level) —',
+    'under' => 'Under :title',
+    'parts_count' => '{1} 1 call or opportunity|[2,*] :count calls and opportunities',
+    'add_part' => 'Add a call',
+    'view_site' => 'View on the website',
+    'view_page' => 'View page',
+    'sections' => [
+        'scholarship' => 'Scholarship',
+        'media' => 'Picture & files',
+    ],
+    'fields' => [
+        'title' => 'Title',
+        'summary' => 'Summary',
+        'details' => 'Details',
+        'eligibility' => 'Eligibility',
+        'how_to_apply' => 'How to apply',
+        'parent' => 'Under',
+        'apply_url' => 'Apply link',
+        'deadline_at' => 'Deadline',
+        'image' => 'Picture',
+        'attachments' => 'Files',
+    ],
+    'help' => [
+        'summary' => 'A sentence or two for the list of scholarships.',
+        'parent' => 'Empty: a scholarship of its own. A scholarship: this is one of its calls or opportunities (e.g. Erasmus → an exchange).',
+        'deadline_at' => 'After it the website shows "Closed" and the apply button goes.',
+    ],
+    'errors' => [
+        'one_level' => 'A call can only go under a scholarship that is not itself a call.',
+        'has_parts' => 'This scholarship has calls of its own, so it stays a scholarship.',
+        'delete_parts_first' => 'Move or delete its calls first.',
+    ],
+];

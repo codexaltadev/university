@@ -1,0 +1,16 @@
+{
+    "name": "uwms/scholarship",
+    "description": "Scholarship module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Scholarship\\": "app/",
+            "Modules\\Scholarship\\Database\\Factories\\": "database/factories/",
+            "Modules\\Scholarship\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Scholarship\\Tests\\": "tests/" }
+    }
+}

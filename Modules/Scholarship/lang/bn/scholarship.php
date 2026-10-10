@@ -1,0 +1,45 @@
+<?php
+
+return [
+    'singular' => 'scholarship',
+    'plural' => 'Scholarship',
+    'intro' => 'ছাত্রছাত্রীদের জন্য scholarship, exchange program ও অন্যান্য সহায়তা।',
+    'details' => 'বিস্তারিত',
+    'apply' => 'আবেদন করুন',
+    'open' => 'চলছে',
+    'closed' => 'বন্ধ',
+    'opportunities' => 'Call ও সুযোগ',
+    'none' => 'এখন কোনো scholarship নেই।',
+    'top_level' => '— একটি scholarship (মূল) —',
+    'under' => ':title-এর অধীনে',
+    'parts_count' => ':countটি call ও সুযোগ',
+    'add_part' => 'Call যোগ করুন',
+    'view_site' => 'Website-এ দেখুন',
+    'view_page' => 'Page দেখুন',
+    'sections' => [
+        'scholarship' => 'Scholarship',
+        'media' => 'ছবি ও file',
+    ],
+    'fields' => [
+        'title' => 'শিরোনাম',
+        'summary' => 'সংক্ষেপ',
+        'details' => 'বিস্তারিত',
+        'eligibility' => 'যোগ্যতা',
+        'how_to_apply' => 'আবেদনের নিয়ম',
+        'parent' => 'যার অধীনে',
+        'apply_url' => 'আবেদনের link',
+        'deadline_at' => 'শেষ সময়',
+        'image' => 'ছবি',
+        'attachments' => 'File',
+    ],
+    'help' => [
+        'summary' => 'Scholarship তালিকার জন্য এক-দুই বাক্য।',
+        'parent' => 'খালি: নিজেই একটি scholarship। কোনো scholarship বাছলে: এটি তার একটি call বা সুযোগ (যেমন Erasmus → একটি exchange)।',
+        'deadline_at' => 'এর পরে website-এ "বন্ধ" দেখায় এবং আবেদনের button থাকে না।',
+    ],
+    'errors' => [
+        'one_level' => 'Call শুধু এমন scholarship-এর অধীনে যায় যা নিজে call নয়।',
+        'has_parts' => 'এই scholarship-এর নিজের call আছে, তাই এটি মূল scholarship-ই থাকবে।',
+        'delete_parts_first' => 'আগে এর call-গুলো সরান বা মুছুন।',
+    ],
+];
