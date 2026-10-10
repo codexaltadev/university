@@ -71,7 +71,8 @@ class Settings
             $isEncrypted = in_array($key, $encrypted, true);
 
             if (in_array($key, $translatable, true) && is_array($value)) {
-                $value = array_filter($value, fn ($text): bool => filled($text)) ?: null;   // no language filled = no value
+                // no language filled = no value; an empty rich text editor sends "<p></p>"
+                $value = array_filter($value, fn ($text): bool => filled(is_string($text) ? trim(strip_tags($text, '<img><iframe><video>')) : $text)) ?: null;
             }
 
             $before = isset($current[$key]) ? $this->decode($current[$key]) : ($defaults[$key] ?? null);
