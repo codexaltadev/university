@@ -6,7 +6,7 @@ Its own team enters the data (by default the Admission Office). The Waiver modul
 | | |
 |---|---|
 | Slug | `tuition` |
-| Admin | **Academic › Tuition Fees** (Filament cluster `Filament/Clusters/TuitionFees`): Tuition fees, Tuition categories; Program Hub › Fees › Tuition Fees |
+| Admin | **Academic › Tuition Fees** (Filament cluster `Filament/Clusters/TuitionFees`): Tuition fees, Tuition categories; read-only "Tuition Fees" part at the end of the Program editor |
 | Tables | `tuition_categories`, `tuition_fees`, `tuition_fee_lines` (B) — DB-03 §11.1 v1.3 |
 | Permissions | resource `…:Tuition`, `…:FeeCategory`; tuitions are scoped through their program (Program / Department / Faculty users read theirs) |
 | Depends on | `program` (hard: `program_id` FK; level = program type), `department`, `faculty` (page filters) |
@@ -19,8 +19,10 @@ Its own team enters the data (by default the Admission Office). The Waiver modul
   (each with an optional "up to"). **Totals** are worked out on every change (AC-FEE-03):
   `tuition = per year + per semester × semesters + per credit × credits` (the waiver base) and
   `total = tuition + admission + other`; "Enter the totals by hand" keeps typed figures (all migrated DIU tuitions).
-* **Program Hub › Fees › Tuition Fees** (`$r->entityPage(Program::class, ProgramTuitions::class)`): the program's
-  tuitions — edited with the tuition permissions, read by entity users in their scope; a new one has the program fixed.
+* **In the Program editor** (`$r->entityFormPart(Program::class, ProgramTuitionPart::class)`): the last part lists the
+  program's tuitions read only (category · label, credits, tuition, total, active) for who may view tuitions; who may
+  create gets "Add tuition fee" (`/admin/tuition/tuitions/create?program=12` — the program fixed, back to the program
+  after saving), who may update gets each row's edit link.
 * **Website:** `/tuition-fees` — one category at a time, filters faculty / department (short name) and level (slug),
   grouped by faculty (layout "grouped") or one table ("compact"); print button. Program page: tab "Tuition Fees"
   (`$r->entityTab(Program::class, TuitionTab::class)`), only where fees exist. Fees of an inactive program,

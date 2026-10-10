@@ -31,6 +31,7 @@ use Platform\Filament\Components\SeoPanel;
 use Platform\Filament\Components\TermSelect;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Filament\Components\WebAddressField;
+use Platform\Filament\Hub\EntityFormPart;
 use Platform\Localization\Languages;
 use Platform\Scope\UserScopeFilter;
 use Platform\Taxonomy\Vocabularies;
@@ -74,7 +75,9 @@ class ProgramForm
                     ->icon(self::ICONS[$part])
                     ->badge(fn (?Program $record): ?string => $record ? ProgramChecklist::badge($record, $part) : null)
                     ->badgeColor(fn (?Program $record): string => $record ? ProgramChecklist::color($record, $part) : 'gray')
-                    ->schema(self::part($part)))->all()),
+                    ->schema(self::part($part)))
+                    ->push(...EntityFormPart::tabsFor(Program::class))   // other modules' read-only parts, e.g. Tuition fees
+                    ->all()),
         ]);
     }
 

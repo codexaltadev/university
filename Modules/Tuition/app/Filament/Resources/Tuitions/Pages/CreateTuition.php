@@ -4,15 +4,15 @@ namespace Modules\Tuition\Filament\Resources\Tuitions\Pages;
 
 use Filament\Resources\Pages\CreateRecord;
 use Livewire\Attributes\Locked;
+use Modules\Program\Filament\Resources\Programs\ProgramResource;
 use Modules\Program\Models\Program;
-use Modules\Tuition\Filament\Hub\ProgramTuitions;
 use Modules\Tuition\Filament\Resources\Tuitions\TuitionResource;
 
 class CreateTuition extends CreateRecord
 {
     protected static string $resource = TuitionResource::class;
 
-    /** Opened from a Program Hub (?program=12): that Program, fixed; back to the Hub after saving. */
+    /** Opened from the Program editor (?program=12): that Program, fixed; back to the program after saving. */
     #[Locked]
     public ?int $hubProgram = null;
 
@@ -37,8 +37,12 @@ class CreateTuition extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return $this->hubProgram
-            ? ProgramTuitions::getUrl(['record' => $this->hubProgram])
-            : parent::getRedirectUrl();
+        if ($this->hubProgram === null) {
+            return parent::getRedirectUrl();
+        }
+
+        $program = Program::query()->find($this->hubProgram);
+
+        return ProgramResource::getUrl(auth()->user()?->can('update', $program) ? 'edit' : 'view', ['record' => $this->hubProgram]);
     }
 }

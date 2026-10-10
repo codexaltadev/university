@@ -2,6 +2,9 @@
 
 return [
     'title' => 'Tuition Fees',
+    'add' => 'Add tuition fee',
+    'open_menu' => 'Open Tuition Fees',
+    'none' => 'No tuition fee yet.',
     'tuition_fees' => 'Tuition Fees',
     'all_tuition_fees' => 'All tuition fees',
     'prospectus' => 'Prospectus',

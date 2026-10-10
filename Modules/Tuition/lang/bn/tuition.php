@@ -2,6 +2,9 @@
 
 return [
     'title' => 'Tuition Fee',
+    'add' => 'Tuition fee যোগ করুন',
+    'open_menu' => 'Tuition Fees খুলুন',
+    'none' => 'এখনো কোনো tuition fee নেই।',
     'tuition_fees' => 'Tuition Fee',
     'all_tuition_fees' => 'সব tuition fee',
     'prospectus' => 'Prospectus',

@@ -23,6 +23,7 @@ class Registrar
         'pageBlock' => 'page_blocks',
         'entityTab' => 'entity_tabs',
         'entityPage' => 'entity_pages',
+        'entityFormPart' => 'entity_form_parts',
         'menuItemType' => 'menu_item_types',
         'vocabulary' => 'vocabularies',
         'metric' => 'metrics',
@@ -126,6 +127,16 @@ class Registrar
     public function entityPage(string $target, string $pageClass): static
     {
         return $this->add('entityPage', ['target' => $target, 'class' => $pageClass]);
+    }
+
+    /**
+     * A read-only part at the end of another entity's editor (UI/UX Part A §5.2.1), e.g.
+     *   entityFormPart(Program::class, ProgramTuitionPart::class)   // "Tuition fees" below the Program's parts
+     * The part class extends Platform\Filament\Hub\EntityFormPart; the target never knows the module.
+     */
+    public function entityFormPart(string $targetModel, string $partClass): static
+    {
+        return $this->add('entityFormPart', ['target' => $targetModel, 'class' => $partClass]);
     }
 
     public function menuItemType(string $model): static

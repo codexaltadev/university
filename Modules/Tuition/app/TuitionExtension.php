@@ -3,7 +3,7 @@
 namespace Modules\Tuition;
 
 use Modules\Program\Models\Program;
-use Modules\Tuition\Filament\Hub\ProgramTuitions;
+use Modules\Tuition\Filament\Parts\ProgramTuitionPart;
 use Modules\Tuition\Filament\TuitionPlugin;
 use Modules\Tuition\Models\Tuition;
 use Modules\Tuition\Tabs\TuitionTab;
@@ -21,7 +21,7 @@ final class TuitionExtension implements ModuleExtension
         $r->filamentPlugin(TuitionPlugin::class);                        // Academic › Tuition Fees: tuition fees, tuition categories
         $r->scopeable(Tuition::class);                                   // through the program
         $r->entityTab(Program::class, TuitionTab::class);                // FR-FEE-04, FR-PROG-18
-        $r->entityPage(Program::class, ProgramTuitions::class);          // Program Hub › Fees (FR-GEN-86)
+        $r->entityFormPart(Program::class, ProgramTuitionPart::class);   // read only, last part of the Program editor
         $r->layouts('tuition.listing', ['grouped', 'compact']);          // FR-FEE-03
     }
 }

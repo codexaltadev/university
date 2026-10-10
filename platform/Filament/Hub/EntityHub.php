@@ -68,6 +68,10 @@ trait EntityHub
         $parts = collect([...static::hubOwnPages(), ...static::hubPageClasses()])
             ->sortBy(fn (string $class): int => $class::getNavigationSort() ?? 50)->values()->all();
 
+        if ($parts === []) {
+            return [];   // only the Profile: no side menu
+        }
+
         return $page->generateNavigationItems([...static::hubProfilePages(), ...$parts]);
     }
 

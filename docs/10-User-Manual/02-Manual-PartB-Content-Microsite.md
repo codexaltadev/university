@@ -330,7 +330,7 @@ Program খুললে বাম দিকে একই অংশগুলো �
 * list-এর item ⠿ দিয়ে টেনে ক্রম বদলান; item-এ click করলে খোলে।
 * Department user নাম, short name, web address, Department ও Active বদলাতে পারেন না — Admin পারেন।
 * যাঁদের শুধু দেখার অনুমতি (যেমন Admission Office), তাঁরা একই page read-only দেখেন।
-* **Tuition Fees** বাম মেনুর **Fees** অংশে — Admission Office সেটা দেখেন। Waiver rule এখানে নেই, সেগুলো **Waiver Calculator** menu-তে।
+* **Tuition Fees** বাম দিকের অংশগুলোর একদম নিচে — শুধু দেখা যায়। যোগ বা বদল **Academic › Tuition Fees**-এ (Admission Office); অনুমতি থাকলে এখানে "Add tuition fee" ও প্রতিটির link থাকে। Waiver rule **Academic › Waiver Calculator**-এ।
 * Program page-এর **Curriculum**, **Calendar** অংশ আসে অন্য module থেকে — নিচের অংশ দেখুন।
 * Program-এরও নিজস্ব microsite আছে: **Working in** থেকে Program বেছে নিয়ে তার Menu, Homepage, Statistics সাজানো যায়।
 * **Programs website-এর সবচেয়ে বেশি দেখা page-গুলোর একটি — প্রকাশের আগে credit, মেয়াদ ও তারিখ দুবার মিলিয়ে নিন।**

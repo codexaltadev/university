@@ -4,9 +4,9 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | UI/UX Part A: Admin Panel |
-| Version | 1.2 — v1.0 confirmed 2026-10-08; v1.1: Entity Hub (§4.3), Tuition Fees / Waiver Calculator sub-menu (§3), Admission / Waiver Office role (§2); v1.2: Program Editor — সব অংশ এক page-এ, ধাপে ধাপে (§5.2.1) |
+| Version | 1.3 — v1.0 confirmed 2026-10-08; v1.1: Entity Hub (§4.3), Tuition Fees / Waiver Calculator sub-menu (§3), Admission / Waiver Office role (§2); v1.2: Program Editor — সব অংশ এক page-এ, ধাপে ধাপে (§5.2.1); v1.3: Program-এ side menu নেই, tuition fees editor-এর শেষ read-only অংশ |
 | Date | 2026-10-10 |
-| Status | ✔ Confirmed — v1.1 approved 2026-10-10; v1.2 (Program Editor) approved 2026-10-10 |
+| Status | ✔ Confirmed — v1.1 approved 2026-10-10; v1.2 (Program Editor), v1.3 (tuition read-only part) approved 2026-10-10 |
 | Based on | BRD v1.7, SRS v1.0, SAD Part A / B, DB-01 থেকে DB-06 |
 | পাঠক | UI developer, Filament developer, tester, training team |
 
@@ -211,7 +211,7 @@ Faculties › Faculty of Science & IT (FSIT)                [ View microsite ↗
 |---|---|
 | Faculty | Overview, Profile, People (Faculty) · Departments (Department) · Programs (Program) · Menu, Header & Footer, Homepage, Pages, Statistics, SEO (core) · Activity · পরে: News / Events / Notices "shown in" (content module) |
 | Department | Overview, Profile, People · Programs (Program) · microsite অংশ (core) · Activity · পরে: Faculty Members, Courses, Labs |
-| Program | group করে: **Program** — Profile = Program Editor (§5.2.1: Basic info থেকে SEO পর্যন্ত সব অংশ ও sub-item list এক page-এ, ধাপে ধাপে; v1.2-এ আলাদা Hub অংশ থেকে সরানো হয়েছে) · **Fees** — Tuition Fees (edit: Admission Office / Admin; বাকিরা read-only). Waiver rules Program Hub-এ **নেই** — শুধু Waiver Calculator sub-menu-তে (v1.2), কারণ একটি rule অনেক program-এ প্রযোজ্য এবং Waiver Office সেখানেই কাজ করে · **Microsite** — core অংশ · Overview ও Activity · পরে: Curriculum, Courses, Admission |
+| Program | **side menu নেই** (v1.3): Program Editor (§5.2.1) একাই সব — বাম দিকের অংশে Basic info থেকে SEO, তারপর অন্য module-এর read-only অংশ (যেমন Tuition fees, `entityFormPart`); tuition-এর edit Academic › Tuition Fees-এ, waiver rule Academic › Waiver Calculator-এ |
 | Office / Lab | Overview, Profile, People · microsite অংশ (core) · Activity · পরে: service, team ইত্যাদি |
 
 নিয়ম:
@@ -325,7 +325,7 @@ Edit (বাম দিকে অংশ, উপরে "7-টির মধ্য�
 | Sub-item | Major, Career Path, Industry, Facilitator, Material, Membership, Option — নিজের অংশের ভেতরে list (ক্রম drag করে, item collapse হয়ে নাম দেখায়); অংশের উপরে ঐচ্ছিক intro text |
 | অবস্থা | ✓ পূরণ, ! বাকি (Basic info: ছবি; Details: summary ও credit; Eligibility: সাধারণ যোগ্যতা), list-এ item-এর সংখ্যা; Options ও SEO ঐচ্ছিক, হিসাবে নেই |
 | কে কী | Admin সব; Program / Department / Faculty user (scope-এ) সব অংশ edit, কিন্তু Department, নাম, short name, address, active নয় (BRL-PROG-02); শুধু View permission (Admission / Waiver Office) — একই page read-only, Hub-এর অন্য অংশে (Fees) সেখান থেকে যায় |
-| অন্য module | Fees (Tuition Fees; Waiver rules নয় — সেগুলো Waiver Calculator menu-তে) ও পরে Testimonials, Facilities, Accreditations Hub-এর আলাদা অংশ (§4.3), কারণ সেগুলো অন্য office দেখে |
+| অন্য module | Editor-এর শেষে read-only অংশ (`$r->entityFormPart(Program::class, …)`): **Tuition fees** (Tuition module; edit করার অনুমতি থাকলে "Add tuition fee" ও প্রতিটির edit link, যা Academic › Tuition Fees-এ খোলে); পরে Testimonials, Facilities, Accreditations একইভাবে। Program page-এ আলাদা Hub side menu নেই (v1.3) |
 
 ### 5.3 Confirmation ও Feedback
 

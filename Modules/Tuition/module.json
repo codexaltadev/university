@@ -39,7 +39,7 @@
         "provides": {
             "scopeable": true,
             "entity_tabs": true,
-            "entity_pages": true,
+            "entity_form_parts": true,
             "layouts": [
                 "tuition.listing"
             ]
