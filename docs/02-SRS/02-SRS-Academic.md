@@ -388,7 +388,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 
 **Purpose:** Program-ভিত্তিক tuition fee, নিয়মভিত্তিক waiver, scholarship তথ্য, এবং visitor-দের জন্য **Waiver Calculator**।
 
-**Actors:** Admin, Accounts / Admission Office role, Visitor
+**Actors:** Admin, **Admission Office** (tuition fee), **Waiver Office** (waiver rule, scholarship), Faculty / Department / Program user (নিজের scope-এর program-এর tuition শুধু দেখা), Visitor *(v1.1, 2026-10-10)*
 
 **Data:**
 
@@ -428,6 +428,8 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 ### Permissions
 
 `tuition.view`, `tuition.manage`, `waiver.manage`, `scholarship.manage`
+
+*(v1.1)* বাস্তবায়নে resource অনুযায়ী আলাদা permission (Shield: `ViewAny / View / Create / Update / Delete …:{Model}`) — Tuition, FeeCategory, WaiverRule, WaiverCategory, Board, Scholarship; এবং calculator settings-এর জন্য `Manage:WaiverSettings`। Default role (FR-ROLE-04): **Admission Office** = Tuition + FeeCategory; **Waiver Office** = WaiverRule + WaiverCategory + Board + WaiverSettings + Scholarship। এই দুই office-এর user-এর scope থাকে না, তাই সব program দেখেন (BRL-ROLE-03)। Faculty / Department / Program user-কে tuition-এর শুধু View দিলে নিজের scope-এর program-এর tuition দেখেন — Program Hub-এর "Tuition Fees" অংশে, read-only (FR-GEN-86)।
 
 ### Acceptance Criteria
 

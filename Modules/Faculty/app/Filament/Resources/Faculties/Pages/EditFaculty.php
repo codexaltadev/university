@@ -14,6 +14,12 @@ class EditFaculty extends EditRecord
 {
     protected static string $resource = FacultyResource::class;
 
+    /** "Profile" in the Faculty Hub. */
+    public static function getNavigationLabel(): string
+    {
+        return __('platform::hub.profile');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

@@ -22,6 +22,7 @@ class Registrar
         'homepageSection' => 'homepage_sections',
         'pageBlock' => 'page_blocks',
         'entityTab' => 'entity_tabs',
+        'entityPage' => 'entity_pages',
         'menuItemType' => 'menu_item_types',
         'vocabulary' => 'vocabularies',
         'metric' => 'metrics',
@@ -114,6 +115,17 @@ class Registrar
     public function entityTab(string $targetModel, string $tabClass): static
     {
         return $this->add('entityTab', ['target' => $targetModel, 'class' => $tabClass]);
+    }
+
+    /**
+     * A part of another entity's admin Hub (FR-GEN-86, SAD Part A §7.3): a Filament
+     * resource page of the target's resource, e.g.
+     *   entityPage(Faculty::class, FacultyDepartments::class)   // "Departments" in the Faculty Hub
+     *   entityPage('microsite', MicrositeMenuPage::class)       // in every microsite entity's Hub
+     */
+    public function entityPage(string $target, string $pageClass): static
+    {
+        return $this->add('entityPage', ['target' => $target, 'class' => $pageClass]);
     }
 
     public function menuItemType(string $model): static

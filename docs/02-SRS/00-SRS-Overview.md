@@ -4,9 +4,9 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 0: Overview ও Common Requirements |
-| Version | 1.0 — সব part confirmed; consistency review সম্পন্ন (Section 7) |
-| Date | 2026-10-08 |
-| Status | **Approved** |
+| Version | 1.1 — v1.0 approved 2026-10-08; v1.1: FR-GEN-86 Entity Hub, FR-GEN-87 sub-menu (2026-10-10) |
+| Date | 2026-10-10 |
+| Status | **Approved** — v1.1 approved 2026-10-10 |
 | Based on | [BRD v1.3 (Approved)](../01-BRD.md) |
 
 ---
@@ -222,6 +222,8 @@ FR-GEN-20 থেকে 23 বাতিল। Content-এর চালু / ব�
 | FR-GEN-83 | প্রতিটি record-এর edit page-এ "Activity" tab থাকবে, যেখানে ওই record-এর পরিবর্তনের ইতিহাস দেখা যাবে | BR-LOG-08 | Should |
 | FR-GEN-84 | Form-এ অসংরক্ষিত পরিবর্তন রেখে page ছাড়তে চাইলে সতর্কবার্তা দেখাবে | NFR-08 | Should |
 | FR-GEN-85 | Admin Panel-এর interface ভাষা (বাংলা / English) user নিজে নির্বাচন করতে পারবে | BR-LANG-01 | Should |
+| FR-GEN-86 *(v1.1)* | **Entity Hub:** Faculty, Department, Program, Office, Lab ইত্যাদি entity খুললে তার সব কাজ এক জায়গায় — Overview, Profile, অধীন entity (Department, Program …), People, সেই entity-র microsite (Menu, Header & Footer, Homepage, Pages, Statistics, SEO), অন্য module-এর অংশ (যেমন Program-এ Tuition Fees) ও Activity। Hub থেকে তৈরি অধীন record-এ parent আগে থেকে বসানো ও স্থির। নতুন entity save করলে তার Hub খোলে। প্রতিটি অংশ permission ও scope মেনে দেখায় (FR-GEN-82); module inactive হলে তার অংশ থাকে না। Scoped user-এর "My Microsite" = তাঁর entity-র Hub | BR-MS-01, NFR-08 | Must |
+| FR-GEN-87 *(v1.1)* | একই কাজের কয়েকটি screen একটি menu item-এর ভেতরে sub-menu হিসেবে (যেমন Waiver Calculator → Rules, Waiver categories, Boards, Rule test, Settings; Tuition Fees → Tuition fees, Fee categories) | NFR-08 | Should |
 
 ### 3.10 Logging
 

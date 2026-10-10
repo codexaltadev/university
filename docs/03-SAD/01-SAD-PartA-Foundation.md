@@ -4,9 +4,9 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SAD Part A |
-| Version | 0.2 — Filament Shield গ্রহণ (ADR-04), Foreign key ও indexing নীতি পুনর্বিবেচনা (ADR-09, Section 6.6), `core_slugs` (ADR-11) |
-| Date | 2026-10-08 |
-| Status | **Approved** (2026-10-08) |
+| Version | 0.3 — v0.2 approved 2026-10-08; v0.3: Entity Hub (`entityPage()`, §7.2–7.3), Cluster (2026-10-10) |
+| Date | 2026-10-10 |
+| Status | **Approved** — v0.3 approved 2026-10-10 |
 | Based on | [BRD v1.3](../01-BRD.md), [SRS v1.0](../02-SRS/00-SRS-Overview.md) |
 | পাঠক | Core developer, module developer, technical lead |
 
@@ -445,6 +445,7 @@ final class DepartmentExtension implements ModuleExtension
 | `homepageSection()` | Homepage / microsite section | Homepage Builder | FR-GEN-102 |
 | `pageBlock()` | Page builder block | Pages | FR-PAGE-02 |
 | `entityTab()` | অন্য entity-র page-এ tab / section (যেমন Tuition → Program) | Program, Faculty ইত্যাদি | FR-PROG-18 |
+| `entityPage()` *(v0.3, 2026-10-10)* | Admin-এ অন্য entity-র **Hub**-এ একটি অংশ (Filament page): অধীন record-এর list (Department → Faculty Hub, Program → Department / Faculty Hub), অন্য module-এর তথ্য (Tuition → Program Hub), অথবা প্রতিটি microsite entity-তে core-এর অংশ (Menu, Header & Footer, Homepage, Pages, Statistics) — target হিসেবে model অথবা `'microsite'` (সব microsite entity) | Entity Hub (record sub-navigation) | FR-GEN-86 |
 | `menuItemType()` | Menu-তে link করার record type | Menu builder | FR-MENU-04 |
 | `vocabulary()` | Taxonomy vocabulary | Taxonomy | FR-TAX-01 |
 | `metric()` | Statistics metric | Statistics | FR-STAT-03 |
@@ -462,6 +463,8 @@ final class DepartmentExtension implements ModuleExtension
 * `AdminPanelProvider` শুধু **active** module-এর plugin panel-এ যোগ করবে (Module registry থেকে)। সব module folder scan করে resource auto-discover করা হবে না (ADR-05)।
 * Resource-এর গঠন Filament v5 modular standard অনুযায়ী: `Resources/{PluralModel}/` folder-এর root-এ `{Model}Resource.php` (শুধু hook); তার ভেতরে `Pages/`, form logic `Schemas/{Model}Form.php`-এ, table logic `Tables/{PluralModel}Table.php`-এ (`make:filament-resource`-এর default output)।
 * Navigation group (system-wide): `Academic`, `People`, `Content`, `Microsite`, `Services`, `Communication`, `Appearance`, `System`।
+* *(v0.3, 2026-10-10)* **Entity Hub** (FR-GEN-86): microsite entity-র resource (Faculty, Department, Program, Office, Lab …) Filament-এর record sub-navigation পায়। Kernel-এর একটি base (`Platform\Filament\Hub`) resource-এর `getPages()` ও `getRecordSubNavigation()`-এ নিজের অংশ (Overview, Profile, People, Activity) এবং registry-তে `entityPage()` দিয়ে আসা অংশ যোগ করে — target model-এর জন্য, অথবা `'microsite'` হলে সব microsite entity-র জন্য। ফলে Faculty module Department / Program / Fee module-কে চেনে না (R-3 অক্ষত); Department module Faculty-তে `departments` সম্পর্ক যোগ করে `Model::resolveRelationUsing()` দিয়ে (সে-ই Faculty-র উপর নির্ভরশীল)। অধীন record-এর অংশ Filament `ManageRelatedRecords` page — parent আগে থেকে বসানো। প্রতিটি অংশের `canAccess()` permission ও scope মানে; inactive module-এর অংশ registry-তেই থাকে না।
+* *(v0.3)* একই কাজের কয়েকটি screen Filament **Cluster** দিয়ে একটি menu item-এর ভেতরে (FR-GEN-87): `Waiver Calculator` (Rules, Waiver categories, Boards, Rule test, Settings), `Tuition Fees` (Tuition fees, Fee categories)।
 
 ### 7.4 Permission Architecture — Filament Shield + Scope
 

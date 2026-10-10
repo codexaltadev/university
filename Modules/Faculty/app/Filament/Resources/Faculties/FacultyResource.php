@@ -15,12 +15,15 @@ use Modules\Faculty\Filament\Resources\Faculties\Pages\ListFaculties;
 use Modules\Faculty\Filament\Resources\Faculties\Schemas\FacultyForm;
 use Modules\Faculty\Filament\Resources\Faculties\Tables\FacultiesTable;
 use Modules\Faculty\Models\Faculty;
+use Platform\Filament\Hub\EntityHub;
 use Platform\Filament\RelationManagers\ActivityRelationManager;
 use UnitEnum;
 
 /** Academic › Faculties (M-01). */
 class FacultyResource extends Resource
 {
+    use EntityHub;
+
     protected static ?string $model = Faculty::class;
 
     protected static string|UnitEnum|null $navigationGroup = 'Academic';
@@ -62,12 +65,18 @@ class FacultyResource extends Resource
         return [ActivityRelationManager::class];   // FR-GEN-83
     }
 
-    public static function getPages(): array
+    /** The Faculty Hub (FR-GEN-86): Profile + the parts other modules register (Departments …). */
+    protected static function hubBasePages(): array
     {
         return [
             'index' => ListFaculties::route('/'),
             'create' => CreateFaculty::route('/create'),
             'edit' => EditFaculty::route('/{record}/edit'),
         ];
+    }
+
+    protected static function hubProfilePage(): string
+    {
+        return EditFaculty::class;
     }
 }

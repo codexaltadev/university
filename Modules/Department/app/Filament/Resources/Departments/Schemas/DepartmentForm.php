@@ -49,7 +49,9 @@ class DepartmentForm
                     Section::make(__('department::department.sections.department'))->compact()->schema([
                         Select::make('faculty_id')->label(__('department::department.fields.faculty'))
                             ->options(fn (?Department $record): array => static::facultyOptions($record))
-                            ->required()->searchable()->live()->disabled($profileOnly)
+                            ->default(fn (): ?int => request()->integer('faculty') ?: null)      // from the Faculty Hub (FR-GEN-86)
+                            ->required()->searchable()->live()->dehydrated()
+                            ->disabled(fn (string $operation, $livewire): bool => $profileOnly($operation) || filled($livewire->hubFaculty ?? null))
                             ->helperText(fn (string $operation): ?string => $operation === 'edit' ? __('department::department.help.faculty_move') : null),
                         TextInput::make('short_name')->label(__('department::department.fields.short_name'))
                             ->required()->maxLength(30)->disabled($profileOnly)

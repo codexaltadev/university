@@ -4,9 +4,9 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | UI/UX Part A: Admin Panel |
-| Version | 0.1 (Draft) |
-| Date | 2026-10-08 |
-| Status | ✔ Confirmed |
+| Version | 1.1 — v1.0 confirmed 2026-10-08; v1.1: Entity Hub (§4.3), Tuition Fees / Waiver Calculator sub-menu (§3), Admission / Waiver Office role (§2) |
+| Date | 2026-10-10 |
+| Status | ✔ Confirmed — v1.1 approved 2026-10-10 |
 | Based on | BRD v1.7, SRS v1.0, SAD Part A / B, DB-01 থেকে DB-06 |
 | পাঠক | UI developer, Filament developer, tester, training team |
 
@@ -45,6 +45,10 @@
 | **Content Manager** | Content Dashboard | নির্দিষ্ট module-এর content | Content group (permission অনুযায়ী) |
 | **Faculty / Department / Program user** | "My Microsite" Dashboard (নিজের entity) | নিজের entity-র content, menu, homepage, statistics, people | Content + "My Microsite" + Academic (নিজের) |
 | **Office / Lab user** | Office / Lab Dashboard | নিজের Office / Lab-এর page, service, team, content | Content + "My Microsite" + Office / Lab |
+| **Admission Office** *(v1.1)* | Site Dashboard | সব program-এর tuition fee ও fee category (scope নেই) | Academic › Tuition Fees |
+| **Waiver Office** *(v1.1)* | Site Dashboard | Waiver rule, waiver category, board, calculator settings, scholarship (scope নেই) | Academic › Waiver Calculator, Scholarships |
+
+Role ও permission role editor-এ বদলানো যায়; উপরের দুটি Fee module-এর default role (FR-ROLE-04 v1.1)।
 
 ---
 
@@ -80,11 +84,15 @@ Sidebar-এর group ও item (SAD Part A Section 7.3)। শুধু active mo
 │     ⭐ Highlights (Admin)     │   FR-CNT-H06
 │                              │
 │ ▸ ACADEMIC                   │
-│     Faculties · Departments  │
+│     Faculties · Departments  │   প্রতিটি row → সেই entity-র Hub (§4.3)
 │     Programs · Courses       │
 │     Curricula · Sessions     │
 │     Faculty Members          │
-│     Admission · Fees & Waiver│
+│     Admission                │
+│     Tuition Fees ›           │   sub-menu (v1.1): Tuition fees · Fee categories
+│     Waiver Calculator ›      │   sub-menu (v1.1): Rules · Waiver categories ·
+│                              │     Boards · Rule test · Settings · Preview ↗
+│     Scholarships             │
 │     Academic Calendar        │
 │     Campuses                 │
 │                              │
@@ -175,6 +183,46 @@ Media Library সব user দেখেন (নিজের scope অনুযা
 └────────────────────────────────┴────────────────────────────────────────┘
 ⤴ = parent / main site থেকে নেওয়া (U-5)
 ```
+
+### 4.3 Entity Hub *(v1.1, 2026-10-10 — FR-GEN-86)*
+
+একটি entity-র সব কাজ এক জায়গায়। Faculties / Departments / Programs / Offices / Labs list থেকে কোনো row খুললে, বা নতুন entity save করলে, তার Hub খোলে; বাঁ দিকে Hub-এর নিজের sub-menu। Scoped user-এর "My Microsite" group-এর item-গুলো তাঁর বর্তমান context-এর (§4.1) Hub-এর অংশে যায় — Admin ও entity user একই Hub দেখেন, শুধু permission ও scope অনুযায়ী অংশ কম-বেশি।
+
+```
+Faculties › Faculty of Science & IT (FSIT)                [ View microsite ↗ ]
+┌─────────────────────┬─────────────────────────────────────────────────────┐
+│ Overview            │  Overview (§4.2): freshness, own / inherited          │
+│ Profile             │  microsite parts, recent activity, checklist          │
+│ Departments (8)     │  (নতুন entity: "Add departments", "Set the menu" …)   │
+│ Programs (21)       │                                                     │
+│ People              │  Departments: এই Faculty-র Department list;           │
+│ ─── Microsite ───   │  [+ New department] → Faculty = FSIT (স্থির)          │
+│ Menu                │  row খুললে → Department Hub (breadcrumb:            │
+│ Header & Footer     │  Faculties › FSIT › CSE)                            │
+│ Homepage            │                                                     │
+│ Pages               │                                                     │
+│ Statistics          │                                                     │
+│ SEO                 │                                                     │
+│ Activity            │                                                     │
+└─────────────────────┴─────────────────────────────────────────────────────┘
+```
+
+| Hub | অংশ (যে module-এর) |
+|---|---|
+| Faculty | Overview, Profile, People (Faculty) · Departments (Department) · Programs (Program) · Menu, Header & Footer, Homepage, Pages, Statistics, SEO (core) · Activity · পরে: News / Events / Notices "shown in" (content module) |
+| Department | Overview, Profile, People · Programs (Program) · microsite অংশ (core) · Activity · পরে: Faculty Members, Courses, Labs |
+| Program | group করে: **Program** — Profile, People · **Program page** — Majors, Career & Industry, Facilitators, Materials, Memberships, Options (এখনকার form-এর নিচের list এখানে আলাদা অংশ) · **Fees** — Tuition Fees (edit: Admission Office / Admin; বাকিরা read-only), Waiver rules (**শুধু দেখা**: এই program-এ প্রযোজ্য rule; edit কেবল Waiver Calculator sub-menu-তে, কারণ একটি rule অনেক program-এ প্রযোজ্য) · **Microsite** — core অংশ · Overview ও Activity · পরে: Curriculum, Courses, Admission |
+| Office / Lab | Overview, Profile, People · microsite অংশ (core) · Activity · পরে: service, team ইত্যাদি |
+
+নিয়ম:
+
+* প্রতিটি অংশ দেখায় শুধু যার সেই permission ও scope আছে (FR-GEN-82); module inactive হলে তার অংশ থাকে না।
+* Hub থেকে তৈরি অধীন record-এ parent আগে থেকে বসানো ও বদলানো যায় না; অন্য parent-এ সরানো (FR-DEPT-08, BRL-PROG-02) শুধু Profile-এ, Admin।
+* Microsite অংশগুলো Appearance-এর একই screen, owner আগে থেকে এই entity — আলাদা কোনো দ্বিতীয় editor নয়।
+* Appearance › Menus / Homepage ইত্যাদি Admin-এর জন্য থাকে (main site ও সব entity একসাথে); entity user সেগুলো Hub থেকেই পান।
+* অংশ বেশি হলে sub-menu-তে group (Program, Program page, Fees, Microsite …)।
+* একটি জিনিস যদি অনেক entity-তে প্রযোজ্য হয় (যেমন waiver rule), Hub-এ শুধু দেখা যায়; edit তার নিজের screen-এ — যাতে এক entity থেকে বদলে অজান্তে অন্যগুলো না বদলায়। Tuition একটি program-এরই, তাই Hub ও Tuition Fees দুই জায়গাতেই একই form-এ edit হয়।
+* বাস্তবায়নের ক্রম: Faculty → Departments দিয়ে POC; তারপর Faculty / Department / Program Hub ও context switcher (§4.1); Office / Lab Hub তাদের module সম্পূর্ণ করার সময়।
 
 ---
 

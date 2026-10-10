@@ -95,9 +95,9 @@ Login-এর পর **Dashboard** — আপনার role অনুযায়
 
 | Group | কী আছে |
 |---|---|
-| **My Microsite** | আপনার Department / Office-এর page, menu, homepage, header & footer, statistics, people |
+| **My Microsite** | আপনার Department / Office-এর Hub: page, menu, homepage, header & footer, statistics, people |
 | **Content** | News, Events, Notices, Gallery, Slider, Documents, FAQ, Achievements, Testimonials, Announcements, Media |
-| **Academic** | Faculties, Departments, Programs, Courses, Admission, Fees & Waiver, Academic Calendar … |
+| **Academic** | Faculties, Departments, Programs (প্রতিটি খুললে তার Hub — সব কাজ এক জায়গায়), Courses, Admission, Tuition Fees, Waiver Calculator, Scholarships, Academic Calendar … |
 | **People** | Offices, Administration, Leadership, Committees, Alumni |
 | **Services** | Transport, Labs, Facilities, Accreditation & Ranking, International, CSR, Partners |
 | **Communication** | Inquiries, Newsletter |

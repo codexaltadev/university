@@ -6,7 +6,7 @@
 | Version | 0.1 (Draft) |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
-| পাঠক | Content editor; Faculty / Department / Program / Office / Lab-এর microsite editor; Admission ও Accounts office-এর data entry user |
+| পাঠক | Content editor; Faculty / Department / Program / Office / Lab-এর microsite editor; Admission Office ও Waiver Office-এর user |
 
 > আগে [Part A](01-Manual-PartA-Basics.md) পড়ুন — সব form-এর সাধারণ নিয়ম (Active, Publish date, Show in, ভাষা, Media Library, Trash) সেখানে। এখানে শুধু প্রতিটি কাজের ধাপ ও বিশেষ ঘর।
 >
@@ -328,29 +328,29 @@ Screen-এ লেখা থাকে, যেমন: *"This microsite uses Engine
 
 ## 18. Tuition Fee ও Waiver
 
-**Academic › Fees & Waiver** — সাধারণত Admission / Accounts office-এর user।
+**Academic › Tuition Fees** — Admission Office-এর user; **Academic › Waiver Calculator** ও **Scholarships** — Waiver Office-এর user (default role; Admin অন্য role-কেও permission দিতে পারেন)। Faculty / Department / Program user নিজের program-এর tuition তাঁর Hub-এ শুধু দেখেন।
 
 ### 18.1 Tuition fee
 
-**Tuition fees › + New**: Program, **Fee category** (Local / International), Session → খরচের সারি (Admission fee, প্রতি credit, Semester fee, Lab fee …) → মোট নিজে হিসাব হয় (প্রয়োজনে override)।
+**Tuition Fees › Tuition fees › + New** (অথবা Program-এর Hub › Tuition Fees): Program, **Fee category** (Local / International), Session → খরচের সারি (Admission fee, প্রতি credit, Semester fee, Lab fee …) → মোট নিজে হিসাব হয় (প্রয়োজনে override)।
 
 * নতুন session-এর fee নতুন record হিসেবে দিন — পুরনো session archive-এ থাকে।
 * অনেক program একসাথে: **Import** (Excel) — আগে **Export** করে নমুনা file নিন, পূরণ করে import; import-এর আগে preview ও ভুলের তালিকা দেখায়।
 
 ### 18.2 Waiver rule
 
-**Waiver rules › + New**: কোন Level ও Fee category, কোন Board ও Gender, SSC / HSC GPA বা CGPA-র সীমা, Golden A+ লাগবে কিনা, Waiver category, **Waiver %**, website-এ দেখানোর বার্তা।
+**Waiver Calculator › Rules › + New**: কোন Level ও Fee category, কোন Board ও Gender, SSC / HSC GPA বা CGPA-র সীমা, Golden A+ লাগবে কিনা, Waiver category, **Waiver %**, website-এ দেখানোর বার্তা।
 
-**Rule test (প্রকাশের আগে অবশ্যই):** **Waiver rules › Rule test** → একটি নমুনা ছাত্রের তথ্য দিন → কোন rule মিলছে ও কত % আসছে দেখুন। একাধিক rule মিললে বা কোনোটিই না মিললে সতর্কতা দেখায়।
+**Rule test (প্রকাশের আগে অবশ্যই):** **Waiver Calculator › Rule test** → একটি নমুনা ছাত্রের তথ্য দিন → কোন rule মিলছে ও কত % আসছে দেখুন। একাধিক rule মিললে বা কোনোটিই না মিললে সতর্কতা দেখায়।
 
-* একাধিক rule মিললে কোনটি প্রযোজ্য (সর্বোচ্চ, নাকি যোগফল একটি সীমা পর্যন্ত) এবং ফলাফলের নিচের disclaimer লেখা — **Site › Settings › Fees & Waiver** tab (Admin — Part C)।
+* একাধিক rule মিললে কোনটি প্রযোজ্য (সর্বোচ্চ, নাকি যোগফল একটি সীমা পর্যন্ত) এবং ফলাফলের নিচের disclaimer লেখা — **Waiver Calculator › Settings**।
 * **Waiver Calculator website-এর সবচেয়ে বেশি ব্যবহৃত tool — rule বদলানোর পর সবসময় Rule test চালান।**
 
 ---
 
 ## 19. Scholarship
 
-**Academic › Fees & Waiver › Scholarships › + New**: নাম, category, কারা পাবে, শর্ত, পরিমাণ / %, আবেদনের পদ্ধতি ও শেষ তারিখ, সংযুক্ত file। Website-এর `/scholarships` page-এ category অনুযায়ী দেখায়।
+**Academic › Scholarships › + New**: নাম, category, কারা পাবে, শর্ত, পরিমাণ / %, আবেদনের পদ্ধতি ও শেষ তারিখ, সংযুক্ত file। Website-এর `/scholarships` page-এ category অনুযায়ী দেখায়।
 
 ---
 
