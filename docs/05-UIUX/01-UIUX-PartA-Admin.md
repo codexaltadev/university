@@ -571,7 +571,7 @@ Layouts screen: module × page → [ Grid ▾ ] (News listing, Events listing, �
 ```
 ┌──────────────────────────────┬──────────────────────────────────────────────┐
 │ Inquiries   New ▾  Type ▾    │ Admission query — Rakib Hasan                │
-│ ● Admission query    2h  CSE │ rakib@…  ·  from: /department/cse             │
+│ ● Admission query    2h  CSE │ rakib@…  ·  from: /fsit/cse             │
 │ ○ Transport route    1d  —   │ Status [ In progress ▾ ]  Assign [ Me ▾ ]     │
 │ ○ Transcript         3d  Reg.│──────────────────────────────────────────────│
 │                              │ "আমি BSc in CSE-তে ভর্তি হতে চাই …"          │

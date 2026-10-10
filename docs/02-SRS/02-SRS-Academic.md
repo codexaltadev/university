@@ -56,7 +56,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 | FR-FAC-02 | Relation Target ও Microsite entity হিসেবে register (hierarchy-র শীর্ষ) | BR-CNT-02, BR-MS-01 | Must |
 | FR-FAC-03 | Dean নির্বাচন Person Assignment (FR-REL-10, ভূমিকা "Dean") দিয়ে — Faculty Member থেকে, অথবা manual (নাম, পদবি, ছবি); এবং Dean-এর বার্তা | BR-CNT-01 | Must |
 | FR-FAC-04 | Statistics: Faculty-র নিজস্ব Stat Set (C-20) — Department, Program, Faculty Member সংখ্যা automatic; ছাত্র সংখ্যা ও অন্যান্য manual | BR-STAT-01 | Must |
-| FR-FAC-05 | Faculty listing page (`/faculties`) ও details / microsite home (`/faculty/{slug}`) | BR-MS-01 | Must |
+| FR-FAC-05 | Faculty listing page (`/faculties`) ও details / microsite home (`/faculties/{slug}`, FR-GEN-34) | BR-MS-01 | Must |
 | FR-FAC-06 | Microsite home-এ default section: Overview, **Statistics**, Dean-এর বার্তা, Departments, Programs, Latest News, Upcoming Events, Notices (Homepage Builder দিয়ে পরিবর্তনযোগ্য) | BR-MS-07, BR-STAT-01 | Must |
 | FR-FAC-07 | Listing layout: Grid, List, Card | BR-THM-02 | Must |
 | FR-FAC-08 | Homepage section: "Our Faculties" | FR-GEN-102 | Must |
@@ -73,7 +73,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 
 ### Acceptance Criteria
 
-* **AC-FAC-01:** নতুন Faculty তৈরি করলে `/faculty/{slug}` URL-এ default microsite home দেখাবে, main menu সহ (নিজস্ব menu না থাকায়)।
+* **AC-FAC-01:** নতুন Faculty তৈরি করলে `/faculties/{slug}` URL-এ default microsite home দেখাবে, main menu সহ (নিজস্ব menu না থাকায়)।
 * **AC-FAC-02:** Faculty-তে ৩টি Department যোগ করলে statistics-এ "3 Departments" automatically দেখাবে।
 
 ---
@@ -95,7 +95,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 | FR-DEPT-03 | Head নির্বাচন ও বার্তা (FR-FAC-03-এর মতো) | BR-CNT-01 | Must |
 | FR-DEPT-04 | External website link: থাকলে listing থেকে click করলে সেখানে যাবে (বর্তমান `department_link`) | — | Should |
 | FR-DEPT-05 | Statistics: Department-এর নিজস্ব Stat Set (C-20) — Program, Faculty Member সংখ্যা automatic; অন্যান্য manual | BR-STAT-01 | Must |
-| FR-DEPT-06 | Department listing (`/departments`, Faculty অনুযায়ী grouped / filter) ও microsite (`/department/{slug}`) | BR-MS-01 | Must |
+| FR-DEPT-06 | Department listing (`/departments`, Faculty অনুযায়ী grouped / filter) ও microsite (`/{faculty}/{slug}`, যেমন `/fsit/cse` — FR-GEN-34) | BR-MS-01 | Must |
 | FR-DEPT-07 | Microsite default section: About, **Statistics**, Head-এর বার্তা, Programs, Faculty Members, News, Events, Notices, Achievements | BR-MS-07, BR-STAT-01 | Must |
 | FR-DEPT-08 | Department অন্য Faculty-তে স্থানান্তর (শুধু Admin); স্থানান্তরের পর scope ও menu fallback নতুন Faculty অনুযায়ী হবে | — | Should |
 | FR-DEPT-09 | Listing layout: Grid, List, Card; Homepage section: "Departments" | BR-THM-02 | Must |
@@ -152,7 +152,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 | FR-PROG-10 | **Eligibility:** সাধারণ ও English-medium (O/A Level) ছাত্রদের জন্য আলাদা rich text; ঐচ্ছিক structured field (ন্যূনতম GPA ইত্যাদি) | BR-CNT-01 | Must |
 | FR-PROG-11 | Statistics: Program-এর নিজস্ব Stat Set (C-20) — Major ও Industry Expert সংখ্যা automatic; শিক্ষক সংখ্যা manual (শিক্ষক Department-এর সাথে যুক্ত, তাই Program-ভিত্তিক automatic গণনা সম্ভব নয়); approved alumni manual, অথবা Alumni module-এর Program relation থেকে automatic | BR-STAT-01 | Must |
 | FR-PROG-12 | Program listing (`/programs`): Faculty, Department, Level, Shift, Mode দিয়ে filter; search; layout: Card, List, Table, Detailed | BR-THM-02 | Must |
-| FR-PROG-13 | Program details / microsite (`/program/{slug}`): Overview, **Statistics**, Majors, Curriculum (CURR active থাকলে), Tuition (FEE active থাকলে), Eligibility, Career, Facilitators, FAQ, related News / Events / Notices, Apply button | BR-MS-07 | Must |
+| FR-PROG-13 | Program details / microsite (`/{faculty}/{department}/{slug}`, যেমন `/fsit/cse/bsc-in-cse` — FR-GEN-34): Overview, **Statistics**, Majors, Curriculum (CURR active থাকলে), Tuition (FEE active থাকলে), Eligibility, Career, Facilitators, FAQ, related News / Events / Notices, Apply button | BR-MS-07 | Must |
 | FR-PROG-14 | Program-ভিত্তিক hero slider: Slider / Banner module (M-23)-এর slide এই Program-এর সাথে relation দিয়ে যুক্ত হবে (বর্তমান `program_sliders` আলাদা table নয়) | BR-CNT-02 | Should |
 | FR-PROG-15 | Program comparison: ২–৩টি Program পাশাপাশি তুলনা (credit, সময়কাল, fee, shift) | — | Could |
 | FR-PROG-16 | Homepage section: "Featured Programs", "Programs by Level" | FR-GEN-102 | Must |

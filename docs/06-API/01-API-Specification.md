@@ -166,7 +166,7 @@ Document-এর ক্ষেত্রে `kind: "document"`, `mime_type`, `size_
 ### 4.2 `EntityRef` (সম্পর্কিত entity)
 
 ```json
-{ "type": "department.department", "id": 12, "slug": "cse", "name": "Computer Science and Engineering", "url": "/department/cse" }
+{ "type": "department.department", "id": 12, "slug": "cse", "name": "Computer Science and Engineering", "url": "/fsit/cse" }
 ```
 
 ### 4.3 `PersonRef` (Assignment থেকে)
@@ -343,7 +343,7 @@ Response-এ `menus` (location অনুযায়ী, প্রতিটি�
       "is_pinned": true,
       "is_urgent": false,
       "category": { "id": 3, "vocabulary": "notice.category", "slug": "exam", "name": "Exam" },
-      "related": [ { "type": "department.department", "id": 12, "slug": "cse", "name": "Computer Science and Engineering", "url": "/department/cse" } ],
+      "related": [ { "type": "department.department", "id": 12, "slug": "cse", "name": "Computer Science and Engineering", "url": "/fsit/cse" } ],
       "on_main_site": true,
       "attachments": [ { "id": 9001, "kind": "document", "title": "Routine (PDF)", "url": "…", "mime_type": "application/pdf", "size_bytes": 182344 } ],
       "url": "/en/notices/mid-term-exam-routine-fall-2026"
@@ -371,8 +371,8 @@ Program page-এর সব section একবারে; module inactive হলে
     "short_name": "MBA",
     "level": { "slug": "graduate", "name": "Graduate" },
     "tags": [],
-    "faculty": { "type": "faculty.faculty", "slug": "fbe", "name": "Business & Entrepreneurship", "url": "/faculty/fbe" },
-    "department": { "type": "department.department", "slug": "bba", "name": "Business Administration", "url": "/department/bba" },
+    "faculty": { "type": "faculty.faculty", "slug": "fbe", "name": "Business & Entrepreneurship", "url": "/faculties/fbe" },
+    "department": { "type": "department.department", "slug": "bba", "name": "Business Administration", "url": "/fbe/bba" },
     "hero": {
       "image": { "...Media" },
       "subtitle": "…",
@@ -405,7 +405,7 @@ Program page-এর সব section একবারে; module inactive হলে
     },
     "downloads": [ { "title": "Prospectus", "file": { "...Media" } } ],
     "seo": { "...Seo" },
-    "url": "/program/master-in-business-administration"
+    "url": "/fbe/bba/master-in-business-administration"
   },
   "meta": { "locale": "en", "fallback_locale_used": false }
 }

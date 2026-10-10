@@ -214,7 +214,7 @@ Department / Office-এর content শুধু তাদের microsite-এ �
 2. Logo, banner, পরিচিতি।
 3. **Has microsite** (Office / Lab) চালু করলে নিজস্ব microsite।
 4. **Save** — সাথে সাথে:
-   * Microsite তৈরি (`/department/{নাম}`), menu / homepage parent থেকে নেয় যতক্ষণ না নিজেরটা বানানো হয়।
+   * Microsite তৈরি (`/{faculty}/{department}`, যেমন `/fsit/cse`), menu / homepage parent থেকে নেয় যতক্ষণ না নিজেরটা বানানো হয়।
    * Office / Lab-এর জন্য নতুন permission ("Manage: … Office") — Role-এ দিন (§14)।
    * Content-এর **Show in**-এ নতুন নাম দেখা দেয়।
 5. User দিন: §13-এ user-এর **Scope**-এ নতুন Department / Office।

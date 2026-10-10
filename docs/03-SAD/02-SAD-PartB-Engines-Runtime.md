@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SAD Part B |
-| Version | 0.1 (Draft) |
+| Version | 0.2 — v0.1 approved 2026-10-08; v0.2: microsite URL hierarchy অনুযায়ী (§6.1, FR-GEN-34 থেকে 36) |
 | Date | 2026-10-08 |
 | Status | **Approved** (2026-10-08); Deployment: Standard topology (একটি application server) দিয়ে শুরু |
 | Based on | [SAD Part A v0.2](01-SAD-PartA-Foundation.md), [SRS v1.0](../02-SRS/00-SRS-Overview.md) |
@@ -275,11 +275,18 @@ Scoped user নতুন content তৈরি করলে Related To-তে ত
 প্রতিটি public request-এ একটি `MicrositeContext` তৈরি হয়:
 
 ```
-/en/department/cse/news/convocation-2026
-      │         │    │
-      │         │    └─ ভেতরের path → News module-এর detail route
-      │         └─ slug → core_slugs → department:12
-      └─ microsite route prefix (MicrositeRegistry)
+/en/fsit/cse/news/convocation-2026
+      │    │   │
+      │    │   └─ ভেতরের path → News module-এর detail route
+      │    └─ slug → core_slugs → department:12 (parent faculty:3 হতে হবে)
+      └─ slug → core_slugs → faculty:3 (প্রথম segment; সংরক্ষিত শব্দ নয়)
+
+v1.1 (FR-GEN-34): প্রতিটি microsite entity একটি URL pattern register করে —
+  Faculty   faculties/{slug}          Department {parent}/{slug}
+  Program   {parent}/{slug}           Lab        {parent}/lab/{slug}  (parent না থাকলে lab/{slug})
+  Office    office/{slug}
+Resolver বাম থেকে ডানে: স্থির prefix (faculties, office, lab) → Faculty slug → তার Department → Program বা lab/{slug};
+যতটুকু মেলে সেটাই entity, বাকিটা ভেতরের path। প্রতিটি ধাপে parent মিলতে হবে (অন্য Faculty-র department → 404 বা 301)।
 
 MicrositeContext = { entity: department:12, chain: [department:12, faculty:3, site] }
 ```
@@ -318,7 +325,7 @@ resolve(resource, location, context):
 | অংশ | Class | নোট |
 |---|---|---|
 | Context | `Platform\Context\SiteContext` | `site()` / `for($entity)`; `key()`, `chain()` (entity → ancestors → `site:0`), `settings()` |
-| URL → context | `Platform\Context\MicrositeResolver` | `micrositeEntity(Model::class, routePrefix: 'department')`-এর prefix; ঐচ্ছিক locale segment; slug `core_slugs` থেকে; পুরনো slug হলে `redirect` (301-এর URL); inactive বা অজানা entity → `null` (404) |
+| URL → context | `Platform\Context\MicrositeResolver` | *(v1.1: hierarchy pattern, উপরে)* `micrositeEntity(Model::class, routePrefix: 'department')`-এর prefix; ঐচ্ছিক locale segment; slug `core_slugs` থেকে; পুরনো slug হলে `redirect` (301-এর URL); inactive বা অজানা entity → `null` (404) |
 | Slug | `Platform\Concerns\HasSlug` | প্রতিটি ভাষায় তৈরি (`config('platform.locales')`), একই type-এ অনন্য (`-2` suffix), পরিবর্তনে পুরনোটি history |
 | Resolver | `Platform\Context\FallbackResolver` | Core module প্রতিটি resource-এর জন্য একটি **store** register করে: `store('menu', fn ($type, $id, $location) => …, themeDefault)`। `resolve()` item দেয়, `source()` বলে কোথা থেকে এসেছে ("Inherited from …" indicator)। Mode `core_microsite_settings.fallback_modes`-এ (`own` / `inherit` / `main`, default `inherit`)। `template` store kernel-এরই (settings table থেকে) |
 | Cache | — | এখন request-ভিত্তিক memo; persistent cache (`fallback:{resource}:{location}:{entity}:{locale}`) ও invalidation আসবে store-গুলোর সাথে (Phase 2) |

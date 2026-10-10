@@ -42,7 +42,7 @@
 | FR-CNT-C03 | **Category** (module-এর নিজস্ব Taxonomy vocabulary) ও shared **Tags** | Q-07 | Must |
 | FR-CNT-C04 | Featured image (Media Picker), excerpt, rich text body (multi-language) — যেখানে প্রযোজ্য | BR-MED-05 | Must |
 | FR-CNT-C05 | Listing page: category, related entity, বছর / মাস দিয়ে filter; search; pagination | BR-THM-02 | Must |
-| FR-CNT-C06 | Entity microsite-এ automatically সেই entity-র related content (FR-HOME-05); microsite-এর ভেতরেও listing URL (যেমন `/department/cse/news`) | BR-MS-07 | Must |
+| FR-CNT-C06 | Entity microsite-এ automatically সেই entity-র related content (FR-HOME-05); microsite-এর ভেতরেও listing URL (যেমন `/fsit/cse/news`) | BR-MS-07 | Must |
 | FR-CNT-C07 | Details page: breadcrumb, social share button, print, "Related content" (একই category / entity) | — | Should |
 | FR-CNT-C08 | View counter (bot বাদ দিয়ে), admin-এ "Most viewed" sort | — | Should |
 | FR-CNT-C09 | RSS feed প্রতিটি listing-এর জন্য (`/news/feed`) | — | Could |
@@ -64,7 +64,7 @@
 | FR-CNT-H02 | Main Site-এ highlight করার জন্য আলাদা permission (`{module}.highlight-main`, default: Admin)। Scoped / Office / Lab user শুধু নিজের entity context-এ highlight করতে পারবে | Must |
 | FR-CNT-H03 | "Highlight until" তারিখ পার হলে highlight automatically বন্ধ হবে (content listing-এ থেকে যাবে) | Must |
 | FR-CNT-H04 | Homepage Builder-এর module section-এ **source mode**: (ক) Latest — সর্বশেষ N টি; (খ) Highlighted only; (গ) Highlighted first, then latest — highlight আগে, বাকি জায়গা সর্বশেষ দিয়ে পূরণ (default); (ঘ) Manual pick — নির্দিষ্ট item বেছে ক্রম ঠিক করা | Must |
-| FR-CNT-H05 | প্রতিটি section-এর "View all" button সেই context-এর পূর্ণ listing page-এ নিয়ে যাবে (যেমন CSE homepage → `/department/cse/news`) | Must |
+| FR-CNT-H05 | প্রতিটি section-এর "View all" button সেই context-এর পূর্ণ listing page-এ নিয়ে যাবে (যেমন CSE homepage → `/fsit/cse/news`) | Must |
 | FR-CNT-H06 | Admin-এ "Highlights" view: একটি context-এ বর্তমানে কী কী highlight আছে, drag & drop করে ক্রম পরিবর্তন | Should |
 | FR-CNT-H07 | **Main site-এ প্রকাশ (BRD BR-CNT-08, Q-26):** Content main site-এর listing (`/news`, `/notices` ...) ও main homepage-এ দেখাবে শুধু যদি "Main site-এ প্রকাশ" চালু থাকে। এটি চালু / বন্ধ করতে পারবেন শুধু `PublishMain` permission থাকা user (default: Admin)। Admin-এর তৈরি content-এ default চালু; entity user-এর form-এ option দেখায় না — তাঁদের content শুধু নিজের entity-তে | Must |
 | FR-CNT-H08 | Admin-এর জন্য "Main site-এ প্রকাশের অপেক্ষায়" তালিকা: entity user-দের সাম্প্রতিক content, এক click-এ main site-এ প্রকাশ | Should |
@@ -80,7 +80,7 @@ News: "CSE students win ICPC Regional"   Related: Engineering Faculty, CSE Depar
 
 Main homepage "Latest News" (Highlighted first, 6 টি):  এই news প্রথমে, বাকি ৫টি main site-এ প্রকাশিত সর্বশেষ news
 /news page:          main site-এ প্রকাশিত সব news, তারিখ অনুযায়ী
-/department/cse/news: CSE-related সব news (main site-এ প্রকাশিত হোক বা না হোক)
+/fsit/cse/news: CSE-related সব news (main site-এ প্রকাশিত হোক বা না হোক)
 ```
 
 > Highlight তথ্য Relation Engine-এর relation-এর অংশ হিসেবে রাখা হবে (context = target)। "Main Site" একটি বিশেষ context। বিস্তারিত Database Design-এ।

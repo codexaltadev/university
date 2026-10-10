@@ -325,7 +325,7 @@ Original list-এ ৫৪টি item ছিল। Duplicate এবং ছোট c
 
 ### 7.4 Entity Microsite (Faculty / Department / Program / Office / Lab)
 
-প্রতিটি Faculty, Department, Program, Office ও Lab-এর website-এর ভেতরে নিজস্ব একটি অংশ (microsite) থাকবে, যেমন `/faculty/engineering`, `/department/cse`, `/office/registrar`, `/lab/robotics`।
+প্রতিটি Faculty, Department, Program, Office ও Lab-এর website-এর ভেতরে নিজস্ব একটি অংশ (microsite) থাকবে, যেমন `/faculties/fsit`, `/fsit/cse`, `/fsit/cse/bsc-in-cse`, `/office/registrar`, `/fsit/cse/lab/robotics` (URL কাঠামো: SRS FR-GEN-34, 2026-10-10)।
 
 | ID | Requirement | Priority |
 |---|---|---|

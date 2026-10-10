@@ -654,7 +654,7 @@ use Illuminate\Support\Facades\Route;
 use Modules\Faq\Http\Controllers\Frontend\FaqController;
 
 Route::get('/faq', [FaqController::class, 'index'])->name('faq.index');
-// Microsite-এ automatically: /department/{slug}/faq → name 'faq.index' + context (SAD Part B §6.1)
+// Microsite-এ automatically: /{faculty}/{department}/faq → name 'faq.index' + context (SAD Part B §6.1)
 ```
 
 ### 10.3 Controller

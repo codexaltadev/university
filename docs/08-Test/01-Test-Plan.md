@@ -199,7 +199,7 @@ POC fail হলে: SAD ADR-04-এর বিকল্প (নিজস্ব rol
 | TC-MS-03 | CSE-এর primary আছে, footer নেই | Primary CSE-এর, footer parent / main-এর (location অনুযায়ী আলাদা) | SAD Part B §6.2 |
 | TC-MS-04 | Fallback mode `own` / `main` | `own`: নিজের না থাকলে theme default; `main`: parent বাদ | SAD Part B §6.2 |
 | TC-MS-05 | Header, footer, template, homepage, stat set, logo, banner | একই resolver — প্রতিটির জন্য TC-MS-01..03 data-driven | FR-HF-05, FR-STAT-08 |
-| TC-MS-06 | নতুন Lab তৈরি | Code ছাড়া `/lab/{slug}` microsite, menu, permission | BRD §11 |
+| TC-MS-06 | নতুন Lab তৈরি | Code ছাড়া `/{faculty}/{department}/lab/{slug}` microsite, menu, permission | BRD §11 |
 | TC-MS-07 | Fallback cache | Parent menu পরিবর্তন → child microsite-এ সাথে সাথে নতুন menu | NFR-PERF-04 |
 
 ### 6.6 Person assignment (TC-ASG)

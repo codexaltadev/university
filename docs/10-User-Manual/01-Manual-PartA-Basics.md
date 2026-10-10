@@ -45,7 +45,7 @@
 
 * **Website (public):** সবাই যা দেখে — যেমন `daffodilvarsity.edu.bd`।
 * **Admin Panel:** আপনি যেখানে কাজ করবেন — যেমন `daffodilvarsity.edu.bd/admin`।
-* **Microsite:** প্রতিটি Faculty, Department, Program, Office ও Lab-এর নিজস্ব ছোট website, মূল website-এর ভেতরে — যেমন `/department/cse`।
+* **Microsite:** প্রতিটি Faculty, Department, Program, Office ও Lab-এর নিজস্ব ছোট website, মূল website-এর ভেতরে — যেমন `/faculties/fsit`, `/fsit/cse`, `/fsit/cse/bsc-in-cse`।
 
 আপনি কী দেখবেন ও কী করতে পারবেন, তা নির্ভর করে আপনার **role** (ভূমিকা) ও **scope**-এর (কোন Department / Office) উপর। যে কাজের অনুমতি নেই, তার button আপনার screen-এ দেখাবেই না।
 

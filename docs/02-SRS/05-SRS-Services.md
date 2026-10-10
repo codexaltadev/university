@@ -100,7 +100,7 @@
 | FR-LAB-03 | Lab তৈরি হলে dynamic permission: `lab.{id}.manage`, `lab.{id}.content`, `lab.{id}.menu` (FR-ROLE-07) | BRD 5.4 | Must |
 | FR-LAB-04 | Equipment / Tool, Scope / Service, Student Project, Product — Lab-এর ভেতরে sub-item হিসেবে CRUD, প্রতিটির category (Taxonomy, সব Lab-এ shared) | Q-16 | Must |
 | FR-LAB-05 | Lab listing (`/labs`): ধরন, Department, Campus দিয়ে filter; layout: Grid, List, Card | BR-THM-02 | Must |
-| FR-LAB-06 | Lab microsite (`/lab/{slug}`) default section: Hero (Slider), About, Statistics, Scope, Equipment, Projects, Products, News, Events, Gallery, Committee, Partners, Contact (Homepage Builder দিয়ে পরিবর্তনযোগ্য) | BR-MS-07 | Must |
+| FR-LAB-06 | Lab microsite (`/{faculty}/{department}/lab/{slug}`, যেমন `/fsit/cse/lab/robotics`; Department ছাড়া `/lab/{slug}` — FR-GEN-34) default section: Hero (Slider), About, Statistics, Scope, Equipment, Projects, Products, News, Events, Gallery, Committee, Partners, Contact (Homepage Builder দিয়ে পরিবর্তনযোগ্য) | BR-MS-07 | Must |
 | FR-LAB-07 | Lab-এর news, event, gallery, slider, committee, research, partner — সংশ্লিষ্ট module-এ Relation দিয়ে (বর্তমান `lab_news`, `lab_galleries`, `lab_committees`, `lab_research` আলাদা table নয়) | BR-CNT-02 | Must |
 | FR-LAB-08 | Lab-এর নিজস্ব menu ও icon-সহ quick link (বর্তমান `lab_menus`, `lab_app_menus`) — Core Menu-র মাধ্যমে, "Quick Links (icon)" menu location দিয়ে | BR-MS-10 | Must |
 | FR-LAB-09 | Feature block (বর্তমান `lab_mid_sections`: icon, title, বিবরণ, রং) ও section intro text (বর্তমান `lab_section_summaries`) — Homepage Builder section হিসেবে | FR-HOME-02 | Must |
@@ -120,7 +120,7 @@ Dynamic: `lab.{id}.manage`, `lab.{id}.content`, `lab.{id}.menu`
 
 ### Acceptance Criteria
 
-* **AC-LAB-01:** "Robotics Lab" তৈরি করলে `/lab/robotics-lab` microsite ও তিনটি dynamic permission তৈরি হবে।
+* **AC-LAB-01:** "Robotics Lab" তৈরি করলে `/fsit/cse/lab/robotics-lab` microsite (CSE-এর Lab হলে) ও তিনটি dynamic permission তৈরি হবে।
 * **AC-LAB-02:** News তৈরি করে Related To-তে Robotics Lab দিলে Lab microsite-এর News section-এ দেখাবে।
 
 ---

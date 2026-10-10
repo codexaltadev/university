@@ -465,7 +465,7 @@
 | FR-PAGE-02 | Block-based content (Filament Builder): text, image gallery, accordion, tabs, people card, file list, embed | BR-THM-05 | Should |
 | FR-PAGE-03 | Parent-child hierarchy (breadcrumb ও URL-এ প্রতিফলিত) | — | Must |
 | FR-PAGE-04 | Page template select (theme থেকে): Default, Full width, With sidebar, Landing | BR-THM-02 | Must |
-| FR-PAGE-05 | Owner entity: Main site, অথবা Faculty / Department / Program / Office / Lab। Entity-র page তার microsite URL-এ থাকবে (যেমন `/department/cse/about`) | BR-MS-01 | Must |
+| FR-PAGE-05 | Owner entity: Main site, অথবা Faculty / Department / Program / Office / Lab। Entity-র page তার microsite URL-এ থাকবে (যেমন `/fsit/cse/about`) | BR-MS-01 | Must |
 | FR-PAGE-06 | Page-এ attachment (Media Library থেকে) যোগ করে নিচে download তালিকা দেখানো | — | Should |
 | FR-PAGE-07 | Revision history: শেষ ১০টি version রাখা ও আগের version-এ ফিরে যাওয়া | — | Should |
 | FR-PAGE-08 | Page duplicate | — | Should |
@@ -476,7 +476,7 @@
 
 ### Acceptance Criteria
 
-* **AC-PAGE-01:** CSE Department user একটি "Lab Facilities" page তৈরি করলে তা `/department/cse/lab-facilities` URL-এ CSE-এর menu ও template সহ দেখাবে।
+* **AC-PAGE-01:** CSE Department user একটি "Lab Facilities" page তৈরি করলে তা `/fsit/cse/lab-facilities` URL-এ CSE-এর menu ও template সহ দেখাবে।
 
 ---
 

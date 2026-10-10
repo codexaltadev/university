@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | UI/UX Part B: Frontend |
-| Version | 0.1 (Draft) |
+| Version | 0.2 — v0.1 approved 2026-10-08; v0.2: microsite URL hierarchy অনুযায়ী (§3, FR-GEN-34) |
 | Date | 2026-10-08 |
 | Status | ✔ Approved — prototype v3 সহ (2026-10-08) |
 | Based on | BRD v1.7, SRS v1.0, SAD Part B §6 (Microsite), §8 (Theme Engine), UI/UX Part A |
@@ -77,13 +77,13 @@ Contrast: `--color-text` ও `--color-primary-contrast` সবসময় AA (�
 /{locale}/                                       Main homepage
 /{locale}/news, /notices, /events, /gallery …    Main listing (main site-এ প্রকাশিত — Q-26)
 /{locale}/news/{slug}                            Detail
-/{locale}/programs, /program/{slug}              Program listing / microsite
-/{locale}/faculties, /faculty/{slug}             Faculty listing / microsite
-/{locale}/departments, /department/{slug}        Department
-/{locale}/offices, /office/{slug}                Office
-/{locale}/labs, /lab/{slug}                      Lab
-/{locale}/department/{slug}/news                 Microsite-এর ভেতরের listing (entity-র সব content)
-/{locale}/department/{slug}/{page-slug}          Microsite page
+/{locale}/faculties, /faculties/{faculty}                    Faculty listing / microsite      (/faculties/fsit)
+/{locale}/departments, /{faculty}/{department}               Department listing / microsite   (/fsit/cse)
+/{locale}/programs, /{faculty}/{department}/{program}        Program listing / microsite      (/fsit/cse/bsc-in-cse)
+/{locale}/labs, /{faculty}/{department}/lab/{lab}            Lab listing / microsite          (/fsit/cse/lab/robotics; Department ছাড়া /lab/{lab})
+/{locale}/offices, /office/{office}                          Office listing / microsite       (/office/registrar)
+/{locale}/{faculty}/{department}/news                        Microsite-এর ভেতরের listing (entity-র সব content)
+/{locale}/{faculty}/{department}/{page-slug}                 Microsite page                   (/fsit/cse/lab-facilities)
 /{locale}/admission, /tuition-fees, /waiver-calculator, /scholarships, /academic-calendar
 /{locale}/faculty-members, /administration, /leadership, /committees, /alumni
 /{locale}/transport, /facilities, /rankings, /international/partners, /csr, /partners
@@ -92,7 +92,8 @@ Contrast: `--color-text` ও `--color-primary-contrast` সবসময় AA (�
 
 * `{locale}` default ভাষার জন্য ঐচ্ছিক (FR-GEN-33)।
 * URL segment (যেমন `/administration`) module settings-এ বদলানো যায় (FR-ADMN-04)।
-* প্রতিটি page-এ breadcrumb ও `hreflang` (NFR-SEO-02)।
+* প্রতিটি page-এ breadcrumb ও `hreflang` (NFR-SEO-02)। Microsite-এ breadcrumb hierarchy অনুযায়ী: Home › FSIT › CSE › BSc in CSE (প্রতিটি নিজের microsite-এ link)।
+* *(v0.2, 2026-10-10)* Microsite URL hierarchy অনুযায়ী (FR-GEN-34 থেকে 36): `/fsit` একা → `/faculties/fsit`; সরালে বা slug বদলালে পুরনো URL 301; DIU-র পুরনো URL (`/department/cse`, `/department/bba/program/…`) 301; সংরক্ষিত শব্দ ও slug সংঘর্ষ save-এ আটকানো।
 
 ---
 
