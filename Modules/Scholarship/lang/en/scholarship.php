@@ -18,6 +18,23 @@ return [
     'add_part' => 'Add a call',
     'view_site' => 'View on the website',
     'view_page' => 'View page',
+    'layouts' => [
+        'cards' => 'Cards',
+        'accordion' => 'Accordion',
+    ],
+    'block' => [
+        'categories' => 'Categories',
+        'categories_help' => 'Empty: every category. A category includes its sub-categories.',
+        'scholarships' => 'Or these scholarships',
+        'scholarships_help' => 'Picked ones are shown in this order, whatever the categories.',
+        'layout' => 'Show as',
+        'limit' => 'How many',
+        'limit_help' => 'Empty: all.',
+    ],
+    'settings' => [
+        'intro' => 'Text above the list of scholarships',
+        'outro' => 'Text below the list of scholarships',
+    ],
     'sections' => [
         'scholarship' => 'Scholarship',
         'media' => 'Picture & files',

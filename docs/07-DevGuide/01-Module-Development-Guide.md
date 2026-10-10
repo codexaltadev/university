@@ -999,3 +999,13 @@ Module ZIP দেওয়ার আগে:
 | Admin form ও list pattern | UI/UX Part A §5–§6 |
 | Frontend component ও accessibility | UI/UX Part B §6–§8 |
 | Kernel table (relation, assignment, slug, media, taxonomy …) | DB-01, DB-02 |
+
+### Content module checklist *(2026-10-10)*
+
+যে module website-এ content দেখায় (Notice, News, Event, FAQ, Scholarship …), সে তিনটি জিনিস দেবে, যাতে যেকোনো page বা menu-তে তার content বসানো যায়:
+
+| কী | কীভাবে | উদাহরণ (Scholarship) |
+|---|---|---|
+| Website page (Menu-র "Module page") | `$r->websitePage('scholarship.index', label: 'scholarship::scholarship.plural', path: '/scholarships')` | Menu → Module page → Scholarships |
+| Category archive URL (Menu-র "Category") | website handler `/{module}/{vocabulary-এর শেষ অংশ}/{term slug}` চেনে (FR-TAX-05) | `/scholarship/category/international` → `/scholarships?category=international` |
+| Page block | `$r->pageBlock(ScholarshipsBlock::class)` (`Platform\Pages\PageBlock`) — category / নির্দিষ্ট record / সব, layout, সংখ্যা | Content › Pages → Add block → Scholarships |

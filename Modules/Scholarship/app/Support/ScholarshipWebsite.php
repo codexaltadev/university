@@ -11,6 +11,7 @@ use Platform\Context\SiteContext;
 use Platform\Seo\Seo;
 use Platform\Taxonomy\Term;
 use Platform\Taxonomy\Vocabularies;
+use Platform\Theme\LayoutResolver;
 
 /**
  * /scholarships (FR-FEE-10): the top-level scholarships in order; /scholarships/{slug}: one
@@ -22,6 +23,12 @@ class ScholarshipWebsite
     public function respond(string $rest, SiteContext $context, string $locale): Response|RedirectResponse|null
     {
         $rest = trim($rest, '/');
+
+        // A menu's "Category" item (FR-TAX-05): /scholarship/category/{slug} → the listing on that category
+        if (! $context->isMicrosite() && preg_match('#^scholarship/category/([^/]+)$#', $rest, $m)) {
+            return redirect(Seo::localized('/'.Scholarship::PATH, $locale).'?category='.rawurlencode($m[1]), 301);
+        }
+
         if ($context->isMicrosite() || ($rest !== Scholarship::PATH && ! Str::startsWith($rest, Scholarship::PATH.'/'))) {
             return null;
         }
@@ -82,6 +89,13 @@ class ScholarshipWebsite
             ->push(['category' => null, 'scholarships' => $scholarships->filter(fn (Scholarship $s): bool => $termOf($s) === null)->values()])
             ->filter(fn (array $g): bool => $g['scholarships']->isNotEmpty())->values();
 
-        return ['groups' => $groups, 'categories' => $categories, 'selected' => $selected, 'scholarships' => $scholarships];
+        $layout = app(LayoutResolver::class)->for('scholarship.listing') ?? 'cards';
+
+        return [
+            'groups' => $groups, 'categories' => $categories, 'selected' => $selected, 'scholarships' => $scholarships,
+            'layout' => in_array($layout, ['cards', 'accordion'], true) ? $layout : 'cards',
+            'intro' => filled($intro = settings('scholarship.intro')) ? (string) $intro : null,
+            'outro' => filled($outro = settings('scholarship.outro')) ? (string) $outro : null,
+        ];
     }
 }

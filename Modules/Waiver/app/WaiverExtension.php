@@ -15,6 +15,7 @@ final class WaiverExtension implements ModuleExtension
 {
     public function register(Registrar $r): void
     {
+        $r->websitePage('waiver.calculator', label: 'waiver::waiver.calculator.title', path: '/waiver-calculator');   // Menus › Module page
         $r->filamentPlugin(WaiverPlugin::class);                         // Academic › Waiver Calculator: rules, categories, boards
         $r->settings(WaiverSettings::class);                             // waiver mode, disclaimer
     }

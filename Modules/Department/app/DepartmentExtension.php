@@ -19,6 +19,7 @@ final class DepartmentExtension implements ModuleExtension
 {
     public function register(Registrar $r): void
     {
+        $r->websitePage('department.index', label: 'department::department.plural', path: '/departments');   // Menus › Module page
         $r->filamentPlugin(DepartmentPlugin::class);
         $r->relationTarget(Department::class, parent: Faculty::class, parentKey: 'faculty_id');   // FR-DEPT-02
         $r->scopeable(Department::class);                         // Department users; Faculty users through the hierarchy

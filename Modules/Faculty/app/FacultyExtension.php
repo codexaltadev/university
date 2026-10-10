@@ -17,6 +17,7 @@ final class FacultyExtension implements ModuleExtension
 {
     public function register(Registrar $r): void
     {
+        $r->websitePage('faculty.index', label: 'faculty::faculty.plural', path: '/faculties');   // Menus › Module page
         $r->filamentPlugin(FacultyPlugin::class);
         $r->relationTarget(Faculty::class);                       // top of the hierarchy (FR-FAC-02)
         $r->scopeable(Faculty::class);                            // Faculty users

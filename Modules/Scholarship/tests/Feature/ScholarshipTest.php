@@ -9,6 +9,8 @@
 use Filament\Facades\Filament;
 use Illuminate\Validation\ValidationException;
 use Livewire\Livewire;
+use Modules\Menu\Support\MenuLinks;
+use Modules\Scholarship\Blocks\ScholarshipsBlock;
 use Modules\Scholarship\Database\Seeders\ScholarshipDatabaseSeeder;
 use Modules\Scholarship\Filament\Resources\Scholarships\Pages\CreateScholarship;
 use Modules\Scholarship\Filament\Resources\Scholarships\Pages\ListScholarships;
@@ -107,6 +109,35 @@ it('groups scholarships by category on the website, with sub-categories in the f
         ->assertCanSeeTableRecords([$this->erasmus, $this->spring, $this->fall])->assertCanNotSeeTableRecords([$this->diu, $gks]);
     Livewire::withQueryParams(['parent' => $this->erasmus->id])->test(CreateScholarship::class)
         ->assertFormFieldIsHidden('category');                                    // a call has no category of its own
+});
+
+it('offers the listing to menus, answers a menu category link, and shows as an accordion with the settings text', function () {
+    $links = app(MenuLinks::class);
+    expect($links->modulePages())->toHaveKey('page:scholarship.index')
+        ->and($links->modulePagePath('page:scholarship.index'))->toBe('/scholarships')
+        ->and($links->modulePagePath('page:program.index'))->toBe('/programs');
+
+    Vocabularies::ensureTerms(Scholarship::CATEGORY, [['name' => ['en' => 'Merit'], 'slug' => 'merit']]);
+    $this->get('/scholarship/category/merit')->assertRedirect('/scholarships?category=merit');
+
+    settings()->save('scholarship', ['intro' => ['en' => '<p>Waiver and scholarship schemes.</p>']], translatable: ['intro', 'outro']);
+    settings()->save('layouts', ['scholarship.listing' => ['layout' => 'accordion']]);
+    $this->get('/scholarships')->assertOk()
+        ->assertSee('Waiver and scholarship schemes.')
+        ->assertSee('<details class="accordion__item"', false);
+});
+
+it('shows scholarships on any page through the Scholarships block', function () {
+    Vocabularies::ensureTerms(Scholarship::CATEGORY, [['name' => ['en' => 'Merit'], 'slug' => 'merit']]);
+    $merit = (int) array_search('Merit', app(Vocabularies::class)->options(Scholarship::CATEGORY), true);
+    $this->diu->syncTerms(Scholarship::CATEGORY, [$merit]);
+
+    expect(ScholarshipsBlock::scholarships(['categories' => [$merit]])->pluck('id')->all())->toBe([$this->diu->id])
+        ->and(ScholarshipsBlock::scholarships(['scholarships' => [$this->erasmus->id, $this->diu->id]])->pluck('id')->all())->toBe([$this->erasmus->id, $this->diu->id])
+        ->and(ScholarshipsBlock::scholarships(['limit' => 1])->count())->toBe(1);
+
+    $html = view(ScholarshipsBlock::view(), ['data' => ['categories' => [$merit], 'layout' => 'accordion'], 'locale' => 'en'])->render();
+    expect($html)->toContain('DIU Scholarship')->not->toContain('Erasmus Scholarship')->toContain('accordion__item');
 });
 
 it('puts scholarships in search and the sitemap', function () {

@@ -44,7 +44,8 @@
                 "faculty.list"
             ],
             "searchable": true,
-            "sitemap": true
+            "sitemap": true,
+            "website_pages": true
         }
     }
 }

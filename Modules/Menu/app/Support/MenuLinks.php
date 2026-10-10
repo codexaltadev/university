@@ -61,14 +61,37 @@ class MenuLinks
             ->all();
     }
 
-    /** @return array<string, string> route name => label, listing pages modules offer (named "site.{module}.index") */
+    /**
+     * Listing pages modules offer: registered with $r->websitePage() ("page:{key}" => label), and routes named
+     * "site.{module}.index".
+     *
+     * @return array<string, string>
+     */
     public function modulePages(): array
     {
-        return collect(Route::getRoutes()->getRoutesByName())
+        $registered = collect(app(Registry::class)->all('websitePage'))
+            ->mapWithKeys(fn (array $page): array => ['page:'.$page['key'] => __($page['label'])]);
+
+        $routes = collect(Route::getRoutes()->getRoutesByName())
             ->keys()
             ->filter(fn (string $name): bool => str_starts_with($name, 'site.') && str_ends_with($name, '.index'))
-            ->mapWithKeys(fn (string $name): array => [$name => Str::headline(Str::between($name, 'site.', '.index'))])
-            ->all();
+            ->mapWithKeys(fn (string $name): array => [$name => Str::headline(Str::between($name, 'site.', '.index'))]);
+
+        return $registered->merge($routes)->sort()->all();
+    }
+
+    /** Path of a module page item: a registered website page, else a named route; null when it is gone (module off). */
+    public function modulePagePath(?string $key): ?string
+    {
+        if ($key === null) {
+            return null;
+        }
+
+        if (str_starts_with($key, 'page:')) {
+            return collect(app(Registry::class)->all('websitePage'))->firstWhere('key', substr($key, 5))['path'] ?? null;
+        }
+
+        return Route::has($key) ? route($key, [], false) : null;
     }
 
     public function target(MenuItem $item): ?Model
@@ -96,7 +119,7 @@ class MenuLinks
     {
         return match ($item->type) {
             'url' => $item->url,
-            'module_page' => $item->route_key && Route::has($item->route_key) ? route($item->route_key, [], false) : null,
+            'module_page' => $this->modulePagePath($item->route_key),
             'file' => ($media = $this->target($item)) instanceof MediaItem ? $media->permalink() : null,
             'taxonomy' => ($term = $this->target($item)) instanceof Term ? $this->termUrl($term, $locale) : null,
             'record' => ($record = $this->target($item)) ? $this->recordUrl($record, $locale) : null,
@@ -140,7 +163,7 @@ class MenuLinks
         }
 
         if ($item->type === 'module_page') {
-            return $item->route_key && Route::has($item->route_key) ? null : 'module_off';
+            return $this->modulePagePath($item->route_key) !== null ? null : 'module_off';
         }
 
         if ($item->type === 'record' && ! isset($this->recordTypes()[$item->linkable_type])) {

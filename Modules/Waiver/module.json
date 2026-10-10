@@ -39,7 +39,8 @@
             "Manage:WaiverSettings"
         ],
         "provides": {
-            "settings": true
+            "settings": true,
+            "website_pages": true
         }
     }
 }

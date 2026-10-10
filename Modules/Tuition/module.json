@@ -42,7 +42,8 @@
             "entity_form_parts": true,
             "layouts": [
                 "tuition.listing"
-            ]
+            ],
+            "website_pages": true
         }
     }
 }

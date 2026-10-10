@@ -18,6 +18,7 @@ final class TuitionExtension implements ModuleExtension
 {
     public function register(Registrar $r): void
     {
+        $r->websitePage('tuition.index', label: 'tuition::tuition.tuition_fees', path: '/tuition-fees');   // Menus › Module page
         $r->filamentPlugin(TuitionPlugin::class);                        // Academic › Tuition Fees: tuition fees, tuition categories
         $r->scopeable(Tuition::class);                                   // through the program
         $r->entityTab(Program::class, TuitionTab::class);                // FR-FEE-04, FR-PROG-18

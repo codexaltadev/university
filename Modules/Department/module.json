@@ -47,7 +47,8 @@
             ],
             "searchable": true,
             "sitemap": true,
-            "entity_form_parts": true
+            "entity_form_parts": true,
+            "website_pages": true
         }
     }
 }

@@ -18,6 +18,23 @@ return [
     'add_part' => 'Call যোগ করুন',
     'view_site' => 'Website-এ দেখুন',
     'view_page' => 'Page দেখুন',
+    'layouts' => [
+        'cards' => 'Card',
+        'accordion' => 'Accordion',
+    ],
+    'block' => [
+        'categories' => 'Category',
+        'categories_help' => 'খালি: সব category। একটি category তার sub-category-সহ।',
+        'scholarships' => 'অথবা এই scholarship-গুলো',
+        'scholarships_help' => 'বাছাই করা গুলো এই ক্রমে দেখায়, category যা-ই হোক।',
+        'layout' => 'দেখানোর ধরন',
+        'limit' => 'কয়টি',
+        'limit_help' => 'খালি: সব।',
+    ],
+    'settings' => [
+        'intro' => 'Scholarship তালিকার উপরের লেখা',
+        'outro' => 'Scholarship তালিকার নিচের লেখা',
+    ],
     'sections' => [
         'scholarship' => 'Scholarship',
         'media' => 'ছবি ও file',

@@ -35,7 +35,13 @@
             "menu_item_types": true,
             "vocabularies": [
                 "scholarship.category"
-            ]
+            ],
+            "website_pages": true,
+            "page_blocks": true,
+            "layouts": [
+                "scholarship.listing"
+            ],
+            "settings": true
         }
     }
 }

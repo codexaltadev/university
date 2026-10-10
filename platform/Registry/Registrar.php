@@ -25,6 +25,7 @@ class Registrar
         'entityPage' => 'entity_pages',
         'entityFormPart' => 'entity_form_parts',
         'micrositeTool' => 'microsite_tools',
+        'websitePage' => 'website_pages',
         'menuItemType' => 'menu_item_types',
         'vocabulary' => 'vocabularies',
         'metric' => 'metrics',
@@ -151,6 +152,15 @@ class Registrar
     public function micrositeTool(string $pageClass): static
     {
         return $this->add('micrositeTool', ['class' => $pageClass]);
+    }
+
+    /**
+     * A listing page of the module's website, e.g. websitePage('scholarship.index', label: 'scholarship::scholarship.plural',
+     * path: '/scholarships'): Menus offer it as a "Module page"; the item hides while the module is off.
+     */
+    public function websitePage(string $key, string $label, string $path): static
+    {
+        return $this->add('websitePage', compact('key', 'label', 'path'));
     }
 
     public function menuItemType(string $model): static

@@ -24,6 +24,7 @@ final class ProgramExtension implements ModuleExtension
 {
     public function register(Registrar $r): void
     {
+        $r->websitePage('program.index', label: 'program::program.plural', path: '/programs');   // Menus › Module page
         $r->filamentPlugin(ProgramPlugin::class);
         $r->relationTarget(Program::class, parent: Department::class, parentKey: 'department_id');   // FR-PROG-02
         $r->scopeable(Program::class);                            // Program users; Faculty / Department users through the hierarchy

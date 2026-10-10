@@ -384,6 +384,7 @@ Scholarship waiver rule, tuition বা board-এর সাথে যুক্�
 * Index: `(parent_id, sort_order)`।
 * Media: `image` (cover), `attachments` (PDF, ক্রমসহ) — Media usage (DB-02)। Slug `core_slugs`: `/scholarships/{slug}`; অধীন অংশের breadcrumb: Scholarships › Erasmus › {call}। SEO (`HasSeo`), search, sitemap।
 * নিয়ম: parent নিজে অন্য কারো অধীন হতে পারবে না (এক স্তর); অধীন অংশ থাকলে parent মোছা যাবে না (FR-GEN-08)।
+* *(v1.4)* Settings `scholarship.intro`, `scholarship.outro` (ভাষা অনুযায়ী rich text) — `/scholarships`-এর উপরে ও নিচে।
 * *(v1.4)* Category → vocabulary `scholarship.category` (hierarchical, প্রতি scholarship-এ একটি, `core_termables`) — শুধু মূল scholarship-এ; call-গুলো parent-এর category-তে পড়ে। ধরন অনুযায়ী ভাগ (Government, International, Merit, Exchange …); parent / child আলাদা জিনিস (একটি scholarship ও তার call)। পুরনো `fee.scholarship-category` বাদ।
 
 ---
@@ -463,6 +464,7 @@ Program-এর সাথে সম্পর্ক audience term দিয়ে 
 | `tuitions` (১০১) | tuition_fees + tuition_fee_lines | Column → line (Section 11.1); `majors` text → মন্তব্য বা বাদ (manual) |
 | `boards` (৮), `waiver_categories` (২১), `waivers` (৯২) + ৫টি pivot | waiver_boards, waiver_categories, waiver_rules + pivot | `waiver_rate` → waiver_percent, `hsc_golden` / `ssc_golden` → require_*_golden, `undergraduate_min / max` → ug_cgpa_*; `international_undergraduate_*` → আলাদা rule (is_international = 1); `gender_waiver.gender_id` → gender string |
 | `scholarship_categories` (৭) + `scholarships` (২৭) | scholarship_scholarships *(v1.4)* | category → মূল scholarship (`detail` → details, `serial` → sort_order, `publication_status` → is_active, slug রাখা); scholarship → তার category-র অধীন অংশ (২৭টিই Erasmus-এর; ১৬টি অপ্রকাশিত → inactive); যোগ্যতা / আবেদন আলাদা field বর্তমান data-য় নেই — details-এ থাকে |
+| `accordion_categories` (৬) + `accordions` (৩০) | scholarship_scholarships + `scholarship.category` *(v1.4)* | মূল category ("scholarship")-র `top_content` / `bottom_content` → settings intro / outro; ৫টি sub-category → category term (slug রাখা); প্রতিটি accordion → category সহ মূল scholarship (`description` → details, `serial`, `publication_status` → is_active) |
 | `calenders` (১৮) + `calender_programs` (২) + `calendar_events` (১৯২) + pivot (৩৮০) | calendar_calendars, calendar_events + audience term | `date_explanation` → date_label; structured `starts_on` বর্তমান data-তে নেই → manual পূরণ বা parse (সীমাবদ্ধতা) |
 | `coordination_officers` (৭৩) | core_assignments (Department / Program, `role_key = coordinator`) | DB-04-এ বিস্তারিত (Administration person) |
 | Course, Curriculum, Faculty Member, Campus | — | বর্তমান DB-তে নেই; নতুন করে entry বা import |

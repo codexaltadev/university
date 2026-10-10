@@ -344,7 +344,7 @@ Entity / main site placement: `core_relations` (Section 1)। Media: `image`।
 | `achievements.category` | Achievements | | — |
 | `research.area` | Research | ✔ | — |
 | `documents.type` | Documents | | flipbook, prospectus, charter / guidebook, policy, content category |
-| `faq.category` | FAQ | ✔ | `faq_categories` (৯) + `accordion_categories` (৬) |
+| `faq.category` | FAQ | ✔ | `faq_categories` (৯) *(`accordion_categories` → Scholarship, DB-03 v1.4 §11.3)* |
 | `links.group` | Links | | — |
 | `shared.tags` | সব | | `blog_tags` (৩) |
 
@@ -402,7 +402,7 @@ Entity / main site placement: `core_relations` (Section 1)। Media: `image`।
 | `charter_guidebooks` (৮৬) + categories (৪) | documents_documents (Charter / Guidebook) | |
 | `policies` (১) + categories (২) | documents_documents (Policy) | `approve_date` → approved_on |
 | `faqs` (১,৩০৯) + `faq_categories` (৯) | faq_faqs + `faq.category` | `department_id` → relation |
-| `accordions` (৩০) + `accordion_categories` (৬) | faq_faqs + `faq.category` | Category-র `image`, `top_content`, `bottom_content`, `parent_category_id` রক্ষিত |
+| `accordions` (৩০) + `accordion_categories` (৬) | *(2026-10-10)* **Scholarship module**-এ (DB-03 v1.4 §11.3) — এগুলো DIU-র waiver / scholarship scheme, FAQ নয় | — |
 | `greetings` (৫) | announcement_widgets (`popup`) | `is_home` → `site:0`; `is_faculty` / `is_department` / `is_program` → `faculty_id` / `department_id` / `department_program_type_id` relation; `is_admission` → `route_keys = ["admission.index"]`; `start_date` / `expiry_date` → starts_at / ends_at |
 | `news_tickers` (৪) | announcement_widgets (`ticker`) | |
 | `countdown_timers` (১) | announcement_widgets (`countdown`) | |
