@@ -24,6 +24,8 @@ use Modules\Menu\Models\Menu;
 use Modules\Menu\Models\MenuItem;
 use Modules\Menu\Support\MenuEditor;
 use Modules\Menu\Support\MenuLinks;
+use Platform\Context\FollowsWorkingIn;
+use Platform\Context\MicrositeTool;
 use Platform\Filament\Components\FallbackIndicator;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\TranslatableTabs;
@@ -35,8 +37,10 @@ use Platform\Taxonomy\Vocabularies;
  * place without its own menu shows where its menu comes from, with "create own",
  * "copy and edit" and the menu source; an own menu is edited as a tree (3 levels).
  */
-class ManageMenus extends Page
+class ManageMenus extends Page implements MicrositeTool
 {
+    use FollowsWorkingIn;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBars3;
 
     protected static ?int $navigationSort = 10;
@@ -70,6 +74,24 @@ class ManageMenus extends Page
         return __('menu::menu.title');
     }
 
+    /** Microsite tool (UI/UX Part A §4.1): the entity editors' "Microsite" button opens it on one owner. */
+    public static function canUseFor(string $ownerKey): bool
+    {
+        return in_array($ownerKey, MenuEditor::ownerKeys(Auth::user()), true);
+    }
+
+    public static function urlFor(string $ownerKey): string
+    {
+        return static::getUrl(['owner' => $ownerKey]);
+    }
+
+    public static function isSetUpFor(string $ownerKey): bool
+    {
+        $editor = app(MenuEditor::class);
+
+        return $editor->mode($ownerKey) === 'inherit' || $editor->own($ownerKey, 'primary') !== null;   // its own main menu, or the parent's on purpose
+    }
+
     public static function canAccess(): bool
     {
         return MenuEditor::ownerKeys(Auth::user()) !== [];
@@ -79,7 +101,7 @@ class ManageMenus extends Page
     {
         $owners = MenuEditor::ownerKeys(Auth::user());
         abort_if($owners === [], 403);
-        $this->owner = in_array($this->owner, $owners, true) ? $this->owner : $owners[0];
+        $this->owner = $this->ownerOnOpen($owners);   // "Working in" unless asked for
         $this->location = array_key_exists($this->location, MenuEditor::locations()) ? $this->location : array_key_first(MenuEditor::locations());
 
         $this->pickForm->fill(['owner' => $this->owner, 'location' => $this->location, 'mode' => $this->editor()->mode($this->owner)]);

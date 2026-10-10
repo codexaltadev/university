@@ -30,6 +30,8 @@
             "Manage:Statistic",
             "ManageMain:Statistic"
         ],
-        "provides": {}
+        "provides": {
+            "microsite_tools": true
+        }
     }
 }

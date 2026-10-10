@@ -1,8 +1,8 @@
 <?php
 
 /*
-| Entity Hubs (FR-GEN-86, UI/UX Part A §4.3): Department Hub › Programs (new program with
-| the Department preset and fixed), Faculty Hub › Programs (all of its departments'),
+| Editor parts (UI/UX Part A §5.2.1): the Department editor's Programs (new program with
+| the Department preset and fixed), the Faculty editor's Programs (all of its departments'),
 | and the Program editor: a new program step by step, an existing one part by part with
 | what is filled in (UI/UX Part A §5.2 v1.2).
 */
@@ -10,14 +10,14 @@
 use Filament\Facades\Filament;
 use Livewire\Livewire;
 use Modules\Department\Filament\Resources\Departments\DepartmentResource;
+use Modules\Department\Filament\Resources\Departments\Pages\EditDepartment;
 use Modules\Department\Models\Department;
-use Modules\Faculty\Filament\Resources\Faculties\FacultyResource;
+use Modules\Faculty\Filament\Resources\Faculties\Pages\EditFaculty;
 use Modules\Faculty\Models\Faculty;
 use Modules\Program\Database\Factories\ProgramFactory;
-use Modules\Program\Filament\Hub\DepartmentPrograms;
-use Modules\Program\Filament\Hub\FacultyPrograms;
 use Modules\Program\Filament\Resources\Programs\Pages\CreateProgram;
 use Modules\Program\Filament\Resources\Programs\Pages\EditProgram;
+use Modules\Program\Filament\Resources\Programs\Pages\ListPrograms;
 use Modules\Program\Filament\Resources\Programs\ProgramResource;
 use Modules\Program\Models\Program;
 use Platform\Modules\ModulePermissions;
@@ -38,33 +38,28 @@ beforeEach(function () {
     $this->mba = Program::factory()->create(['department_id' => $this->bba->id, 'name' => ['en' => 'Master of Business Administration']]);
 });
 
-it('gives the Department Hub its programs, and creates one with the Department fixed', function () {
+it('lists the Department\'s programs at the end of its editor, and adds one with the Department fixed', function () {
     $this->actingAs(superAdmin());
 
-    $this->get(DepartmentResource::getUrl('edit', ['record' => $this->cse]))->assertOk()
-        ->assertSee(DepartmentPrograms::getUrl(['record' => $this->cse]), false);
-
-    $this->get(DepartmentPrograms::getUrl(['record' => $this->cse]))->assertOk()
+    Livewire::test(EditDepartment::class, ['record' => $this->cse->getRouteKey()])   // the editor (the top bar lists every program)
         ->assertSee('BSc in Computer Science')->assertDontSee('BSc in Software Engineering')
-        ->assertSee('/admin/programs/create?department='.$this->cse->id, false);
+        ->assertSee(ProgramResource::getUrl('create', ['department' => $this->cse->id]), false)
+        ->assertSee(ProgramResource::getUrl('edit', ['record' => $this->bscCse]), false);
 
     Livewire::withQueryParams(['department' => $this->cse->id])->test(CreateProgram::class)
         ->assertFormFieldIsDisabled('department_id')
         ->fillForm(['department_id' => $this->bba->id, 'level_term_id' => ProgramFactory::level('Graduate'), 'name' => ['en' => 'MSc in CSE'], 'short_name' => 'MSc', 'web_address' => 'msc-cse'])
         ->call('create')
         ->assertHasNoFormErrors()
-        ->assertRedirect(DepartmentPrograms::getUrl(['record' => $this->cse]));
+        ->assertRedirect(DepartmentResource::getUrl('edit', ['record' => $this->cse]));
 
     expect(Program::query()->where('short_name', 'MSc')->sole()->department_id)->toBe($this->cse->id);
 });
 
-it('gives the Faculty Hub every program of its departments, read here, made in a Department Hub', function () {
+it('lists every program of the Faculty\'s departments in its editor; new ones are added from a Department', function () {
     $this->actingAs(superAdmin());
 
-    $this->get(FacultyResource::getUrl('edit', ['record' => $this->fsit]))->assertOk()
-        ->assertSee(FacultyPrograms::getUrl(['record' => $this->fsit]), false);
-
-    $this->get(FacultyPrograms::getUrl(['record' => $this->fsit]))->assertOk()
+    Livewire::test(EditFaculty::class, ['record' => $this->fsit->getRouteKey()])
         ->assertSee('BSc in Computer Science')->assertSee('BSc in Software Engineering')
         ->assertDontSee('Master of Business Administration')
         ->assertDontSee('/admin/programs/create', false);
@@ -102,17 +97,15 @@ it('enters a new program step by step, its lists included, in one go', function 
     expect(collect($editor->get('data.majors'))->pluck('title.en')->all())->toBe(['Machine Learning']);
 });
 
-it('follows scope and permission in the Hubs; a viewer cannot switch records off', function () {
+it('follows scope and permission; a viewer cannot switch programs off', function () {
     $viewer = makeUser(['ViewAny:Department', 'View:Department', 'ViewAny:Program', 'View:Program'], [$this->cse]);
     $this->actingAs($viewer);
 
-    $this->get(DepartmentPrograms::getUrl(['record' => $this->cse]))->assertOk()->assertSee('BSc in Computer Science');
-    $this->get(DepartmentPrograms::getUrl(['record' => $this->bba]))->assertNotFound();
     $this->get('/admin/programs/create?department='.$this->bba->id)->assertNotFound();    // outside the scope
     $this->get('/admin/programs/create?department='.$this->cse->id)->assertForbidden();   // no Create:Program at all
 
-    Livewire::test(DepartmentPrograms::class, ['record' => $this->cse->getRouteKey()])
-        ->assertTableColumnStateSet('is_active', true, $this->bscCse)
+    Livewire::test(ListPrograms::class)
+        ->assertCanSeeTableRecords([$this->bscCse])->assertCanNotSeeTableRecords([$this->mba])
         ->call('updateTableColumnState', 'is_active', (string) $this->bscCse->getKey(), false);
     expect($this->bscCse->fresh()->is_active)->toBeTrue();                                    // the toggle is disabled for a viewer
 });

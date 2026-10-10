@@ -60,7 +60,9 @@ return [
         'test_result' => ':count টি rule মিলেছে; calculator দেবে :percent%: :names',
         'test_none' => 'কোনো rule মেলেনি।',
     ],
+    'preview' => 'Preview',
     'settings' => [
+        'title' => 'Settings',
         'waiver_mode' => 'একাধিক rule মিললে',
         'mode_highest' => 'সর্বোচ্চ waiver (DIU)',
         'mode_additive' => 'যোগ করে, সবচেয়ে ছোট সীমা পর্যন্ত',

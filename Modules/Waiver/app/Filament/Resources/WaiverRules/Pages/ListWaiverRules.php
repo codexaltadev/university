@@ -18,6 +18,7 @@ use Modules\Waiver\Filament\Resources\WaiverRules\WaiverRuleResource;
 use Modules\Waiver\Models\Board;
 use Modules\Waiver\Models\WaiverCategory;
 use Modules\Waiver\Models\WaiverRule;
+use Modules\Waiver\Support\CalculatorWebsite;
 use Modules\Waiver\Support\WaiverCalculator;
 use Platform\Taxonomy\Vocabularies;
 
@@ -27,7 +28,12 @@ class ListWaiverRules extends ListRecords
 
     protected function getHeaderActions(): array
     {
-        return [CreateAction::make(), $this->testAction()];
+        return [
+            CreateAction::make(),
+            $this->testAction(),
+            Action::make('preview')->label(__('waiver::waiver.preview'))->icon(Heroicon::OutlinedArrowTopRightOnSquare)->color('gray')
+                ->url(url('/'.CalculatorWebsite::PAGE))->openUrlInNewTab(),   // the public calculator
+        ];
     }
 
     /** FR-FEE-09: which rules a sample input matches, and what the calculator gives. */

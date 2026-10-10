@@ -19,6 +19,7 @@ use Platform\Filament\Components\PeopleManager;
 use Platform\Filament\Components\SeoPanel;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Filament\Components\WebAddressField;
+use Platform\Filament\Hub\EntityFormPart;
 use Platform\Scope\UserScopeFilter;
 
 /**
@@ -73,6 +74,7 @@ class DepartmentForm
                 ]),
             ]),
             PeopleManager::make()->columnSpanFull(),   // Head, Coordinator, Officer, Contact, Industry Expert (FR-DEPT-03)
+            ...EntityFormPart::sectionsFor(Department::class),   // other modules' read-only parts (UI/UX Part A §5.2.1)
         ]);
     }
 

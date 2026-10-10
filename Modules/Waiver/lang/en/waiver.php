@@ -60,7 +60,9 @@ return [
         'test_result' => ':count rule(s) match; the calculator gives :percent%: :names',
         'test_none' => 'No rule matches.',
     ],
+    'preview' => 'Preview',
     'settings' => [
+        'title' => 'Settings',
         'waiver_mode' => 'When several rules match',
         'mode_highest' => 'The highest waiver (DIU)',
         'mode_additive' => 'Add them up, up to the smallest cap',

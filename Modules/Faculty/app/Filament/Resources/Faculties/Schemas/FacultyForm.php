@@ -10,11 +10,13 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Unique;
+use Modules\Faculty\Models\Faculty;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\PeopleManager;
 use Platform\Filament\Components\SeoPanel;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Filament\Components\WebAddressField;
+use Platform\Filament\Hub\EntityFormPart;
 
 /**
  * Faculty form (FR-FAC-01/03, UI/UX Part A §5.2): name, overview, Dean's message per
@@ -59,6 +61,7 @@ class FacultyForm
                 ]),
             ]),
             PeopleManager::make()->columnSpanFull(),   // Dean, Associate Dean, Officer, Contact (FR-FAC-03)
+            ...EntityFormPart::sectionsFor(Faculty::class),   // other modules' read-only parts (UI/UX Part A §5.2.1)
         ]);
     }
 

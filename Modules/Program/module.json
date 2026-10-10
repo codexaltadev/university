@@ -60,9 +60,9 @@
                 "program.featured",
                 "program.by-level"
             ],
-            "entity_pages": true,
             "searchable": true,
-            "sitemap": true
+            "sitemap": true,
+            "entity_form_parts": true
         }
     }
 }

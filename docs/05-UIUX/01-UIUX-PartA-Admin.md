@@ -4,9 +4,9 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | UI/UX Part A: Admin Panel |
-| Version | 1.3 — v1.0 confirmed 2026-10-08; v1.1: Entity Hub (§4.3), Tuition Fees / Waiver Calculator sub-menu (§3), Admission / Waiver Office role (§2); v1.2: Program Editor — সব অংশ এক page-এ, ধাপে ধাপে (§5.2.1); v1.3: Program-এ side menu নেই, tuition fees editor-এর শেষ read-only অংশ |
+| Version | 1.4 — v1.0 confirmed 2026-10-08; v1.1: Entity Hub (§4.3), Tuition Fees / Waiver Calculator sub-menu (§3), Admission / Waiver Office role (§2); v1.2: Program Editor — সব অংশ এক page-এ, ধাপে ধাপে (§5.2.1); v1.3: Program-এ side menu নেই, tuition fees editor-এর শেষ read-only অংশ; v1.4: সব entity-তে side menu বদলে editor-এর অংশ ও Microsite ▾, Working in (§4) |
 | Date | 2026-10-10 |
-| Status | ✔ Confirmed — v1.1 approved 2026-10-10; v1.2 (Program Editor), v1.3 (tuition read-only part) approved 2026-10-10 |
+| Status | ✔ Confirmed — v1.1 approved 2026-10-10; v1.2 (Program Editor), v1.3 (tuition read-only part), v1.4 (entity editors, Working in) 2026-10-10 |
 | Based on | BRD v1.7, SRS v1.0, SAD Part A / B, DB-01 থেকে DB-06 |
 | পাঠক | UI developer, Filament developer, tester, training team |
 
@@ -91,7 +91,7 @@ Sidebar-এর group ও item (SAD Part A Section 7.3)। শুধু active mo
 │     Admission                │
 │     Tuition Fees ›           │   Tuition module (v1.3): Tuition fees · Tuition categories
 │     Waiver Calculator ›      │   Waiver module (v1.2): Rules · Waiver categories ·
-│                              │     Boards (পরে: Settings · Preview ↗)
+│                              │     Boards · Settings · Preview ↗
 │     Scholarships             │
 │     Academic Calendar        │
 │     Campuses                 │
@@ -158,11 +158,14 @@ Media Library সব user দেখেন (নিজের scope অনুযা
 └───────────────────────────────────────────────────────────────────────┘
 ```
 
-* নির্বাচিত context-ই নতুন content-এর default "Show in" (FR-GEN-51) এবং "My Microsite" কোন entity-র তা ঠিক করে।
+* নির্বাচিত context-এ microsite screen-গুলো (Menus, Header & Footer, Homepage, Statistics) খোলে, নতুন Page-এর owner হয়, এবং "My Microsite" কোন entity-র তা ঠিক করে; কোনো screen অন্য owner-এ খুললে (`?owner=`, Microsite ▾) সেটাই context হয়। *(v1.4 বাস্তবায়ন: top bar-এ "Working in" select — main site (unscoped user), তারপর scope-এর microsite entity-গুলো kind অনুযায়ী group; session-এ থাকে)*
+* নতুন content-এর default "Show in" (FR-GEN-51) context থেকে — পরের ধাপে।
 * Context কেবল UI-র সুবিধা; নিরাপত্তা scope engine ও policy থেকে (SAD Part B §5) — context বদলে scope-এর বাইরে যাওয়া যায় না।
 * Admin-এর জন্য switcher-এ "Main Site" + সব entity।
 
 ### 4.2 "My Microsite" Overview
+
+> *v1.4:* "My Microsite" (navigation) scoped user-কে তাঁর entity-র editor-এ নেয় (§4.3); microsite অংশগুলোর অবস্থা (own / নেই) Microsite ▾-এ ✓ / ! হিসেবে। নিচের পূর্ণ overview (content freshness, inherited ⤴, recent activity) Notification / freshness module-এর সাথে পরে।
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
@@ -184,45 +187,38 @@ Media Library সব user দেখেন (নিজের scope অনুযা
 ⤴ = parent / main site থেকে নেওয়া (U-5)
 ```
 
-### 4.3 Entity Hub *(v1.1, 2026-10-10 — FR-GEN-86)*
+### 4.3 Entity Editor *(v1.4, 2026-10-10 — FR-GEN-86; v1.1-এর "Entity Hub" side menu বদলে)*
 
-একটি entity-র সব কাজ এক জায়গায়। Faculties / Departments / Programs / Offices / Labs list থেকে কোনো row খুললে, বা নতুন entity save করলে, তার Hub খোলে; বাঁ দিকে Hub-এর নিজের sub-menu। Scoped user-এর "My Microsite" group-এর item-গুলো তাঁর বর্তমান context-এর (§4.1) Hub-এর অংশে যায় — Admin ও entity user একই Hub দেখেন, শুধু permission ও scope অনুযায়ী অংশ কম-বেশি।
+একটি entity-র সব কাজ এক জায়গায় — তার **editor**-এ, আলাদা side menu ছাড়া। Faculties / Departments / Programs (পরে Offices / Labs) list থেকে কোনো row খুললে editor খোলে।
 
 ```
-Faculties › Faculty of Science & IT (FSIT)                [ View microsite ↗ ]
-┌─────────────────────┬─────────────────────────────────────────────────────┐
-│ Overview            │  Overview (§4.2): freshness, own / inherited          │
-│ Profile             │  microsite parts, recent activity, checklist          │
-│ Departments (8)     │  (নতুন entity: "Add departments", "Set the menu" …)   │
-│ Programs (21)       │                                                     │
-│ People              │  Departments: এই Faculty-র Department list;           │
-│ ─── Microsite ───   │  [+ New department] → Faculty = FSIT (স্থির)          │
-│ Menu                │  row খুললে → Department Hub (breadcrumb:            │
-│ Header & Footer     │  Faculties › FSIT › CSE)                            │
-│ Homepage            │                                                     │
-│ Pages               │                                                     │
-│ Statistics          │                                                     │
-│ SEO                 │                                                     │
-│ Activity            │                                                     │
-└─────────────────────┴─────────────────────────────────────────────────────┘
+Faculties › Faculty of Science & IT (FSIT)          [ Microsite ▾ ] [ Delete ]
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  নিজের তথ্য (Profile, People, SEO …)                                          │
+│ ────────────────────────────────────────────────────────────────────────────  │
+│  Departments  8                                       [ + Add department ]    │
+│   CSE — Computer Science and Engineering         ✓       (row → Department)   │
+│   SWE — Software Engineering                     ✓                            │
+│  Programs  21                                                                 │
+│   BSc CSE — …                CSE                 ✓                            │
+└──────────────────────────────────────────────────────────────────────────────┘
+Microsite ▾ :  Menus ✓ · Header & Footer ! · Homepage ✓ · Statistics ✓ · Pages ! · View microsite ↗
 ```
 
-| Hub | অংশ (যে module-এর) |
+| Entity | Editor-এর অংশ |
 |---|---|
-| Faculty | Overview, Profile, People (Faculty) · Departments (Department) · Programs (Program) · Menu, Header & Footer, Homepage, Pages, Statistics, SEO (core) · Activity · পরে: News / Events / Notices "shown in" (content module) |
-| Department | Overview, Profile, People · Programs (Program) · microsite অংশ (core) · Activity · পরে: Faculty Members, Courses, Labs |
-| Program | **side menu নেই** (v1.3): Program Editor (§5.2.1) একাই সব — বাম দিকের অংশে Basic info থেকে SEO, তারপর অন্য module-এর read-only অংশ (যেমন Tuition fees, `entityFormPart`); tuition-এর edit Academic › Tuition Fees-এ, waiver rule Academic › Waiver Calculator-এ |
-| Office / Lab | Overview, Profile, People · microsite অংশ (core) · Activity · পরে: service, team ইত্যাদি |
+| Faculty | নিজের তথ্য · **Departments** (Department module) · **Programs** (Program module) — read-only তালিকা, শেষে |
+| Department | নিজের তথ্য · **Programs** (Program module) |
+| Program | Program Editor (§5.2.1): ৯টি অংশ বাম দিকের tab-এ, তারপর **Tuition Fees** (Tuition module) |
+| Office / Lab | নিজের তথ্য · পরে: service, team ইত্যাদি (module সম্পূর্ণ করার সময়) |
 
 নিয়ম:
 
-* প্রতিটি অংশ দেখায় শুধু যার সেই permission ও scope আছে (FR-GEN-82); module inactive হলে তার অংশ থাকে না।
-* Hub থেকে তৈরি অধীন record-এ parent আগে থেকে বসানো ও বদলানো যায় না; অন্য parent-এ সরানো (FR-DEPT-08, BRL-PROG-02) শুধু Profile-এ, Admin।
-* Microsite অংশগুলো Appearance-এর একই screen, owner আগে থেকে এই entity — আলাদা কোনো দ্বিতীয় editor নয়।
-* Appearance › Menus / Homepage ইত্যাদি Admin-এর জন্য থাকে (main site ও সব entity একসাথে); entity user সেগুলো Hub থেকেই পান।
-* অংশ বেশি হলে sub-menu-তে group (Program, Program page, Fees, Microsite …)।
-* একটি জিনিস যদি অনেক entity-তে প্রযোজ্য হয় (যেমন waiver rule), Hub-এ শুধু দেখা যায়; edit তার নিজের screen-এ — যাতে এক entity থেকে বদলে অজান্তে অন্যগুলো না বদলায়। Tuition একটি program-এরই, তাই Hub ও Tuition Fees দুই জায়গাতেই একই form-এ edit হয়।
-* বাস্তবায়নের ক্রম: Faculty → Departments দিয়ে POC; তারপর Faculty / Department / Program Hub ও context switcher (§4.1); Office / Lab Hub তাদের module সম্পূর্ণ করার সময়।
+* অন্য module-এর অংশ `$r->entityFormPart(Faculty::class, …)` দিয়ে যুক্ত হয় (SAD Part A §7.3); entity-র module সেই module-কে চেনে না। Module inactive বা দেখার permission না থাকলে অংশ থাকে না (FR-GEN-82)।
+* অংশগুলো **read-only তালিকা**; create permission থাকলে "+ Add …" (নতুন record-এ এই entity আগে থেকে বসানো ও স্থির, save-এর পর এই editor-এ ফেরত), update permission থাকলে প্রতিটি row-এর link সেই record-এর নিজের editor-এ। অন্য parent-এ সরানো (FR-DEPT-08, BRL-PROG-02) শুধু Admin, নিজের editor-এ।
+* **Microsite ▾** (উপরে): এই entity-র Menus, Header & Footer, Homepage, Statistics, Pages — Appearance / Content-এর একই screen, owner আগে থেকে এই entity — প্রতিটির পাশে ✓ (নিজের আছে / parent-এর ইচ্ছাকৃত) বা ! (এখনো নেই), আর "View microsite ↗"। Screen-গুলো `$r->micrositeTool(…)` দিয়ে যুক্ত।
+* একটি জিনিস যদি অনেক entity-তে প্রযোজ্য হয় (waiver rule), editor-এ নেই; তার নিজের menu-তে (Academic › Waiver Calculator)।
+
 
 ---
 

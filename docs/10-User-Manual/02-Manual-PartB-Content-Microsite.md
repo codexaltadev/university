@@ -203,6 +203,8 @@ Page তৈরি করে **Menu**-তে যোগ না করলে visito
 
 ## 12. Menu
 
+> **Microsite ▾ কীভাবে:** Faculty, Department বা Program-এর page খুলে উপরের **Microsite ▾** — নিচের প্রতিটি screen সেই জায়গার জন্য খোলে। উপরের **Working in** দেখায় এখন কোন microsite-এ কাজ করছেন; বদলালে Menu, Homepage ইত্যাদি সেটার জন্য খোলে।
+
 **My Microsite › Menu**
 
 ### 12.1 নিজের menu নেই (শুরুর অবস্থা)
@@ -332,7 +334,7 @@ Program খুললে বাম দিকে একই অংশগুলো �
 * যাঁদের শুধু দেখার অনুমতি (যেমন Admission Office), তাঁরা একই page read-only দেখেন।
 * **Tuition Fees** বাম দিকের অংশগুলোর একদম নিচে — শুধু দেখা যায়। যোগ বা বদল **Academic › Tuition Fees**-এ (Admission Office); অনুমতি থাকলে এখানে "Add tuition fee" ও প্রতিটির link থাকে। Waiver rule **Academic › Waiver Calculator**-এ।
 * Program page-এর **Curriculum**, **Calendar** অংশ আসে অন্য module থেকে — নিচের অংশ দেখুন।
-* Program-এরও নিজস্ব microsite আছে: **Working in** থেকে Program বেছে নিয়ে তার Menu, Homepage, Statistics সাজানো যায়।
+* Program-এরও নিজস্ব microsite আছে: Program-এর page-এর উপরে **Microsite ▾** থেকে তার Menu, Homepage, Header & Footer, Statistics, Pages খোলে (✓ = সাজানো, ! = এখনো নেই)। অথবা উপরের **Working in**-এ Program বেছে নিয়ে Appearance-এর screen খুলুন।
 * **Programs website-এর সবচেয়ে বেশি দেখা page-গুলোর একটি — প্রকাশের আগে credit, মেয়াদ ও তারিখ দুবার মিলিয়ে নিন।**
 
 ---

@@ -33,7 +33,8 @@
             "menu_item_types": true,
             "sitemap": true,
             "searchable": true,
-            "freshness_source": true
+            "freshness_source": true,
+            "microsite_tools": true
         }
     }
 }

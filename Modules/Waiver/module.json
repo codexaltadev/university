@@ -35,7 +35,9 @@
             "waiver.category": "Modules\\Waiver\\Models\\WaiverCategory",
             "waiver.rule": "Modules\\Waiver\\Models\\WaiverRule"
         },
-        "custom_permissions": [],
+        "custom_permissions": [
+            "Manage:WaiverSettings"
+        ],
         "provides": {
             "settings": true
         }

@@ -20,6 +20,7 @@ use Platform\Events\ModuleActivated;
 use Platform\Events\ModuleDeactivated;
 use Platform\Events\ModuleUninstalling;
 use Platform\Events\SettingsUpdated;
+use Platform\Filament\Livewire\WorkingInSwitcher;
 use Platform\Hierarchy\EntityHierarchy;
 use Platform\Localization\DatabaseTranslationLoader;
 use Platform\Localization\Languages;
@@ -142,6 +143,7 @@ class PlatformServiceProvider extends ServiceProvider
     {
         ThemeBlade::register();
         Livewire::component('platform.instant-search', InstantSearch::class);   // FR-SRCH-05
+        Livewire::component('platform.working-in', WorkingInSwitcher::class);  // UI/UX Part A §4.1
 
         $this->app->make(HttpKernel::class)->appendMiddlewareToGroup('web', ApplyTheme::class);
 

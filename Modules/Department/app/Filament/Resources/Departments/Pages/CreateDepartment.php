@@ -4,15 +4,15 @@ namespace Modules\Department\Filament\Resources\Departments\Pages;
 
 use Filament\Resources\Pages\CreateRecord;
 use Livewire\Attributes\Locked;
-use Modules\Department\Filament\Hub\FacultyDepartments;
 use Modules\Department\Filament\Resources\Departments\DepartmentResource;
+use Modules\Faculty\Filament\Resources\Faculties\FacultyResource;
 use Modules\Faculty\Models\Faculty;
 
 class CreateDepartment extends CreateRecord
 {
     protected static string $resource = DepartmentResource::class;
 
-    /** Opened from a Faculty Hub (?faculty=12): that Faculty, fixed; back to the Hub after saving. */
+    /** Opened from a Faculty Hub (?faculty=12): that Faculty, fixed; back to the Faculty after saving. */
     #[Locked]
     public ?int $hubFaculty = null;
 
@@ -37,8 +37,8 @@ class CreateDepartment extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return $this->hubFaculty
-            ? FacultyDepartments::getUrl(['record' => $this->hubFaculty])
+        return $this->hubFaculty && auth()->user()?->can('update', Faculty::query()->find($this->hubFaculty))
+            ? FacultyResource::getUrl('edit', ['record' => $this->hubFaculty])
             : parent::getRedirectUrl();
     }
 }

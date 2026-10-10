@@ -33,6 +33,8 @@
             "Manage:Menu",
             "ManageMain:Menu"
         ],
-        "provides": {}
+        "provides": {
+            "microsite_tools": true
+        }
     }
 }

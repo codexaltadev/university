@@ -45,9 +45,9 @@
             "homepage_sections": [
                 "department.list"
             ],
-            "entity_pages": true,
             "searchable": true,
-            "sitemap": true
+            "sitemap": true,
+            "entity_form_parts": true
         }
     }
 }

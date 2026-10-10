@@ -28,7 +28,9 @@ use Modules\Homepage\Models\HomeSection;
 use Modules\Homepage\Models\Layout;
 use Modules\Homepage\Sections\CustomHtmlSection;
 use Modules\Homepage\Support\Homepages;
+use Platform\Context\FollowsWorkingIn;
 use Platform\Context\MicrositeOwners;
+use Platform\Context\MicrositeTool;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Homepage\SectionContext;
 use Platform\Relations\RelationEngine;
@@ -39,8 +41,10 @@ use Platform\Scope\UserScopeFilter;
  * microsite's — sections in order (drag), each with heading, source mode and count
  * (content sections), its own settings, background and schedule (FR-HOME-01..11).
  */
-class ManageHomepage extends Page
+class ManageHomepage extends Page implements MicrositeTool
 {
+    use FollowsWorkingIn;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedHome;
 
     protected static ?int $navigationSort = 30;
@@ -69,6 +73,22 @@ class ManageHomepage extends Page
         return __('homepage::homepage.title');
     }
 
+    /** Microsite tool (UI/UX Part A §4.1): the entity editors' "Microsite" button opens it on one owner. */
+    public static function canUseFor(string $ownerKey): bool
+    {
+        return in_array($ownerKey, MicrositeOwners::keys(Auth::user(), 'Homepage'), true);
+    }
+
+    public static function urlFor(string $ownerKey): string
+    {
+        return static::getUrl(['owner' => $ownerKey]);
+    }
+
+    public static function isSetUpFor(string $ownerKey): bool
+    {
+        return app(Homepages::class)->own($ownerKey) !== null;
+    }
+
     public static function canAccess(): bool
     {
         return MicrositeOwners::keys(Auth::user(), 'Homepage') !== [];
@@ -78,7 +98,7 @@ class ManageHomepage extends Page
     {
         $owners = MicrositeOwners::keys(Auth::user(), 'Homepage');
         abort_if($owners === [], 403);
-        $this->owner = in_array($this->owner, $owners, true) ? $this->owner : $owners[0];
+        $this->owner = $this->ownerOnOpen($owners);   // "Working in" unless asked for
 
         $this->pickForm->fill(['owner' => $this->owner]);
         $this->load();

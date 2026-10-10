@@ -2,12 +2,11 @@
 
 namespace Modules\Program\Filament\Resources\Programs\Pages;
 
-use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
-use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
 use Modules\Program\Filament\Resources\Programs\ProgramResource;
 use Modules\Program\Models\Program;
+use Platform\Filament\Hub\MicrositeActions;
 
 /**
  * The Program editor, read only, for who may view but not update the program — e.g.
@@ -43,8 +42,7 @@ class ViewProgram extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('view_site')->label(__('program::program.actions.view_site'))->icon(Heroicon::OutlinedArrowTopRightOnSquare)->color('gray')
-                ->url(fn (Program $record): ?string => $record->url())->openUrlInNewTab(),
+            MicrositeActions::group(),   // Menus, Header & Footer, Homepage, Statistics, Pages of this microsite; view it
         ];
     }
 }

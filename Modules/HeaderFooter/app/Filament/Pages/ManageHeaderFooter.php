@@ -23,7 +23,9 @@ use Livewire\Attributes\Url;
 use Modules\HeaderFooter\Models\Region;
 use Modules\HeaderFooter\Support\Regions;
 use Platform\Context\FallbackResolver;
+use Platform\Context\FollowsWorkingIn;
 use Platform\Context\MicrositeOwners;
+use Platform\Context\MicrositeTool;
 use Platform\Filament\Components\FallbackIndicator;
 use Platform\Filament\Components\TranslatableTabs;
 
@@ -33,8 +35,10 @@ use Platform\Filament\Components\TranslatableTabs;
  * "copy … and edit"; its own region has a theme variant, switches or footer columns,
  * and the copyright line.
  */
-class ManageHeaderFooter extends Page
+class ManageHeaderFooter extends Page implements MicrositeTool
 {
+    use FollowsWorkingIn;
+
     public const BLOCKS = ['about_text', 'menu', 'contact', 'social', 'newsletter', 'custom_html'];
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleGroup;
@@ -68,6 +72,24 @@ class ManageHeaderFooter extends Page
         return __('headerfooter::headerfooter.title');
     }
 
+    /** Microsite tool (UI/UX Part A §4.1): the entity editors' "Microsite" button opens it on one owner. */
+    public static function canUseFor(string $ownerKey): bool
+    {
+        return in_array($ownerKey, MicrositeOwners::keys(Auth::user(), 'HeaderFooter'), true);
+    }
+
+    public static function urlFor(string $ownerKey): string
+    {
+        return static::getUrl(['owner' => $ownerKey]);
+    }
+
+    public static function isSetUpFor(string $ownerKey): bool
+    {
+        $regions = app(Regions::class);
+
+        return $regions->own($ownerKey, 'header') !== null || $regions->own($ownerKey, 'footer') !== null;
+    }
+
     public static function canAccess(): bool
     {
         return MicrositeOwners::keys(Auth::user(), 'HeaderFooter') !== [];
@@ -77,7 +99,7 @@ class ManageHeaderFooter extends Page
     {
         $owners = MicrositeOwners::keys(Auth::user(), 'HeaderFooter');
         abort_if($owners === [], 403);
-        $this->owner = in_array($this->owner, $owners, true) ? $this->owner : $owners[0];
+        $this->owner = $this->ownerOnOpen($owners);   // "Working in" unless asked for
         $this->region = in_array($this->region, Region::REGIONS, true) ? $this->region : 'header';
 
         $this->pickForm->fill(['owner' => $this->owner, 'region' => $this->region]);

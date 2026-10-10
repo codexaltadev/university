@@ -2,14 +2,13 @@
 
 namespace Modules\Program\Filament\Resources\Programs\Pages;
 
-use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Support\Icons\Heroicon;
 use Modules\Program\Filament\Resources\Programs\ProgramResource;
 use Modules\Program\Filament\Resources\Programs\Schemas\ProgramForm;
 use Modules\Program\Models\Program;
 use Modules\Program\Support\ProgramChecklist;
+use Platform\Filament\Hub\MicrositeActions;
 
 /** The Program editor (UI/UX Part A §5.2 v1.2): every part as a tab on the left, with what is filled in. */
 class EditProgram extends EditRecord
@@ -40,8 +39,7 @@ class EditProgram extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('view')->label(__('program::program.actions.view_site'))->icon(Heroicon::OutlinedArrowTopRightOnSquare)->color('gray')
-                ->url(fn (Program $record): ?string => $record->url())->openUrlInNewTab(),
+            MicrositeActions::group(),   // Menus, Header & Footer, Homepage, Statistics, Pages of this microsite; view it
             DeleteAction::make(),
         ];
     }

@@ -5,8 +5,8 @@ namespace Modules\Program\Filament\Resources\Programs\Pages;
 use Filament\Resources\Pages\CreateRecord;
 use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
 use Livewire\Attributes\Locked;
+use Modules\Department\Filament\Resources\Departments\DepartmentResource;
 use Modules\Department\Models\Department;
-use Modules\Program\Filament\Hub\DepartmentPrograms;
 use Modules\Program\Filament\Resources\Programs\ProgramResource;
 use Modules\Program\Filament\Resources\Programs\Schemas\ProgramForm;
 
@@ -17,7 +17,7 @@ class CreateProgram extends CreateRecord
 
     protected static string $resource = ProgramResource::class;
 
-    /** Opened from a Department Hub (?department=12): that Department, fixed; back to the Hub after saving. */
+    /** Opened from a Department editor (?department=12): that Department, fixed; back to the Department after saving. */
     #[Locked]
     public ?int $hubDepartment = null;
 
@@ -52,8 +52,8 @@ class CreateProgram extends CreateRecord
 
     protected function getRedirectUrl(): string
     {
-        return $this->hubDepartment
-            ? DepartmentPrograms::getUrl(['record' => $this->hubDepartment])
+        return $this->hubDepartment && auth()->user()?->can('update', Department::query()->find($this->hubDepartment))
+            ? DepartmentResource::getUrl('edit', ['record' => $this->hubDepartment])
             : ProgramResource::getUrl('edit', ['record' => $this->getRecord()]);
     }
 }

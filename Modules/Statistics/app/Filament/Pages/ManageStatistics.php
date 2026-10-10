@@ -24,7 +24,9 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Url;
+use Platform\Context\FollowsWorkingIn;
 use Platform\Context\MicrositeOwners;
+use Platform\Context\MicrositeTool;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Localization\Languages;
 use Platform\Scope\UserScopeFilter;
@@ -38,8 +40,10 @@ use Platform\Statistics\StatSet;
  * of every entity — manual numbers or module metrics counted for that entity and
  * everything below it, with override, rounding, prefix / suffix; live preview.
  */
-class ManageStatistics extends Page
+class ManageStatistics extends Page implements MicrositeTool
 {
+    use FollowsWorkingIn;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBar;
 
     protected static ?int $navigationSort = 40;
@@ -71,6 +75,22 @@ class ManageStatistics extends Page
         return __('statistics::statistics.title');
     }
 
+    /** Microsite tool (UI/UX Part A §4.1): the entity editors' "Microsite" button opens it on one owner. */
+    public static function canUseFor(string $ownerKey): bool
+    {
+        return in_array($ownerKey, MicrositeOwners::keys(Auth::user(), 'Statistic'), true);
+    }
+
+    public static function urlFor(string $ownerKey): string
+    {
+        return static::getUrl(['owner' => $ownerKey]);
+    }
+
+    public static function isSetUpFor(string $ownerKey): bool
+    {
+        return app(Statistics::class)->set($ownerKey) !== null;
+    }
+
     public static function canAccess(): bool
     {
         return MicrositeOwners::keys(Auth::user(), 'Statistic') !== [];
@@ -80,7 +100,7 @@ class ManageStatistics extends Page
     {
         $owners = MicrositeOwners::keys(Auth::user(), 'Statistic');
         abort_if($owners === [], 403);
-        $this->owner = in_array($this->owner, $owners, true) ? $this->owner : $owners[0];
+        $this->owner = $this->ownerOnOpen($owners);   // "Working in" unless asked for
         $this->set = Str::slug($this->set) ?: 'default';
 
         $this->pickForm->fill(['owner' => $this->owner, 'set' => $this->set]);

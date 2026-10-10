@@ -12,6 +12,7 @@ use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 use Modules\Page\Blocks\PageBlocks;
 use Modules\Page\Models\Page;
+use Platform\Context\WorkingIn;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\PublishingPanel;
 use Platform\Filament\Components\SeoPanel;
@@ -39,7 +40,7 @@ class PageForm
                         // FR-PAGE-05: main site (unscoped users) or one of the user's entities
                         Select::make('owner_key')->label(__('platform::relations.owner'))
                             ->options(fn (): array => ContentFilters::ownerOptions())
-                            ->default(fn (): ?string => ContentFilters::ownerKeys()[0] ?? null)   // main site, or the user's first entity
+                            ->default(fn (): ?string => WorkingIn::pick(ContentFilters::ownerKeys()))   // "Working in", else the main site or the user's first entity
                             ->required()->searchable()->live()
                             ->in(fn (): array => ContentFilters::ownerKeys())
                             ->afterStateHydrated(fn (Select $component, ?Page $record) => $record?->exists ? $component->state($record->ownerKey()) : null),

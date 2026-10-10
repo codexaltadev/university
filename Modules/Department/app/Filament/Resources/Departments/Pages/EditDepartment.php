@@ -2,13 +2,12 @@
 
 namespace Modules\Department\Filament\Resources\Departments\Pages;
 
-use Filament\Actions\Action;
 use Filament\Actions\DeleteAction;
 use Filament\Resources\Pages\EditRecord;
-use Filament\Support\Icons\Heroicon;
 use Modules\Department\Filament\Resources\Departments\DepartmentResource;
 use Modules\Department\Filament\Resources\Departments\Schemas\DepartmentForm;
 use Modules\Department\Models\Department;
+use Platform\Filament\Hub\MicrositeActions;
 
 class EditDepartment extends EditRecord
 {
@@ -23,8 +22,7 @@ class EditDepartment extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('view')->label(__('department::department.actions.view_site'))->icon(Heroicon::OutlinedArrowTopRightOnSquare)->color('gray')
-                ->url(fn (Department $record): ?string => $record->url())->openUrlInNewTab(),
+            MicrositeActions::group(),   // Menus, Header & Footer, Homepage, Statistics, Pages of this microsite; view it
             DeleteAction::make(),
         ];
     }

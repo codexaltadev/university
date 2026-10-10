@@ -3,7 +3,7 @@
 namespace Modules\Department;
 
 use Modules\Department\Filament\DepartmentPlugin;
-use Modules\Department\Filament\Hub\FacultyDepartments;
+use Modules\Department\Filament\Parts\FacultyDepartmentsPart;
 use Modules\Department\Metrics\DepartmentCount;
 use Modules\Department\Models\Department;
 use Modules\Department\Sections\DepartmentsSection;
@@ -29,6 +29,6 @@ final class DepartmentExtension implements ModuleExtension
         $r->homepageSection(DepartmentsSection::class);                 // FR-DEPT-09, FR-FAC-06
         $r->searchable(Department::class, label: 'department::department.plural', weight: 7);
         $r->sitemap(Department::class);
-        $r->entityPage(Faculty::class, FacultyDepartments::class);                  // "Departments" in the Faculty Hub (FR-GEN-86)
+        $r->entityFormPart(Faculty::class, FacultyDepartmentsPart::class);   // the Faculty editor's "Departments" (read only)
     }
 }

@@ -3,7 +3,9 @@
 namespace Platform\Filament\Hub;
 
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Text;
 use Illuminate\Database\Eloquent\Model;
 use Platform\Registry\Registry;
 
@@ -42,13 +44,33 @@ abstract class EntityFormPart
         return null;
     }
 
-    /** @return list<Tab> the registered parts of a model, in their order, as editor tabs */
-    public static function tabsFor(string $model): array
+    /** @return list<class-string<static>> the registered parts of a model, in their order */
+    public static function partsFor(string $model): array
     {
         return collect(app(Registry::class)->all('entityFormPart'))
             ->filter(fn (array $entry): bool => $entry['target'] === $model && class_exists($entry['class']))
             ->pluck('class')
             ->sortBy(fn (string $class): int => $class::sort())
+            ->values()->all();
+    }
+
+    /** @return list<Section> the parts as sections below a form without tabs (Faculty, Department) */
+    public static function sectionsFor(string $model): array
+    {
+        return collect(static::partsFor($model))
+            ->map(fn (string $class): Section => Section::make($class::label())
+                ->icon($class::icon())
+                ->columnSpanFull()->collapsible()
+                ->afterHeader(fn (?Model $record): array => $record?->exists && filled($badge = $class::badge($record)) ? [Text::make($badge)->badge()] : [])
+                ->visible(fn (?Model $record): bool => $record?->exists === true && $class::canView($record))
+                ->schema($class::schema()))
+            ->all();
+    }
+
+    /** @return list<Tab> the parts as editor tabs (Program) */
+    public static function tabsFor(string $model): array
+    {
+        return collect(static::partsFor($model))
             ->map(fn (string $class): Tab => Tab::make($class::label())
                 ->icon($class::icon())
                 ->visible(fn (?Model $record): bool => $record?->exists === true && $class::canView($record))

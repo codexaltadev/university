@@ -33,6 +33,8 @@
             "Manage:HeaderFooter",
             "ManageMain:HeaderFooter"
         ],
-        "provides": {}
+        "provides": {
+            "microsite_tools": true
+        }
     }
 }

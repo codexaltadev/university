@@ -15,10 +15,12 @@ use Modules\Page\Filament\Resources\Pages\Pages\ListPages;
 use Modules\Page\Filament\Resources\Pages\Schemas\PageForm;
 use Modules\Page\Filament\Resources\Pages\Tables\PagesTable;
 use Modules\Page\Models\Page;
+use Platform\Context\MicrositeTool;
 use Platform\Filament\RelationManagers\ActivityRelationManager;
+use Platform\Filament\Tables\ContentFilters;
 
 /** Content › Pages (C-11): main site and microsite pages. */
-class PageResource extends Resource
+class PageResource extends Resource implements MicrositeTool
 {
     protected static ?string $model = Page::class;
 
@@ -27,6 +29,22 @@ class PageResource extends Resource
     protected static ?int $navigationSort = 1;
 
     protected static ?string $recordTitleAttribute = 'title';
+
+    /** Microsite tool (UI/UX Part A §4.1): the owner's pages. */
+    public static function canUseFor(string $ownerKey): bool
+    {
+        return static::canViewAny() && in_array($ownerKey, ContentFilters::ownerKeys(), true);
+    }
+
+    public static function urlFor(string $ownerKey): string
+    {
+        return static::getUrl('index', ['filters' => ['owner' => ['value' => $ownerKey]]]);
+    }
+
+    public static function isSetUpFor(string $ownerKey): bool
+    {
+        return Page::query()->ownedBy($ownerKey)->exists();
+    }
 
     public static function getNavigationGroup(): ?string
     {

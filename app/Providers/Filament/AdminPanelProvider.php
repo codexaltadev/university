@@ -8,10 +8,12 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationItem;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\View\PanelsRenderHook;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -19,7 +21,10 @@ use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\PreventRequestForgery;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Platform\Context\WorkingIn;
+use Platform\Filament\Livewire\WorkingInSwitcher;
 use Platform\Registry\ExtensionLoader;
 use Platform\Registry\Registry;
 
@@ -64,6 +69,16 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+            ])
+            // "Working in ▾" and "My Microsite" (UI/UX Part A §4.1)
+            ->renderHook(PanelsRenderHook::GLOBAL_SEARCH_BEFORE, fn (): string => WorkingInSwitcher::shouldShow() ? Blade::render('@livewire(\'platform.working-in\')') : '')
+            ->navigationItems([
+                NavigationItem::make('my-microsite')
+                    ->label(fn (): string => __('platform::hub.my_microsite'))
+                    ->icon('heroicon-o-home-modern')
+                    ->sort(-10)
+                    ->url(fn (): ?string => WorkingIn::myMicrositeUrl())
+                    ->visible(fn (): bool => WorkingIn::myMicrositeUrl() !== null),
             ]);
     }
 

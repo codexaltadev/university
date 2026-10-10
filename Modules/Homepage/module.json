@@ -33,6 +33,8 @@
             "Manage:Homepage",
             "ManageMain:Homepage"
         ],
-        "provides": {}
+        "provides": {
+            "microsite_tools": true
+        }
     }
 }

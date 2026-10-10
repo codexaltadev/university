@@ -4,8 +4,8 @@ namespace Modules\Program;
 
 use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
-use Modules\Program\Filament\Hub\DepartmentPrograms;
-use Modules\Program\Filament\Hub\FacultyPrograms;
+use Modules\Program\Filament\Parts\DepartmentProgramsPart;
+use Modules\Program\Filament\Parts\FacultyProgramsPart;
 use Modules\Program\Filament\ProgramPlugin;
 use Modules\Program\Metrics\IndustryExpertCount;
 use Modules\Program\Metrics\MajorCount;
@@ -40,7 +40,7 @@ final class ProgramExtension implements ModuleExtension
         $r->homepageSection(ProgramsByLevelSection::class);
         $r->searchable(Program::class, label: 'program::program.plural', weight: 9);
         $r->sitemap(Program::class);
-        $r->entityPage(Department::class, DepartmentPrograms::class);   // Hubs (FR-GEN-86)
-        $r->entityPage(Faculty::class, FacultyPrograms::class);
+        $r->entityFormPart(Department::class, DepartmentProgramsPart::class);   // editors' "Programs" (read only)
+        $r->entityFormPart(Faculty::class, FacultyProgramsPart::class);
     }
 }

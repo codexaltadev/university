@@ -3,6 +3,7 @@
 namespace Modules\Page;
 
 use Modules\Page\Filament\PagePlugin;
+use Modules\Page\Filament\Resources\Pages\PageResource;
 use Modules\Page\Freshness\PageFreshness;
 use Modules\Page\Models\Page;
 use Platform\Contracts\ModuleExtension;
@@ -17,6 +18,7 @@ final class PageExtension implements ModuleExtension
     public function register(Registrar $r): void
     {
         $r->filamentPlugin(PagePlugin::class);
+        $r->micrositeTool(PageResource::class);   // "Microsite" button (UI/UX Part A §4.1)
         $r->menuItemType(Page::class);   // menus can link pages
         $r->sitemap(Page::class);        // sitemap.xml (FR-SEO-02)
         $r->searchable(Page::class, label: 'page::page.search_group', weight: 6);   // website search (FR-SRCH-01)

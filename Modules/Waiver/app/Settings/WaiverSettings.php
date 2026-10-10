@@ -2,6 +2,7 @@
 
 namespace Modules\Waiver\Settings;
 
+use App\Models\User;
 use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Textarea;
 use Platform\Filament\Components\TranslatableTabs;
@@ -31,6 +32,12 @@ class WaiverSettings extends ModuleSettings
     public function translatable(): array
     {
         return ['disclaimer'];
+    }
+
+    /** The Waiver Office's ("Manage:WaiverSettings"), also in Academic › Waiver Calculator › Settings. */
+    public function canAccess(User $user): bool
+    {
+        return $user->isSuperAdmin() || $user->can('Manage:WaiverSettings');
     }
 
     public function schema(): array

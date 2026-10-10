@@ -24,6 +24,7 @@ class Registrar
         'entityTab' => 'entity_tabs',
         'entityPage' => 'entity_pages',
         'entityFormPart' => 'entity_form_parts',
+        'micrositeTool' => 'microsite_tools',
         'menuItemType' => 'menu_item_types',
         'vocabulary' => 'vocabularies',
         'metric' => 'metrics',
@@ -137,6 +138,15 @@ class Registrar
     public function entityFormPart(string $targetModel, string $partClass): static
     {
         return $this->add('entityFormPart', ['target' => $targetModel, 'class' => $partClass]);
+    }
+
+    /**
+     * A screen editing what a microsite owns (UI/UX Part A §4.1), e.g. micrositeTool(ManageMenus::class):
+     * it implements Platform\Context\MicrositeTool and appears in the entity editors' "Microsite" button.
+     */
+    public function micrositeTool(string $pageClass): static
+    {
+        return $this->add('micrositeTool', ['class' => $pageClass]);
     }
 
     public function menuItemType(string $model): static
