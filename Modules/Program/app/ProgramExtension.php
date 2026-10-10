@@ -27,7 +27,7 @@ final class ProgramExtension implements ModuleExtension
         $r->filamentPlugin(ProgramPlugin::class);
         $r->relationTarget(Program::class, parent: Department::class, parentKey: 'department_id');   // FR-PROG-02
         $r->scopeable(Program::class);                            // Program users; Faculty / Department users through the hierarchy
-        $r->micrositeEntity(Program::class, routePrefix: 'program', parent: Department::class, home: 'program::microsite.home');   // /program/{slug}
+        $r->micrositeEntity(Program::class, routePrefix: 'program', parent: Department::class, home: 'program::microsite.home');   // /{faculty}/{department}/{slug} (FR-GEN-34)
         $r->assignable(Program::class, roles: ['coordinator', 'officer', 'contact', 'industry_expert']);
         $r->vocabulary('program.level', label: 'Program level', multiple: false);   // FR-PROG-03
         $r->vocabulary('program.tag', label: 'Program tag');                         // FR-PROG-03a

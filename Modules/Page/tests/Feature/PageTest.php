@@ -80,7 +80,7 @@ it('puts an entity user\'s page on their microsite (AC-PAGE-01, FR-PAGE-05)', fu
         ->call('create')
         ->assertHasNoFormErrors();
 
-    expect(Page::first()->url('en'))->toBe('/test-dept/cse/lab-facilities');
+    expect(Page::first()->url('en'))->toBe('/engineering/cse/lab-facilities');
 });
 
 it('lists only the pages of the user\'s entities', function () {

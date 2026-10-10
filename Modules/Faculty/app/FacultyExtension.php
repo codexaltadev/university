@@ -20,7 +20,7 @@ final class FacultyExtension implements ModuleExtension
         $r->filamentPlugin(FacultyPlugin::class);
         $r->relationTarget(Faculty::class);                       // top of the hierarchy (FR-FAC-02)
         $r->scopeable(Faculty::class);                            // Faculty users
-        $r->micrositeEntity(Faculty::class, routePrefix: 'faculty', home: 'faculty::microsite.home');   // /faculty/{slug}
+        $r->micrositeEntity(Faculty::class, routePrefix: 'faculties', home: 'faculty::microsite.home');   // /faculties/{slug}; its departments at /{slug}/… (FR-GEN-34)
         $r->assignable(Faculty::class, roles: ['dean', 'associate_dean', 'officer', 'contact']);        // FR-FAC-03
         $r->metric('faculty.count', FacultyCount::class);
         $r->layouts('faculty.listing', ['grid', 'list', 'card']);  // FR-FAC-07

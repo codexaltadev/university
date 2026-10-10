@@ -156,21 +156,22 @@ it('migrates academic faculties and departments, keeping old addresses and leavi
 
     expect(Faculty::query()->pluck('short_name')->all())->toBe(['FSIT']);
     $fsit = Faculty::query()->sole();
-    expect($fsit->url())->toBe('/faculty/fsit')
+    expect($fsit->url())->toBe('/faculties/fsit')
         ->and($fsit->getTranslation('overview', 'en'))->toBe('<p>Computing at DIU.</p>');
 
     expect(Department::query()->orderBy('sort_order')->pluck('short_name')->all())->toBe(['CSE', 'SWE'])    // not the deleted one, not the registrar
         ->and(Department::query()->where('short_name', 'SWE')->sole()->external_url)->toBe('https://swe.daffodilvarsity.edu.bd')
-        ->and(Department::query()->where('short_name', 'CSE')->sole()->url())->toBe('/department/cse');
+        ->and(Department::query()->where('short_name', 'CSE')->sole()->url())->toBe('/fsit/cse');
 
-    $this->get('/department/cse')->assertOk()->assertSee('CSE about.');
+    $this->get('/fsit/cse')->assertOk()->assertSee('CSE about.');
+    $this->get('/department/cse')->assertRedirect('/fsit/cse');   // DIU's old address (FR-GEN-36)
 });
 
 it('migrates programs with level, tag, eligibility, counters and their parts (S02, S06)', function () {
     $this->artisan('legacy:migrate', ['--all' => true, '--no-report' => true])->assertSuccessful();
 
     $swe = Program::findBySlug('bsc-in-swe', 'en')[0];
-    expect($swe->url())->toBe('/program/bsc-in-swe')
+    expect($swe->url())->toBe($swe->department->url().'/bsc-in-swe')
         ->and((float) $swe->total_credits)->toBe(147.0)
         ->and((float) $swe->duration_years)->toBe(4.0)
         ->and($swe->total_terms)->toBe(12)
@@ -210,7 +211,8 @@ it('migrates programs with level, tag, eligibility, counters and their parts (S0
         ->and($variants[0]->relatedProgram->slug())->toBe('msc-in-swe')
         ->and($variants[1]->related_program_id)->toBeNull();                                    // pointing at itself
 
-    $this->get('/program/bsc-in-swe')->assertOk()->assertSee('Build software.')->assertSee('Data Science')->assertSee('Ayesha Rahman');
+    $this->get('/program/bsc-in-swe')->assertRedirect($swe->url());   // the old form (FR-GEN-36)
+    $this->get($swe->url())->assertOk()->assertSee('Build software.')->assertSee('Data Science')->assertSee('Ayesha Rahman');
 });
 
 it('migrates tuition fees with DIU\'s totals, lines, ranges and labels (S07)', function () {

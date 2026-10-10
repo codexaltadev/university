@@ -46,7 +46,7 @@ it('creates a faculty with its address and its own counters (FR-FAC-01/04)', fun
         ->assertHasNoFormErrors();
 
     $fbe = Faculty::query()->where('short_name', 'FBE')->sole();
-    expect($fbe->url())->toBe('/faculty/fbe')
+    expect($fbe->url())->toBe('/faculties/fbe')
         ->and($fbe->getTranslation('name', 'bn'))->toBe('ব্যবসায় ও উদ্যোক্তা অনুষদ');
 
     $set = StatSet::query()->ownedBy($fbe->getMorphClass().':'.$fbe->id)->sole();

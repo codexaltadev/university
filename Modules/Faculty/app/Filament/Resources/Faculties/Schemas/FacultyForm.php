@@ -45,7 +45,7 @@ class FacultyForm
                         TextInput::make('short_name')->label(__('faculty::faculty.fields.short_name'))
                             ->required()->maxLength(30)->disabled($profileOnly)
                             ->unique(ignoreRecord: true, modifyRuleUsing: fn (Unique $rule) => $rule->whereNull('deleted_at')),
-                        WebAddressField::make(prefix: '/faculty/')->disabled($profileOnly),
+                        WebAddressField::forMicrosite(Faculty::class)->disabled($profileOnly),
                         TextInput::make('email')->label(__('faculty::faculty.fields.email'))->email()->maxLength(191),
                         TextInput::make('phone')->label(__('faculty::faculty.fields.phone'))->tel()->maxLength(50),
                         Toggle::make('show_in_listing')->label(__('faculty::faculty.fields.show_in_listing'))

@@ -26,6 +26,11 @@ return [
     'until' => 'Until',
     'web_address' => 'Web address',
     'web_address_help' => 'Made from the title; change it here. The old address keeps working.',
+    'home' => 'Home',
+    'breadcrumb' => 'Breadcrumb',
+    'address_reserved' => 'The address ":address" is used by the website itself; choose another.',
+    'address_taken_page' => 'A page already has the address ":address" here; choose another.',
+    'address_taken_entity' => '":address" is already the address of a faculty, department, program or lab; choose another.',
     'fallback' => [
         'uses' => 'This place has none of its own here; it uses :owner\'s.',
         'none' => 'Nothing set here yet; the theme\'s default is shown.',

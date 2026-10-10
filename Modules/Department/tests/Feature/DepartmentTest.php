@@ -69,7 +69,7 @@ it('creates a department under a Faculty with its address and its own counters (
         ->assertHasNoFormErrors();
 
     $swe = Department::query()->where('short_name', 'SWE')->sole();
-    expect($swe->url())->toBe('/department/swe')
+    expect($swe->url())->toBe('/'.$this->fsit->slug('en').'/swe')   // under its Faculty (FR-GEN-34)
         ->and($swe->faculty->is($this->fsit))->toBeTrue();
 
     $set = StatSet::query()->ownedBy($swe->getMorphClass().':'.$swe->id)->sole();

@@ -132,7 +132,7 @@ class ProgramForm
                     ->required(),
                 TextInput::make('short_name')->label(__('program::program.fields.short_name'))
                     ->required()->maxLength(50)->disabled($profileOnly),
-                WebAddressField::make(prefix: '/program/')->disabled($profileOnly),
+                WebAddressField::forMicrosite(Program::class, parentField: 'department_id')->disabled($profileOnly),
                 TermSelect::make('tags')->vocabulary('program.tag')->columnSpanFull(),
             ]),
             Section::make(__('program::program.sections.media'))->compact()->columns(2)->schema([

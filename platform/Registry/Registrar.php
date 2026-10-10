@@ -87,9 +87,13 @@ class Registrar
      * the microsite homepage until the entity builds its own (FR-FAC-06), e.g.
      * 'faculty::microsite.home' (gets $entity and $context).
      */
-    public function micrositeEntity(string $model, string $routePrefix, ?string $parent = null, ?string $home = null): static
+    /**
+     * A microsite entity (SRS FR-GEN-34): its URL is "/{routePrefix}/{slug}" without a parent,
+     * else under the parent's — "/fsit/cse", or with a $childSegment "/fsit/cse/lab/robotics".
+     */
+    public function micrositeEntity(string $model, string $routePrefix, ?string $parent = null, ?string $home = null, ?string $childSegment = null): static
     {
-        return $this->add('micrositeEntity', compact('model', 'routePrefix', 'parent', 'home'));
+        return $this->add('micrositeEntity', compact('model', 'routePrefix', 'parent', 'home', 'childSegment'));
     }
 
     /** Model implements Platform\Contracts\HasEntityPermissions (subject, actions, label). */

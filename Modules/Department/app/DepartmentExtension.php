@@ -22,7 +22,7 @@ final class DepartmentExtension implements ModuleExtension
         $r->filamentPlugin(DepartmentPlugin::class);
         $r->relationTarget(Department::class, parent: Faculty::class, parentKey: 'faculty_id');   // FR-DEPT-02
         $r->scopeable(Department::class);                         // Department users; Faculty users through the hierarchy
-        $r->micrositeEntity(Department::class, routePrefix: 'department', parent: Faculty::class, home: 'department::microsite.home');   // /department/{slug}
+        $r->micrositeEntity(Department::class, routePrefix: 'department', parent: Faculty::class, home: 'department::microsite.home');   // /{faculty}/{slug}; DIU's /department/{slug} redirects (FR-GEN-34)
         $r->assignable(Department::class, roles: ['head', 'coordinator', 'officer', 'contact', 'industry_expert']);                     // FR-DEPT-03
         $r->metric('department.count', DepartmentCount::class);
         $r->layouts('department.listing', ['grid', 'list', 'card']);   // FR-DEPT-09

@@ -57,7 +57,7 @@ class DepartmentForm
                         TextInput::make('short_name')->label(__('department::department.fields.short_name'))
                             ->required()->maxLength(30)->disabled($profileOnly)
                             ->unique(ignoreRecord: true, modifyRuleUsing: fn (Unique $rule, Get $get) => $rule->where('faculty_id', $get('faculty_id'))->whereNull('deleted_at')),   // BRL-DEPT-01
-                        WebAddressField::make(prefix: '/department/')->disabled($profileOnly),
+                        WebAddressField::forMicrosite(Department::class, parentField: 'faculty_id')->disabled($profileOnly),
                         TextInput::make('external_url')->label(__('department::department.fields.external_url'))
                             ->url()->maxLength(2048)->helperText(__('department::department.help.external_url')),
                         TextInput::make('email')->label(__('department::department.fields.email'))->email()->maxLength(191),

@@ -4,9 +4,13 @@ namespace Platform\Filament\Components;
 
 use Closure;
 use Filament\Forms\Components\TextInput;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Platform\Context\MicrositeResolver;
+use Platform\Context\UrlRules;
 use Platform\Localization\Languages;
+use Platform\Scope\UserScopeFilter;
 
 /**
  * Web address of a record with a frontend page (FR-GEN-30/32, UI/UX Part A §6):
@@ -15,6 +19,7 @@ use Platform\Localization\Languages;
  * Needs HasSlug on the model.
  *
  *     WebAddressField::make(prefix: fn (Get $get, ?Model $record): string => '/news/')
+ *     WebAddressField::forMicrosite(Department::class, parentField: 'faculty_id')   // "/fsit/" in front, clashes refused
  */
 class WebAddressField
 {
@@ -43,5 +48,43 @@ class WebAddressField
                     $record->changeSlug($locale, $state);
                 }
             });
+    }
+
+    /**
+     * A microsite entity's address (SRS FR-GEN-34/35): the parent's path in front
+     * ("/faculties/", "/fsit/", "/fsit/cse/lab/"), reserved words and taken addresses refused.
+     *
+     * @param  class-string<Model>  $model
+     */
+    public static function forMicrosite(string $model, ?string $parentField = null): TextInput
+    {
+        return static::make(prefix: fn (Get $get): string => static::micrositePrefix($model, $parentField ? $get($parentField) : null))
+            ->rules([fn (?Model $record): Closure => function (string $attribute, mixed $value, Closure $fail) use ($model, $record): void {
+                if (filled($value) && ($record === null || Str::slug($value) !== $record->slug(app(Languages::class)->default()))
+                    && ($message = UrlRules::entityClash($model, (string) $value, $record))) {
+                    $fail($message);
+                }
+            }]);
+    }
+
+    /** @param class-string<Model> $model */
+    protected static function micrositePrefix(string $model, mixed $parentId): string
+    {
+        $resolver = app(MicrositeResolver::class);
+        $entry = $resolver->entities()[$model] ?? null;
+        if ($entry === null) {
+            return '/';
+        }
+
+        $parent = $entry['parent'] && filled($parentId)
+            ? UserScopeFilter::withoutScope(fn () => $entry['parent']::query()->find($parentId))
+            : null;
+
+        if ($parent === null) {
+            return "/{$entry['routePrefix']}/";
+        }
+
+        return rtrim((string) $resolver->basePathFor($parent, app(Languages::class)->default()), '/')
+            .($entry['childSegment'] ? "/{$entry['childSegment']}" : '').'/';
     }
 }

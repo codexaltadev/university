@@ -10,6 +10,7 @@ use Platform\Context\FallbackResolver;
 use Platform\Context\MicrositeResolver;
 use Platform\Context\MicrositeSetting;
 use Platform\Context\SiteContext;
+use Platform\Hierarchy\EntityHierarchy;
 use Platform\Slugs\Slug;
 use Tests\Fixtures\Models\FixtureChild;
 
@@ -68,30 +69,44 @@ it('gives every language a unique slug and keeps old slugs as history', function
 
 // ─── Microsite context (§6.1) ──────────────────────────────────────────────
 
-it('turns a public URL into a microsite context', function () {
+it('turns a public URL into a microsite context, down the hierarchy (FR-GEN-34)', function () {
     $resolve = fn (string $path) => app(MicrositeResolver::class)->resolve($path, 'en');
 
-    $result = $resolve('/test-dept/cse/news/convocation-2026');
+    expect(app(MicrositeResolver::class)->urlFor($this->engineering, 'en'))->toBe('/test-faculty/engineering')   // top entity: its prefix
+        ->and(app(MicrositeResolver::class)->urlFor($this->cse, 'en'))->toBe('/engineering/cse');              // child: under the parent's slug
+
+    $result = $resolve('/engineering/cse/news/convocation-2026');
     expect($result['context']->entity->is($this->cse))->toBeTrue()
         ->and($result['rest'])->toBe('news/convocation-2026')
         ->and($result['redirect'])->toBeNull();
 
     expect($resolve('/bn/test-faculty/engineering')['context']->entity->is($this->engineering))->toBeTrue()
+        ->and($resolve('/test-faculty'))->toMatchArray(['rest' => 'test-faculty'])                             // the listing
         ->and($resolve('/news/x'))->toMatchArray(['rest' => 'news/x'])
         ->and($resolve('/news/x')['context']->isMicrosite())->toBeFalse()
-        ->and($resolve('/test-dept/nothing'))->toBeNull();
+        ->and($resolve('/test-faculty/nothing'))->toBeNull();
 
     $this->eee->deactivate();
-    expect($resolve('/test-dept/eee'))->toBeNull();   // inactive microsite → 404
+    expect($resolve('/engineering/eee'))->toBeNull()                        // inactive microsite → 404
+        ->and($resolve('/test-dept/eee'))->toBeNull();
+
+    $this->engineering->deactivate();
+    expect($resolve('/engineering/cse'))->toBeNull();                       // an inactive parent hides its children
 });
 
-it('an old slug resolves with a 301 target to the current URL', function () {
+it('redirects to the canonical URL: old slug, the top entity alone, a moved child, the old prefix form (FR-GEN-32/36)', function () {
+    $resolve = fn (string $path) => app(MicrositeResolver::class)->resolve($path, 'en');
+
     $this->cse->changeSlug('en', 'Computer Science');
+    expect($resolve('/en/engineering/cse/notices')['redirect'])->toBe('/en/engineering/computer-science/notices')
+        ->and($resolve('/engineering')['redirect'])->toBe('/test-faculty/engineering')                      // "/fsit" → "/faculties/fsit"
+        ->and($resolve('/engineering/about')['redirect'])->toBe('/test-faculty/engineering/about')
+        ->and($resolve('/test-dept/computer-science/notices')['redirect'])->toBe('/engineering/computer-science/notices');   // DIU's "/department/cse"
 
-    $result = app(MicrositeResolver::class)->resolve('/en/test-dept/cse/notices', 'en');
-
-    expect($result['redirect'])->toBe('/en/test-dept/computer-science/notices')
-        ->and(app(MicrositeResolver::class)->urlFor($this->cse, 'en'))->toBe('/test-dept/computer-science');
+    $science = faculty('Science');
+    $this->cse->update(['parent_id' => $science->id]);
+    app(EntityHierarchy::class)->flush();
+    expect($resolve('/engineering/computer-science/notices')['redirect'])->toBe('/science/computer-science/notices');   // moved: 301 to where it is now
 });
 
 it('a context knows its chain: entity, ancestors, main site', function () {

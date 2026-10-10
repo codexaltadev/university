@@ -115,4 +115,26 @@ return [
 
     /* Main Site pseudo-target in core_relations: ("site", 0) means "published on the main site" (ADR-15). */
     'main_site' => ['type' => 'site', 'id' => 0],
+
+    /*
+    | Website addresses (SRS FR-GEN-34/35). A top entity's slug opens its children's URLs
+    | ("/fsit/cse"), so it may not be one of the main site's own first segments; inside a
+    | microsite, a child's slug may not be one of the microsite's section paths. Locales and
+    | microsite route prefixes are added automatically; a main site page or child slug that
+    | is taken is checked separately (Platform\Context\UrlRules).
+    */
+    'reserved_paths' => [
+        'admin', 'api', 'livewire', 'storage', 'media', 'build', 'themes', 'filament', 'up',
+        'search', 'sitemap.xml', 'robots.txt', 'feed',
+        'faculties', 'departments', 'programs', 'offices', 'labs', 'office', 'lab',
+        'news', 'notices', 'events', 'gallery', 'downloads', 'faq', 'contact',
+        'admission', 'tuition-fees', 'waiver-calculator', 'scholarships', 'academic-calendar',
+        'faculty-members', 'administration', 'leadership', 'committees', 'alumni', 'transport',
+        'facilities', 'rankings', 'international', 'csr', 'partners', 'courses', 'curriculum',
+    ],
+    'reserved_microsite_paths' => [
+        'news', 'notices', 'events', 'gallery', 'downloads', 'faq', 'contact', 'search',
+        'faculty-members', 'people', 'programs', 'courses', 'curriculum', 'labs', 'lab',
+        'committees', 'achievements', 'publications', 'research', 'tuition-fees', 'admission',
+    ],
 ];

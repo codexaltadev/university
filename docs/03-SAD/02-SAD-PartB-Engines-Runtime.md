@@ -286,7 +286,9 @@ v1.1 (FR-GEN-34): প্রতিটি microsite entity একটি URL patter
   Program   {parent}/{slug}           Lab        {parent}/lab/{slug}  (parent না থাকলে lab/{slug})
   Office    office/{slug}
 Resolver বাম থেকে ডানে: স্থির prefix (faculties, office, lab) → Faculty slug → তার Department → Program বা lab/{slug};
-যতটুকু মেলে সেটাই entity, বাকিটা ভেতরের path। প্রতিটি ধাপে parent মিলতে হবে (অন্য Faculty-র department → 404 বা 301)।
+যতটুকু মেলে সেটাই entity, বাকিটা ভেতরের path। প্রতিটি ধাপে আগে এই parent-এর child খোঁজা হয়, না পেলে অন্য parent-এর (সরানো entity)।
+তারপর requested path ও canonical URL তুলনা: আলাদা হলে 301 — পুরনো slug, সরানো entity, `/fsit` একা, entity-র নিজের route prefix-এর পুরনো রূপ (`/department/cse`, `/department/cse/program/x`, `/program/x` — DIU-র URL)।
+*(বাস্তবায়ন 3.5c, 2026-10-10)* `MicrositeResolver` (`entities()`, `roots()`, `urlFor()`, `basePathFor()`, `ancestors()`), `micrositeEntity(…, childSegment:)`, `Platform\Context\UrlRules` (FR-GEN-35: `config('platform.reserved_paths' / 'reserved_microsite_paths')`, page lookup `UrlRules::pagesUsing()` Page module থেকে), `WebAddressField::forMicrosite()` (prefix `/fsit/`, clash rule), `Platform\Context\Breadcrumbs` + theme partial `breadcrumb` (BreadcrumbList JSON-LD)।
 
 MicrositeContext = { entity: department:12, chain: [department:12, faculty:3, site] }
 ```

@@ -26,6 +26,11 @@ return [
     'until' => 'পর্যন্ত',
     'web_address' => 'Web ঠিকানা',
     'web_address_help' => 'শিরোনাম থেকে তৈরি; এখানে বদলানো যায়। পুরনো ঠিকানাও কাজ করবে।',
+    'home' => 'হোম',
+    'breadcrumb' => 'Breadcrumb',
+    'address_reserved' => '":address" ঠিকানাটি website নিজে ব্যবহার করে; অন্যটি দিন।',
+    'address_taken_page' => 'এখানে ":address" ঠিকানায় একটি page আছে; অন্যটি দিন।',
+    'address_taken_entity' => '":address" ইতিমধ্যে একটি faculty, department, program বা lab-এর ঠিকানা; অন্যটি দিন।',
     'fallback' => [
         'uses' => 'এখানে নিজের নেই; :owner-এরটা ব্যবহার হচ্ছে।',
         'none' => 'এখনো কিছু ঠিক করা নেই; theme-এর default দেখাবে।',

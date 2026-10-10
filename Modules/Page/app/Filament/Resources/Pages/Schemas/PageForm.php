@@ -2,6 +2,7 @@
 
 namespace Modules\Page\Filament\Resources\Pages\Schemas;
 
+use Closure;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -12,6 +13,7 @@ use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
 use Modules\Page\Blocks\PageBlocks;
 use Modules\Page\Models\Page;
+use Platform\Context\UrlRules;
 use Platform\Context\WorkingIn;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\PublishingPanel;
@@ -19,6 +21,7 @@ use Platform\Filament\Components\SeoPanel;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Filament\Components\WebAddressField;
 use Platform\Filament\Tables\ContentFilters;
+use Platform\Localization\Languages;
 
 /** Standard content form (UI/UX Part A §5.2): blocks per language left; publishing and page settings right. */
 class PageForm
@@ -52,7 +55,14 @@ class PageForm
                         Select::make('template')->label(__('page::page.fields.template'))
                             ->options(collect(Page::TEMPLATES)->mapWithKeys(fn (string $t): array => [$t => __("page::page.templates.{$t}")])->all())
                             ->default('default')->required()->selectablePlaceholder(false),
-                        WebAddressField::make(prefix: fn (Get $get, ?Page $record): string => static::addressPrefix($get, $record)),
+                        WebAddressField::make(prefix: fn (Get $get, ?Page $record): string => static::addressPrefix($get, $record))
+                            ->rules([fn (Get $get, ?Page $record): Closure => function (string $attribute, mixed $value, Closure $fail) use ($get, $record): void {
+                                // FR-GEN-35: a top-level page's address may not be an entity's under the same owner
+                                if (filled($value) && blank($get('parent_id')) && ($record === null || Str::slug($value) !== $record->slug(app(Languages::class)->default()))
+                                    && ($message = UrlRules::pageClash($get('owner_key') ?: 'site:0', (string) $value))) {
+                                    $fail($message);
+                                }
+                            }]),
                     ]),
                     Section::make(__('page::page.sections.files'))->compact()->schema([
                         MediaPicker::make('featured_image')->label(__('page::page.fields.featured_image'))->image(),

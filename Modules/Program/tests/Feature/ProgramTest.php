@@ -130,7 +130,7 @@ it('creates a program under a Department with level, tags and its own counters (
         ->assertHasNoFormErrors();
 
     $msc = Program::query()->where('short_name', 'MSc CSE')->sole();
-    expect($msc->url())->toBe('/program/msc-cse')
+    expect($msc->url())->toBe($msc->department->url().'/msc-cse')   // under its Department (FR-GEN-34)
         ->and($msc->faculty()->is($this->fsit))->toBeTrue()                         // from the Department
         ->and($msc->level->getTranslation('name', 'en'))->toBe('Graduate')
         ->and($msc->termIdsIn('program.tag'))->toBe([$dual->id])
