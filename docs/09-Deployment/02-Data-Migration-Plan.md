@@ -137,7 +137,7 @@ Dependency অনুযায়ী — আগের ধাপের id পর�
 | S12 | Assignment | `contacts`, `coordination_officers`, `office_admins`, `support_contacts`, `section_employees`, `facilitators` | DB-04 §11.1 | — |
 | S13 | Committee | `committee_categories`, `committees`, `lab_committees` | DB-04 §11.1 | — |
 | S14 | Lab | `lab_facilities`, `lab_tools`, scopes, projects, products, `lab_mid_sections` | DB-06 §13 | — |
-| S15 | Page ও Menu | `*_articles`, `articles`, `registrar_offices`, `proctor_offices`, `*_menus`, `side_menus` | DB-02 §18 | — |
+| S15 | Page ও Menu | *(department অংশ তৈরি 2026-10-10, step `S15D`: `department_articles` → department-এর page (slug রাখা), `department_menus` → department-এর primary menu; module link → সেই module-এর ভবিষ্যৎ page-এর link, module না থাকা পর্যন্ত inactive — module এলে step আবার চালালে চালু; program-গুলোর menu "inherit" (department-এর menu))* `*_articles`, `articles`, `registrar_offices`, `proctor_offices`, `*_menus`, `side_menus` | DB-02 §18 | — |
 | S16 | Notice, Event | `notices`, `notice_files`, `events`, `event_images` | DB-05 §18 | — |
 | S17 | Gallery, Slider, Documents, FAQ, Testimonial, Widget | `gallery_*`, `lab_galleries`, `documentaries`, `lecture_series`, `sliders`, `cover_photos`, `flipbooks`, `prospectuses`, `charter_guidebooks`, `policies`, `faqs`, `accordions`, `testimonials`, `greetings`, `news_tickers`, `countdown_timers` | DB-05 §18 | Flipbook PDF (৭.৭) |
 | S18 | Services | Transport, `facilities`, accreditation, rankings, international, `visitors`, `csrs`, `mps`, `discount_partners` | DB-06 §13 | Ranking parse, country, mps (৭.৮) |
