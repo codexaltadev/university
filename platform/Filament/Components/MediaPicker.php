@@ -38,7 +38,7 @@ class MediaPicker extends Select
         $this->searchable()
             ->allowHtml()
             ->dehydrated(fn (MediaPicker $component): bool => $component->storesIds)
-            ->options(fn (MediaPicker $component): array => $component->labels($component->query()->latest('id')->limit(30)->get()))
+            ->options(fn (MediaPicker $component): array => $component->recentOptions())
             ->getSearchResultsUsing(fn (MediaPicker $component, string $search): array => $component->labels($component->query()
                 ->where(fn (Builder $q) => $q->where('title', 'like', "%{$search}%")
                     ->orWhereHas('media', fn (Builder $m) => $m->where('file_name', 'like', "%{$search}%")))
@@ -112,6 +112,25 @@ class MediaPicker extends Select
         return $ids === [] ? [] : MediaItem::query()->whereKey($ids)->get()
             ->filter(fn (MediaItem $item): bool => blank($item->getTranslation('alt_text', app(Languages::class)->default(), false)))
             ->pluck('id')->all();
+    }
+
+    /**
+     * The latest 30 files, once per request: a list of items (a program's facilitators …)
+     * has a picker in every row.
+     *
+     * @return array<int, string>
+     */
+    public function recentOptions(): array
+    {
+        $key = 'media-picker.recent.'.($this->onlyImages ? 'images' : 'all');
+        $cached = request()->attributes->get($key);
+
+        if (! is_array($cached)) {
+            $cached = $this->labels($this->query()->latest('id')->limit(30)->get());
+            request()->attributes->set($key, $cached);
+        }
+
+        return $cached;
     }
 
     public function query(): Builder

@@ -44,7 +44,9 @@ it('lets the Admission Office manage the program\'s tuition from the Hub', funct
     $office = makeUser(['ViewAny:Program', 'View:Program', 'ViewAny:Tuition', 'View:Tuition', 'Create:Tuition', 'Update:Tuition']);   // no scope: every program
     $this->actingAs($office);
 
-    $this->get(ProgramResource::getUrl('edit', ['record' => $this->bsc]))->assertForbidden();             // the profile stays Update:Program
+    $this->get(ProgramResource::getUrl('edit', ['record' => $this->bsc]))->assertForbidden();             // the editor stays Update:Program
+    $this->get(ProgramResource::getUrl('view', ['record' => $this->bsc]))->assertOk()                     // read only, with the Hub
+        ->assertSee(ProgramTuitions::getUrl(['record' => $this->bsc]), false);
 
     $this->get(ProgramTuitions::getUrl(['record' => $this->bsc]))->assertOk()
         ->assertSeeInOrder(['Fees', 'Tuition Fees'])

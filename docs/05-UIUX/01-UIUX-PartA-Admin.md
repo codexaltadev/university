@@ -4,9 +4,9 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | UI/UX Part A: Admin Panel |
-| Version | 1.1 — v1.0 confirmed 2026-10-08; v1.1: Entity Hub (§4.3), Tuition Fees / Waiver Calculator sub-menu (§3), Admission / Waiver Office role (§2) |
+| Version | 1.2 — v1.0 confirmed 2026-10-08; v1.1: Entity Hub (§4.3), Tuition Fees / Waiver Calculator sub-menu (§3), Admission / Waiver Office role (§2); v1.2: Program Editor — সব অংশ এক page-এ, ধাপে ধাপে (§5.2.1) |
 | Date | 2026-10-10 |
-| Status | ✔ Confirmed — v1.1 approved 2026-10-10 |
+| Status | ✔ Confirmed — v1.1 approved 2026-10-10; v1.2 (Program Editor) approved 2026-10-10 |
 | Based on | BRD v1.7, SRS v1.0, SAD Part A / B, DB-01 থেকে DB-06 |
 | পাঠক | UI developer, Filament developer, tester, training team |
 
@@ -211,7 +211,7 @@ Faculties › Faculty of Science & IT (FSIT)                [ View microsite ↗
 |---|---|
 | Faculty | Overview, Profile, People (Faculty) · Departments (Department) · Programs (Program) · Menu, Header & Footer, Homepage, Pages, Statistics, SEO (core) · Activity · পরে: News / Events / Notices "shown in" (content module) |
 | Department | Overview, Profile, People · Programs (Program) · microsite অংশ (core) · Activity · পরে: Faculty Members, Courses, Labs |
-| Program | group করে: **Program** — Profile, People · **Program page** — Majors, Career & Industry, Facilitators, Materials, Memberships, Options (এখনকার form-এর নিচের list এখানে আলাদা অংশ) · **Fees** — Tuition Fees (edit: Admission Office / Admin; বাকিরা read-only), Waiver rules (**শুধু দেখা**: এই program-এ প্রযোজ্য rule; edit কেবল Waiver Calculator sub-menu-তে, কারণ একটি rule অনেক program-এ প্রযোজ্য) · **Microsite** — core অংশ · Overview ও Activity · পরে: Curriculum, Courses, Admission |
+| Program | group করে: **Program** — Profile = Program Editor (§5.2.1: Basic info থেকে SEO পর্যন্ত সব অংশ ও sub-item list এক page-এ, ধাপে ধাপে; v1.2-এ আলাদা Hub অংশ থেকে সরানো হয়েছে) · **Fees** — Tuition Fees (edit: Admission Office / Admin; বাকিরা read-only), Waiver rules (**শুধু দেখা**: এই program-এ প্রযোজ্য rule; edit কেবল Waiver Calculator sub-menu-তে, কারণ একটি rule অনেক program-এ প্রযোজ্য) · **Microsite** — core অংশ · Overview ও Activity · পরে: Curriculum, Courses, Admission |
 | Office / Lab | Overview, Profile, People · microsite অংশ (core) · Activity · পরে: service, team ইত্যাদি |
 
 নিয়ম:
@@ -295,6 +295,37 @@ Faculties › Faculty of Science & IT (FSIT)                [ View microsite ↗
 | Save ▾ | Save · Save & create another · Save & view | — |
 | অসংরক্ষিত পরিবর্তন | Page ছাড়ার আগে সতর্কতা | FR-GEN-84 |
 | Web address | Title থেকে automatic; "Edit web address" link-এ খোলে | FR-GEN-30 |
+
+#### 5.2.1 Program Editor (v1.2)
+
+অনেক অংশওয়ালা entity-র তথ্য (Program) **এক জায়গায়, ধাপে ধাপে** নেওয়া হয়, যাতে editor কোনো অংশ খুঁজে না পেয়ে বাদ না দেয়।
+
+```
+নতুন Program (Wizard, প্রথম ধাপ ছাড়া বাকিগুলো skip করা যায়):
+① Basic info → ② Program details → ③ Eligibility → ④ Majors → ⑤ Program options
+→ ⑥ Career & industry → ⑦ Facilitators & people → ⑧ Materials & memberships → ⑨ Summary & SEO   [Create]
+
+Edit (বাম দিকে অংশ, উপরে "7-টির মধ্যে 5-টি অংশ পূরণ হয়েছে"):
+┌──────────────────────────┬──────────────────────────────────────┐
+│ Basic info            !  │  (অংশের form; list হলে উপরে intro,   │
+│ Program details       ✓  │   তারপর item-গুলো + "Add …")          │
+│ Eligibility           ✓  │                                      │
+│ Majors                3  │                                      │
+│ Program options       0  │                                      │
+│ Career & industry    40  │                                      │
+│ Facilitators & people 18 │                                      │
+│ Materials & membership 2 │                                      │
+│ Summary & SEO            │                    [Save changes]    │
+└──────────────────────────┴──────────────────────────────────────┘
+```
+
+| বিষয় | নিয়ম |
+|---|---|
+| অংশ | একই ৯টি অংশ Create-এ wizard step, Edit / View-এ বাম দিকের tab (`?part=` link-এ থাকে); সব অংশ একবারে save |
+| Sub-item | Major, Career Path, Industry, Facilitator, Material, Membership, Option — নিজের অংশের ভেতরে list (ক্রম drag করে, item collapse হয়ে নাম দেখায়); অংশের উপরে ঐচ্ছিক intro text |
+| অবস্থা | ✓ পূরণ, ! বাকি (Basic info: ছবি; Details: summary ও credit; Eligibility: সাধারণ যোগ্যতা), list-এ item-এর সংখ্যা; Options ও SEO ঐচ্ছিক, হিসাবে নেই |
+| কে কী | Admin সব; Program / Department / Faculty user (scope-এ) সব অংশ edit, কিন্তু Department, নাম, short name, address, active নয় (BRL-PROG-02); শুধু View permission (Admission / Waiver Office) — একই page read-only, Hub-এর অন্য অংশে (Fees) সেখান থেকে যায় |
+| অন্য module | Fees (Tuition Fees, Waiver rules) ও পরে Testimonials, Facilities, Accreditations Hub-এর আলাদা অংশ (§4.3), কারণ সেগুলো অন্য office দেখে |
 
 ### 5.3 Confirmation ও Feedback
 

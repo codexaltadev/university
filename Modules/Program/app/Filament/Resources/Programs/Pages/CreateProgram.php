@@ -3,13 +3,18 @@
 namespace Modules\Program\Filament\Resources\Programs\Pages;
 
 use Filament\Resources\Pages\CreateRecord;
+use Filament\Resources\Pages\CreateRecord\Concerns\HasWizard;
 use Livewire\Attributes\Locked;
 use Modules\Department\Models\Department;
 use Modules\Program\Filament\Hub\DepartmentPrograms;
 use Modules\Program\Filament\Resources\Programs\ProgramResource;
+use Modules\Program\Filament\Resources\Programs\Schemas\ProgramForm;
 
+/** A new program, step by step (UI/UX Part A §5.2 v1.2): the editor's parts as a wizard; any step but the first may be skipped. */
 class CreateProgram extends CreateRecord
 {
+    use HasWizard;
+
     protected static string $resource = ProgramResource::class;
 
     /** Opened from a Department Hub (?department=12): that Department, fixed; back to the Hub after saving. */
@@ -26,6 +31,16 @@ class CreateProgram extends CreateRecord
         parent::mount();
     }
 
+    public function getSteps(): array
+    {
+        return ProgramForm::steps();
+    }
+
+    protected function hasSkippableSteps(): bool
+    {
+        return true;
+    }
+
     protected function mutateFormDataBeforeCreate(array $data): array
     {
         if ($this->hubDepartment) {
@@ -39,6 +54,6 @@ class CreateProgram extends CreateRecord
     {
         return $this->hubDepartment
             ? DepartmentPrograms::getUrl(['record' => $this->hubDepartment])
-            : parent::getRedirectUrl();
+            : ProgramResource::getUrl('edit', ['record' => $this->getRecord()]);
     }
 }

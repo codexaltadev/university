@@ -9,7 +9,9 @@ use Filament\Support\Icons\Heroicon;
 use Modules\Program\Filament\Resources\Programs\ProgramResource;
 use Modules\Program\Filament\Resources\Programs\Schemas\ProgramForm;
 use Modules\Program\Models\Program;
+use Modules\Program\Support\ProgramChecklist;
 
+/** The Program editor (UI/UX Part A §5.2 v1.2): every part as a tab on the left, with what is filled in. */
 class EditProgram extends EditRecord
 {
     protected static string $resource = ProgramResource::class;
@@ -23,6 +25,16 @@ class EditProgram extends EditRecord
     public static function getNavigationGroup(): ?string
     {
         return __('program::program.hub.program');
+    }
+
+    public function getSubheading(): ?string
+    {
+        return static::progressText($this->getRecord());
+    }
+
+    public static function progressText(Program $program): string
+    {
+        return __('program::program.progress', ProgramChecklist::progress($program));
     }
 
     protected function getHeaderActions(): array

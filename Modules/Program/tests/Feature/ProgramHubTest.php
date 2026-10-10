@@ -3,7 +3,8 @@
 /*
 | Entity Hubs (FR-GEN-86, UI/UX Part A §4.3): Department Hub › Programs (new program with
 | the Department preset and fixed), Faculty Hub › Programs (all of its departments'),
-| and the Program Hub with its grouped parts (Program, Program page).
+| and the Program editor: a new program step by step, an existing one part by part with
+| what is filled in (UI/UX Part A §5.2 v1.2).
 */
 
 use Filament\Facades\Filament;
@@ -15,8 +16,8 @@ use Modules\Faculty\Models\Faculty;
 use Modules\Program\Database\Factories\ProgramFactory;
 use Modules\Program\Filament\Hub\DepartmentPrograms;
 use Modules\Program\Filament\Hub\FacultyPrograms;
-use Modules\Program\Filament\Resources\Programs\Hub\ProgramMajors;
 use Modules\Program\Filament\Resources\Programs\Pages\CreateProgram;
+use Modules\Program\Filament\Resources\Programs\Pages\EditProgram;
 use Modules\Program\Filament\Resources\Programs\ProgramResource;
 use Modules\Program\Models\Program;
 use Platform\Modules\ModulePermissions;
@@ -69,14 +70,36 @@ it('gives the Faculty Hub every program of its departments, read here, made in a
         ->assertDontSee('/admin/programs/create', false);
 });
 
-it('groups the Program Hub: Program, Program page', function () {
+it('enters a new program step by step, its lists included, in one go', function () {
     $this->actingAs(superAdmin());
 
-    $this->get(ProgramResource::getUrl('edit', ['record' => $this->bscCse]))->assertOk()
-        ->assertSeeInOrder(['Profile', 'Program page', 'Majors &amp; Specializations', 'Career Paths', 'Industries', 'Facilitators', 'Learning Materials', 'Professional Memberships', 'Program Options'], false)
-        ->assertSee(ProgramMajors::getUrl(['record' => $this->bscCse]), false);
+    $this->get(ProgramResource::getUrl('create'))->assertOk()
+        ->assertSeeInOrder(['Basic info', 'Program details', 'Eligibility', 'Majors', 'Program options', 'Career &amp; industry', 'Facilitators &amp; people', 'Materials &amp; memberships', 'Summary &amp; SEO'], false);
 
-    $this->get(ProgramMajors::getUrl(['record' => $this->bscCse]))->assertOk()->assertSee('Majors &amp; Specializations', false);
+    Livewire::test(CreateProgram::class)
+        ->fillForm([
+            'department_id' => $this->cse->id, 'level_term_id' => ProgramFactory::level('Undergraduate'),
+            'name' => ['en' => 'BSc in Data Science'], 'short_name' => 'BSc DS', 'web_address' => 'bsc-ds',
+            'summary' => ['en' => '<p>Data all the way.</p>'], 'total_credits' => 144,
+            'eligibility_general' => ['en' => '<p>HSC GPA 2.5</p>'],
+            'majors' => [['title' => ['en' => 'Machine Learning'], 'is_active' => true]],
+            'career_paths' => [['title' => ['en' => 'Data Analyst'], 'is_active' => true]],
+            'facilitators' => [['name' => 'Ayesha Rahman', 'is_active' => true]],
+        ])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $program = Program::query()->where('short_name', 'BSc DS')->sole();
+    expect($program->majors()->count())->toBe(1)
+        ->and($program->listItems()->sole()->list_type)->toBe('career_path')
+        ->and($program->facilitators()->sole()->name)->toBe('Ayesha Rahman');
+
+    // The editor shows each part with what is filled in: no picture yet, no materials
+    $this->get(ProgramResource::getUrl('edit', ['record' => $program]))->assertOk()
+        ->assertSee('5 of 7 parts filled in')
+        ->assertSeeInOrder(['Basic info', 'Program details', 'Eligibility', 'Majors'], false);
+    $editor = Livewire::test(EditProgram::class, ['record' => $program->getRouteKey()]);
+    expect(collect($editor->get('data.majors'))->pluck('title.en')->all())->toBe(['Machine Learning']);
 });
 
 it('follows scope and permission in the Hubs; a viewer cannot switch records off', function () {

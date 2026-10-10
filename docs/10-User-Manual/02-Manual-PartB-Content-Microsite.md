@@ -310,17 +310,28 @@ Screen-এ লেখা থাকে, যেমন: *"This microsite uses Engine
 
 **Academic › Programs** (Department user শুধু নিজের Department-এর program দেখেন)
 
-| Tab | কী আছে |
-|---|---|
-| **General** | নাম, Department, **Level** (Undergraduate / Graduate / Diploma / Post Graduate Diploma), Tags, মোট credit, মেয়াদ, Shift, পরবর্তী ভর্তির তারিখ, Apply link, brochure |
-| **Overview** | পরিচিতি, কেন এই program |
-| **Majors** | Major / specialization তালিকা |
-| **Eligibility** | ভর্তির যোগ্যতা — General ও English-medium আলাদা |
-| **Career** | Career path ও industry |
-| **Facilitators** | Industry expert / facilitator (Person picker) |
-| **Materials, Memberships, Variants** | ঐচ্ছিক অংশ |
+**+ New program** ধাপে ধাপে চলে: প্রতিটি ধাপ পূরণ করে **Next**। কোনো ধাপের তথ্য এখনো না থাকলে পরের ধাপে চলে যান, পরে edit-এ দিতে পারবেন। শেষ ধাপে **Create**।
 
-* Program page-এর **Curriculum**, **Tuition**, **Calendar** tab আসে অন্য module থেকে — নিচের অংশ দেখুন।
+Program খুললে বাম দিকে একই অংশগুলো দেখায়। পাশে **✓** মানে পূরণ, **!** মানে বাকি, সংখ্যা মানে কয়টি item আছে। উপরে লেখা থাকে কয়টি অংশ পূরণ হয়েছে। সব অংশ শেষে একবার **Save changes**।
+
+| অংশ | কী আছে |
+|---|---|
+| **Basic info** | নাম, subtitle, degree, Department, **Level** (Undergraduate / Graduate / Diploma / Post Graduate Diploma), short name, web address, Tags, ছবি, video, brochure, প্রকাশ |
+| **Program details** | Summary, objective, মেয়াদ, মোট credit, semester, medium, shift, class mode, পরবর্তী ভর্তির তারিখ, Apply link |
+| **Eligibility** | ভর্তির যোগ্যতা — General ও English-medium আলাদা |
+| **Majors** | Major / specialization তালিকা (**Add major**) |
+| **Program options** | Dual degree, Evening ইত্যাদি — না থাকলে খালি রাখুন |
+| **Career & industry** | Career path ও industry-র তালিকা |
+| **Facilitators & people** | Industry expert / facilitator; coordinator ও যোগাযোগের ব্যক্তি |
+| **Materials & memberships** | Learning material, professional membership / accreditation |
+| **Summary & SEO** | ছোট সারসংক্ষেপ, search engine-এর জন্য তথ্য |
+
+* প্রতিটি list-এর উপরে ঐচ্ছিক **intro text** — website-এ সেই অংশের শুরুতে দেখায়।
+* list-এর item ⠿ দিয়ে টেনে ক্রম বদলান; item-এ click করলে খোলে।
+* Department user নাম, short name, web address, Department ও Active বদলাতে পারেন না — Admin পারেন।
+* যাঁদের শুধু দেখার অনুমতি (যেমন Admission Office), তাঁরা একই page read-only দেখেন।
+* **Tuition Fees** ও **Waiver rules** বাম মেনুর **Fees** অংশে — Admission Office ও Waiver Office সেগুলো দেখেন।
+* Program page-এর **Curriculum**, **Calendar** অংশ আসে অন্য module থেকে — নিচের অংশ দেখুন।
 * Program-এরও নিজস্ব microsite আছে: **Working in** থেকে Program বেছে নিয়ে তার Menu, Homepage, Statistics সাজানো যায়।
 * **Programs website-এর সবচেয়ে বেশি দেখা page-গুলোর একটি — প্রকাশের আগে credit, মেয়াদ ও তারিখ দুবার মিলিয়ে নিন।**
 

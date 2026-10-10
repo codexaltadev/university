@@ -9,16 +9,10 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Modules\Program\Filament\Resources\Programs\Hub\ProgramCareerPaths;
-use Modules\Program\Filament\Resources\Programs\Hub\ProgramFacilitators;
-use Modules\Program\Filament\Resources\Programs\Hub\ProgramIndustries;
-use Modules\Program\Filament\Resources\Programs\Hub\ProgramMajors;
-use Modules\Program\Filament\Resources\Programs\Hub\ProgramMaterials;
-use Modules\Program\Filament\Resources\Programs\Hub\ProgramMemberships;
-use Modules\Program\Filament\Resources\Programs\Hub\ProgramVariants;
 use Modules\Program\Filament\Resources\Programs\Pages\CreateProgram;
 use Modules\Program\Filament\Resources\Programs\Pages\EditProgram;
 use Modules\Program\Filament\Resources\Programs\Pages\ListPrograms;
+use Modules\Program\Filament\Resources\Programs\Pages\ViewProgram;
 use Modules\Program\Filament\Resources\Programs\Schemas\ProgramForm;
 use Modules\Program\Filament\Resources\Programs\Tables\ProgramsTable;
 use Modules\Program\Models\Program;
@@ -72,12 +66,13 @@ class ProgramResource extends Resource
         return [ActivityRelationManager::class];   // FR-GEN-83
     }
 
-    /** The Program Hub (FR-GEN-86): Profile, the program-page parts (BRL-PROG-04) and parts of other modules. */
+    /** The Program Hub (FR-GEN-86): the Program editor (every part of the program page) and parts of other modules (Fees …). */
     protected static function hubBasePages(): array
     {
         return [
             'index' => ListPrograms::route('/'),
             'create' => CreateProgram::route('/create'),
+            'view' => ViewProgram::route('/{record}'),
             'edit' => EditProgram::route('/{record}/edit'),
         ];
     }
@@ -87,8 +82,8 @@ class ProgramResource extends Resource
         return EditProgram::class;
     }
 
-    protected static function hubOwnPages(): array
+    protected static function hubProfilePages(): array
     {
-        return [ProgramMajors::class, ProgramCareerPaths::class, ProgramIndustries::class, ProgramFacilitators::class, ProgramMaterials::class, ProgramMemberships::class, ProgramVariants::class];
+        return [EditProgram::class, ViewProgram::class];
     }
 }

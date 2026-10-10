@@ -25,7 +25,13 @@ trait EntityHub
     /** @return class-string<Page> the edit page, shown as "Profile" */
     abstract protected static function hubProfilePage(): string;
 
-    /** @return list<class-string<HubPage>> parts the entity's own module adds (e.g. a Program's majors) */
+    /** @return list<class-string<Page>> the Profile: the edit page, or also a view page for who may not edit (only one is reachable) */
+    protected static function hubProfilePages(): array
+    {
+        return [static::hubProfilePage()];
+    }
+
+    /** @return list<class-string<HubPage>> parts the entity's own module adds */
     protected static function hubOwnPages(): array
     {
         return [];
@@ -62,7 +68,7 @@ trait EntityHub
         $parts = collect([...static::hubOwnPages(), ...static::hubPageClasses()])
             ->sortBy(fn (string $class): int => $class::getNavigationSort() ?? 50)->values()->all();
 
-        return $page->generateNavigationItems([static::hubProfilePage(), ...$parts]);
+        return $page->generateNavigationItems([...static::hubProfilePages(), ...$parts]);
     }
 
     public static function getSubNavigationPosition(): SubNavigationPosition
