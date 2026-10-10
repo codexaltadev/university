@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 2: Academic Modules |
-| Version | 0.1 (Draft) |
+| Version | 0.2 — 2026-10-10: M-10 তিনটি module — `tuition`, `waiver`, `scholarship` (DB-03 v1.4) |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md), [SRS Part 1](01-SRS-Core.md), `project_diu` analysis |
@@ -386,7 +386,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 
 ## M-10 Tuition, Waiver & Scholarship
 
-**Purpose:** Program-ভিত্তিক tuition fee, নিয়মভিত্তিক waiver, scholarship তথ্য, এবং visitor-দের জন্য **Waiver Calculator**।
+**Purpose:** Program-ভিত্তিক tuition fee, নিয়মভিত্তিক waiver, scholarship তথ্য, এবং visitor-দের জন্য **Waiver Calculator**। *(v0.2: তিনটি আলাদা module — Tuition `tuition`, Waiver Calculator `waiver`, Scholarship `scholarship`; প্রতিটি আলাদা চালু / বন্ধ করা যায়)*
 
 **Actors:** Admin, **Admission Office** (tuition fee), **Waiver Office** (waiver rule, scholarship), Faculty / Department / Program user (নিজের scope-এর program-এর tuition শুধু দেখা), Visitor *(v1.1, 2026-10-10)*
 
@@ -399,7 +399,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 | Waiver Rule | নাম, Program Level, Fee Category, শর্ত (SSC GPA পরিসর, HSC GPA পরিসর, golden A+, Undergraduate CGPA পরিসর (Graduate-এর জন্য), International), প্রযোজ্য Board, Gender, Faculty, Tuition, Waiver category, waiver হার ও সর্বোচ্চ হার, বার্তা |
 | Waiver Category | যেমন Merit, Freedom Fighter, Sibling, Female (Program Level অনুযায়ী) |
 | Education Board | যেমন Dhaka, Rajshahi, Madrasah, Technical (Program Level অনুযায়ী) |
-| Scholarship | title, category (hierarchical), বিবরণ, যোগ্যতা, আবেদন প্রক্রিয়া |
+| Scholarship | title, সংক্ষেপ, বিবরণ, যোগ্যতা, আবেদন প্রক্রিয়া, আবেদনের link, শেষ সময়, ছবি ও file; একটি scholarship-এর অধীনে তার অংশ (যেমন Erasmus → প্রতিটি exchange call) *(v0.2)* |
 
 ### Functional Requirements
 
@@ -414,7 +414,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 | FR-FEE-07 | একাধিক rule মিললে নিয়ম: সর্বোচ্চ হার প্রযোজ্য, তবে rule-এর "সর্বোচ্চ হার" সীমা অতিক্রম করবে না (নিয়ম Admin settings-এ configurable: highest / additive with cap) | Q-16 | Must |
 | FR-FEE-08 | Calculator-এর ফলাফলে disclaimer (settings থেকে) এবং ফলাফল print / PDF | — | Should |
 | FR-FEE-09 | Rule-এর মধ্যে conflict বা ফাঁক থাকলে admin-কে সতর্ক করার "Rule test" tool: নমুনা input দিয়ে কোন rule মিলছে দেখা | — | Should |
-| FR-FEE-10 | Scholarship CRUD, hierarchical category, scholarship page (`/scholarships`) | Q-16 | Must |
+| FR-FEE-10 | Scholarship CRUD (module `scholarship`); একটি scholarship-এর অধীনে অংশ (এক স্তর — "hierarchical category"); শেষ সময় পেরোলে "Closed"; page `/scholarships` (মূল scholarship-গুলো) ও `/scholarships/{slug}` (বিস্তারিত, অধীন অংশের তালিকা) *(v0.2)* | Q-16 | Must |
 | FR-FEE-11 | Tuition ও Waiver Rule Excel import / export | — | Should |
 | FR-FEE-12 | Fee তথ্য Session-ভিত্তিক version রাখা: নতুন session-এর fee আলাদা, পুরনো session archive | — | Should |
 
@@ -429,7 +429,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 
 `tuition.view`, `tuition.manage`, `waiver.manage`, `scholarship.manage`
 
-*(v1.1)* বাস্তবায়নে resource অনুযায়ী আলাদা permission (Shield: `ViewAny / View / Create / Update / Delete …:{Model}`) — Tuition, FeeCategory, WaiverRule, WaiverCategory, Board, Scholarship; এবং calculator settings-এর জন্য `Manage:WaiverSettings`। Default role (FR-ROLE-04): **Admission Office** = Tuition + FeeCategory; **Waiver Office** = WaiverRule + WaiverCategory + Board + WaiverSettings + Scholarship। এই দুই office-এর user-এর scope থাকে না, তাই সব program দেখেন (BRL-ROLE-03)। Faculty / Department / Program user-কে tuition-এর শুধু View দিলে নিজের scope-এর program-এর tuition দেখেন — Program Hub-এর "Tuition Fees" অংশে, read-only (FR-GEN-86)।
+*(v1.1)* বাস্তবায়নে resource অনুযায়ী আলাদা permission (Shield: `ViewAny / View / Create / Update / Delete …:{Model}`) — Tuition, FeeCategory, WaiverRule, WaiverCategory, Board, Scholarship; এবং calculator settings-এর জন্য `Manage:WaiverSettings`। Default role (FR-ROLE-04): **Admission Office** = Tuition + FeeCategory; **Waiver Office** = WaiverRule + WaiverCategory + Board + WaiverSettings + Scholarship (Scholarship module install-এর সময় এই role পায়; অন্য role-কেও দেওয়া যায়)। এই দুই office-এর user-এর scope থাকে না, তাই সব program দেখেন (BRL-ROLE-03)। Faculty / Department / Program user-কে tuition-এর শুধু View দিলে নিজের scope-এর program-এর tuition দেখেন — Program Hub-এর "Tuition Fees" অংশে, read-only (FR-GEN-86)।
 
 ### Acceptance Criteria
 

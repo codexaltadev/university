@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-03 |
-| Version | 1.3 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়) |
+| Version | 1.4 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়); v1.4: Scholarship নিজের module `scholarship`, parent / child (§11.3) |
 | Date | 2026-10-10 (v1.0 confirmed 2026-10-08) |
 | Status | ✔ Confirmed — v1.3 approved 2026-10-10 (Tuition, Waiver আলাদা module); v1.1 approved 2026-10-10: entry করা rule ও data অক্ষত থাকবে; logic বদলানো যাবে যদি ফলাফল হুবহু একই থাকে (golden master দিয়ে প্রমাণ) |
 | Based on | [DB-01](01-DB-Core-Kernel.md) (conventions), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 2](../02-SRS/02-SRS-Academic.md), `project_diu` |
@@ -38,7 +38,8 @@
 | M-08 Campus | `campus` | `campus_` | — |
 | M-09 Admission Info | `admission` | `admission_` | Program, Session (optional → index) |
 | M-10 Tuition | `tuition` (v1.3) | `tuition_` | Program (hard → FK; level = program type), Department / Faculty (filter); Session (optional → index) |
-| M-10 Waiver Calculator & Scholarship | `waiver` | `waiver_` | Tuition (hard → FK: category, tuition), Program (hard → FK: level); Faculty (hard → FK, rule condition) |
+| M-10 Waiver Calculator | `waiver` | `waiver_` | Tuition (hard → FK: category, tuition), Program (hard → FK: level); Faculty (hard → FK, rule condition) |
+| M-10 Scholarship | `scholarship` (v1.4) | `scholarship_` | — (কোনো dependency নেই) |
 | M-11 Academic Calendar | `calendar` | `calendar_` | Session, Program (optional → index) |
 
 ---
@@ -310,7 +311,7 @@ UQ: `(employee_id, active_key)` (NULL employee_id একাধিক থাক�
 
 ## 11. M-10 Tuition (slug `tuition`) ও Waiver Calculator (slug `waiver`)
 
-> *v1.3:* tuition fee ও tuition category (Local / International) নিজের module `tuition`-এ (`tuition_categories`, `tuition_fees`, `tuition_fee_lines`), কারণ আলাদা team এই data দেয়; একটি program-এর একাধিক tuition fee থাকতে পারে (category ও label অনুযায়ী)। Admin: Academic › Tuition Fees (Tuition fees, Tuition categories)। Waiver module শুধু waiver category, rule, board (ও পরে scholarship) রাখে; program, level (program type), tuition category, tuition, faculty, gender অন্য module থেকে নেয় (dependency)। Admin: Academic › Waiver Calculator (Rules, Categories, Boards)।
+> *v1.3:* tuition fee ও tuition category (Local / International) নিজের module `tuition`-এ (`tuition_categories`, `tuition_fees`, `tuition_fee_lines`), কারণ আলাদা team এই data দেয়; একটি program-এর একাধিক tuition fee থাকতে পারে (category ও label অনুযায়ী)। Admin: Academic › Tuition Fees (Tuition fees, Tuition categories)। Waiver module শুধু waiver category, rule, board রাখে (scholarship নিজের module — §11.3, v1.4); program, level (program type), tuition category, tuition, faculty, gender অন্য module থেকে নেয় (dependency)। Admin: Academic › Waiver Calculator (Rules, Categories, Boards)।
 
 ### 11.1 Tuition
 
@@ -360,21 +361,30 @@ UQ: `(employee_id, active_key)` (NULL employee_id একাধিক থাক�
 
 Gender আলাদা master table নয়: মাত্র তিনটি স্থির মান, application enum (বর্তমান `genders` table-এর ২টি row)।
 
-### 11.3 Scholarship — `waiver_scholarships` — B
+### 11.3 Scholarship — নিজের module `scholarship` *(v1.4, 2026-10-10)*
+
+Scholarship waiver rule, tuition বা board-এর সাথে যুক্ত নয় — এটি তথ্যের page; তাই নিজের module, Waiver থেকে আলাদা চালু / বন্ধ করা যায়। DIU-র data-য় "category"-গুলো আসলে নিজেই scholarship (DIU Scholarship, Korean Government, Erasmus …, প্রতিটির বিস্তারিত page), আর `scholarships`-এর row-গুলো একটির (Erasmus) অধীনের সময়-নির্দিষ্ট ডাক / সুযোগ। তাই আলাদা category তালিকা নয় — **একটি scholarship-এর নিচে তার অংশ** (এক স্তর)।
+
+#### `scholarship_scholarships` — B
 
 | Column | Type | Key / N | বর্ণনা |
 |---|---|---|---|
 | id | BIGINT UNSIGNED | PK | |
+| parent_id | BIGINT UNSIGNED | FK self, N | যে scholarship-এর অধীনে (যেমন Erasmus → একটি exchange call); null = মূল scholarship। শুধু এক স্তর |
 | title | JSON | T | |
-| summary | JSON | N, T | |
-| details | JSON | N, T | |
-| eligibility | JSON | N, T | |
-| how_to_apply | JSON | N, T | |
+| summary | JSON | N, T | তালিকার card-এর ছোট লেখা |
+| details | JSON | N, T | বিস্তারিত (rich text) |
+| eligibility | JSON | N, T | যোগ্যতা |
+| how_to_apply | JSON | N, T | আবেদন প্রক্রিয়া |
+| apply_url | VARCHAR(2048) | N | আবেদনের link |
+| deadline_at | TIMESTAMP | N | শেষ সময় — পেরোলে website-এ "Closed" (তালিকায় থাকে, নিচে) |
 | sort_order | INT UNSIGNED | | |
-| published_at | TIMESTAMP | N | |
-| ⚙ | | | |
+| ⚙ | | | `is_active` (দেখানো হবে কিনা — আলাদা publish date নেই), soft delete, created / updated by |
 
-Category → vocabulary `fee.scholarship-category` (hierarchical; বর্তমান `scholarship_categories.parent_category_id`)।
+* Index: `(parent_id, sort_order)`।
+* Media: `image` (cover), `attachments` (PDF, ক্রমসহ) — Media usage (DB-02)। Slug `core_slugs`: `/scholarships/{slug}`; অধীন অংশের breadcrumb: Scholarships › Erasmus › {call}। SEO (`HasSeo`), search, sitemap।
+* নিয়ম: parent নিজে অন্য কারো অধীন হতে পারবে না (এক স্তর); অধীন অংশ থাকলে parent মোছা যাবে না (FR-GEN-08)।
+* *(v1.4)* Vocabulary `fee.scholarship-category` বাদ — "hierarchical category" (FR-FEE-10) parent / child দিয়ে।
 
 ---
 
@@ -398,7 +408,6 @@ Program-এর সাথে সম্পর্ক audience term দিয়ে 
 | `program.major-category` | Program | | | `program_major_categories` |
 | `faculty-member.designation` | Faculty Member | | ✔ | — |
 | `admission.highlight-category` | Admission | | | `admission_facility_categories` |
-| `fee.scholarship-category` | Fee | ✔ | | `scholarship_categories` |
 | `calendar.audience` | Calendar | | | `calender_programs` |
 | `calendar.event-type` | Calendar | | | — (নতুন) |
 
@@ -417,7 +426,8 @@ Program-এর সাথে সম্পর্ক audience term দিয়ে 
 | Faculty Member | faculty_member_profiles, faculty_member_departments, faculty_member_profile_items | ৩ |
 | Campus | campus_campuses, campus_buildings | ২ |
 | Admission | admission_circulars, admission_highlights, admission_steps, admission_contact_groups, admission_result_batches, admission_results, admission_subscribers | ৭ |
-| Tuition + Waiver | tuition_categories, tuition_fees, tuition_fee_lines, waiver_boards, waiver_categories, waiver_category_includes *(v1.1)*, waiver_rules, 5টি waiver pivot, waiver_scholarships | ১৩ |
+| Tuition + Waiver | tuition_categories, tuition_fees, tuition_fee_lines, waiver_boards, waiver_categories, waiver_category_includes *(v1.1)*, waiver_rules, 5টি waiver pivot | ১২ |
+| Scholarship *(v1.4)* | scholarship_scholarships | ১ |
 | Calendar | calendar_calendars, calendar_events | ২ |
 | **মোট** | | **৪৫** |
 
@@ -451,7 +461,7 @@ Program-এর সাথে সম্পর্ক audience term দিয়ে 
 | `tuition_categories` (২) | tuition_categories | `category_code` → code |
 | `tuitions` (১০১) | tuition_fees + tuition_fee_lines | Column → line (Section 11.1); `majors` text → মন্তব্য বা বাদ (manual) |
 | `boards` (৮), `waiver_categories` (২১), `waivers` (৯২) + ৫টি pivot | waiver_boards, waiver_categories, waiver_rules + pivot | `waiver_rate` → waiver_percent, `hsc_golden` / `ssc_golden` → require_*_golden, `undergraduate_min / max` → ug_cgpa_*; `international_undergraduate_*` → আলাদা rule (is_international = 1); `gender_waiver.gender_id` → gender string |
-| `scholarships` (২৭) + `scholarship_categories` (৭) | waiver_scholarships + term | |
+| `scholarship_categories` (৭) + `scholarships` (২৭) | scholarship_scholarships *(v1.4)* | category → মূল scholarship (`detail` → details, `serial` → sort_order, `publication_status` → is_active, slug রাখা); scholarship → তার category-র অধীন অংশ (২৭টিই Erasmus-এর; ১৬টি অপ্রকাশিত → inactive); যোগ্যতা / আবেদন আলাদা field বর্তমান data-য় নেই — details-এ থাকে |
 | `calenders` (১৮) + `calender_programs` (২) + `calendar_events` (১৯২) + pivot (৩৮০) | calendar_calendars, calendar_events + audience term | `date_explanation` → date_label; structured `starts_on` বর্তমান data-তে নেই → manual পূরণ বা parse (সীমাবদ্ধতা) |
 | `coordination_officers` (৭৩) | core_assignments (Department / Program, `role_key = coordinator`) | DB-04-এ বিস্তারিত (Administration person) |
 | Course, Curriculum, Faculty Member, Campus | — | বর্তমান DB-তে নেই; নতুন করে entry বা import |
