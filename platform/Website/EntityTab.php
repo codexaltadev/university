@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 abstract class EntityTab
 {
-    /** Anchor and stable key, e.g. "program.tuition". */
+    /** Anchor and stable key, e.g. "tuition.fee". */
     abstract public static function key(): string;
 
     abstract public static function label(): string;

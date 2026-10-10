@@ -39,7 +39,7 @@ class ProgramTestTuitionTab extends EntityTab
 {
     public static function key(): string
     {
-        return 'program.tuition';
+        return 'tuition.fee';
     }
 
     public static function label(): string
@@ -277,7 +277,7 @@ it('adds other modules\' tabs to the program page; a missing or broken one never
 
     $this->get($this->bsc->url())->assertOk()
         ->assertSee('Tuition Fees')
-        ->assertSee('href="#program-tuition"', false)
+        ->assertSee('href="#tuition-fee"', false)
         ->assertSee('program-card--list', false);
 
     $nofee = Program::factory()->create(['department_id' => $this->cse->id, 'short_name' => 'NOFEE']);

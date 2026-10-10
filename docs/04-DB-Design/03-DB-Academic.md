@@ -4,9 +4,9 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-03 |
-| Version | 1.2 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: M-10 দুই ভাগ — tuition Program module-এ (`program_` table), Waiver Calculator নিজের module `waiver` |
+| Version | 1.3 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়) |
 | Date | 2026-10-10 (v1.0 confirmed 2026-10-08) |
-| Status | ✔ Confirmed — v1.2 approved 2026-10-10 (module ভাগ); v1.1 approved 2026-10-10: entry করা rule ও data অক্ষত থাকবে; logic বদলানো যাবে যদি ফলাফল হুবহু একই থাকে (golden master দিয়ে প্রমাণ) |
+| Status | ✔ Confirmed — v1.3 approved 2026-10-10 (Tuition, Waiver আলাদা module); v1.1 approved 2026-10-10: entry করা rule ও data অক্ষত থাকবে; logic বদলানো যাবে যদি ফলাফল হুবহু একই থাকে (golden master দিয়ে প্রমাণ) |
 | Based on | [DB-01](01-DB-Core-Kernel.md) (conventions), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 2](../02-SRS/02-SRS-Academic.md), `project_diu` |
 
 > Convention, শ্রেণী (B / C / P / S / L), ⚙ (`platformColumns()`), `active_key` ও Main Site `('site', 0)` — DB-01 Section 1 ও DB-02 Section 1 অনুযায়ী।
@@ -37,8 +37,8 @@
 | M-07 Faculty Member | `faculty-member` | `faculty_member_` | Department (hard → FK) |
 | M-08 Campus | `campus` | `campus_` | — |
 | M-09 Admission Info | `admission` | `admission_` | Program, Session (optional → index) |
-| M-10 Tuition | `program` (Program module-এর অংশ, v1.2) | `program_` | — (নিজের Program) ; Session (optional → index) |
-| M-10 Waiver Calculator & Scholarship | `waiver` | `waiver_` | Program (hard → FK: level, fee category, tuition); Faculty (hard → FK, rule condition) |
+| M-10 Tuition | `tuition` (v1.3) | `tuition_` | Program (hard → FK; level = program type), Department / Faculty (filter); Session (optional → index) |
+| M-10 Waiver Calculator & Scholarship | `waiver` | `waiver_` | Tuition (hard → FK: category, tuition), Program (hard → FK: level); Faculty (hard → FK, rule condition) |
 | M-11 Academic Calendar | `calendar` | `calendar_` | Session, Program (optional → index) |
 
 ---
@@ -69,9 +69,9 @@ erDiagram
     course_courses ||--o{ curriculum_items : ""
     curriculum_curricula ||--o{ curriculum_elective_groups : ""
     campus_campuses ||--o{ campus_buildings : ""
-    program_programs ||--o{ program_tuitions : ""
-    program_fee_categories ||--o{ program_tuitions : ""
-    program_tuitions ||--o{ program_tuition_lines : ""
+    program_programs ||--o{ tuition_fees : ""
+    tuition_categories ||--o{ tuition_fees : ""
+    tuition_fees ||--o{ tuition_fee_lines : ""
     waiver_rules ||--o{ waiver_rule_boards : ""
     waiver_boards ||--o{ waiver_rule_boards : ""
     waiver_rules ||--o{ waiver_rule_categories : ""
@@ -308,19 +308,19 @@ UQ: `(employee_id, active_key)` (NULL employee_id একাধিক থাক�
 
 ---
 
-## 11. M-10 Tuition (Program module) ও Waiver Calculator (slug `waiver`)
+## 11. M-10 Tuition (slug `tuition`) ও Waiver Calculator (slug `waiver`)
 
-> *v1.2:* tuition fee ও fee category Program-এর নিজের তথ্য, তাই Program module-এ (`program_fee_categories`, `program_tuitions`, `program_tuition_lines`)। Waiver module শুধু waiver category, rule, board (ও পরে scholarship) রাখে; program, level, fee category, tuition, faculty, gender অন্য module থেকে নেয় (dependency)। Admin: Academic › Waiver Calculator (Rules, Categories, Boards)।
+> *v1.3:* tuition fee ও tuition category (Local / International) নিজের module `tuition`-এ (`tuition_categories`, `tuition_fees`, `tuition_fee_lines`), কারণ আলাদা team এই data দেয়; একটি program-এর একাধিক tuition fee থাকতে পারে (category ও label অনুযায়ী)। Admin: Academic › Tuition Fees (Tuition fees, Tuition categories)। Waiver module শুধু waiver category, rule, board (ও পরে scholarship) রাখে; program, level (program type), tuition category, tuition, faculty, gender অন্য module থেকে নেয় (dependency)। Admin: Academic › Waiver Calculator (Rules, Categories, Boards)।
 
 ### 11.1 Tuition
 
 | Table | শ্রেণী | Column (⚙ ছাড়া) | Key | Ref |
 |---|---|---|---|---|
-| `program_fee_categories` | B | `name` (T) ("Local", "International"), `code` VARCHAR(20), `currency` CHAR(3) DEFAULT `BDT`, `sort_order` | UQ `(code, active_key)` | FR-FEE-01 |
-| `program_tuitions` | B | `program_id` (FK program_programs restrict), `fee_category_id` (FK program_fee_categories restrict), `session_id` N (optional → index), `label` (T, N) *(v1.1)*, `credit_min`, `credit_max` DECIMAL(6,1) N, `total_terms` TINYINT N, `duration_label` (T, N), `tuition_min`, `tuition_max` DECIMAL(12,2) N *(v1.1)*, `total_min`, `total_max` DECIMAL(12,2) N, `totals_overridden` TINYINT(1), `prospectus_url` N, `sort_order` | IX `(program_id, fee_category_id, session_id)` *(v1.1: UQ বাদ)*; IX `(fee_category_id)` | FR-FEE-02/12 |
-| `program_tuition_lines` | B | `tuition_id` (FK cascade), `line_type` VARCHAR(20) (`admission` / `year` / `term` / `per_credit` / `other`), `label` (T) ("1st Year"), `amount` DECIMAL(12,2), `amount_max` DECIMAL(12,2) N, `sort_order` | IX `(tuition_id, sort_order)` | FR-FEE-02 |
+| `tuition_categories` | B | `name` (T) ("Local", "International"), `code` VARCHAR(20), `currency` CHAR(3) DEFAULT `BDT`, `sort_order` | UQ `(code, active_key)` | FR-FEE-01 |
+| `tuition_fees` | B | `program_id` (FK program_programs restrict), `fee_category_id` (FK tuition_categories restrict), `session_id` N (optional → index), `label` (T, N) *(v1.1)*, `credit_min`, `credit_max` DECIMAL(6,1) N, `total_terms` TINYINT N, `duration_label` (T, N), `tuition_min`, `tuition_max` DECIMAL(12,2) N *(v1.1)*, `total_min`, `total_max` DECIMAL(12,2) N, `totals_overridden` TINYINT(1), `prospectus_url` N, `sort_order` | IX `(program_id, fee_category_id, session_id)` *(v1.1: UQ বাদ)*; IX `(fee_category_id)` | FR-FEE-02/12 |
+| `tuition_fee_lines` | B | `tuition_id` (FK cascade), `line_type` VARCHAR(20) (`admission` / `year` / `term` / `per_credit` / `other`), `label` (T) ("1st Year"), `amount` DECIMAL(12,2), `amount_max` DECIMAL(12,2) N, `sort_order` | IX `(tuition_id, sort_order)` | FR-FEE-02 |
 
-> বর্তমান `tuitions`-এর আলাদা column (`admission_fees`, `first_year` … `fourth_year`, `semester_cost`, `other_fee`) `program_tuition_lines`-এর row হবে। ফলে ৫ বছরের program বা trimester-ভিত্তিক fee-ও schema পরিবর্তন ছাড়া রাখা যায় (BO-06)।
+> বর্তমান `tuitions`-এর আলাদা column (`admission_fees`, `first_year` … `fourth_year`, `semester_cost`, `other_fee`) `tuition_fee_lines`-এর row হবে। ফলে ৫ বছরের program বা trimester-ভিত্তিক fee-ও schema পরিবর্তন ছাড়া রাখা যায় (BO-06)।
 > `total_min / total_max` line থেকে হিসাব হয়ে save হয়; `totals_overridden = 1` হলে manual মান থাকে (FR-FEE-02)।
 > *(v1.1)* `tuition_min / tuition_max` = মোটের যে অংশে waiver বসে (admission ও অন্যান্য fee ছাড়া; legacy `total_tuition_fees`): year line-এর যোগফল + term line × `total_terms` + per-credit line × credit। মোট = tuition + admission + other। Legacy-র অঙ্ক এই সূত্রে মেলে না (যেমন SWE: 78,000 × 12 ≠ 7,09,500) — তাই migrate হওয়া tuition `totals_overridden = 1`।
 > *(v1.1)* একই Program ও Fee Category-তে একাধিক tuition থাকতে পারে (DIU: MBA International "1 Year" ও "2 Years") — `label` দিয়ে আলাদা; তাই unique key নয়, index।
@@ -331,13 +331,13 @@ UQ: `(employee_id, active_key)` (NULL employee_id একাধিক থাক�
 |---|---|---|---|---|
 | `waiver_boards` | B | `level_term_id` (FK core_terms), `name` (T), `sort_order` | | FR-FEE-05 |
 | `waiver_categories` | B | `level_term_id` (FK core_terms), `name` (T) ("Freedom Fighter", "Sibling"), `uses_diploma_result` TINYINT(1) DEFAULT 0 *(v1.1)*, `sort_order` | | FR-FEE-05 |
-| `waiver_rules` | B | `name` (T), `level_term_id` (FK core_terms), `fee_category_id` (FK program_fee_categories, N), `ssc_min`, `ssc_max`, `hsc_min`, `hsc_max` DECIMAL(3,2) N, `require_ssc_golden`, `require_hsc_golden` TINYINT(1), `ug_cgpa_min`, `ug_cgpa_max` DECIMAL(3,2) N, `is_international` TINYINT(1) N, `waiver_percent` DECIMAL(5,2), `improved_waiver_percent` DECIMAL(5,2) N *(v1.1)*, `max_waiver_percent` DECIMAL(5,2) N, `message` (T, N), `priority` SMALLINT | IX `(level_term_id, fee_category_id, is_active)` | FR-FEE-05/06/07, BRL-FEE-01 |
+| `waiver_rules` | B | `name` (T), `level_term_id` (FK core_terms), `fee_category_id` (FK tuition_categories, N), `ssc_min`, `ssc_max`, `hsc_min`, `hsc_max` DECIMAL(3,2) N, `require_ssc_golden`, `require_hsc_golden` TINYINT(1), `ug_cgpa_min`, `ug_cgpa_max` DECIMAL(3,2) N, `is_international` TINYINT(1) N, `waiver_percent` DECIMAL(5,2), `improved_waiver_percent` DECIMAL(5,2) N *(v1.1)*, `max_waiver_percent` DECIMAL(5,2) N, `message` (T, N), `priority` SMALLINT | IX `(level_term_id, fee_category_id, is_active)` | FR-FEE-05/06/07, BRL-FEE-01 |
 | `waiver_rule_boards` | P | `rule_id` (FK cascade), `board_id` (FK waiver_boards cascade) | PK দুটি মিলে | BRL-FEE-04 |
 | `waiver_rule_categories` | P | `rule_id`, `waiver_category_id` (FK cascade), `sort_order` *(v1.1)* | PK | প্রথমটির নাম ফলাফলের বার্তায় |
 | `waiver_category_includes` *(v1.1)* | P | `category_id` (FK waiver_categories cascade), `included_category_id` (FK waiver_categories cascade) | PK দুটি মিলে | Category বাছলে অন্তর্ভুক্ত category-র rule-ও মেলে |
 | `waiver_rule_genders` | P | `rule_id` (FK cascade), `gender` VARCHAR(10) (`male` / `female` / `other`) | PK | বর্তমান `gender_waiver` |
 | `waiver_rule_faculties` | P | `rule_id`, `faculty_id` (FK faculty_faculties cascade) | PK | Faculty transitively hard dependency |
-| `waiver_rule_tuitions` | P | `rule_id`, `tuition_id` (FK program_tuitions cascade) | PK | |
+| `waiver_rule_tuitions` | P | `rule_id`, `tuition_id` (FK tuition_fees cascade) | PK | |
 
 **Rule-matching নিয়ম:** pivot-এ কোনো row না থাকা = "সব"-এ প্রযোজ্য (যেমন কোনো board নির্বাচিত নেই → সব board)। একাধিক rule মিললে setting অনুযায়ী `highest` (default) বা `additive_with_cap` (FR-FEE-07); `priority` সমান হলে বেশি waiver আগে।
 
@@ -417,7 +417,7 @@ Program-এর সাথে সম্পর্ক audience term দিয়ে 
 | Faculty Member | faculty_member_profiles, faculty_member_departments, faculty_member_profile_items | ৩ |
 | Campus | campus_campuses, campus_buildings | ২ |
 | Admission | admission_circulars, admission_highlights, admission_steps, admission_contact_groups, admission_result_batches, admission_results, admission_subscribers | ৭ |
-| Program (tuition) + Waiver | program_fee_categories, program_tuitions, program_tuition_lines, waiver_boards, waiver_categories, waiver_category_includes *(v1.1)*, waiver_rules, 5টি waiver pivot, waiver_scholarships | ১৩ |
+| Tuition + Waiver | tuition_categories, tuition_fees, tuition_fee_lines, waiver_boards, waiver_categories, waiver_category_includes *(v1.1)*, waiver_rules, 5টি waiver pivot, waiver_scholarships | ১৩ |
 | Calendar | calendar_calendars, calendar_events | ২ |
 | **মোট** | | **৪৫** |
 
@@ -448,8 +448,8 @@ Program-এর সাথে সম্পর্ক audience term দিয়ে 
 | `admission_results` (১,৭২০) | একটি "Legacy" batch + admission_results | `program` (text) → program_label; program_id best-effort match |
 | `admission_contacts` (১৩) + `admission_contact_types` | admission_contact_groups + core_assignments | `admin_id` থাকলে Administration person, নইলে manual person |
 | `admission_subscribers` (৪,৮২৮) | admission_subscribers | `contact_type` → channel; `is_active = 0` → unsubscribed |
-| `tuition_categories` (২) | program_fee_categories | `category_code` → code |
-| `tuitions` (১০১) | program_tuitions + program_tuition_lines | Column → line (Section 11.1); `majors` text → মন্তব্য বা বাদ (manual) |
+| `tuition_categories` (২) | tuition_categories | `category_code` → code |
+| `tuitions` (১০১) | tuition_fees + tuition_fee_lines | Column → line (Section 11.1); `majors` text → মন্তব্য বা বাদ (manual) |
 | `boards` (৮), `waiver_categories` (২১), `waivers` (৯২) + ৫টি pivot | waiver_boards, waiver_categories, waiver_rules + pivot | `waiver_rate` → waiver_percent, `hsc_golden` / `ssc_golden` → require_*_golden, `undergraduate_min / max` → ug_cgpa_*; `international_undergraduate_*` → আলাদা rule (is_international = 1); `gender_waiver.gender_id` → gender string |
 | `scholarships` (২৭) + `scholarship_categories` (৭) | waiver_scholarships + term | |
 | `calenders` (১৮) + `calender_programs` (২) + `calendar_events` (১৯২) + pivot (৩৮০) | calendar_calendars, calendar_events + audience term | `date_explanation` → date_label; structured `starts_on` বর্তমান data-তে নেই → manual পূরণ বা parse (সীমাবদ্ধতা) |

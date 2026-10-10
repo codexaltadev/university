@@ -1,0 +1,23 @@
+{
+    "name": "uwms/tuition",
+    "description": "Tuition module",
+    "authors": [
+        {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Tuition\\": "app/",
+            "Modules\\Tuition\\Database\\Factories\\": "database/factories/",
+            "Modules\\Tuition\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Tuition\\Tests\\": "tests/"
+        }
+    }
+}

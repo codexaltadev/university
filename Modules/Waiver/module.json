@@ -25,6 +25,7 @@
         "license": "proprietary",
         "table_prefix": "waiver_",
         "dependencies": {
+            "tuition": "^1.0",
             "program": "^1.0",
             "faculty": "^1.0"
         },

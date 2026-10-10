@@ -11,7 +11,7 @@ use Modules\Program\Models\Program;
 
 /**
  * The Program editor, read only, for who may view but not update the program — e.g.
- * the Admission Office, which edits only its tuition in the Hub (SRS M-10 v1.1). Who
+ * the Admission Office, which edits only the tuition fees (Tuition module) in the Hub. Who
  * may update gets the editor instead, so the Hub shows one "Profile".
  */
 class ViewProgram extends ViewRecord

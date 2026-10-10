@@ -4,9 +4,9 @@ namespace Legacy\Migration\Steps;
 
 use Illuminate\Support\Str;
 use Legacy\Migration\Support\Normalizer;
-use Modules\Program\Models\FeeCategory;
-use Modules\Program\Models\Tuition;
-use Modules\Program\Models\TuitionLine;
+use Modules\Tuition\Models\FeeCategory;
+use Modules\Tuition\Models\Tuition;
+use Modules\Tuition\Models\TuitionLine;
 use Modules\Waiver\Models\Board;
 use Modules\Waiver\Models\WaiverCategory;
 use Modules\Waiver\Models\WaiverRule;
@@ -36,7 +36,7 @@ class S07Fees extends Step
 
     public static function requires(): array
     {
-        return ['program', 'waiver'];
+        return ['program', 'tuition', 'waiver'];
     }
 
     protected function handle(): void

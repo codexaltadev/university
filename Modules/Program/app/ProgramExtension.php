@@ -11,10 +11,8 @@ use Modules\Program\Metrics\IndustryExpertCount;
 use Modules\Program\Metrics\MajorCount;
 use Modules\Program\Metrics\ProgramCount;
 use Modules\Program\Models\Program;
-use Modules\Program\Models\Tuition;
 use Modules\Program\Sections\FeaturedProgramsSection;
 use Modules\Program\Sections\ProgramsByLevelSection;
-use Modules\Program\Tabs\TuitionTab;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
 
@@ -44,10 +42,5 @@ final class ProgramExtension implements ModuleExtension
         $r->sitemap(Program::class);
         $r->entityPage(Department::class, DepartmentPrograms::class);   // Hubs (FR-GEN-86)
         $r->entityPage(Faculty::class, FacultyPrograms::class);
-
-        // Tuition fees (M-10 part, now the Program's own): /tuition-fees, the program page's tab
-        $r->scopeable(Tuition::class);                                   // through the program
-        $r->entityTab(Program::class, TuitionTab::class);                // FR-FEE-04
-        $r->layouts('program.tuition-table', ['grouped', 'compact']);    // FR-FEE-03
     }
 }

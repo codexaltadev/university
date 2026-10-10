@@ -2,7 +2,7 @@
 
 namespace Modules\Waiver\Support;
 
-use Modules\Program\Models\Tuition;
+use Modules\Tuition\Models\Tuition;
 use Modules\Waiver\Models\WaiverRule;
 
 /**

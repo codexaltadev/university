@@ -133,12 +133,6 @@ class Program extends BaseModel implements Scopeable
         return $this->hasMany(ProgramVariant::class)->ordered();
     }
 
-    /** FR-FEE-02: one per fee category (Local, International …), several when the label differs. */
-    public function tuitions(): HasMany
-    {
-        return $this->hasMany(Tuition::class);
-    }
-
     /** FR-PROG-01: always the Department's Faculty, never stored. */
     public function faculty(): ?Faculty
     {

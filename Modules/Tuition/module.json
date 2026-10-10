@@ -1,0 +1,48 @@
+{
+    "name": "Tuition",
+    "alias": "tuition",
+    "description": "Tuition fees of the programs with tuition categories (Local, International), /tuition-fees and the program page tab — M-10",
+    "keywords": [
+        "academic",
+        "tuition",
+        "fees"
+    ],
+    "priority": 58,
+    "providers": [
+        "Modules\\Tuition\\Providers\\TuitionServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "tuition",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "tuition_",
+        "dependencies": {
+            "program": "^1.0",
+            "department": "^1.0",
+            "faculty": "^1.0"
+        },
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "tuition.category": "Modules\\Tuition\\Models\\FeeCategory",
+            "tuition.fee": "Modules\\Tuition\\Models\\Tuition",
+            "tuition.line": "Modules\\Tuition\\Models\\TuitionLine"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "scopeable": true,
+            "entity_tabs": true,
+            "entity_pages": true,
+            "layouts": [
+                "tuition.listing"
+            ]
+        }
+    }
+}

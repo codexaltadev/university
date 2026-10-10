@@ -94,7 +94,7 @@
         @if ($answer && $answer['status'] === 'ok')
             <div class="waiver-result__ok" style="border:3px solid var(--color-primary);border-radius:var(--radius-lg, 16px);padding:var(--space-6, 24px)">
                 <p style="text-align:center;font-size:var(--text-lg, 20px)">
-                    {!! __('waiver::waiver.calculator.eligible', ['percent' => '<strong style="font-size:2em">'.e(\Modules\Program\Models\Tuition::plain($answer['percent'])).'%</strong>', 'category' => e($answer['category'])]) !!}
+                    {!! __('waiver::waiver.calculator.eligible', ['percent' => '<strong style="font-size:2em">'.e(\Modules\Tuition\Models\Tuition::plain($answer['percent'])).'%</strong>', 'category' => e($answer['category'])]) !!}
                 </p>
                 <h3>{{ $tuition->program->name }}</h3>
                 <dl style="display:grid;grid-template-columns:minmax(0, 1fr) auto;gap:.25rem 1rem">

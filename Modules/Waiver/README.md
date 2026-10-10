@@ -1,7 +1,7 @@
 # Waiver
 
 Installable module, the Waiver Calculator part of M-10 (SRS Part 2): waiver categories, waiver rules, boards and
-the public calculator; scholarships follow (3.4c). Tuition fees are the Program module's (`Modules/Program`, see its README).
+the public calculator; scholarships follow (3.4c). Tuition fees are the Tuition module's (`Modules/Tuition`).
 
 | | |
 |---|---|
@@ -9,7 +9,7 @@ the public calculator; scholarships follow (3.4c). Tuition fees are the Program 
 | Admin | **Academic › Waiver Calculator** (Filament cluster `Filament/Clusters/WaiverCalculator`): Waiver rules, Waiver categories, Boards |
 | Tables | `waiver_boards`, `waiver_categories` (+ `waiver_category_includes`), `waiver_rules` + pivots `waiver_rule_boards` / `_categories` (ordered) / `_genders` / `_faculties` / `_tuitions` — DB-03 §11.2 v1.2 |
 | Permissions | resource `…:WaiverRule`, `…:WaiverCategory`, `…:Board` (by default the Waiver Office) |
-| Depends on | `program` (levels `program.level`, programs, fee categories and tuitions — `program_fee_categories`, `program_tuitions` FKs), `faculty` (rule condition). Entered here: only categories, rules and boards; the rest is inherited |
+| Depends on | `tuition` (tuition categories and fees — `tuition_categories`, `tuition_fees` FKs), `program` (levels `program.level`, programs), `faculty` (rule condition). Entered here: only categories, rules and boards; the rest is inherited |
 
 * **Waiver rules**: level, fee category, result ranges (SSC / HSC GPA 0–5 with golden, undergraduate CGPA 0–4;
   min ≤ max), waiver %, a higher % when the HSC GPA beats the SSC GPA, a cap for additive mode, the condition shown

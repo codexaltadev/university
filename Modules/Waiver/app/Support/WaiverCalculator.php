@@ -4,7 +4,7 @@ namespace Modules\Waiver\Support;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Modules\Program\Models\Tuition;
+use Modules\Tuition\Models\Tuition;
 use Modules\Waiver\Models\WaiverCategory;
 use Modules\Waiver\Models\WaiverRule;
 

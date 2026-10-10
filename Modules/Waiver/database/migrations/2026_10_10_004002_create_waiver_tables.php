@@ -40,7 +40,7 @@ return new class extends Migration
             $table->id();
             $table->json('name');
             $table->foreignId('level_term_id')->constrained('core_terms')->restrictOnDelete();
-            $table->foreignId('fee_category_id')->nullable()->constrained('program_fee_categories')->restrictOnDelete();
+            $table->foreignId('fee_category_id')->nullable()->constrained('tuition_categories')->restrictOnDelete();
             $table->decimal('ssc_min', 3, 2)->nullable();
             $table->decimal('ssc_max', 3, 2)->nullable();
             $table->decimal('hsc_min', 3, 2)->nullable();
@@ -90,7 +90,7 @@ return new class extends Migration
 
         Schema::create('waiver_rule_tuitions', function (Blueprint $table) {
             $table->foreignId('rule_id')->constrained('waiver_rules')->cascadeOnDelete();
-            $table->foreignId('tuition_id')->constrained('program_tuitions')->cascadeOnDelete();
+            $table->foreignId('tuition_id')->constrained('tuition_fees')->cascadeOnDelete();
             $table->primary(['rule_id', 'tuition_id']);
             $table->index('tuition_id');
         });

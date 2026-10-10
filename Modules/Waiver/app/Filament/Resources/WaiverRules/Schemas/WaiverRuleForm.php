@@ -12,8 +12,8 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Database\Eloquent\Builder;
-use Modules\Program\Models\FeeCategory;
-use Modules\Program\Models\Tuition;
+use Modules\Tuition\Models\FeeCategory;
+use Modules\Tuition\Models\Tuition;
 use Modules\Waiver\Models\WaiverCategory;
 use Modules\Waiver\Models\WaiverRule;
 use Platform\Filament\Components\TranslatableTabs;
@@ -64,7 +64,7 @@ class WaiverRuleForm
                             ->relationship('faculties', 'short_name'),
                         Select::make('tuitions')->label(__('waiver::waiver.fields.tuitions'))->multiple()->searchable()
                             ->relationship('tuitions', modifyQueryUsing: fn (Builder $query, Get $get) => $query->with('program')
-                                ->when($get('fee_category_id'), fn ($q, $c) => $q->where('program_tuitions.fee_category_id', $c))
+                                ->when($get('fee_category_id'), fn ($q, $c) => $q->where('tuition_fees.fee_category_id', $c))
                                 ->whereHas('program', fn ($p) => $p->where('level_term_id', $get('level_term_id'))))
                             ->getOptionLabelFromRecordUsing(fn (Tuition $record): string => trim($record->program?->name.' '.($record->label ? "({$record->label})" : ''))),
                     ]),

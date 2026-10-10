@@ -13,10 +13,10 @@ use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
 use Modules\Program\Database\Factories\ProgramFactory;
 use Modules\Program\Filament\Resources\Programs\ProgramResource;
-use Modules\Program\Models\FeeCategory;
 use Modules\Program\Models\Program;
-use Modules\Program\Models\Tuition;
-use Modules\Program\Models\TuitionLine;
+use Modules\Tuition\Models\FeeCategory;
+use Modules\Tuition\Models\Tuition;
+use Modules\Tuition\Models\TuitionLine;
 use Modules\Waiver\Filament\Resources\Boards\BoardResource;
 use Modules\Waiver\Filament\Resources\WaiverCategories\WaiverCategoryResource;
 use Modules\Waiver\Filament\Resources\WaiverRules\Pages\CreateWaiverRule;
@@ -33,7 +33,9 @@ use Platform\Modules\ModulePermissions;
 
 beforeEach(function () {
     Filament::setCurrentPanel(Filament::getPanel('admin'));
-    app(ModulePermissions::class)->sync('Waiver');
+    foreach (['Tuition', 'Waiver'] as $module) {
+        app(ModulePermissions::class)->sync($module);
+    }
 
     $this->ug = ProgramFactory::level('Undergraduate');
     $this->grad = ProgramFactory::level('Graduate');

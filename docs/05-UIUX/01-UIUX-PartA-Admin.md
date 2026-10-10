@@ -48,7 +48,7 @@
 | **Admission Office** *(v1.1)* | Site Dashboard | সব program-এর tuition fee ও fee category (scope নেই) | Academic › Tuition Fees |
 | **Waiver Office** *(v1.1)* | Site Dashboard | Waiver rule, waiver category, board, calculator settings, scholarship (scope নেই) | Academic › Waiver Calculator, Scholarships |
 
-Role ও permission role editor-এ বদলানো যায়; উপরের দুটি module-এর default role: Admission Office — Program module (tuition), Waiver Office — Waiver module (FR-ROLE-04 v1.1)।
+Role ও permission role editor-এ বদলানো যায়; উপরের দুটি module-এর default role: Admission Office — Tuition module, Waiver Office — Waiver module (FR-ROLE-04 v1.1)।
 
 ---
 
@@ -89,7 +89,7 @@ Sidebar-এর group ও item (SAD Part A Section 7.3)। শুধু active mo
 │     Curricula · Sessions     │
 │     Faculty Members          │
 │     Admission                │
-│     Tuition Fees ›           │   Program module (v1.2): Tuition fees · Fee categories
+│     Tuition Fees ›           │   Tuition module (v1.3): Tuition fees · Tuition categories
 │     Waiver Calculator ›      │   Waiver module (v1.2): Rules · Waiver categories ·
 │                              │     Boards (পরে: Settings · Preview ↗)
 │     Scholarships             │
