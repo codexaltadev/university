@@ -6,7 +6,7 @@
 | Document | UI/UX Part B: Frontend |
 | Version | 0.2 — v0.1 approved 2026-10-08; v0.2: microsite URL hierarchy অনুযায়ী (§3, FR-GEN-34) |
 | Date | 2026-10-08 |
-| Status | ✔ Approved — prototype v3 সহ (2026-10-08) |
+| Status | ✔ Approved — prototype v3 সহ (2026-10-08); v0.2 (URL) approved 2026-10-10 |
 | Based on | BRD v1.7, SRS v1.0, SAD Part B §6 (Microsite), §8 (Theme Engine), UI/UX Part A |
 | পাঠক | Theme developer, frontend developer, designer, tester |
 

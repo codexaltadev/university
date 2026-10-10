@@ -4,9 +4,9 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 0: Overview ও Common Requirements |
-| Version | 1.1 — v1.0 approved 2026-10-08; v1.1: FR-GEN-86 Entity Hub, FR-GEN-87 sub-menu (2026-10-10) |
+| Version | 1.2 — v1.0 approved 2026-10-08; v1.1: FR-GEN-86 Entity Hub, FR-GEN-87 sub-menu (2026-10-10); v1.2: FR-GEN-34 থেকে 36 microsite URL hierarchy অনুযায়ী (2026-10-10) |
 | Date | 2026-10-10 |
-| Status | **Approved** — v1.1 approved 2026-10-10 |
+| Status | **Approved** — v1.2 approved 2026-10-10 |
 | Based on | [BRD v1.3 (Approved)](../01-BRD.md) |
 
 ---
@@ -179,9 +179,9 @@ FR-GEN-20 থেকে 23 বাতিল। Content-এর চালু / ব�
 | FR-GEN-31 | একই module-এ slug unique হবে (প্রতিটি ভাষায়) | NFR-03 | Must |
 | FR-GEN-32 | Slug পরিবর্তন করলে পুরনো URL থেকে নতুন URL-এ automatically 301 redirect তৈরি হবে | NFR-03 | Should |
 | FR-GEN-33 | URL-এ ভাষা prefix থাকবে: `/{locale}/{module-route}/{slug}` (যেমন `/en/news/convocation-2026`)। Default ভাষার জন্য prefix ঐচ্ছিক (setting) | BR-LANG-04 | Must |
-| FR-GEN-34 | *(v1.1, 2026-10-10)* **Microsite URL, hierarchy অনুযায়ী:** Faculty `/faculties/{faculty}` (যেমন `/faculties/fsit`); Department `/{faculty}/{department}` (`/fsit/cse`); Program `/{faculty}/{department}/{program}` (`/fsit/cse/bsc-in-cse`); Lab `/{faculty}/{department}/lab/{lab}` (`/fsit/cse/lab/robotics`), Department ছাড়া Lab `/lab/{lab}`; Office `/office/{office}` (`/office/registrar`)। Microsite-এর ভেতরের path এর পরে (`/fsit/cse/news`, `/fsit/cse/lab-facilities`)। Breadcrumb: Home › Faculty › Department › Program / Lab। `/{faculty}` একা খুললে `/faculties/{faculty}`-এ 301। Listing আগের মতো: `/faculties`, `/departments`, `/programs`, `/labs`, `/offices` | BR-MS-01, NFR-03 | Must |
-| FR-GEN-35 | *(v1.1)* URL সংঘর্ষ রোধ: Faculty slug কোনো সংরক্ষিত প্রথম segment (main site page, listing / module path যেমন `news`, `admission`, `faculties`, `office`, `lab`, ভাষা code) হতে পারবে না, এবং main site page-এর slug কোনো Faculty slug হতে পারবে না; Department-এর নিচে Program slug, `lab` ও microsite-এর section path (`news`, `notices`, `events`, `faculty-members` …) এবং সেই Department-এর page slug পরস্পর আলাদা — save-এ validation বার্তা | NFR-03 | Must |
-| FR-GEN-36 | *(v1.1)* Entity অন্য parent-এ সরালে (Department অন্য Faculty-তে, Program অন্য Department-এ) বা slug বদলালে তার ও নিচের সব microsite-এর পুরনো URL থেকে নতুনটিতে automatically 301 (FR-GEN-32 এর বিস্তার); data migration-এ DIU-র পুরনো URL (`/faculties/{x}`, `/department/{x}`, `/department/{x}/program/{y}`) নতুন URL-এ 301 | NFR-03 | Must |
+| FR-GEN-34 | *(v1.2, 2026-10-10)* **Microsite URL, hierarchy অনুযায়ী:** Faculty `/faculties/{faculty}` (যেমন `/faculties/fsit`); Department `/{faculty}/{department}` (`/fsit/cse`); Program `/{faculty}/{department}/{program}` (`/fsit/cse/bsc-in-cse`); Lab `/{faculty}/{department}/lab/{lab}` (`/fsit/cse/lab/robotics`), Department ছাড়া Lab `/lab/{lab}`; Office `/office/{office}` (`/office/registrar`)। Microsite-এর ভেতরের path এর পরে (`/fsit/cse/news`, `/fsit/cse/lab-facilities`)। Breadcrumb: Home › Faculty › Department › Program / Lab। `/{faculty}` একা খুললে `/faculties/{faculty}`-এ 301। Listing আগের মতো: `/faculties`, `/departments`, `/programs`, `/labs`, `/offices` | BR-MS-01, NFR-03 | Must |
+| FR-GEN-35 | *(v1.2)* URL সংঘর্ষ রোধ: Faculty slug কোনো সংরক্ষিত প্রথম segment (main site page, listing / module path যেমন `news`, `admission`, `faculties`, `office`, `lab`, ভাষা code) হতে পারবে না, এবং main site page-এর slug কোনো Faculty slug হতে পারবে না; Department-এর নিচে Program slug, `lab` ও microsite-এর section path (`news`, `notices`, `events`, `faculty-members` …) এবং সেই Department-এর page slug পরস্পর আলাদা — save-এ validation বার্তা | NFR-03 | Must |
+| FR-GEN-36 | *(v1.2)* Entity অন্য parent-এ সরালে (Department অন্য Faculty-তে, Program অন্য Department-এ) বা slug বদলালে তার ও নিচের সব microsite-এর পুরনো URL থেকে নতুনটিতে automatically 301 (FR-GEN-32 এর বিস্তার); data migration-এ DIU-র পুরনো URL (`/faculties/{x}`, `/department/{x}`, `/department/{x}/program/{y}`) নতুন URL-এ 301 | NFR-03 | Must |
 
 ### 3.5 Multi-language
 

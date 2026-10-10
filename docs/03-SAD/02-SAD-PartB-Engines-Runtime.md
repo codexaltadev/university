@@ -6,7 +6,7 @@
 | Document | SAD Part B |
 | Version | 0.2 — v0.1 approved 2026-10-08; v0.2: microsite URL hierarchy অনুযায়ী (§6.1, FR-GEN-34 থেকে 36) |
 | Date | 2026-10-08 |
-| Status | **Approved** (2026-10-08); Deployment: Standard topology (একটি application server) দিয়ে শুরু |
+| Status | **Approved** (2026-10-08; v0.2 URL 2026-10-10); Deployment: Standard topology (একটি application server) দিয়ে শুরু |
 | Based on | [SAD Part A v0.2](01-SAD-PartA-Foundation.md), [SRS v1.0](../02-SRS/00-SRS-Overview.md) |
 | পাঠক | Core developer, technical lead, DevOps |
 

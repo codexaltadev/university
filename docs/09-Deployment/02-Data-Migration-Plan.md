@@ -143,7 +143,7 @@ Dependency অনুযায়ী — আগের ধাপের id পর�
 | S18 | Services | Transport, `facilities`, accreditation, rankings, international, `visitors`, `csrs`, `mps`, `discount_partners` | DB-06 §13 | Ranking parse, country, mps (৭.৮) |
 | S19 | Newsletter subscriber | `newsletters`, `admission_subscribers` | DB-06 §13 (DBQ-07: সরাসরি subscribed) | — |
 | S20 | **Main site ও highlight** | সব `is_home = 1` → `site:0` relation; `featured_partners`, `csrs.is_featured` → highlight | DB-05 §1, BRD Q-26 | — |
-| S21 | SEO meta, slug, redirect | `seo`, সব slug, পুরনো URL তালিকা | DB-02 §18 | Redirect sheet (৭.৯) |
+| S21 | SEO meta, slug, redirect | `seo`, সব slug, পুরনো URL তালিকা; *(2026-10-10, SRS FR-GEN-34 থেকে 36)* DIU-র microsite URL pattern থেকে record-target redirect (পরের slug বদলও অনুসরণ করে): `/faculties/{x}` একই থাকে, `/department/{x}` → `/{faculty}/{x}`, `/department/{d}/program/{p}` → `/{faculty}/{d}/{program}` | DB-02 §18 | Redirect sheet (৭.৯) |
 | S22 | Content Update Reminder rule | `notification_settings` | DB-02 §18 | — |
 | S23 | Stat set (manual মান) | `department_program_type`-এর count field | DB-03 §15 | — |
 | S24 | শেষ কাজ | — | — | Search index, sitemap, cache warm, view count, Research / Publications `default_active` অনুযায়ী inactive |
