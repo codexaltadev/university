@@ -4,7 +4,9 @@ namespace Modules\Program\Filament;
 
 use Filament\Contracts\Plugin;
 use Filament\Panel;
+use Modules\Program\Filament\Resources\FeeCategories\FeeCategoryResource;
 use Modules\Program\Filament\Resources\Programs\ProgramResource;
+use Modules\Program\Filament\Resources\Tuitions\TuitionResource;
 
 class ProgramPlugin implements Plugin
 {
@@ -20,7 +22,7 @@ class ProgramPlugin implements Plugin
 
     public function register(Panel $panel): void
     {
-        $panel->resources([ProgramResource::class]);
+        $panel->resources([ProgramResource::class, TuitionResource::class, FeeCategoryResource::class]);
     }
 
     public function boot(Panel $panel): void {}

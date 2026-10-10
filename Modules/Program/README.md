@@ -5,9 +5,9 @@ Installable module M-03 (SRS Part 2). Academic › Programs and the program page
 | | |
 |---|---|
 | Slug | `program` |
-| Tables | `program_programs` (B) — DB-03 §4.1; media `image`, `brochure`. Sub-items (§4.2, B, cascade on force delete): `program_majors`, `program_list_items` (career_path / industry), `program_facilitators` (media `photo`), `program_materials` (media `file`), `program_memberships` (media `logo`), `program_variants` (media `image`) |
+| Tables | `program_programs` (B) — DB-03 §4.1; media `image`, `brochure`. Sub-items (§4.2, B, cascade on force delete): `program_majors`, `program_list_items` (career_path / industry), `program_facilitators` (media `photo`), `program_materials` (media `file`), `program_memberships` (media `logo`), `program_variants` (media `image`). Tuition (M-10 part, DB-03 §11.1 v1.2): `program_fee_categories`, `program_tuitions`, `program_tuition_lines` |
 | Vocabularies | `program.level` (one per program, column `level_term_id`; seeded: Undergraduate, Graduate, Diploma, Post Graduate Diploma), `program.tag` (many, core_termables), `program.major-category` |
-| Permissions | resource `…:Program`; scoped users edit the profile but not Department, name, short name, address, active |
+| Permissions | resource `…:Program`; scoped users edit the profile but not Department, name, short name, address, active. `…:Tuition`, `…:FeeCategory` (by default the Admission Office); tuitions are scoped through their program |
 | Depends on | `department` (hard: `department_id` FK, restrict) and `faculty` (listing filter; the Faculty comes from the Department) |
 
 * **Admin:** texts per language (name, subtitle, degree, duration label, summary, objective, eligibility general /
@@ -16,11 +16,22 @@ Installable module M-03 (SRS Part 2). Academic › Programs and the program page
   application link, structured eligibility rules); active, publish date, "show in the program list"; image,
   brochure, video; SEO; people (Coordinator, Officer, Contact, Industry Expert); drag order; filters by Faculty,
   Department, level, shift.
-* **Sub-items** (BRL-PROG-04) are edited on the Program's edit page, one list each: Majors & Specializations
-  (category), Career Paths, Industries, Facilitators & Industry Experts, Learning Materials (link or file),
-  Professional Memberships, Program Options (variants: related program, button). They have no policy of their
-  own — whoever may update the Program edits them, whoever may view it sees them (AC-PROG-03). Each part of the
-  page can have a short intro ("Section intros" in the form).
+* **Program Editor** (UI/UX Part A §5.2.1): a new program is a wizard (Basic info, Details, Eligibility, Majors,
+  Options, Career & industry, Facilitators & people, Materials & memberships, Summary & SEO; skippable); an existing
+  one shows the same parts as tabs on the left with ✓ / ! / item counts and "x of 7 parts filled in"
+  (`Support\ProgramChecklist`). Who may only view gets it read only (`ViewProgram`).
+* **Sub-items** (BRL-PROG-04) are lists inside their part: Majors & Specializations (category), Career Paths,
+  Industries, Facilitators & Industry Experts, Learning Materials (link or file), Professional Memberships,
+  Program Options (variants: related program, button). They have no policy of their own — whoever may update the
+  Program edits them, whoever may view it sees them (AC-PROG-03). Each part has an optional intro on top.
+* **Tuition fees** (FR-FEE-01..04): Academic › Fee categories (name, code used in `/tuition-fees?category=local`,
+  currency, order) and Academic › Tuition fees (program, category, label, credits / range, semesters, duration,
+  prospectus link, fee lines admission / per year / per semester / per credit / other with optional "up to").
+  Totals worked out on every change: `tuition = per year + per semester × semesters + per credit × credits`
+  (the waiver base), `total = tuition + admission + other`; "Enter the totals by hand" keeps typed figures (all
+  migrated DIU tuitions). Program Hub › Fees › Tuition Fees: the program's tuitions — edited with the tuition
+  permissions, read by entity users. Website `/tuition-fees` (one category, filters faculty / department / level,
+  layouts grouped / compact, print) and the program page's "Tuition Fees" tab. The Waiver module reads these.
 * **Scope:** a Program user sees only their Program (AC-PROG-03); Department / Faculty users their programs.
   Moving to another Department is an Admin's (BRL-PROG-02) and fires `EntityHierarchyChanged`.
 * **Website:** `/programs` with filters `faculty`, `department` (short names), `level` (slug), `shift`, `mode`,
@@ -49,3 +60,8 @@ Installable module M-03 (SRS Part 2). Academic › Programs and the program page
 | `sections.by-level` | `$items` (list of `level`, `programs`), `$section`, `$settings` |
 | `microsite.home` | `$entity` (Program), `$context` |
 | `microsite.items` | `$entity`, `$part` = majors / variants / careers / people |
+| `tuition.grouped` / `tuition.compact` | `$category`, `$categories`, `$groups` (list of `faculty`, `tuitions`), `$choices`, `$selected`, `$options` |
+| `tuition.table` | `$tuitions`, `$withFaculty` |
+| `tuition.filters` | `$category`, `$categories`, `$choices`, `$selected` |
+| `tuition.summary` | `$tuition`, `$detailed` |
+| `tuition.tab` | `$entity` (Program), `$tuitions` |

@@ -1,0 +1,23 @@
+{
+    "name": "uwms/waiver",
+    "description": "Waiver Calculator module",
+    "authors": [
+        {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Waiver\\": "app/",
+            "Modules\\Waiver\\Database\\Factories\\": "database/factories/",
+            "Modules\\Waiver\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Waiver\\Tests\\": "tests/"
+        }
+    }
+}

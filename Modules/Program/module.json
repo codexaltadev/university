@@ -1,10 +1,11 @@
 {
     "name": "Program",
     "alias": "program",
-    "description": "Academic programs under a Department with their microsites, levels, tags, counters and listing — M-03",
+    "description": "Academic programs under a Department with their microsites, levels, tags, counters, listing and tuition fees — M-03, M-10 tuition",
     "keywords": [
         "academic",
-        "program"
+        "program",
+        "tuition"
     ],
     "priority": 52,
     "providers": [
@@ -35,7 +36,10 @@
             "program.facilitator": "Modules\\Program\\Models\\ProgramFacilitator",
             "program.material": "Modules\\Program\\Models\\ProgramMaterial",
             "program.membership": "Modules\\Program\\Models\\ProgramMembership",
-            "program.variant": "Modules\\Program\\Models\\ProgramVariant"
+            "program.variant": "Modules\\Program\\Models\\ProgramVariant",
+            "program.fee-category": "Modules\\Program\\Models\\FeeCategory",
+            "program.tuition": "Modules\\Program\\Models\\Tuition",
+            "program.tuition-line": "Modules\\Program\\Models\\TuitionLine"
         },
         "custom_permissions": [],
         "provides": {
@@ -54,7 +58,8 @@
                 "program.industry-experts"
             ],
             "layouts": [
-                "program.listing"
+                "program.listing",
+                "program.tuition-table"
             ],
             "homepage_sections": [
                 "program.featured",
@@ -62,7 +67,8 @@
             ],
             "entity_pages": true,
             "searchable": true,
-            "sitemap": true
+            "sitemap": true,
+            "entity_tabs": true
         }
     }
 }

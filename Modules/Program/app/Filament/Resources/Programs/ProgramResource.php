@@ -9,6 +9,7 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Modules\Program\Filament\Hub\ProgramTuitions;
 use Modules\Program\Filament\Resources\Programs\Pages\CreateProgram;
 use Modules\Program\Filament\Resources\Programs\Pages\EditProgram;
 use Modules\Program\Filament\Resources\Programs\Pages\ListPrograms;
@@ -85,5 +86,10 @@ class ProgramResource extends Resource
     protected static function hubProfilePages(): array
     {
         return [EditProgram::class, ViewProgram::class];
+    }
+
+    protected static function hubOwnPages(): array
+    {
+        return [ProgramTuitions::class];   // Fees › Tuition Fees
     }
 }

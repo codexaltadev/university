@@ -1,0 +1,42 @@
+{
+    "name": "Waiver",
+    "alias": "waiver",
+    "description": "Waiver Calculator: waiver categories, rules and boards, the calculator page, scholarships later — M-10",
+    "keywords": [
+        "academic",
+        "waiver",
+        "scholarship"
+    ],
+    "priority": 60,
+    "providers": [
+        "Modules\\Waiver\\Providers\\WaiverServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "waiver",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "waiver_",
+        "dependencies": {
+            "program": "^1.0",
+            "faculty": "^1.0"
+        },
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "waiver.board": "Modules\\Waiver\\Models\\Board",
+            "waiver.category": "Modules\\Waiver\\Models\\WaiverCategory",
+            "waiver.rule": "Modules\\Waiver\\Models\\WaiverRule"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "settings": true
+        }
+    }
+}
