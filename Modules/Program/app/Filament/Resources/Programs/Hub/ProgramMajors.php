@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Program\Filament\Resources\Programs\RelationManagers;
+namespace Modules\Program\Filament\Resources\Programs\Hub;
 
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -8,17 +8,23 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
 use Modules\Program\Models\ProgramMajor;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Taxonomy\Vocabularies;
 
 /** Majors / Specializations (FR-PROG-04). */
-class MajorsRelationManager extends ProgramItemsRelationManager
+class ProgramMajors extends ProgramItemsPage
 {
     protected static string $relationship = 'majors';
 
-    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    protected static ?int $navigationSort = 31;
+
+    public static function hubKey(): string
+    {
+        return 'majors';
+    }
+
+    public static function getNavigationLabel(): string
     {
         return __('program::program.items.majors');
     }

@@ -14,12 +14,12 @@ use Livewire\Livewire;
 use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
 use Modules\Program\Database\Seeders\ProgramDatabaseSeeder;
+use Modules\Program\Filament\Resources\Programs\Hub\ProgramCareerPaths;
+use Modules\Program\Filament\Resources\Programs\Hub\ProgramIndustries;
+use Modules\Program\Filament\Resources\Programs\Hub\ProgramMajors;
+use Modules\Program\Filament\Resources\Programs\Hub\ProgramVariants;
 use Modules\Program\Filament\Resources\Programs\Pages\EditProgram;
 use Modules\Program\Filament\Resources\Programs\ProgramResource;
-use Modules\Program\Filament\Resources\Programs\RelationManagers\CareerPathsRelationManager;
-use Modules\Program\Filament\Resources\Programs\RelationManagers\IndustriesRelationManager;
-use Modules\Program\Filament\Resources\Programs\RelationManagers\MajorsRelationManager;
-use Modules\Program\Filament\Resources\Programs\RelationManagers\VariantsRelationManager;
 use Modules\Program\Models\Program;
 use Modules\Program\Models\ProgramFacilitator;
 use Modules\Program\Models\ProgramListItem;
@@ -44,7 +44,7 @@ beforeEach(function () {
     $this->bsc = Program::factory()->create(['department_id' => $this->cse->id, 'short_name' => 'BSc CSE', 'name' => ['en' => 'BSc in CSE']]);
     $this->msc = Program::factory()->create(['department_id' => $this->cse->id, 'short_name' => 'MSc CSE', 'name' => ['en' => 'MSc in CSE']]);
 
-    $this->rm = fn (string $class) => Livewire::test($class, ['ownerRecord' => $this->bsc, 'pageClass' => EditProgram::class]);
+    $this->rm = fn (string $class) => Livewire::test($class, ['record' => $this->bsc->getRouteKey()]);   // Program Hub parts (FR-GEN-86)
 });
 
 it('adds majors with a category, and career paths and industries to their own lists (FR-PROG-04/05)', function () {
@@ -52,7 +52,7 @@ it('adds majors with a category, and career paths and industries to their own li
     Vocabularies::ensureTerms('program.major-category', [['name' => ['en' => 'Concentration']]]);
     $concentration = array_key_first(app(Vocabularies::class)->options('program.major-category'));
 
-    ($this->rm)(MajorsRelationManager::class)
+    ($this->rm)(ProgramMajors::class)
         ->callTableAction('create', data: ['title' => ['en' => 'Cyber Security', 'bn' => 'সাইবার নিরাপত্তা'], 'category_term_id' => $concentration, 'is_active' => true])
         ->assertHasNoTableActionErrors();
 
@@ -61,9 +61,9 @@ it('adds majors with a category, and career paths and industries to their own li
         ->and($major->category->getTranslation('name', 'en'))->toBe('Concentration')
         ->and($major->getTranslation('title', 'bn'))->toBe('সাইবার নিরাপত্তা');
 
-    ($this->rm)(CareerPathsRelationManager::class)
+    ($this->rm)(ProgramCareerPaths::class)
         ->callTableAction('create', data: ['title' => ['en' => 'Software Engineer'], 'is_active' => true])->assertHasNoTableActionErrors();
-    ($this->rm)(IndustriesRelationManager::class)
+    ($this->rm)(ProgramIndustries::class)
         ->callTableAction('create', data: ['title' => ['en' => 'Banking'], 'is_active' => true])->assertHasNoTableActionErrors();
 
     expect(ProgramListItem::query()->get()->mapWithKeys(fn (ProgramListItem $i): array => [$i->getTranslation('title', 'en') => $i->list_type])->all())
@@ -72,13 +72,13 @@ it('adds majors with a category, and career paths and industries to their own li
     // Each list shows only its own items
     $career = ProgramListItem::query()->where('list_type', 'career_path')->sole();
     $industry = ProgramListItem::query()->where('list_type', 'industry')->sole();
-    ($this->rm)(CareerPathsRelationManager::class)->assertCanSeeTableRecords([$career])->assertCanNotSeeTableRecords([$industry]);
+    ($this->rm)(ProgramCareerPaths::class)->assertCanSeeTableRecords([$career])->assertCanNotSeeTableRecords([$industry]);
 });
 
 it('links a variant to a related program; the button falls back to that program (FR-PROG-09)', function () {
     $this->actingAs(superAdmin());
 
-    ($this->rm)(VariantsRelationManager::class)
+    ($this->rm)(ProgramVariants::class)
         ->callTableAction('create', data: ['title' => ['en' => 'Evening option'], 'short_description' => ['en' => 'Classes after office hours.'], 'related_program_id' => $this->msc->id, 'is_active' => true])
         ->assertHasNoTableActionErrors();
 
@@ -94,7 +94,7 @@ it('lets whoever may update the program edit its sub-items, and nobody else (BRL
     $this->actingAs($programUser);
     $this->get(ProgramResource::getUrl('edit', ['record' => $this->bsc]))->assertOk()->assertSee('Majors &amp; Specializations', false);
 
-    ($this->rm)(MajorsRelationManager::class)
+    ($this->rm)(ProgramMajors::class)
         ->callTableAction('create', data: ['title' => ['en' => 'Data Science'], 'is_active' => true])
         ->assertHasNoTableActionErrors();
     expect(ProgramMajor::query()->where('program_id', $this->bsc->id)->count())->toBe(1);
@@ -105,8 +105,8 @@ it('lets whoever may update the program edit its sub-items, and nobody else (BRL
     // View only: the list is there, the buttons are not
     $viewer = makeUser(['ViewAny:Program', 'View:Program'], [$this->bsc]);
     $this->actingAs($viewer);
-    expect(MajorsRelationManager::canViewForRecord($this->bsc, EditProgram::class))->toBeTrue();
-    ($this->rm)(MajorsRelationManager::class)->assertTableActionHidden('create');
+    expect(ProgramMajors::canAccess(['record' => $this->bsc]))->toBeTrue();
+    ($this->rm)(ProgramMajors::class)->assertTableActionHidden('create');
 });
 
 it('shows the sub-items on the program page with their intros, active ones only (FR-PROG-13)', function () {

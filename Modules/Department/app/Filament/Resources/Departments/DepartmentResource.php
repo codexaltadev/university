@@ -15,12 +15,15 @@ use Modules\Department\Filament\Resources\Departments\Pages\ListDepartments;
 use Modules\Department\Filament\Resources\Departments\Schemas\DepartmentForm;
 use Modules\Department\Filament\Resources\Departments\Tables\DepartmentsTable;
 use Modules\Department\Models\Department;
+use Platform\Filament\Hub\EntityHub;
 use Platform\Filament\RelationManagers\ActivityRelationManager;
 use UnitEnum;
 
 /** Academic › Departments (M-02). */
 class DepartmentResource extends Resource
 {
+    use EntityHub;
+
     protected static ?string $model = Department::class;
 
     protected static string|UnitEnum|null $navigationGroup = 'Academic';
@@ -62,12 +65,18 @@ class DepartmentResource extends Resource
         return [ActivityRelationManager::class];   // FR-GEN-83
     }
 
-    public static function getPages(): array
+    /** The Department Hub (FR-GEN-86): Profile + the parts other modules register (Programs …). */
+    protected static function hubBasePages(): array
     {
         return [
             'index' => ListDepartments::route('/'),
             'create' => CreateDepartment::route('/create'),
             'edit' => EditDepartment::route('/{record}/edit'),
         ];
+    }
+
+    protected static function hubProfilePage(): string
+    {
+        return EditDepartment::class;
     }
 }

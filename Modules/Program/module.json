@@ -60,6 +60,7 @@
                 "program.featured",
                 "program.by-level"
             ],
+            "entity_pages": true,
             "searchable": true,
             "sitemap": true
         }

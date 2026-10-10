@@ -9,25 +9,28 @@ use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Modules\Program\Filament\Resources\Programs\Hub\ProgramCareerPaths;
+use Modules\Program\Filament\Resources\Programs\Hub\ProgramFacilitators;
+use Modules\Program\Filament\Resources\Programs\Hub\ProgramIndustries;
+use Modules\Program\Filament\Resources\Programs\Hub\ProgramMajors;
+use Modules\Program\Filament\Resources\Programs\Hub\ProgramMaterials;
+use Modules\Program\Filament\Resources\Programs\Hub\ProgramMemberships;
+use Modules\Program\Filament\Resources\Programs\Hub\ProgramVariants;
 use Modules\Program\Filament\Resources\Programs\Pages\CreateProgram;
 use Modules\Program\Filament\Resources\Programs\Pages\EditProgram;
 use Modules\Program\Filament\Resources\Programs\Pages\ListPrograms;
-use Modules\Program\Filament\Resources\Programs\RelationManagers\CareerPathsRelationManager;
-use Modules\Program\Filament\Resources\Programs\RelationManagers\FacilitatorsRelationManager;
-use Modules\Program\Filament\Resources\Programs\RelationManagers\IndustriesRelationManager;
-use Modules\Program\Filament\Resources\Programs\RelationManagers\MajorsRelationManager;
-use Modules\Program\Filament\Resources\Programs\RelationManagers\MaterialsRelationManager;
-use Modules\Program\Filament\Resources\Programs\RelationManagers\MembershipsRelationManager;
-use Modules\Program\Filament\Resources\Programs\RelationManagers\VariantsRelationManager;
 use Modules\Program\Filament\Resources\Programs\Schemas\ProgramForm;
 use Modules\Program\Filament\Resources\Programs\Tables\ProgramsTable;
 use Modules\Program\Models\Program;
+use Platform\Filament\Hub\EntityHub;
 use Platform\Filament\RelationManagers\ActivityRelationManager;
 use UnitEnum;
 
 /** Academic › Programs (M-03). */
 class ProgramResource extends Resource
 {
+    use EntityHub;
+
     protected static ?string $model = Program::class;
 
     protected static string|UnitEnum|null $navigationGroup = 'Academic';
@@ -66,25 +69,26 @@ class ProgramResource extends Resource
 
     public static function getRelations(): array
     {
-        // BRL-PROG-04: sub-items are edited on the Program's page
-        return [
-            MajorsRelationManager::class,
-            CareerPathsRelationManager::class,
-            IndustriesRelationManager::class,
-            FacilitatorsRelationManager::class,
-            MaterialsRelationManager::class,
-            MembershipsRelationManager::class,
-            VariantsRelationManager::class,
-            ActivityRelationManager::class,   // FR-GEN-83
-        ];
+        return [ActivityRelationManager::class];   // FR-GEN-83
     }
 
-    public static function getPages(): array
+    /** The Program Hub (FR-GEN-86): Profile, the program-page parts (BRL-PROG-04) and parts of other modules. */
+    protected static function hubBasePages(): array
     {
         return [
             'index' => ListPrograms::route('/'),
             'create' => CreateProgram::route('/create'),
             'edit' => EditProgram::route('/{record}/edit'),
         ];
+    }
+
+    protected static function hubProfilePage(): string
+    {
+        return EditProgram::class;
+    }
+
+    protected static function hubOwnPages(): array
+    {
+        return [ProgramMajors::class, ProgramCareerPaths::class, ProgramIndustries::class, ProgramFacilitators::class, ProgramMaterials::class, ProgramMemberships::class, ProgramVariants::class];
     }
 }

@@ -32,7 +32,9 @@ class TuitionForm
                 Grid::make(1)->columnSpan(2)->schema([
                     Section::make(__('fee::fee.sections.tuition'))->columns(2)->schema([
                         Select::make('program_id')->label(__('fee::fee.fields.program'))->required()->searchable()
-                            ->options(fn (?Tuition $record): array => static::programOptions($record)),
+                            ->options(fn (?Tuition $record): array => static::programOptions($record))
+                            ->default(fn (): ?int => request()->integer('program') ?: null)      // from the Program Hub (FR-GEN-86)
+                            ->dehydrated()->disabled(fn ($livewire): bool => filled($livewire->hubProgram ?? null)),
                         Select::make('fee_category_id')->label(__('fee::fee.fields.category'))->required()
                             ->options(fn (): array => FeeCategory::query()->ordered()->get()->mapWithKeys(fn (FeeCategory $c): array => [$c->id => $c->name])->all()),
                         TextInput::make('credit_min')->label(__('fee::fee.fields.credit_min'))->numeric()->minValue(0)->maxValue(9999)->live(onBlur: true),

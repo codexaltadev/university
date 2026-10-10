@@ -1,0 +1,91 @@
+<?php
+
+/*
+| Program Hub › Fees (FR-GEN-86, UI/UX Part A §4.3, SRS M-10 v1.1): Tuition Fees — edited
+| by who has the tuition permissions (Admission Office), read by entity users in their
+| scope; Waiver rules — read only, for who may view waiver rules (Waiver Office).
+*/
+
+use Filament\Facades\Filament;
+use Livewire\Livewire;
+use Modules\Department\Models\Department;
+use Modules\Faculty\Models\Faculty;
+use Modules\Fee\Filament\Hub\ProgramTuitions;
+use Modules\Fee\Filament\Hub\ProgramWaiverRules;
+use Modules\Fee\Filament\Resources\Tuitions\Pages\CreateTuition;
+use Modules\Fee\Models\FeeCategory;
+use Modules\Fee\Models\Tuition;
+use Modules\Fee\Models\WaiverRule;
+use Modules\Program\Database\Factories\ProgramFactory;
+use Modules\Program\Filament\Resources\Programs\ProgramResource;
+use Modules\Program\Models\Program;
+use Platform\Modules\ModulePermissions;
+
+beforeEach(function () {
+    Filament::setCurrentPanel(Filament::getPanel('admin'));
+    foreach (['Program', 'Fee'] as $module) {
+        app(ModulePermissions::class)->sync($module);
+    }
+
+    $this->local = FeeCategory::query()->create(['name' => ['en' => 'Local Tuition Fee'], 'code' => 'local', 'currency' => 'BDT']);
+    $dept = Department::factory()->create(['faculty_id' => Faculty::factory()->create()->id]);
+    $this->bsc = Program::factory()->create(['department_id' => $dept->id, 'name' => ['en' => 'BSc in CSE']]);
+    $this->other = Program::factory()->create(['department_id' => $dept->id, 'name' => ['en' => 'BSc in EEE']]);
+    $this->tuition = Tuition::query()->create(['program_id' => $this->bsc->id, 'fee_category_id' => $this->local->id, 'totals_overridden' => true, 'tuition_min' => 709500, 'total_min' => 952500]);
+    $otherTuition = Tuition::query()->create(['program_id' => $this->other->id, 'fee_category_id' => $this->local->id, 'totals_overridden' => true, 'tuition_min' => 500000, 'total_min' => 700000]);
+
+    $this->ruleHere = WaiverRule::query()->create(['name' => ['en' => 'GPA 5 here'], 'level_term_id' => ProgramFactory::level('Undergraduate'), 'fee_category_id' => $this->local->id, 'waiver_percent' => 20]);
+    $this->ruleHere->tuitions()->sync([$this->tuition->id]);
+    $this->ruleElsewhere = WaiverRule::query()->create(['name' => ['en' => 'Only for EEE'], 'level_term_id' => ProgramFactory::level('Undergraduate'), 'fee_category_id' => $this->local->id, 'waiver_percent' => 30]);
+    $this->ruleElsewhere->tuitions()->sync([$otherTuition->id]);
+});
+
+it('lets the Admission Office manage the program\'s tuition from the Hub', function () {
+    $office = makeUser(['ViewAny:Program', 'View:Program', 'ViewAny:Tuition', 'View:Tuition', 'Create:Tuition', 'Update:Tuition']);   // no scope: every program
+    $this->actingAs($office);
+
+    $this->get(ProgramResource::getUrl('edit', ['record' => $this->bsc]))->assertForbidden();             // the profile stays Update:Program
+
+    $this->get(ProgramTuitions::getUrl(['record' => $this->bsc]))->assertOk()
+        ->assertSeeInOrder(['Fees', 'Tuition Fees'])
+        ->assertDontSee(ProgramWaiverRules::getUrl(['record' => $this->bsc]), false)                  // no waiver permission
+        ->assertSee('৳ 952,500')->assertDontSee('৳ 700,000')
+        ->assertSee('/admin/tuitions/create?program='.$this->bsc->id, false);
+
+    Livewire::withQueryParams(['program' => $this->bsc->id])->test(CreateTuition::class)
+        ->assertFormFieldIsDisabled('program_id')
+        ->fillForm(['program_id' => $this->other->id, 'fee_category_id' => $this->local->id, 'credit_min' => 40])
+        ->call('create')
+        ->assertHasNoFormErrors()
+        ->assertRedirect(ProgramTuitions::getUrl(['record' => $this->bsc]));
+    expect(Tuition::query()->where('program_id', $this->bsc->id)->count())->toBe(2);
+});
+
+it('shows a program user their tuition read only', function () {
+    $programUser = makeUser(['ViewAny:Program', 'View:Program', 'Update:Program', 'ViewAny:Tuition', 'View:Tuition'], [$this->bsc]);
+    $this->actingAs($programUser);
+
+    $this->get(ProgramTuitions::getUrl(['record' => $this->bsc]))->assertOk()
+        ->assertSee('৳ 952,500')
+        ->assertDontSee('/admin/tuitions/create', false);
+
+    Livewire::test(ProgramTuitions::class, ['record' => $this->bsc->getRouteKey()])
+        ->assertTableActionHidden('edit', $this->tuition)
+        ->call('updateTableColumnState', 'is_active', (string) $this->tuition->getKey(), false);
+    expect($this->tuition->fresh()->is_active)->toBeTrue();
+
+    $this->get(ProgramTuitions::getUrl(['record' => $this->other]))->assertNotFound();                   // another program
+});
+
+it('lists the waiver rules that apply to the program, read only, for the Waiver Office', function () {
+    $waiverOffice = makeUser(['ViewAny:Program', 'View:Program', 'ViewAny:WaiverRule', 'View:WaiverRule', 'Update:WaiverRule']);
+    $this->actingAs($waiverOffice);
+
+    $this->get(ProgramWaiverRules::getUrl(['record' => $this->bsc]))->assertOk()
+        ->assertSee('GPA 5 here')->assertDontSee('Only for EEE')
+        ->assertSee('/admin/waiver-rules/'.$this->ruleHere->id.'/edit', false)                          // editing opens the rule itself
+        ->assertDontSee('/admin/waiver-rules/create', false);
+
+    $this->actingAs(makeUser(['ViewAny:Program', 'View:Program', 'ViewAny:Tuition']));
+    $this->get(ProgramWaiverRules::getUrl(['record' => $this->bsc]))->assertForbidden();
+});

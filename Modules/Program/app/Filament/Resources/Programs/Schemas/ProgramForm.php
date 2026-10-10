@@ -80,7 +80,9 @@ class ProgramForm
                     Section::make(__('program::program.sections.program'))->compact()->schema([
                         Select::make('department_id')->label(__('program::program.fields.department'))
                             ->options(fn (?Program $record): array => static::departmentOptions($record))
-                            ->required()->searchable()->disabled($profileOnly)
+                            ->default(fn (): ?int => request()->integer('department') ?: null)      // from the Department Hub (FR-GEN-86)
+                            ->required()->searchable()->dehydrated()
+                            ->disabled(fn (string $operation, $livewire): bool => $profileOnly($operation) || filled($livewire->hubDepartment ?? null))
                             ->helperText(fn (string $operation): ?string => $operation === 'edit' ? __('program::program.help.department_move') : null),
                         Select::make('level_term_id')->label(__('program::program.fields.level'))
                             ->options(fn (): array => app(Vocabularies::class)->options('program.level'))

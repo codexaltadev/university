@@ -1,24 +1,30 @@
 <?php
 
-namespace Modules\Program\Filament\Resources\Programs\RelationManagers;
+namespace Modules\Program\Filament\Resources\Programs\Hub;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
 use Modules\Program\Models\ProgramListItem;
 use Platform\Filament\Components\TranslatableTabs;
 
-/** Career Paths (FR-PROG-05); Industries share the table (IndustriesRelationManager). */
-class CareerPathsRelationManager extends ProgramItemsRelationManager
+/** Career Paths (FR-PROG-05); Industries share the table (ProgramIndustries). */
+class ProgramCareerPaths extends ProgramItemsPage
 {
     protected static string $relationship = 'listItems';
 
     protected const LIST_TYPE = ProgramListItem::CAREER_PATH;
 
-    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    protected static ?int $navigationSort = 32;
+
+    public static function hubKey(): string
+    {
+        return 'career-paths';
+    }
+
+    public static function getNavigationLabel(): string
     {
         return __('program::program.items.'.static::LIST_TYPE);
     }

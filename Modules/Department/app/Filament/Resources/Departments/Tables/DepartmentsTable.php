@@ -31,7 +31,8 @@ class DepartmentsTable
                     ->description(fn (Department $record): ?string => $record->listingUrl()),
                 $inFaculty ? null : TextColumn::make('faculty.short_name')->label(__('department::department.fields.faculty'))->sortable(),
                 IconColumn::make('show_in_listing')->label(__('department::department.fields.show_in_listing'))->boolean(),
-                ToggleColumn::make('is_active')->label(__('platform::relations.active')),
+                ToggleColumn::make('is_active')->label(__('platform::relations.active'))
+                    ->disabled(fn ($record): bool => ! auth()->user()?->can('update', $record)),   // only who may update (a viewer in a Hub may not)
                 TextColumn::make('updated_at')->label(__('department::department.fields.updated_at'))->since()->sortable()->toggleable(),
             ]))
             ->filters(array_filter([

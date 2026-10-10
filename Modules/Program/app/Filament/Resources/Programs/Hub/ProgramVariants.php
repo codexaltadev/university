@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\Program\Filament\Resources\Programs\RelationManagers;
+namespace Modules\Program\Filament\Resources\Programs\Hub;
 
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
@@ -9,7 +9,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
 use Modules\Program\Models\Program;
 use Modules\Program\Models\ProgramVariant;
 use Platform\Filament\Components\MediaPicker;
@@ -17,11 +16,18 @@ use Platform\Filament\Components\TranslatableTabs;
 use Platform\Scope\UserScopeFilter;
 
 /** Program Variants, e.g. Dual Degree or Evening (FR-PROG-09). */
-class VariantsRelationManager extends ProgramItemsRelationManager
+class ProgramVariants extends ProgramItemsPage
 {
     protected static string $relationship = 'variants';
 
-    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    protected static ?int $navigationSort = 37;
+
+    public static function hubKey(): string
+    {
+        return 'options';
+    }
+
+    public static function getNavigationLabel(): string
     {
         return __('program::program.items.variants');
     }

@@ -29,7 +29,7 @@ class FacultyDepartments extends HubRelationPage
         return 'departments';
     }
 
-    protected static function parentQueryKey(): string
+    protected static function parentQueryKey(): ?string
     {
         return 'faculty';
     }

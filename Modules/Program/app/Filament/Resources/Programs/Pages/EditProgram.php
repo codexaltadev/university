@@ -14,6 +14,17 @@ class EditProgram extends EditRecord
 {
     protected static string $resource = ProgramResource::class;
 
+    /** "Profile" in the Program Hub, group "Program". */
+    public static function getNavigationLabel(): string
+    {
+        return __('platform::hub.profile');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('program::program.hub.program');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

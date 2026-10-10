@@ -1,22 +1,28 @@
 <?php
 
-namespace Modules\Program\Filament\Resources\Programs\RelationManagers;
+namespace Modules\Program\Filament\Resources\Programs\Hub;
 
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\TranslatableTabs;
 
 /** Professional Memberships / Accreditations (FR-PROG-08). */
-class MembershipsRelationManager extends ProgramItemsRelationManager
+class ProgramMemberships extends ProgramItemsPage
 {
     protected static string $relationship = 'memberships';
 
-    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    protected static ?int $navigationSort = 36;
+
+    public static function hubKey(): string
+    {
+        return 'memberships';
+    }
+
+    public static function getNavigationLabel(): string
     {
         return __('program::program.items.memberships');
     }

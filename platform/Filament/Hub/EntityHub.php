@@ -25,11 +25,17 @@ trait EntityHub
     /** @return class-string<Page> the edit page, shown as "Profile" */
     abstract protected static function hubProfilePage(): string;
 
+    /** @return list<class-string<HubPage>> parts the entity's own module adds (e.g. a Program's majors) */
+    protected static function hubOwnPages(): array
+    {
+        return [];
+    }
+
     public static function getPages(): array
     {
         $pages = static::hubBasePages();
 
-        foreach (static::hubPageClasses() as $class) {
+        foreach ([...static::hubOwnPages(), ...static::hubPageClasses()] as $class) {
             $pages[$class::hubKey()] = $class::route('/{record}/'.$class::hubKey());
         }
 
@@ -53,7 +59,10 @@ trait EntityHub
 
     public static function getRecordSubNavigation(Page $page): array
     {
-        return $page->generateNavigationItems([static::hubProfilePage(), ...static::hubPageClasses()]);
+        $parts = collect([...static::hubOwnPages(), ...static::hubPageClasses()])
+            ->sortBy(fn (string $class): int => $class::getNavigationSort() ?? 50)->values()->all();
+
+        return $page->generateNavigationItems([static::hubProfilePage(), ...$parts]);
     }
 
     public static function getSubNavigationPosition(): SubNavigationPosition

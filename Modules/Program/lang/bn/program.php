@@ -5,6 +5,11 @@ return [
     'singular' => 'program',
     'plural' => 'Program সমূহ',
     'metric_count' => 'Program-এর সংখ্যা',
+    'hub' => [
+        'program' => 'Program',
+        'page' => 'Program page',
+        'fees' => 'Fee',
+    ],
     'metric_majors' => 'Major-এর সংখ্যা',
     'metric_industry_experts' => 'Industry expert-এর সংখ্যা',
     'other_majors' => 'Major',

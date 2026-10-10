@@ -14,6 +14,12 @@ class EditDepartment extends EditRecord
 {
     protected static string $resource = DepartmentResource::class;
 
+    /** "Profile" in the Department Hub. */
+    public static function getNavigationLabel(): string
+    {
+        return __('platform::hub.profile');
+    }
+
     protected function getHeaderActions(): array
     {
         return [

@@ -1,21 +1,27 @@
 <?php
 
-namespace Modules\Program\Filament\Resources\Programs\RelationManagers;
+namespace Modules\Program\Filament\Resources\Programs\Hub;
 
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Database\Eloquent\Model;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\TranslatableTabs;
 
 /** Learning Materials: a link or a file from the Media Library (FR-PROG-07). */
-class MaterialsRelationManager extends ProgramItemsRelationManager
+class ProgramMaterials extends ProgramItemsPage
 {
     protected static string $relationship = 'materials';
 
-    public static function getTitle(Model $ownerRecord, string $pageClass): string
+    protected static ?int $navigationSort = 35;
+
+    public static function hubKey(): string
+    {
+        return 'materials';
+    }
+
+    public static function getNavigationLabel(): string
     {
         return __('program::program.items.materials');
     }

@@ -5,6 +5,11 @@ return [
     'singular' => 'program',
     'plural' => 'Programs',
     'metric_count' => 'Number of programs',
+    'hub' => [
+        'program' => 'Program',
+        'page' => 'Program page',
+        'fees' => 'Fees',
+    ],
     'metric_majors' => 'Number of majors',
     'metric_industry_experts' => 'Number of industry experts',
     'other_majors' => 'Majors',

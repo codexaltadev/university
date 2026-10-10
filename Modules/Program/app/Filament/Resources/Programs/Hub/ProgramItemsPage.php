@@ -1,13 +1,12 @@
 <?php
 
-namespace Modules\Program\Filament\Resources\Programs\RelationManagers;
+namespace Modules\Program\Filament\Resources\Programs\Hub;
 
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\RestoreAction;
-use Filament\Resources\RelationManagers\RelationManager;
 use Filament\Tables\Columns\Column;
 use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\TrashedFilter;
@@ -17,14 +16,18 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Auth;
+use Modules\Program\Filament\Resources\Programs\ProgramResource;
+use Platform\Filament\Hub\HubRelationPage;
 
 /**
- * Sub-items edited on the Program's page (BRL-PROG-04). They have no policy of their
+ * Sub-items edited in the Program Hub, one part each (BRL-PROG-04, FR-GEN-86, group "Program page"). They have no policy of their
  * own: whoever may update the Program — its scope included — may edit them
  * (AC-PROG-03); whoever may view it sees them.
  */
-abstract class ProgramItemsRelationManager extends RelationManager
+abstract class ProgramItemsPage extends HubRelationPage
 {
+    protected static string $resource = ProgramResource::class;
+
     /** @return list<Column> */
     abstract protected function columns(): array;
 
@@ -58,9 +61,16 @@ abstract class ProgramItemsRelationManager extends RelationManager
             ->recordActions([EditAction::make(), DeleteAction::make(), RestoreAction::make(), ForceDeleteAction::make()]);
     }
 
-    public static function canViewForRecord(Model $ownerRecord, string $pageClass): bool
+    public static function canAccess(array $parameters = []): bool
     {
-        return (bool) Auth::user()?->can('view', $ownerRecord);
+        $program = $parameters['record'] ?? null;
+
+        return $program instanceof Model && (bool) Auth::user()?->can('view', $program);
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('program::program.hub.page');
     }
 
     protected function ownerAllows(string $ability): bool
