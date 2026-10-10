@@ -16,6 +16,7 @@ use Modules\Scholarship\Filament\Resources\Scholarships\ScholarshipResource;
 use Modules\Scholarship\Models\Scholarship;
 use Platform\Modules\ModulePermissions;
 use Platform\Seo\Sitemap;
+use Platform\Taxonomy\Vocabularies;
 use Spatie\Permission\Models\Role;
 
 beforeEach(function () {
@@ -81,6 +82,31 @@ it('shows the scholarships and their calls on the website, open ones first', fun
     $this->get($this->erasmus->url())->assertNotFound();
     $this->get($this->spring->url())->assertNotFound();                                 // its calls go with it
     $this->get('/scholarships/nothing-here')->assertNotFound();
+});
+
+it('groups scholarships by category on the website, with sub-categories in the filter (DB-03 §11.3 v1.4)', function () {
+    Vocabularies::ensureTerms(Scholarship::CATEGORY, [
+        ['name' => ['en' => 'International'], 'slug' => 'international', 'children' => [['name' => ['en' => 'Exchange'], 'slug' => 'exchange']]],
+        ['name' => ['en' => 'Merit'], 'slug' => 'merit'],
+    ]);
+    $term = fn (string $name): int => (int) array_search($name, array_map(fn ($l) => ltrim($l, '— '), app(Vocabularies::class)->options(Scholarship::CATEGORY)), true);
+    $this->diu->syncTerms(Scholarship::CATEGORY, [$term('Merit')]);
+    $this->erasmus->syncTerms(Scholarship::CATEGORY, [$term('Exchange')]);
+    $gks = Scholarship::factory()->create(['title' => ['en' => 'Korean Government Scholarship'], 'sort_order' => 3]);   // no category
+
+    $this->get('/scholarships')->assertOk()
+        ->assertSeeInOrder(['Exchange', 'Erasmus Scholarship', 'Merit', 'DIU Scholarship', 'Other scholarships', 'Korean Government Scholarship']);
+
+    $this->get('/scholarships?category=international')->assertOk()             // a category with its sub-categories
+        ->assertSee('Erasmus Scholarship')->assertDontSee('DIU Scholarship')->assertDontSee('Korean Government Scholarship');
+
+    // Admin: the category is the scholarship's; its calls are found under it
+    $this->actingAs(superAdmin());
+    Livewire::test(ListScholarships::class)
+        ->filterTable('category', $term('Exchange'))
+        ->assertCanSeeTableRecords([$this->erasmus, $this->spring, $this->fall])->assertCanNotSeeTableRecords([$this->diu, $gks]);
+    Livewire::withQueryParams(['parent' => $this->erasmus->id])->test(CreateScholarship::class)
+        ->assertFormFieldIsHidden('category');                                    // a call has no category of its own
 });
 
 it('puts scholarships in search and the sitemap', function () {

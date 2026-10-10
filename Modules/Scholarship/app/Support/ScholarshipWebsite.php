@@ -4,10 +4,13 @@ namespace Modules\Scholarship\Support;
 
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Scholarship\Models\Scholarship;
 use Platform\Context\SiteContext;
 use Platform\Seo\Seo;
+use Platform\Taxonomy\Term;
+use Platform\Taxonomy\Vocabularies;
 
 /**
  * /scholarships (FR-FEE-10): the top-level scholarships in order; /scholarships/{slug}: one
@@ -27,10 +30,7 @@ class ScholarshipWebsite
         if ($rest === Scholarship::PATH) {
             app(Seo::class)->set(['title' => __('scholarship::scholarship.plural'), 'path' => '/'.Scholarship::PATH]);
 
-            return response()->view('scholarship::listing', [
-                'scholarships' => Scholarship::query()->frontendVisible()->topLevel()->ordered()
-                    ->withCount(['parts' => fn ($q) => $q->frontendVisible()])->get(),
-            ]);
+            return response()->view('scholarship::listing', $this->listing($locale));
         }
 
         if (str_contains($slug, '/') || ! ($found = Scholarship::findBySlug($slug, $locale))) {
@@ -52,5 +52,36 @@ class ScholarshipWebsite
             'parent' => $scholarship->parent,
             'parts' => $scholarship->parts()->frontendVisible()->get()->sortBy(fn (Scholarship $s): int => $s->isClosed() ? 1 : 0)->values(),
         ]);
+    }
+
+    /**
+     * The top-level scholarships grouped by category in the vocabulary's order, the ones
+     * without a category last; ?category={slug} keeps one category and its sub-categories.
+     *
+     * @return array{groups: Collection<int, array{category: ?Term, scholarships: Collection<int, Scholarship>}>, categories: Collection<int, Term>, selected: ?Term, scholarships: Collection<int, Scholarship>}
+     */
+    protected function listing(string $locale): array
+    {
+        $scholarships = Scholarship::query()->frontendVisible()->topLevel()->ordered()->with('terms')
+            ->withCount(['parts' => fn ($q) => $q->frontendVisible()])->get();
+        $termOf = fn (Scholarship $s): ?int => $s->termIdsIn(Scholarship::CATEGORY)[0] ?? null;
+
+        $order = array_keys(app(Vocabularies::class)->options(Scholarship::CATEGORY));   // parents before their children
+        $terms = Term::query()->whereKey($order)->get()->sortBy(fn (Term $t): int => array_search($t->id, $order, true))->values();
+        $used = $scholarships->map($termOf)->filter()->unique()->all();
+        $categories = $terms->filter(fn (Term $t): bool => in_array($t->id, $used, true))->values();
+
+        $wanted = request()->query('category');
+        $selected = is_string($wanted) ? $terms->first(fn (Term $t): bool => $t->slug($locale) === $wanted) : null;
+        if ($selected) {
+            $keep = [$selected->id, ...$selected->descendantIds()];
+            $scholarships = $scholarships->filter(fn (Scholarship $s): bool => in_array($termOf($s), $keep, true))->values();
+        }
+
+        $groups = $terms->map(fn (Term $t): array => ['category' => $t, 'scholarships' => $scholarships->filter(fn (Scholarship $s): bool => $termOf($s) === $t->id)->values()])
+            ->push(['category' => null, 'scholarships' => $scholarships->filter(fn (Scholarship $s): bool => $termOf($s) === null)->values()])
+            ->filter(fn (array $g): bool => $g['scholarships']->isNotEmpty())->values();
+
+        return ['groups' => $groups, 'categories' => $categories, 'selected' => $selected, 'scholarships' => $scholarships];
     }
 }

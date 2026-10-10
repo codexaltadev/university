@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-03 |
-| Version | 1.4 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়); v1.4: Scholarship নিজের module `scholarship`, parent / child (§11.3) |
+| Version | 1.4 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়); v1.4: Scholarship নিজের module `scholarship`, parent / child ও category vocabulary (§11.3) |
 | Date | 2026-10-10 (v1.0 confirmed 2026-10-08) |
 | Status | ✔ Confirmed — v1.3 approved 2026-10-10 (Tuition, Waiver আলাদা module); v1.1 approved 2026-10-10: entry করা rule ও data অক্ষত থাকবে; logic বদলানো যাবে যদি ফলাফল হুবহু একই থাকে (golden master দিয়ে প্রমাণ) |
 | Based on | [DB-01](01-DB-Core-Kernel.md) (conventions), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 2](../02-SRS/02-SRS-Academic.md), `project_diu` |
@@ -384,7 +384,7 @@ Scholarship waiver rule, tuition বা board-এর সাথে যুক্�
 * Index: `(parent_id, sort_order)`।
 * Media: `image` (cover), `attachments` (PDF, ক্রমসহ) — Media usage (DB-02)। Slug `core_slugs`: `/scholarships/{slug}`; অধীন অংশের breadcrumb: Scholarships › Erasmus › {call}। SEO (`HasSeo`), search, sitemap।
 * নিয়ম: parent নিজে অন্য কারো অধীন হতে পারবে না (এক স্তর); অধীন অংশ থাকলে parent মোছা যাবে না (FR-GEN-08)।
-* *(v1.4)* Vocabulary `fee.scholarship-category` বাদ — "hierarchical category" (FR-FEE-10) parent / child দিয়ে।
+* *(v1.4)* Category → vocabulary `scholarship.category` (hierarchical, প্রতি scholarship-এ একটি, `core_termables`) — শুধু মূল scholarship-এ; call-গুলো parent-এর category-তে পড়ে। ধরন অনুযায়ী ভাগ (Government, International, Merit, Exchange …); parent / child আলাদা জিনিস (একটি scholarship ও তার call)। পুরনো `fee.scholarship-category` বাদ।
 
 ---
 
@@ -408,6 +408,7 @@ Program-এর সাথে সম্পর্ক audience term দিয়ে 
 | `program.major-category` | Program | | | `program_major_categories` |
 | `faculty-member.designation` | Faculty Member | | ✔ | — |
 | `admission.highlight-category` | Admission | | | `admission_facility_categories` |
+| `scholarship.category` *(v1.4)* | Scholarship | ✔ | | — (নতুন; DIU-র `scholarship_categories` আসলে scholarship, §11.3) |
 | `calendar.audience` | Calendar | | | `calender_programs` |
 | `calendar.event-type` | Calendar | | | — (নতুন) |
 

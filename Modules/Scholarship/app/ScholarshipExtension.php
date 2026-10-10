@@ -19,5 +19,6 @@ final class ScholarshipExtension implements ModuleExtension
         $r->searchable(Scholarship::class, label: 'scholarship::scholarship.plural', weight: 7);   // website search (FR-SRCH-01)
         $r->sitemap(Scholarship::class);                                                       // sitemap.xml (FR-SEO-02)
         $r->menuItemType(Scholarship::class);                                                  // menus can link a scholarship
+        $r->vocabulary(Scholarship::CATEGORY, label: 'Scholarship category', hierarchical: true, multiple: false);   // Government, International … (DB-03 §11.3)
     }
 }

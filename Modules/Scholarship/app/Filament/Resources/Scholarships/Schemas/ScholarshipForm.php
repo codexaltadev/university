@@ -10,10 +10,12 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Modules\Scholarship\Models\Scholarship;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\SeoPanel;
+use Platform\Filament\Components\TermSelect;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Filament\Components\WebAddressField;
 
@@ -47,7 +49,9 @@ class ScholarshipForm
                             ->default(fn (): ?int => request()->integer('parent') ?: null)
                             ->disabled(fn (?Scholarship $record): bool => (bool) $record?->parts()->exists())   // a scholarship with parts stays on top
                             ->dehydrated()
-                            ->searchable(),
+                            ->searchable()->live(),
+                        TermSelect::make('category')->vocabulary(Scholarship::CATEGORY)
+                            ->visible(fn (Get $get): bool => blank($get('parent_id'))),   // a call is in its scholarship's category
                         WebAddressField::make(prefix: '/'.Scholarship::PATH.'/'),
                         TextInput::make('apply_url')->label(__('scholarship::scholarship.fields.apply_url'))->url()->maxLength(2048),
                         DateTimePicker::make('deadline_at')->label(__('scholarship::scholarship.fields.deadline_at'))

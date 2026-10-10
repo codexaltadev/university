@@ -32,7 +32,10 @@
         "provides": {
             "searchable": true,
             "sitemap": true,
-            "menu_item_types": true
+            "menu_item_types": true,
+            "vocabularies": [
+                "scholarship.category"
+            ]
         }
     }
 }

@@ -15,6 +15,7 @@ use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Modules\Scholarship\Filament\Resources\Scholarships\ScholarshipResource;
 use Modules\Scholarship\Models\Scholarship;
+use Platform\Taxonomy\Vocabularies;
 
 /** Scholarships and their parts; "Under" filters one scholarship's parts (Erasmus → its calls). */
 class ScholarshipsTable
@@ -22,7 +23,7 @@ class ScholarshipsTable
     public static function configure(Table $table): Table
     {
         return $table
-            ->modifyQueryUsing(fn ($query) => $query->with('parent')->withCount('parts'))
+            ->modifyQueryUsing(fn ($query) => $query->with(['parent.terms', 'terms'])->withCount('parts'))
             ->defaultSort('sort_order')
             ->reorderable('sort_order')
             ->columns([
@@ -30,6 +31,8 @@ class ScholarshipsTable
                     ->description(fn (Scholarship $record): ?string => $record->parent
                         ? __('scholarship::scholarship.under', ['title' => $record->parent->title])
                         : ($record->parts_count ? trans_choice('scholarship::scholarship.parts_count', $record->parts_count, ['count' => $record->parts_count]) : null)),
+                TextColumn::make('category')->label(__('scholarship::scholarship.fields.category'))->badge()
+                    ->state(fn (Scholarship $record): ?string => ($record->parent ?? $record)->termsIn(Scholarship::CATEGORY)->first()?->name),
                 TextColumn::make('deadline_at')->label(__('scholarship::scholarship.fields.deadline_at'))->dateTime('d M Y')->sortable()
                     ->badge()->color(fn (Scholarship $record): string => $record->isClosed() ? 'gray' : 'success')
                     ->description(fn (Scholarship $record): ?string => $record->deadline_at ? ($record->isClosed() ? __('scholarship::scholarship.closed') : __('scholarship::scholarship.open')) : null),
@@ -45,6 +48,11 @@ class ScholarshipsTable
                         'top' => $query->whereNull('parent_id'),
                         default => $query->where('parent_id', $data['value']),
                     }),
+                SelectFilter::make('category')->label(__('scholarship::scholarship.fields.category'))
+                    ->options(fn (): array => app(Vocabularies::class)->options(Scholarship::CATEGORY))
+                    ->query(fn ($query, array $data) => filled($data['value'] ?? null)
+                        ? $query->where(fn ($q) => $q->withTerm((int) $data['value'])->orWhereHas('parent', fn ($p) => $p->withTerm((int) $data['value'])))
+                        : $query),
                 TrashedFilter::make(),
             ])
             ->recordActions([

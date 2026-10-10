@@ -12,6 +12,7 @@ use Platform\Concerns\HasMediaUsage;
 use Platform\Concerns\HasSeo;
 use Platform\Concerns\HasSlug;
 use Platform\Concerns\HasSortOrder;
+use Platform\Concerns\HasTaxonomy;
 use Platform\Concerns\IsSearchable;
 use Platform\Models\BaseModel;
 use Platform\Seo\Seo;
@@ -31,10 +32,13 @@ class Scholarship extends BaseModel
     use HasSeo;
     use HasSlug;            // /scholarships/{slug}
     use HasSortOrder;
+    use HasTaxonomy;        // scholarship.category, on top-level scholarships
     use HasTranslations;
     use IsSearchable;
 
     public const PATH = 'scholarships';
+
+    public const CATEGORY = 'scholarship.category';
 
     public static string $titleAttribute = 'title';
 

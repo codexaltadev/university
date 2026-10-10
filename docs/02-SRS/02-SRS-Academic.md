@@ -414,7 +414,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 | FR-FEE-07 | একাধিক rule মিললে নিয়ম: সর্বোচ্চ হার প্রযোজ্য, তবে rule-এর "সর্বোচ্চ হার" সীমা অতিক্রম করবে না (নিয়ম Admin settings-এ configurable: highest / additive with cap) | Q-16 | Must |
 | FR-FEE-08 | Calculator-এর ফলাফলে disclaimer (settings থেকে) এবং ফলাফল print / PDF | — | Should |
 | FR-FEE-09 | Rule-এর মধ্যে conflict বা ফাঁক থাকলে admin-কে সতর্ক করার "Rule test" tool: নমুনা input দিয়ে কোন rule মিলছে দেখা | — | Should |
-| FR-FEE-10 | Scholarship CRUD (module `scholarship`); একটি scholarship-এর অধীনে অংশ (এক স্তর — "hierarchical category"); শেষ সময় পেরোলে "Closed"; page `/scholarships` (মূল scholarship-গুলো) ও `/scholarships/{slug}` (বিস্তারিত, অধীন অংশের তালিকা) *(v0.2)* | Q-16 | Must |
+| FR-FEE-10 | Scholarship CRUD (module `scholarship`); একটি scholarship-এর অধীনে অংশ (এক স্তর — "hierarchical category"); শেষ সময় পেরোলে "Closed"; ঐচ্ছিক category (Site › Categories & Tags, sub-category সহ) দিয়ে ভাগ; page `/scholarships` (মূল scholarship-গুলো, category অনুযায়ী ভাগ, `?category=` filter) ও `/scholarships/{slug}` (বিস্তারিত, অধীন অংশের তালিকা) *(v0.2)* | Q-16 | Must |
 | FR-FEE-11 | Tuition ও Waiver Rule Excel import / export | — | Should |
 | FR-FEE-12 | Fee তথ্য Session-ভিত্তিক version রাখা: নতুন session-এর fee আলাদা, পুরনো session archive | — | Should |
 
