@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SAD Part A |
-| Version | 0.3 — v0.2 approved 2026-10-08; v0.3: Entity Hub (`entityPage()`, §7.2–7.3), Cluster (2026-10-10) |
+| Version | 0.3 — v0.2 approved 2026-10-08; v0.3: Entity Hub (`entityPage()`, §7.2–7.3), Cluster (2026-10-10); frontend stack: Tailwind 4.3.3, Alpine শুধু দরকারে (2026-10-11) |
 | Date | 2026-10-10 |
 | Status | **Approved** — v0.3 approved 2026-10-10 |
 | Based on | [BRD v1.3](../01-BRD.md), [SRS v1.0](../02-SRS/00-SRS-Overview.md) |
@@ -34,7 +34,8 @@
 | Cache / Queue / Session | Redis | `7+` | ছোট installation-এ database driver বিকল্প |
 | Queue monitor | laravel/horizon | `^5.24` | Redis queue হলে |
 | Web server | Nginx + PHP-FPM | — | HTTPS বাধ্যতামূলক |
-| Frontend asset | Vite, Tailwind CSS | Laravel default | Theme-এর asset build |
+| Frontend asset | Vite, Tailwind CSS | `4.3.3` (pin, CSS-first `@theme`) | Theme-এর asset build; অন্য CSS framework নয় |
+| Frontend JS | Alpine.js | Livewire-এর সাথে আসে | শুধু দরকারে (Theme Guide §12); আলাদা Alpine / jQuery / React নয় |
 
 ### 1.2 Package
 

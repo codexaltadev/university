@@ -16,4 +16,5 @@ The bundled website theme (BRL-THEME-01: it can never be uninstalled). It follow
 Module view overrides: none yet.
 
 Assets in `public/build` are plain CSS / JS that use only the design tokens (T-2).
-The full design (Tailwind build, sections, listing layouts) comes in Phase 4.
+The full design (Tailwind CSS 4.3.3 build, sections, listing layouts) comes in Phase 4.
+Alpine.js (bundled with Livewire) is used only where the browser needs state (Theme Guide §12).

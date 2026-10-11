@@ -3,8 +3,8 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Development Guide — Part B: Theme |
-| Version | 1.1 (kernel API মিলিয়ে, Phase 2.8a) |
-| Date | 2026-10-08 |
+| Version | 1.2 (Tailwind CSS v4.3.3 CSS-first config; Alpine.js শুধু দরকারে) |
+| Date | 2026-10-11 |
 | Status | ✔ Approved |
 | Based on | SAD Part B (§6 fallback resolver, §8 theme engine, §8.6 Blade + Livewire), UI/UX Part B (§2 token, §4 layout, §6 component, §8 checklist, §9 Theme Developer Contract), SRS C-06 (FR-THEME, FR-MENU, FR-HF, FR-PAGE-04) |
 | পাঠক | Frontend / Laravel developer যিনি নতুন public website theme বানাবেন বা default theme বদলাবেন |
@@ -107,8 +107,10 @@ themes/campus/
 │   ├── css/app.css
 │   └── js/app.js
 ├── public/build/                   # compiled asset + manifest.json — ZIP-এ বাধ্যতামূলক
-├── package.json  vite.config.js  tailwind.config.js
+├── package.json  vite.config.js    # Tailwind v4: tailwind.config.js নেই — config resources/css/app.css-এ
 ```
+
+> **Frontend stack (নির্ধারিত):** Blade + Livewire + **Tailwind CSS v4.3.3** (version pin করা, `^` নয়) + **Alpine.js শুধু দরকার হলে** (§12)। Bootstrap, jQuery বা অন্য CSS framework নয়।
 
 Development-এ:
 
@@ -267,45 +269,41 @@ Theme কখনো `:root`-এ token-এর মান নিজে **লিখ�
 
 ### 6.2 Tailwind-কে token-এ বাঁধা
 
-```js
-// themes/campus/tailwind.config.js
-export default {
-  content: ['./views/**/*.blade.php'],
-  theme: {
-    extend: {
-      colors: {
-        primary: 'var(--color-primary)',
-        'primary-contrast': 'var(--color-primary-contrast)',
-        secondary: 'var(--color-secondary)',
-        accent: 'var(--color-accent)',
-        bg: 'var(--color-bg)',
-        surface: 'var(--color-surface)',
-        text: 'var(--color-text)',
-        muted: 'var(--color-text-muted)',
-        border: 'var(--color-border)',
-      },
-      fontFamily: {
-        heading: 'var(--font-heading)',
-        body: 'var(--font-body)',
-      },
-      borderRadius: {
-        sm: 'var(--radius-sm)',
-        md: 'var(--radius-md)',
-        lg: 'var(--radius-lg)',
-      },
-      maxWidth: { container: 'var(--container-max)' },
-    },
-  },
-};
+Tailwind **v4.3.3** CSS-first: `tailwind.config.js` নেই; সব config `resources/css/app.css`-এ। `@theme inline` token-কে utility-তে বাঁধে, মান kernel-এর `:root` থেকে আসে (theme নিজে মান লেখে না):
+
+```css
+/* themes/campus/resources/css/app.css */
+@import "tailwindcss";
+
+/* view কোথায় — theme ও module view (নইলে module-এর class build-এ আসবে না) */
+@source "../../views";
+@source "../../../../Modules/*/resources/views";
+@source "../../../../platform/resources/views";
+
+@theme inline {
+  --color-primary: var(--color-primary);
+  --color-primary-contrast: var(--color-primary-contrast);
+  --color-secondary: var(--color-secondary);
+  --color-accent: var(--color-accent);
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-text: var(--color-text);
+  --color-muted: var(--color-text-muted);
+  --color-border: var(--color-border);
+  --font-heading: var(--font-heading);
+  --font-body: var(--font-body);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --container-container: var(--container-max);
+}
 ```
 
-এখন Blade-এ `bg-primary`, `text-muted`, `font-heading`, `rounded-md` — সবই admin-এর রং মেনে চলে। `bg-blue-700`, `text-[#034EA2]` CI lint fail করবে।
+এখন Blade-এ `bg-primary`, `text-muted`, `font-heading`, `rounded-md`, `max-w-container` — সবই admin-এর রং মেনে চলে। `bg-blue-700`, `text-[#034EA2]` CI lint fail করবে।
 
-**Module-এর Tailwind class:** Module view-ও এই utility নাম ব্যবহার করে, তাই theme-এর `content`-এ module view path যোগ করুন, নইলে class purge হয়ে যাবে:
-
-```js
-content: ['./views/**/*.blade.php', '../../Modules/*/resources/views/**/*.blade.php'],
-```
+* `package.json`-এ `tailwindcss` ও `@tailwindcss/vite` দুটোই ঠিক `4.3.3` (pin); version বদলানো = আলাদা সিদ্ধান্ত, CHANGELOG-এ লেখা।
+* `vite.config.js`-এ `@tailwindcss/vite` plugin (PostCSS config লাগে না)।
+* Reusable অংশ (card, hero, mega menu, accordion) Blade component (`<x-theme::card>`); `@apply` শুধু খুব দরকারে।
 
 ### 6.3 বাংলা
 
@@ -551,9 +549,11 @@ Theme-এর নিজের string (`skip_to_content`, `read_more`, `primary_na
 // themes/campus/vite.config.js
 import { defineConfig } from 'vite';
 import laravel from 'laravel-vite-plugin';
+import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [
+    tailwindcss(),
     laravel({
       input: ['resources/css/app.css', 'resources/js/app.js'],
       buildDirectory: 'build',          // → themes/campus/public/build
@@ -569,7 +569,12 @@ npm run build      # → public/build/manifest.json + hashed file
 ```
 
 * Install / activate-এর সময় kernel `public/` কে `public/themes/{slug}`-এ publish করে; `@themeVite` manifest পড়ে সঠিক URL দেয়।
-* JS: Alpine.js Livewire-এর সাথে আসে — **আলাদা Alpine বা jQuery load করবেন না**। Slider, lightbox-এর মতো ছোট library ঠিক আছে, কিন্তু bundle size বাজেট: CSS ≤ 80 KB, JS ≤ 120 KB (gzip) (NFR-PERF-02)।
+* **JS — Alpine.js শুধু দরকার হলে:**
+  * আগে HTML / CSS দিয়ে চেষ্টা: accordion = `<details>`, hover / focus menu = CSS (`:hover`, `:focus-within`), animation = CSS transition। JS ছাড়াই কাজ করলে Alpine নয়।
+  * Alpine তখনই যখন browser-এ state লাগে: mega menu ও mobile off-canvas (keyboard, Esc, বাইরে click), tab, slider, modal / lightbox, counter, scroll reveal। Server-এর data লাগলে Livewire, Alpine নয়।
+  * Alpine Livewire-এর সাথেই আসে — **আলাদা Alpine, jQuery বা React / Vue load করবেন না**। Alpine plugin (Focus, Collapse, Intersect) Livewire-এর Alpine-এ যোগ হয়।
+  * Alpine-এর `x-data` ছোট রাখুন; বড় logic `Alpine.data('megaMenu', …)` হিসেবে `resources/js/app.js`-এ। `[x-cloak]` ব্যবহার করুন; JS বন্ধ থাকলেও link কাজ করবে (progressive enhancement)।
+  * Slider, lightbox-এর মতো ছোট library ঠিক আছে, কিন্তু bundle size বাজেট: CSS ≤ 80 KB, JS ≤ 120 KB (gzip) (NFR-PERF-02)।
 * Font: token-এ যে font, kernel সেটি Google Fonts / upload থেকে load করে (FR-THEME-05); theme নিজে font link দেবে না।
 * Image (logo, pattern): `public/images/`; content image কখনো theme-এ নয় — Media Library-তে।
 
@@ -633,7 +638,8 @@ ZIP-এ থাকে: `theme.json`, `views/`, `lang/`, `public/build/`, `public/
 - [ ] `layouts/app` ও `layouts/microsite`-এ সব slot, `@livewireStyles`, `@livewireScripts`, skip link
 - [ ] চারটি standard page template; ন্যূনতম একটি header ও footer variant; একটি microsite template
 - [ ] কোনো `.php` (Blade ও lang ছাড়া), `@php`, query নেই
-- [ ] শুধু token; Tailwind config token-এ বাঁধা; module view path `content`-এ
+- [ ] Tailwind `4.3.3` pin; শুধু token; `@theme inline` token-এ বাঁধা; module view path `@source`-এ
+- [ ] Alpine শুধু যেখানে browser state দরকার; আলাদা Alpine / jQuery নেই
 - [ ] Module-dependent অংশ `@moduleActive`-এ ঘেরা
 - [ ] প্রতিটি module override-এ contract (variable, `wire:` নাম) অক্ষত; README-তে override তালিকা
 - [ ] `en` ও `bn` translation; বাংলা font ও line-height
