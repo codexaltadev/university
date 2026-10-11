@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 2: Academic Modules |
-| Version | 0.2 — 2026-10-10: M-10 তিনটি module — `tuition`, `waiver`, `scholarship` (DB-03 v1.4) |
+| Version | 0.3 — 2026-10-10: M-10 তিনটি module — `tuition`, `waiver`, `scholarship` (DB-03 v1.4); 2026-10-11: M-09 Admission website গঠন, FR-ADM-13 থেকে 16 (DB-03 v1.5) |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md), [SRS Part 1](01-SRS-Core.md), `project_diu` analysis |
@@ -343,12 +343,12 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 
 | অংশ | তথ্য |
 |---|---|
-| Admission Circular / Notice | title, Admission Session, application শুরু ও শেষ তারিখ, admission test তারিখ, ভর্তির তারিখ, বিস্তারিত, সংশ্লিষ্ট Program, PDF |
+| Admission Circular / Notice | title, Admission Session (আপাতত লেখা — M-05 পরে), application শুরু ও শেষ তারিখ, admission test তারিখ, ভর্তির তারিখ, ক্লাস শুরু, বিস্তারিত, সংশ্লিষ্ট Program, PDF |
 | Admission Facility / Highlight | title, ছবি, link, ক্রম, category (বর্তমান `admissions`, `admission_facility_categories`) |
-| Admission Test Result | Program, application serial, ছাত্রের নাম, ফলাফল (Selected / Not selected / Waiting / Absent) |
+| Admission Test Result | Program, application serial, ছাত্রের নাম, ফলাফল (Selected / Not selected / Waiting / Absent) ও file-এর মূল লেখা ("Selected 1st Merit List") |
 | Result Message | প্রতিটি ফলাফলের জন্য প্রদর্শিত বার্তা (বর্তমান `admission_tests`) |
 | Admission Contact | contact type অনুযায়ী (যেমন Undergraduate, International), নাম, পদবি, phone, email, ছবি — Administration থেকে link বা manual |
-| Admission Subscriber | email / WhatsApp, verified, source |
+| Admission Subscriber | email / WhatsApp, topic (admission, Silver Jubilee …), verified, source |
 | Admission Step | কীভাবে আবেদন করবেন — ধাপ (title, বিবরণ, icon) |
 
 ### Functional Requirements
@@ -367,11 +367,17 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 | FR-ADM-10 | Admission contact তালিকা, type অনুযায়ী grouped | Q-16 | Must |
 | FR-ADM-11 | Homepage section: "Admission Going On" banner / countdown, "Important Dates" | FR-GEN-102 | Must |
 | FR-ADM-12 | Subscriber ও result export (Admin) | — | Should |
+| FR-ADM-13 | *(v0.3)* `/admission` landing = main site-এর একটি Page (block দিয়ে সাজানো, Admission-এর block সহ); section page-গুলো তার child page (`/admission/schedule` …); module install-এ page না থাকলে default page তৈরি | Q-16 | Must |
+| FR-ADM-14 | *(v0.3)* Section page-এর বাম পাশের menu: page-এ "Sidebar menu" বাছা যায় (free menu, FR-MENU), child page সেটি পায় | Q-16 | Must |
+| FR-ADM-15 | *(v0.3)* Page block: Circulars (important dates / countdown), Highlights, Steps, Contacts, Subscribe, Result lookup, Apply / Request for Information — যেকোনো page-এ বসানো যায় | FR-PAGE-02 | Must |
+| FR-ADM-16 | *(v0.3)* Module page: `/admission/circulars/{slug}`, `/admission/result`; menu-র "Module page" তালিকায় | FR-MENU-03 | Must |
 
 ### Business Rules
 
 * **BRL-ADM-01:** Admission Result একটি bulk data table; প্রতি session-এ হাজার হাজার row। Result-এর জন্য soft delete থাকবে (BR-DATA-01), কিন্তু পুরনো session-এর result একসাথে archive / purge করার ব্যবস্থা থাকবে।
 * **BRL-ADM-02:** Result lookup কোনো ব্যক্তিগত তথ্য (phone, email) দেখাবে না; শুধু নাম ও ফলাফল।
+* **BRL-ADM-03:** *(v0.3)* কোনো table-এ `published_at` নেই; দেখানো হবে কিনা = `is_active` (result batch-এর publish switch-ও এটি)। Circular "Closed" হয় application-এর শেষ তারিখ দিয়ে।
+* **BRL-ADM-04:** *(v0.3)* Home-এর "Admission" mega menu Menu module-এর data (main site primary menu-র item, display mega) — Admission module-এর অংশ নয়।
 
 ### Permissions
 

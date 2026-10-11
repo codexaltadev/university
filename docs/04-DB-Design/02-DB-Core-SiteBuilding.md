@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-02 |
-| Version | 0.1 (Draft) |
+| Version | 0.2 — 2026-10-11: free menu (`menu_menus.location` null), page-এর নিজের sidebar menu (`page_pages.sidebar_menu_id`), module landing page (§5.1, §8.1) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md) (conventions), SRS Part 1, SAD Part A / B |
@@ -197,11 +197,11 @@ PK: `(term_id, termable_type, termable_id)`; IX: `(termable_type, termable_id)`�
 | id | BIGINT UNSIGNED | PK | |
 | name | VARCHAR(191) | | Admin-এর জন্য |
 | owner_type, owner_id | VARCHAR(100), BIGINT UNSIGNED | | `site, 0` অথবা microsite entity |
-| location | VARCHAR(50) | | `primary`, `topbar`, `footer-1` ... `quick-links`, `quick-links-icon`, `sidebar` |
+| location | VARCHAR(50) | N | `primary`, `topbar`, `footer-1` ... `quick-links`, `quick-links-icon`, `sidebar`; *(v0.2)* null = **free menu** — কোনো location-এ নয়, page নিজের sidebar menu হিসেবে বাছে (§8.1) |
 | style | VARCHAR(20) | | `dropdown` (default) / `multilevel` / `mega` — website-এ menu কীভাবে খুলবে *(v1.1)* |
 | ⚙ | | | |
 
-UQ: `(owner_type, owner_id, location, active_key)` (BRL-MENU-03)।
+UQ: `(owner_type, owner_id, location, active_key)` (BRL-MENU-03) — location null হলে বাধা নেই, তাই একটি owner-এর অনেক free menu থাকতে পারে (যেমন Admission, DLRC, Medical-এর বাম পাশের menu) *(v0.2)*।
 
 ### 5.2 `menu_items` — B (P-11)
 
@@ -292,12 +292,15 @@ Source module inactive হলে section লুকানো হয় render-এ
 | excerpt | JSON | N, T | | |
 | content | JSON | N, T | | ভাষা অনুযায়ী block array (FR-PAGE-01/02) |
 | template | VARCHAR(50) | | `default` | FR-PAGE-04 |
+| sidebar_menu_id | BIGINT UNSIGNED | N, FK menu_menus (null on delete) | | *(v0.2)* এই page-এর বাম পাশের menu (একই owner-এর menu)। Null = parent page-এরটি, তাও না থাকলে owner-এর `sidebar` location-এর menu |
 | published_at, expires_at | TIMESTAMP | N | | |
 | sort_order | INT UNSIGNED | | 0 | |
 | ⚙ | | | | |
 
 IX: `(owner_type, owner_id, parent_id, sort_order)`; IX-5: `(is_active, deleted_at, published_at)`।
 Slug → `core_slugs` (URL-এ parent path যোগ হয় render-এ)। Attachment → Media usage (`field = attachments`)। SEO → `core_seo_meta`। Revision → `core_revisions`।
+
+*(v0.2)* **Module landing page:** main site-এর page সাধারণত reserved path নিতে পারে না (UrlRules), কিন্তু যে module নিজের landing হিসেবে page চায় (`admission`, আগে থেকে `contact`), সেই path page নিতে পারে; module-এর নিজের page-গুলো (`/admission/result`, `/admission/circulars/…`) তার child page-এর slug হতে পারবে না।
 
 ---
 
@@ -597,7 +600,7 @@ Sanctum default (`tokenable` morph, `abilities`, `last_used_at`, `expires_at`) �
 | বর্তমান | নতুন | রূপান্তর |
 |---|---|---|
 | বিভিন্ন table-এর file / image column (`photo`, `image`, `file_name`, `thumb`, `logo`, `notice_files.file_name` ...) | `core_media_items` + `media` + `core_media_usages` | প্রতিটি file Media Library-তে import (একই file একবার — hash দিয়ে), তারপর usage row। মোট file সংখ্যা ও আকার migration-এর আগে গণনা করতে হবে (`notice_files` একাই ৩,৫০০) |
-| `faculty_menus` (৫০), `department_menus` (৯১৬), `program_menus` (৩৪), `lab_menus` (১৫), `lab_app_menus` (৮), `side_menus` (১৩) + `side_menu_categories` | `menu_menus` (owner অনুযায়ী) + `menu_items` | `link_type`: `article_link` → `record` (Page), `module_link` → `module_page`, `external_link` → `url`, `file` → `file` (Media); `parent_id` ও `serial` → `parent_id` ও `sort_order`; `lab_app_menus` → location `quick-links-icon` |
+| `faculty_menus` (৫০), `department_menus` (৯১৬), `program_menus` (৩৪), `lab_menus` (১৫), `lab_app_menus` (৮), `side_menus` (১৩) + `side_menu_categories` | `menu_menus` (owner অনুযায়ী) + `menu_items` | `link_type`: `article_link` → `record` (Page), `module_link` → `module_page`, `external_link` → `url`, `file` → `file` (Media); `parent_id` ও `serial` → `parent_id` ও `sort_order`; `lab_app_menus` → location `quick-links-icon`; *(v0.2)* `side_menu_categories` (DLRC, Medical) → প্রতিটি একটি free menu, তার page-গুলোর `sidebar_menu_id` |
 | `faculty_articles`, `department_articles`, `program_articles`, `lab_articles`, `articles`, `registrar_offices`, `proctor_offices` | `page_pages` (owner অনুযায়ী) | Menu-র `article_link` এই নতুন page-এ remap (ID mapping table) |
 | `seo` (২৬) | `core_seo_meta` | `model_type` পুরনো class → নতুন morph alias; `meta_data` JSON ভেঙে field-এ |
 | পুরনো website-এর URL | `seo_redirects` (`source = import`) | পুরনো URL তালিকা (sitemap / analytics থেকে) → নতুন URL; CSV import (FR-SEO-05) |

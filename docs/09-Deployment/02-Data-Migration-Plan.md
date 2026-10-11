@@ -130,7 +130,7 @@ Dependency অনুযায়ী — আগের ধাপের id পর�
 | S05 | Campus, Session | — (নতুন), `semesters` | DB-03 §15 | Campus তালিকা |
 | S06 | **Program** ও তার অংশ | `department_program_type`, `program_types`, majors, career paths, facilitators, eligibilities, variants … | DB-03 §15, §15.1 | Program review sheet (৭.৩) |
 | S07 | **Tuition, waiver, scholarship** | `tuition_categories`, `tuitions`, `boards`, `waiver_categories`, `waivers` + pivot, `scholarship_categories` + `scholarships` (→ Scholarship module, parent / child — DB-03 v1.4 §11.3), `accordion_categories` + `accordions` (→ Scholarship, category সহ; step `S07S`) | DB-03 §15 | — (golden master দিয়ে যাচাই, Section 8) |
-| S08 | **Admission** | `admission_notices`, `admissions`, `admission_tests`, `admission_results`, `admission_contacts`, `admission_subscribers` | DB-03 §15 | — |
+| S08 | **Admission** | `admission_notices`, `admissions` + `admission_facility_categories`, `admission_tests`, `admission_results`, `admission_contact_types` + `admission_contacts` (ব্যক্তি `admins` থেকে manual person), `admission_subscribers` (DB-03 v1.5 §10, §15); `/admission` page ও তার child page নতুন content — legacy-তে নেই, হাতে বা seeder | DB-03 §15 | Program নাম না মেলা result-এর তালিকা |
 | S09 | Academic Calendar | `calenders`, `calendar_events` | DB-03 §15 | তারিখ (৭.৬) |
 | S10 | Office, Section | `offices`, `sections` | DB-04 §11.1 | — |
 | S11 | **Person ও dedupe** | `admins`, `staff`, `alumnis` + `admin_id` ছাড়া row | DB-04 §11.2 | Merge review sheet (৭.২) |

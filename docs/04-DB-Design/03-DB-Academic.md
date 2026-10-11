@@ -4,8 +4,8 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-03 |
-| Version | 1.4 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়); v1.4: Scholarship নিজের module `scholarship`, parent / child ও category vocabulary (§11.3) |
-| Date | 2026-10-10 (v1.0 confirmed 2026-10-08) |
+| Version | 1.5 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়); v1.4: Scholarship নিজের module `scholarship`, parent / child ও category vocabulary (§11.3); v1.5: Admission (§10) — `published_at` নয় `is_active`, session লেখা, result label, subscriber topic, website গঠন |
+| Date | 2026-10-11 (v1.0 confirmed 2026-10-08) |
 | Status | ✔ Confirmed — v1.3 approved 2026-10-10 (Tuition, Waiver আলাদা module); v1.1 approved 2026-10-10: entry করা rule ও data অক্ষত থাকবে; logic বদলানো যাবে যদি ফলাফল হুবহু একই থাকে (golden master দিয়ে প্রমাণ) |
 | Based on | [DB-01](01-DB-Core-Kernel.md) (conventions), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 2](../02-SRS/02-SRS-Academic.md), `project_diu` |
 
@@ -36,7 +36,7 @@
 | M-06 Curriculum | `curriculum` | `curriculum_` | Program, Course (hard → FK); Session (optional → index) |
 | M-07 Faculty Member | `faculty-member` | `faculty_member_` | Department (hard → FK) |
 | M-08 Campus | `campus` | `campus_` | — |
-| M-09 Admission Info | `admission` | `admission_` | Program, Session (optional → index) |
+| M-09 Admission Info | `admission` | `admission_` | Program (optional → index); Session পরে (v1.5: এখন লেখা) |
 | M-10 Tuition | `tuition` (v1.3) | `tuition_` | Program (hard → FK; level = program type), Department / Faculty (filter); Session (optional → index) |
 | M-10 Waiver Calculator | `waiver` | `waiver_` | Tuition (hard → FK: category, tuition), Program (hard → FK: level); Faculty (hard → FK, rule condition) |
 | M-10 Scholarship | `scholarship` (v1.4) | `scholarship_` | — (কোনো dependency নেই) |
@@ -293,19 +293,37 @@ UQ: `(employee_id, active_key)` (NULL employee_id একাধিক থাক�
 
 ## 10. M-09 Admission Info
 
+> *v1.5 (2026-10-11):* `published_at` নেই — সব table-এ ⚙-এর `is_active` (দেখানো হবে কিনা; result batch-এর publish switch-ও এটাই)। Session আপাতত লেখা (`session_label`, যেমন "Fall 2026"), কারণ M-05 Session module সবার শেষে; Session এলে `session_id` N (optional → index) যোগ হবে ও লেখা থেকে মিলিয়ে পূরণ হবে। Result-এ legacy-র লেখা ("Selected 1st Merit List") রাখা হয় `result_label`-এ। Subscriber-এ `topic`। Website-এর গঠন নিচে।
+
 | Table | শ্রেণী | Column (⚙ ছাড়া) | Key | Ref |
 |---|---|---|---|---|
-| `admission_circulars` | B | `session_id` N, `title` (T), `content` (T), `apply_starts_on`, `apply_ends_on` DATE N, `test_on` DATE N, `admission_on` DATE N, `published_at`; Program → `core_relations` (Attachable); Media `pdf` | IX `(session_id)`, `(apply_ends_on)`, IX-5 | FR-ADM-02/03 |
+| `admission_circulars` | B | `session_label` VARCHAR(50) N *(v1.5)*, `title` (T), `content` (T, N), `apply_starts_on`, `apply_ends_on` DATE N, `test_on` DATE N, `admission_on` DATE N, `classes_start_on` DATE N *(v1.5)*, `sort_order`; Program → `core_relations` (Attachable); Media `pdf`; slug `/admission/circulars/{slug}` | IX `(apply_ends_on)`, `(sort_order)` | FR-ADM-02/03 |
 | `admission_highlights` | B | `title` (T), `url` N, `open_in_new_tab`, `sort_order`; category → vocabulary `admission.highlight-category` (termables); Media `image` | | বর্তমান `admissions`, `admission_facility_categories` |
 | `admission_steps` | B | `title` (T), `description` (T), `icon` N, `sort_order` | | FR-ADM-01 |
-| `admission_contact_groups` | B (Assignable) | `name` (T) ("Undergraduate", "International"), `sort_order`; ব্যক্তি → `core_assignments` (`role_key = contact`) | | FR-ADM-10 |
-| `admission_result_batches` | B | `session_id` N, `name` (T), `is_published` TINYINT(1), `messages` JSON T (`selected`, `not_selected`, `waiting`, `absent`, `not_found`), `imported_rows` INT, `imported_at` | IX `(session_id, is_published)` | FR-ADM-05/08 (বর্তমান `admission_tests`) |
-| `admission_results` | B | `batch_id` (FK admission_result_batches cascade), `program_id` N (Program optional → index), `program_label` VARCHAR(191) (file-এর মূল লেখা), `application_serial` VARCHAR(50), `student_name` VARCHAR(191), `result` VARCHAR(20) (`selected` / `not_selected` / `waiting` / `absent`) | UQ `(batch_id, application_serial, active_key)`; IX `(program_id)` | FR-ADM-05/06, BRL-ADM-02 |
-| `admission_subscribers` | B | `channel` VARCHAR(20) (`email` / `whatsapp`), `contact` VARCHAR(191), `verified_at` N, `source` VARCHAR(30), `unsubscribed_at` N, `unsubscribe_reason` N | UQ `(channel, contact, active_key)` | FR-ADM-09 |
+| `admission_contact_groups` | B (Assignable) | `name` (T) ("Local Admission", "International Admission"), `sort_order`; ব্যক্তি → `core_assignments` (`role_key = contact`; Administration module না থাকা পর্যন্ত manual person) | | FR-ADM-10 |
+| `admission_result_batches` | B | `session_label` VARCHAR(50) N *(v1.5)*, `name` (T), `messages` JSON T (`selected`, `not_selected`, `waiting`, `absent`, `not_found`; `{name}` = ছাত্রের নাম), `imported_rows` INT, `imported_at` N; publish = `is_active` *(v1.5: `is_published` বাদ)* | IX `(is_active)` | FR-ADM-05/08 (বর্তমান `admission_tests`) |
+| `admission_results` | B | `batch_id` (FK admission_result_batches cascade), `program_id` N (Program optional → index), `program_label` VARCHAR(191) (file-এর মূল লেখা), `application_serial` VARCHAR(50), `student_name` VARCHAR(191), `result` VARCHAR(20) (`selected` / `not_selected` / `waiting` / `absent` — কোন বার্তা), `result_label` VARCHAR(100) N *(v1.5: file-এর মূল লেখা, যেমন "Waiting 2nd Merit List")* | UQ `(batch_id, application_serial, active_key)`; IX `(application_serial)`, `(program_id)` | FR-ADM-05/06, BRL-ADM-02 |
+| `admission_subscribers` | B | `channel` VARCHAR(20) (`email` / `whatsapp`), `contact` VARCHAR(191), `topic` VARCHAR(50) DEFAULT `admission` *(v1.5)*, `source` VARCHAR(30) (`admission` / `footer`), `verified_at` N, `unsubscribed_at` N, `unsubscribe_reason` N | UQ `(channel, contact, topic, active_key)` | FR-ADM-09 |
 
-* Result lookup query: `batch (published, session) + application_serial` → UQ index দিয়ে এক ধাপে (AC-ADM-01: < ২ সেকেন্ড)।
+* Result lookup query: active batch-গুলোতে `application_serial` → index দিয়ে এক ধাপে (AC-ADM-01: < ২ সেকেন্ড)। একাধিক active batch-এ মিললে নতুনটি।
 * পুরনো session-এর result: batch-ভিত্তিক bulk purge (BRL-ADM-01) — batch delete → cascade।
 * Newsletter module (M-39) active থাকলে subscriber "Admission Updates" list-এ sync (FR-NLT-08); এই table admission-এর নিজস্ব উৎস।
+
+**Website *(v1.5)*:**
+
+| অংশ | কোথায় |
+|---|---|
+| `/admission` (landing) | Main site-এর একটি **Page** (slug `admission` — module-এর landing path, page নিতে পারে; DB-02 §8.1 v0.2)। Template `with-sidebar`; content = page block, তার মধ্যে Admission-এর block। Module install-এ page না থাকলে seeder তৈরি করে (circulars, highlights, steps, contacts, subscribe block সহ) |
+| `/admission/schedule`, `/admission/eligibility` … | Admission page-এর child page (DIU-র "Browse by Section") |
+| বাম পাশের menu | একটি free menu "Admission" (location নেই), Admission page-এ "Sidebar menu" হিসেবে বাছা; child page-ও সেটি পায় (DB-02 §5.1, §8.1 v0.2) |
+| `/admission/circulars/{slug}` | Module page (circular-এর বিস্তারিত, তারিখ, PDF, Program) |
+| `/admission/result` | Module page — result lookup (Livewire, rate limit + captcha) |
+| Block | `admission.circulars` (চলমান circular + important dates / countdown), `admission.highlights`, `admission.steps`, `admission.contacts`, `admission.subscribe`, `admission.result-lookup`, `admission.apply` (Apply Now / Request for Information) |
+| Homepage section | `admission.going-on` (banner / countdown, FR-ADM-11) |
+| Settings `admission` | `apply_url`, `info_request_url`, `whatsapp_group_url`, `result_page_intro` (T) |
+| Home-এর "Admission" mega menu | Main site primary menu-র item (display `mega`) — Menu-তে data entry, module-এর কাজ নয় |
+
+`result`, `circulars` Admission page-এর child page-এর slug হতে পারবে না (module page-এর path — UrlRules)।
 
 ---
 
@@ -454,12 +472,12 @@ Program-এর সাথে সম্পর্ক audience term দিয়ে 
 | `program_materials`, `program_professional_memberships`, `program_variants` | সংশ্লিষ্ট table | |
 | `eligibilities` (৫৭) | program_programs.eligibility_* | `normal_student` → eligibility_general, `em_student` → eligibility_english_medium; একাধিক row থাকা program-এর জন্য manual merge |
 | `semesters` (২) | session_sessions | |
-| `admission_notices` (২) | admission_circulars | |
-| `admissions` (২৬) + `admission_facility_categories` | admission_highlights + term | |
-| `admission_tests` (১) | admission_result_batches.messages | একমাত্র row-এর `select_mgs`, `not_select_mgs`, `waiting_mgs`, `absent_mgs`, `not_found` → "Legacy" batch-এর বার্তা ও নতুন batch-এর default |
-| `admission_results` (১,৭২০) | একটি "Legacy" batch + admission_results | `program` (text) → program_label; program_id best-effort match |
-| `admission_contacts` (১৩) + `admission_contact_types` | admission_contact_groups + core_assignments | `admin_id` থাকলে Administration person, নইলে manual person |
-| `admission_subscribers` (৪,৮২৮) | admission_subscribers | `contact_type` → channel; `is_active = 0` → unsubscribed |
+| `admission_notices` (২) | admission_circulars | `notice_title` → title ও `session_label` ("Fall 2026 (Tri Semester)"), `apply_date` → apply_ends_on, `admission_test` → test_on, `admission_date` → admission_on, `notice` → content, `serial`, `publication_status` → is_active |
+| `admissions` (২৬) + `admission_facility_categories` (৩) | admission_highlights + term | `link` → url, `target = _blank` → open_in_new_tab; category (Notice, Facility, Campus Life) → term (slug রাখা); `display_side` বাদ (theme ঠিক করে); `image` → Media; পুরনো DIU link (`/tuition-fees`, `/scholarship`) নতুন path-এ |
+| `admission_tests` (১) | admission_result_batches | একমাত্র row → batch "Summer 2026" (`title` → name ও session_label); `*_mgs`, `not_found` → messages (`student_name` → `{name}`); `box_show` → is_active |
+| `admission_results` (১,৭২০) | ওই batch-এর admission_results | `program` (text) → program_label, program_id নাম মিলিয়ে (না মিললে null, report); `result` → status (`Selected…` → selected, `Not Selected` → not_selected, `Waiting…` → waiting, `Absent` → absent) ও মূল লেখা → result_label |
+| `admission_contacts` (১৩) + `admission_contact_types` (২) | admission_contact_groups + core_assignments | ১৩টিরই `admin_id` → `admins`-এর নাম, পদবি, phone, email, ছবি দিয়ে manual person (Administration module এলে সেখানে যুক্ত হবে); `extension` → overrides |
+| `admission_subscribers` (৪,৮২৮) | admission_subscribers | `contact_type` → channel, `email` / `whatsapp` → contact, `reason` → topic (`admission` ৪,৮১৫, `all` ৫, `Silver Jubilee` ৬, null → admission), `is_footer` → source; `is_active = 0` → unsubscribed; একই contact দুবার → একটি |
 | `tuition_categories` (২) | tuition_categories | `category_code` → code |
 | `tuitions` (১০১) | tuition_fees + tuition_fee_lines | Column → line (Section 11.1); `majors` text → মন্তব্য বা বাদ (manual) |
 | `boards` (৮), `waiver_categories` (২১), `waivers` (৯২) + ৫টি pivot | waiver_boards, waiver_categories, waiver_rules + pivot | `waiver_rate` → waiver_percent, `hsc_golden` / `ssc_golden` → require_*_golden, `undergraduate_min / max` → ug_cgpa_*; `international_undergraduate_*` → আলাদা rule (is_international = 1); `gender_waiver.gender_id` → gender string |
