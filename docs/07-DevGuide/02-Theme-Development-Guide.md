@@ -3,7 +3,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Development Guide — Part B: Theme |
-| Version | 1.2 (Tailwind CSS v4.3.3 CSS-first config; Alpine.js শুধু দরকারে) |
+| Version | 1.2 (Tailwind CSS v4.3.3 CSS-first config; Alpine.js যেখানে প্রয়োজন) |
 | Date | 2026-10-11 |
 | Status | ✔ Approved |
 | Based on | SAD Part B (§6 fallback resolver, §8 theme engine, §8.6 Blade + Livewire), UI/UX Part B (§2 token, §4 layout, §6 component, §8 checklist, §9 Theme Developer Contract), SRS C-06 (FR-THEME, FR-MENU, FR-HF, FR-PAGE-04) |
@@ -110,7 +110,7 @@ themes/campus/
 ├── package.json  vite.config.js    # Tailwind v4: tailwind.config.js নেই — config resources/css/app.css-এ
 ```
 
-> **Frontend stack (নির্ধারিত):** Blade + Livewire + **Tailwind CSS v4.3.3** (version pin করা, `^` নয়) + **Alpine.js শুধু দরকার হলে** (§12)। Bootstrap, jQuery বা অন্য CSS framework নয়।
+> **Frontend stack (নির্ধারিত):** Blade + Livewire + **Tailwind CSS v4.3.3** (version pin করা, `^` নয়) + **Alpine.js যেখানে প্রয়োজন** (§12) — যেখানে যেটা ভালো, সেখানে সেটা। Bootstrap, jQuery বা অন্য CSS framework নয়।
 
 Development-এ:
 
@@ -569,9 +569,9 @@ npm run build      # → public/build/manifest.json + hashed file
 ```
 
 * Install / activate-এর সময় kernel `public/` কে `public/themes/{slug}`-এ publish করে; `@themeVite` manifest পড়ে সঠিক URL দেয়।
-* **JS — Alpine.js শুধু দরকার হলে:**
-  * আগে HTML / CSS দিয়ে চেষ্টা: accordion = `<details>`, hover / focus menu = CSS (`:hover`, `:focus-within`), animation = CSS transition। JS ছাড়াই কাজ করলে Alpine নয়।
-  * Alpine তখনই যখন browser-এ state লাগে: mega menu ও mobile off-canvas (keyboard, Esc, বাইরে click), tab, slider, modal / lightbox, counter, scroll reveal। Server-এর data লাগলে Livewire, Alpine নয়।
+* **JS — যেখানে যেটা সবচেয়ে ভালো, সেখানে সেটা:**
+  * Alpine.js যেখানে প্রয়োজন সেখানে নির্দ্বিধায় ব্যবহার করুন — mega menu, mobile off-canvas, tab, slider, modal / lightbox, accordion, counter, scroll reveal, যেকোনো browser-side interaction। "আগে অন্য কিছু চেষ্টা" বাধ্যতামূলক নয়।
+  * কাজ অনুযায়ী সেরা পথ বেছে নিন: browser-এর interaction = Alpine; server-এর data / form / lookup = Livewire; শুধু চেহারা = Tailwind / CSS।
   * Alpine Livewire-এর সাথেই আসে — **আলাদা Alpine, jQuery বা React / Vue load করবেন না**। Alpine plugin (Focus, Collapse, Intersect) Livewire-এর Alpine-এ যোগ হয়।
   * Alpine-এর `x-data` ছোট রাখুন; বড় logic `Alpine.data('megaMenu', …)` হিসেবে `resources/js/app.js`-এ। `[x-cloak]` ব্যবহার করুন; JS বন্ধ থাকলেও link কাজ করবে (progressive enhancement)।
   * Slider, lightbox-এর মতো ছোট library ঠিক আছে, কিন্তু bundle size বাজেট: CSS ≤ 80 KB, JS ≤ 120 KB (gzip) (NFR-PERF-02)।
@@ -639,7 +639,7 @@ ZIP-এ থাকে: `theme.json`, `views/`, `lang/`, `public/build/`, `public/
 - [ ] চারটি standard page template; ন্যূনতম একটি header ও footer variant; একটি microsite template
 - [ ] কোনো `.php` (Blade ও lang ছাড়া), `@php`, query নেই
 - [ ] Tailwind `4.3.3` pin; শুধু token; `@theme inline` token-এ বাঁধা; module view path `@source`-এ
-- [ ] Alpine শুধু যেখানে browser state দরকার; আলাদা Alpine / jQuery নেই
+- [ ] Interaction-এ Alpine, server data-য় Livewire; আলাদা Alpine / jQuery নেই
 - [ ] Module-dependent অংশ `@moduleActive`-এ ঘেরা
 - [ ] প্রতিটি module override-এ contract (variable, `wire:` নাম) অক্ষত; README-তে override তালিকা
 - [ ] `en` ও `bn` translation; বাংলা font ও line-height

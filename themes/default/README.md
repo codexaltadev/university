@@ -17,4 +17,4 @@ Module view overrides: none yet.
 
 Assets in `public/build` are plain CSS / JS that use only the design tokens (T-2).
 The full design (Tailwind CSS 4.3.3 build, sections, listing layouts) comes in Phase 4.
-Alpine.js (bundled with Livewire) is used only where the browser needs state (Theme Guide §12).
+Alpine.js (bundled with Livewire) is used wherever it is the best fit for an interaction (Theme Guide §12).

@@ -430,7 +430,7 @@ Admin "Preview" করলে session-এ preview theme রাখা হয়; �
 * **দায়িত্ব ভাগ:** Livewire component **module**-এর (`Modules/{Name}/app/Livewire/`, logic ও data); তার **view** Blade, তাই theme override করতে পারে (`themes/{theme}/views/modules/{slug}/livewire/...`) — logic theme-এ নয় (BRL-THEME-02)।
 * Public form-এর নিরাপত্তা (rate limit, honeypot, captcha, validation) Livewire action-এ — API Spec Section 8-এর একই নিয়ম।
 * Livewire component full-page cache-এর বাইরে (ADR-16): cache করা page-এ component lazy-load হয়।
-* JavaScript ন্যূনতম: Alpine.js (Livewire-এর সাথে আসে) **শুধু দরকার হলে** — slider, lightbox, mega menu, mobile menu, tab, modal। HTML / CSS-এ হলে (`<details>`, `:focus-within`, transition) JS নয়; server-এর data লাগলে Livewire। Styling: Tailwind CSS 4.3.3 (Theme Guide §6.2, §12)।
+* JavaScript: Alpine.js (Livewire-এর সাথে আসে) যেখানে প্রয়োজন — slider, lightbox, mega menu, mobile menu, tab, modal, accordion ইত্যাদি; যেখানে যেটা ভালো সেটা: browser interaction = Alpine, server-এর data = Livewire। Styling: Tailwind CSS 4.3.3 (Theme Guide §6.2, §12)।
 * Release 1-এ REST API নেই (API Spec APIQ-02); module-এর data access service class-এ রাখা হবে, যাতে Release 2-এ API Resource একই service ব্যবহার করে।
 
 ---
