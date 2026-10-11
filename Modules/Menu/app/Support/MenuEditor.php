@@ -21,6 +21,9 @@ use Platform\Theme\Themes;
  */
 class MenuEditor
 {
+    /** Prefix of a free menu's "location" on the Menus screen. */
+    public const FREE = 'menu:';
+
     /** @return array<string, string> location => label (FR-MENU-01) */
     public static function locations(): array
     {
@@ -50,14 +53,48 @@ class MenuEditor
         return MicrositeOwners::keys($user, 'Menu');
     }
 
+    /**
+     * An owner's free menus — no location; a page picks one as its sidebar menu (DB-02 v0.2 §5.1).
+     *
+     * @return array<int, string> id => name
+     */
+    public static function freeMenus(string $ownerKey): array
+    {
+        return Menu::query()->withoutGlobalScope(UserScopeFilter::class)->ownedBy($ownerKey)->whereNull('location')
+            ->orderBy('name')->pluck('name', 'id')->all();
+    }
+
+    /** The Menus screen's "location" of a free menu: "menu:12". */
+    public static function isFree(string $location): bool
+    {
+        return str_starts_with($location, self::FREE);
+    }
+
     public function own(string $ownerKey, string $location): ?Menu
     {
-        return Menu::query()->withoutGlobalScope(UserScopeFilter::class)->ownedBy($ownerKey)->where('location', $location)->first();
+        $query = Menu::query()->withoutGlobalScope(UserScopeFilter::class)->ownedBy($ownerKey);
+
+        return static::isFree($location)
+            ? $query->whereNull('location')->find((int) substr($location, strlen(self::FREE)))
+            : $query->where('location', $location)->first();
+    }
+
+    /** Start a free menu with this name. */
+    public function createFree(string $ownerKey, string $name): Menu
+    {
+        $menu = (new Menu(['name' => $name, 'location' => null, 'style' => 'dropdown']))->setOwnerKey($ownerKey);
+        $menu->save();
+
+        return $menu;
     }
 
     /** The menu used at this owner and location now, and whose it is (FallbackIndicator). */
     public function current(string $ownerKey, string $location): array
     {
+        if (static::isFree($location)) {
+            return ['menu' => $this->own($ownerKey, $location), 'from' => null];   // no fallback for a free menu
+        }
+
         $context = $this->context($ownerKey);
         $resolver = app(FallbackResolver::class);
 
@@ -144,11 +181,14 @@ class MenuEditor
      *
      * @param  array<int|string, array<string, mixed>>  $tree
      */
-    public function save(Menu $menu, array $tree, ?string $style = null): void
+    public function save(Menu $menu, array $tree, ?string $style = null, ?string $name = null): void
     {
-        DB::transaction(function () use ($menu, $tree, $style): void {
+        DB::transaction(function () use ($menu, $tree, $style, $name): void {
             if ($style !== null && in_array($style, Menu::STYLES, true)) {
                 $menu->update(['style' => $style]);
+            }
+            if ($menu->location === null && filled($name)) {
+                $menu->update(['name' => $name]);   // a free menu is known by its name
             }
 
             $kept = [];

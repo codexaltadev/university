@@ -22,6 +22,7 @@ use Platform\Filament\Components\TranslatableTabs;
 use Platform\Filament\Components\WebAddressField;
 use Platform\Filament\Tables\ContentFilters;
 use Platform\Localization\Languages;
+use Platform\Theme\SiteData;
 
 /** Standard content form (UI/UX Part A §5.2): blocks per language left; publishing and page settings right. */
 class PageForm
@@ -54,12 +55,23 @@ class PageForm
                             ->searchable(),
                         Select::make('template')->label(__('page::page.fields.template'))
                             ->options(collect(Page::TEMPLATES)->mapWithKeys(fn (string $t): array => [$t => __("page::page.templates.{$t}")])->all())
-                            ->default('default')->required()->selectablePlaceholder(false),
+                            ->default('default')->required()->selectablePlaceholder(false)->live(),
+                        // DB-02 v0.2 §8.1: a free menu of the same owner on the left (Admission, DLRC …); none = the parent's
+                        Select::make('sidebar_menu_id')->label(__('page::page.fields.sidebar_menu'))
+                            ->options(fn (Get $get): array => filled($get('owner_key')) ? (array) app(SiteData::class)->get('free-menus', $get('owner_key')) : [])
+                            ->placeholder(__('page::page.sidebar_inherit'))
+                            ->helperText(__('page::page.help.sidebar_menu'))
+                            ->visible(fn (Get $get): bool => $get('template') === 'with-sidebar' && app(SiteData::class)->has('free-menus')),
                         WebAddressField::make(prefix: fn (Get $get, ?Page $record): string => static::addressPrefix($get, $record))
                             ->rules([fn (Get $get, ?Page $record): Closure => function (string $attribute, mixed $value, Closure $fail) use ($get, $record): void {
                                 // FR-GEN-35: a top-level page's address may not be an entity's under the same owner
                                 if (filled($value) && blank($get('parent_id')) && ($record === null || Str::slug($value) !== $record->slug(app(Languages::class)->default()))
                                     && ($message = UrlRules::pageClash($get('owner_key') ?: 'site:0', (string) $value))) {
+                                    $fail($message);
+                                }
+                                // a main site page inside another may not take a module page's address ("/admission/result")
+                                if (filled($value) && filled($get('parent_id')) && ($get('owner_key') ?: 'site:0') === 'site:0'
+                                    && ($message = UrlRules::modulePageClash(static::addressPrefix($get, $record).Str::slug((string) $value)))) {
                                     $fail($message);
                                 }
                             }]),

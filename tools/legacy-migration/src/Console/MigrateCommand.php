@@ -10,6 +10,7 @@ use Legacy\Migration\Steps\S04FacultiesDepartments;
 use Legacy\Migration\Steps\S06Programs;
 use Legacy\Migration\Steps\S07Fees;
 use Legacy\Migration\Steps\S07Scholarships;
+use Legacy\Migration\Steps\S08Admission;
 use Legacy\Migration\Steps\S15DepartmentSites;
 use Legacy\Migration\Steps\Step;
 use Platform\Modules\ModuleRegistry;
@@ -28,7 +29,7 @@ class MigrateCommand extends Command
     protected $description = 'Migrate DIU data from the legacy database (project_diu)';
 
     /** In the order of the plan (§5). */
-    public const STEPS = [S02Vocabularies::class, S04FacultiesDepartments::class, S06Programs::class, S07Fees::class, S07Scholarships::class, S15DepartmentSites::class];
+    public const STEPS = [S02Vocabularies::class, S04FacultiesDepartments::class, S06Programs::class, S07Fees::class, S07Scholarships::class, S08Admission::class, S15DepartmentSites::class];
 
     public function handle(): int
     {

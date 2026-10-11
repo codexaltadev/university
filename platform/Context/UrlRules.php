@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use Platform\Concerns\HasSlug;
+use Platform\Registry\Registry;
 use Platform\Relations\RelationEngine;
 use Platform\Scope\UserScopeFilter;
 
@@ -97,7 +98,8 @@ class UrlRules
         }
 
         if ($ownerKey === RelationEngine::SITE_KEY) {
-            if (in_array($slug, array_diff(static::reservedRoot(), ['contact']), true)) {   // a "Contact" page is fine without the Contact module
+            // a module's landing page is a page ("Admission", "Contact" — DB-02 v0.2 §8.1)
+            if (in_array($slug, array_diff(static::reservedRoot(), config('platform.page_landing_paths', [])), true)) {
                 return __('platform::relations.address_reserved', ['address' => $slug]);
             }
             foreach ($resolver->roots() as $root) {
@@ -123,6 +125,24 @@ class UrlRules
         return $resolver->childrenOf($entity::class) !== [] && in_array($slug, static::reservedInside(), true)
             ? __('platform::relations.address_reserved', ['address' => $slug])
             : null;
+    }
+
+    /**
+     * Why a main site page may not have this full address, or null: it is a module's page
+     * or under one ("/admission/result", "/admission/circulars/…" — DB-02 v0.2 §8.1).
+     */
+    public static function modulePageClash(string $path): ?string
+    {
+        $path = '/'.trim($path, '/');
+
+        foreach (app(Registry::class)->all('websitePage') as $page) {
+            $taken = '/'.trim($page['path'], '/');
+            if ($path === $taken || str_starts_with($path, $taken.'/')) {
+                return __('platform::relations.address_reserved', ['address' => ltrim($path, '/')]);
+            }
+        }
+
+        return null;
     }
 
     /** @param class-string<Model> $model */

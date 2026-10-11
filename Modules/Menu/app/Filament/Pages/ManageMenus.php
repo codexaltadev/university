@@ -102,7 +102,7 @@ class ManageMenus extends Page implements MicrositeTool
         $owners = MenuEditor::ownerKeys(Auth::user());
         abort_if($owners === [], 403);
         $this->owner = $this->ownerOnOpen($owners);   // "Working in" unless asked for
-        $this->location = array_key_exists($this->location, MenuEditor::locations()) ? $this->location : array_key_first(MenuEditor::locations());
+        $this->location = $this->isLocation($this->location) ? $this->location : array_key_first(MenuEditor::locations());
 
         $this->pickForm->fill(['owner' => $this->owner, 'location' => $this->location, 'mode' => $this->editor()->mode($this->owner)]);
         $this->load();
@@ -116,7 +116,7 @@ class ManageMenus extends Page implements MicrositeTool
                 ->searchable()->selectablePlaceholder(false)->live()
                 ->afterStateUpdated(fn (?string $state) => $this->switchTo(owner: $state)),
             Select::make('location')->label(__('menu::menu.location'))
-                ->options(fn (): array => MenuEditor::locations())
+                ->options(fn (): array => $this->locationOptions())
                 ->selectablePlaceholder(false)->live()
                 ->afterStateUpdated(fn (?string $state) => $this->switchTo(location: $state)),
             // FR-MENU-08: where an entity's menus come from when it has none of its own
@@ -139,10 +139,14 @@ class ManageMenus extends Page implements MicrositeTool
                 createOwn: fn () => $this->createOwn(copy: false),
                 copy: fn () => $this->createOwn(copy: true),
                 createLabel: __('menu::menu.actions.create_own'),
-            )->visible(fn (): bool => $this->ownMenu() === null),
-            Section::make(fn (): string => __('menu::menu.structure', ['location' => MenuEditor::locations()[$this->location] ?? $this->location]))
+            )->visible(fn (): bool => $this->ownMenu() === null && ! MenuEditor::isFree($this->location)),
+            Section::make(fn (): string => __('menu::menu.structure', ['location' => MenuEditor::isFree($this->location) ? ($this->ownMenu()?->name ?? '') : (MenuEditor::locations()[$this->location] ?? $this->location)]))
                 ->visible(fn (): bool => $this->ownMenu() !== null)
                 ->schema([
+                    TextInput::make('name')->label(__('menu::menu.fields.name'))
+                        ->helperText(__('menu::menu.help.free_menu'))
+                        ->required()->maxLength(191)
+                        ->visible(fn (): bool => MenuEditor::isFree($this->location)),
                     Select::make('style')->label(__('menu::menu.fields.style'))
                         ->options(collect(Menu::STYLES)->mapWithKeys(fn (string $s): array => [$s => __("menu::menu.styles.{$s}")])->all())
                         ->helperText(__('menu::menu.help.style'))
@@ -162,6 +166,39 @@ class ManageMenus extends Page implements MicrositeTool
     public function content(Schema $schema): Schema
     {
         return $schema->components([EmbeddedSchema::make('pickForm'), EmbeddedSchema::make('form')]);
+    }
+
+    /** "New free menu": a menu at no location, for pages to pick as their sidebar (DB-02 v0.2 §5.1). */
+    protected function getHeaderActions(): array
+    {
+        return [
+            Action::make('newFreeMenu')->label(__('menu::menu.actions.new_free_menu'))->icon(Heroicon::OutlinedPlus)->color('gray')
+                ->modalDescription(__('menu::menu.help.free_menu'))
+                ->schema([TextInput::make('name')->label(__('menu::menu.fields.name'))->required()->maxLength(191)])
+                ->action(function (array $data): void {
+                    $this->guardOwner();
+                    $menu = $this->editor()->createFree($this->owner, $data['name']);
+                    $this->pick['location'] = MenuEditor::FREE.$menu->id;
+                    $this->switchTo(location: MenuEditor::FREE.$menu->id);
+                    Notification::make()->success()->title(__('menu::menu.notifications.created'))->send();
+                }),
+        ];
+    }
+
+    /** @return array<string, string|array<string, string>> the locations, then this owner's free menus */
+    protected function locationOptions(): array
+    {
+        $free = collect($this->owner ? MenuEditor::freeMenus($this->owner) : [])
+            ->mapWithKeys(fn (string $name, int $id): array => [MenuEditor::FREE.$id => $name])->all();
+
+        return $free === [] ? MenuEditor::locations()
+            : [__('menu::menu.locations_group') => MenuEditor::locations(), __('menu::menu.free_menus') => $free];
+    }
+
+    protected function isLocation(?string $location): bool
+    {
+        return $location !== null && (array_key_exists($location, MenuEditor::locations())
+            || (MenuEditor::isFree($location) && $this->owner && $this->editor()->own($this->owner, $location) !== null));
     }
 
     /** Nested items, up to MenuItem::MAX_DEPTH levels (FR-MENU-02). */
@@ -289,9 +326,12 @@ class ManageMenus extends Page implements MicrositeTool
         if ($owner !== null && in_array($owner, MenuEditor::ownerKeys(Auth::user()), true)) {
             $this->owner = $owner;
             $this->pick['mode'] = $this->editor()->mode($owner);
+            if (MenuEditor::isFree($this->location)) {   // another owner's free menu
+                $this->location = $this->pick['location'] = 'primary';
+            }
         }
 
-        if ($location !== null && array_key_exists($location, MenuEditor::locations())) {
+        if ($location !== null && $this->isLocation($location)) {
             $this->location = $location;
         }
 
@@ -301,7 +341,7 @@ class ManageMenus extends Page implements MicrositeTool
     protected function load(): void
     {
         $menu = $this->ownMenu();
-        $this->form->fill(['style' => $menu?->style ?? 'dropdown', 'items' => $menu ? $this->editor()->tree($menu) : []]);
+        $this->form->fill(['name' => $menu?->name, 'style' => $menu?->style ?? 'dropdown', 'items' => $menu ? $this->editor()->tree($menu) : []]);
     }
 
     /** Livewire-callable: the owner is always one of the user's (mount / switchTo). */
@@ -320,7 +360,7 @@ class ManageMenus extends Page implements MicrositeTool
         $this->guardOwner();
         $menu = $this->ownMenu() ?? abort(404);
         $state = $this->form->getState();
-        $this->editor()->save($menu, $state['items'] ?? [], $state['style'] ?? null);
+        $this->editor()->save($menu, $state['items'] ?? [], $state['style'] ?? null, $state['name'] ?? null);
         $this->load();
 
         Notification::make()->success()->title(__('menu::menu.notifications.saved'))->send();
@@ -331,6 +371,10 @@ class ManageMenus extends Page implements MicrositeTool
         $this->guardOwner();
         if ($menu = $this->ownMenu()) {
             $this->editor()->delete($menu);
+        }
+
+        if (MenuEditor::isFree($this->location)) {   // gone: back to the main menu
+            $this->location = $this->pick['location'] = 'primary';
         }
 
         $this->load();

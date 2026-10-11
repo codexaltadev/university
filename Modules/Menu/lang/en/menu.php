@@ -3,6 +3,8 @@
 return [
     'title' => 'Menus',
     'location' => 'Location',
+    'locations_group' => 'Locations',
+    'free_menus' => 'Free menus',
     'source' => 'Menus come from',
     'sub_items' => 'Sub-items',
     'structure' => 'Structure — :location',
@@ -31,6 +33,7 @@ return [
         'heading' => 'Heading (no link)',
     ],
     'fields' => [
+        'name' => 'Name',
         'style' => 'Opens as',
         'display' => 'This item opens as',
         'columns' => 'Columns',
@@ -51,6 +54,7 @@ return [
         'new_tab' => 'Open in new tab',
     ],
     'help' => [
+        'free_menu' => 'A menu at no location. A page picks it as its sidebar menu (Pages › Sidebar menu); its child pages use it too.',
         'style' => 'How the website opens this menu; each top item can differ under "Display".',
         'columns' => 'Second-level items become column headings, third-level items the links under them.',
         'title' => 'Empty: the linked page\'s own title.',
@@ -85,6 +89,7 @@ return [
         'mega' => 'Mega · :columns columns',
     ],
     'actions' => [
+        'new_free_menu' => 'New free menu',
         'create_own' => 'Create own menu',
         'copy' => 'Copy :owner\'s menu and edit',
         'save' => 'Save menu',

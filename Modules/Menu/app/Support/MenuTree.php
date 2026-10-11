@@ -9,6 +9,8 @@ use Modules\Menu\Models\MenuItem;
 use Platform\Context\FallbackResolver;
 use Platform\Context\SiteContext;
 use Platform\Media\MediaItem;
+use Platform\Scope\UserScopeFilter;
+use Platform\Theme\LocationMenus;
 
 /**
  * Menus for the website (FR-MENU-07/10/12): the menu that applies at a location in a
@@ -39,9 +41,18 @@ class MenuTree
      */
     public function menuAt(string $location, SiteContext $context, ?string $locale = null): array
     {
-        $menu = app(FallbackResolver::class)->resolve('menu', $location, $context);
+        $menu = $this->pageMenu($location, $context) ?? app(FallbackResolver::class)->resolve('menu', $location, $context);
 
         return $menu instanceof Menu ? ['style' => $menu->style, 'items' => $this->of($menu, $locale)] : ['style' => null, 'items' => []];
+    }
+
+    /** The page's own menu at this location (a free menu of the context's owner, DB-02 v0.2 §8.1), if it set one. */
+    protected function pageMenu(string $location, SiteContext $context): ?Menu
+    {
+        $id = app(LocationMenus::class)->for($location);
+
+        return $id === null ? null : Menu::query()->withoutGlobalScope(UserScopeFilter::class)
+            ->ownedBy($context->key())->whereNull('location')->where('is_active', true)->find($id);
     }
 
     /** @return list<array<string, mixed>> */

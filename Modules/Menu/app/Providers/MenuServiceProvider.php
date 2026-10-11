@@ -45,6 +45,8 @@ class MenuServiceProvider extends ModuleServiceProvider
 
         // <x-platform::menu> on the website (C-06)
         $this->app->make(SiteData::class)->provide('menu', fn (string $location, SiteContext $context): array => $this->app->make(MenuTree::class)->menuAt($location, $context));
+        // An owner's free menus, for a page's "Sidebar menu" (DB-02 v0.2 §8.1)
+        $this->app->make(SiteData::class)->provide('free-menus', fn (string $ownerKey): array => MenuEditor::freeMenus($ownerKey));
 
         // FR-MENU-12, AC-MENU-03: a menu or a linked page / record changed → fresh menus
         Event::listen(['eloquent.saved: *', 'eloquent.deleted: *', 'eloquent.restored: *'], function (string $event, array $models): void {

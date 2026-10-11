@@ -10,7 +10,9 @@ return [
         'page' => 'Page',
         'files' => 'Pictures & files',
     ],
+    'sidebar_inherit' => 'Same as the parent page',
     'fields' => [
+        'sidebar_menu' => 'Sidebar menu',
         'title' => 'Title',
         'excerpt' => 'Short description',
         'content' => 'Content',
@@ -49,6 +51,7 @@ return [
         'secondary' => 'Plain',
     ],
     'help' => [
+        'sidebar_menu' => 'The menu on the left of this page and of the pages inside it. Make one in Appearance › Menus › New free menu.',
         'web_address' => 'Made from the title; change it here. The old address keeps working.',
         'attachments' => 'Listed for download at the end of the page.',
         'embed' => 'YouTube, Vimeo, Google Maps or Facebook video link.',

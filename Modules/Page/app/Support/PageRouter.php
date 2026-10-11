@@ -10,6 +10,7 @@ use Platform\Context\SiteContext;
 use Platform\Scope\UserScopeFilter;
 use Platform\Seo\Seo;
 use Platform\Slugs\Slug;
+use Platform\Theme\LocationMenus;
 use Platform\Theme\Themes;
 
 /**
@@ -71,6 +72,7 @@ class PageRouter
         }
 
         app(Seo::class)->forRecord($page);
+        app(LocationMenus::class)->use('sidebar', $page->sidebarMenuId());   // its own sidebar menu, or its parent's (DB-02 v0.2 §8.1)
 
         $templates = app(Themes::class)->manifest()->pageTemplates();
         $template = in_array($page->template, $templates, true) ? $page->template : 'default';

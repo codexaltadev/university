@@ -53,6 +53,7 @@ use Platform\Theme\DesignTokens;
 use Platform\Theme\Http\ApplyTheme;
 use Platform\Theme\Http\HomeController;
 use Platform\Theme\LayoutResolver;
+use Platform\Theme\LocationMenus;
 use Platform\Theme\SiteData;
 use Platform\Theme\ThemeBlade;
 use Platform\Theme\Themes;
@@ -78,6 +79,8 @@ class PlatformServiceProvider extends ServiceProvider
         ] as $service) {
             $this->app->singleton($service);
         }
+
+        $this->app->scoped(LocationMenus::class);   // one request: a page's own sidebar menu
 
         BlueprintMacros::register();
 

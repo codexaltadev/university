@@ -47,7 +47,7 @@ class Page extends BaseModel implements Scopeable
 
     protected $table = 'page_pages';
 
-    protected $fillable = ['parent_id', 'title', 'excerpt', 'content', 'template', 'published_at', 'expires_at', 'sort_order', 'is_active'];
+    protected $fillable = ['parent_id', 'title', 'excerpt', 'content', 'template', 'sidebar_menu_id', 'published_at', 'expires_at', 'sort_order', 'is_active'];
 
     public array $translatable = ['title', 'excerpt', 'content'];
 
@@ -81,6 +81,18 @@ class Page extends BaseModel implements Scopeable
     }
 
     /** Public address (FR-PAGE-03/05, AC-PAGE-01). */
+    /** The page's sidebar menu: its own, else the nearest parent's; null = the owner's "sidebar" menu. */
+    public function sidebarMenuId(): ?int
+    {
+        for ($page = $this; $page !== null; $page = $page->parent) {
+            if ($page->sidebar_menu_id) {
+                return (int) $page->sidebar_menu_id;
+            }
+        }
+
+        return null;
+    }
+
     public function url(?string $locale = null): string
     {
         $slugs = [];

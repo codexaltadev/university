@@ -132,6 +132,8 @@ return [
         'faculty-members', 'administration', 'leadership', 'committees', 'alumni', 'transport',
         'facilities', 'rankings', 'international', 'csr', 'partners', 'courses', 'curriculum',
     ],
+    // Reserved first segments a main site page may take: the module's landing is a page (DB-02 v0.2 §8.1)
+    'page_landing_paths' => ['contact', 'admission'],
     'reserved_microsite_paths' => [
         'news', 'notices', 'events', 'gallery', 'downloads', 'faq', 'contact', 'search',
         'faculty-members', 'people', 'programs', 'courses', 'curriculum', 'labs', 'lab',

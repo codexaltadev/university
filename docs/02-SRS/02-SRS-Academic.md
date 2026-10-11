@@ -377,6 +377,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 * **BRL-ADM-01:** Admission Result একটি bulk data table; প্রতি session-এ হাজার হাজার row। Result-এর জন্য soft delete থাকবে (BR-DATA-01), কিন্তু পুরনো session-এর result একসাথে archive / purge করার ব্যবস্থা থাকবে।
 * **BRL-ADM-02:** Result lookup কোনো ব্যক্তিগত তথ্য (phone, email) দেখাবে না; শুধু নাম ও ফলাফল।
 * **BRL-ADM-03:** *(v0.3)* কোনো table-এ `published_at` নেই; দেখানো হবে কিনা = `is_active` (result batch-এর publish switch-ও এটি)। Circular "Closed" হয় application-এর শেষ তারিখ দিয়ে।
+* **BRL-ADM-05:** *(v0.3)* FR-ADM-07: এখন প্রতি visitor মিনিটে ১০ বার + লুকানো trap field; captcha যোগ হবে kernel-এ captcha service এলে (সব public form-এর জন্য একবারে)।
 * **BRL-ADM-04:** *(v0.3)* Home-এর "Admission" mega menu Menu module-এর data (main site primary menu-র item, display mega) — Admission module-এর অংশ নয়।
 
 ### Permissions

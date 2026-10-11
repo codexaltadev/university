@@ -10,7 +10,9 @@ return [
         'page' => 'Page',
         'files' => 'ছবি ও file',
     ],
+    'sidebar_inherit' => 'Parent page-এর মতো',
     'fields' => [
+        'sidebar_menu' => 'Sidebar menu',
         'title' => 'শিরোনাম',
         'excerpt' => 'সংক্ষিপ্ত বিবরণ',
         'content' => 'বিষয়বস্তু',
@@ -49,6 +51,7 @@ return [
         'secondary' => 'সাধারণ',
     ],
     'help' => [
+        'sidebar_menu' => 'এই page ও এর ভেতরের page-গুলোর বাম পাশের menu। Appearance › Menus › নতুন free menu থেকে বানান।',
         'web_address' => 'শিরোনাম থেকে তৈরি; এখানে বদলানো যায়। পুরনো ঠিকানাও কাজ করবে।',
         'attachments' => 'Page-এর শেষে download তালিকায় দেখাবে।',
         'embed' => 'YouTube, Vimeo, Google Maps বা Facebook ভিডিওর link।',

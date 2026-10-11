@@ -325,6 +325,8 @@ UQ: `(employee_id, active_key)` (NULL employee_id একাধিক থাক�
 
 `result`, `circulars` Admission page-এর child page-এর slug হতে পারবে না (module page-এর path — UrlRules)।
 
+*(v1.5, build-এর সময়)* Circular ↔ Program সম্পর্ক (`core_relations`) এখনো যোগ হয়নি — legacy-তে নেই; দরকার হলে পরে। Result-এর Program নাম মেলানো হয় নাম, short name, বা শেষের "(BBA)" বাদ দিয়ে নাম দিয়ে; না মিললে `program_label` থাকে (S08: ১,৭১৭-র ১,৬৫৩টি মিলেছে)।
+
 ---
 
 ## 11. M-10 Tuition (slug `tuition`) ও Waiver Calculator (slug `waiver`)

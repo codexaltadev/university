@@ -3,6 +3,8 @@
 return [
     'title' => 'Menu',
     'location' => 'জায়গা',
+    'locations_group' => 'জায়গা',
+    'free_menus' => 'Free menu',
     'source' => 'Menu কোথা থেকে',
     'sub_items' => 'ভেতরের item',
     'structure' => 'গঠন — :location',
@@ -31,6 +33,7 @@ return [
         'heading' => 'শিরোনাম (link নেই)',
     ],
     'fields' => [
+        'name' => 'নাম',
         'style' => 'যেভাবে খুলবে',
         'display' => 'এই item যেভাবে খুলবে',
         'columns' => 'কলাম',
@@ -51,6 +54,7 @@ return [
         'new_tab' => 'নতুন tab-এ খুলবে',
     ],
     'help' => [
+        'free_menu' => 'কোনো জায়গায় নয় এমন menu। Page এটিকে sidebar menu হিসেবে বাছে (Pages › Sidebar menu); তার child page-ও এটি পায়।',
         'style' => 'Website-এ menu কীভাবে খুলবে; প্রতিটি উপরের item "প্রদর্শন"-এ আলাদা হতে পারে।',
         'columns' => 'দ্বিতীয় স্তরের item কলামের শিরোনাম, তৃতীয় স্তরের item তার নিচের link।',
         'title' => 'খালি রাখলে link করা page-এর শিরোনাম।',
@@ -85,6 +89,7 @@ return [
         'mega' => 'Mega · :columnsটি কলাম',
     ],
     'actions' => [
+        'new_free_menu' => 'নতুন free menu',
         'create_own' => 'নিজের menu তৈরি',
         'copy' => ':owner-এর menu কপি করে edit',
         'save' => 'Menu সংরক্ষণ',

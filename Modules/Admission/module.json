@@ -1,0 +1,56 @@
+{
+    "name": "Admission",
+    "alias": "admission",
+    "description": "Admission circulars, highlights, steps, contacts, test results and subscribers; /admission page blocks — M-09",
+    "keywords": [
+        "academic",
+        "admission"
+    ],
+    "priority": 62,
+    "providers": [
+        "Modules\\Admission\\Providers\\AdmissionServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "admission",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "admission_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "program"
+        ],
+        "morph_aliases": {
+            "admission.circular": "Modules\\Admission\\Models\\Circular",
+            "admission.highlight": "Modules\\Admission\\Models\\AdmissionHighlight",
+            "admission.step": "Modules\\Admission\\Models\\AdmissionStep",
+            "admission.contact-group": "Modules\\Admission\\Models\\AdmissionContactGroup",
+            "admission.result-batch": "Modules\\Admission\\Models\\ResultBatch",
+            "admission.result": "Modules\\Admission\\Models\\AdmissionResult",
+            "admission.subscriber": "Modules\\Admission\\Models\\AdmissionSubscriber"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "assignable": true,
+            "searchable": true,
+            "sitemap": true,
+            "menu_item_types": true,
+            "vocabularies": [
+                "admission.highlight-category"
+            ],
+            "website_pages": true,
+            "page_blocks": true,
+            "homepage_sections": [
+                "admission.going-on"
+            ],
+            "settings": true
+        }
+    }
+}

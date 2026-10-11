@@ -52,6 +52,7 @@ it('lists every module, recording bundled ones on first visit', function () {
     $this->actingAs(superAdmin());
 
     Livewire::test(ListModules::class)
+        ->set('tableRecordsPerPage', 50)   // more modules than one page of 25
         ->assertCanSeeTableRecords(CoreModule::whereIn('slug', ['faq', 'office', 'role', 'user', 'module-manager'])->get())
         ->assertTableColumnStateSet('status', 'active', moduleRow('faq'));
 
