@@ -1,0 +1,16 @@
+{
+    "name": "uwms/leadership",
+    "description": "Leadership module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Leadership\\": "app/",
+            "Modules\\Leadership\\Database\\Factories\\": "database/factories/",
+            "Modules\\Leadership\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Leadership\\Tests\\": "tests/" }
+    }
+}

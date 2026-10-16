@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-04 |
-| Version | 1.2 — 2026-10-11 (v1.1): §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত); 2026-10-16 (v1.2): §4 Administration সরলীকরণ — contact visibility তিনটি column, campus ও user link পরে, Office scope, website গঠন |
+| Version | 1.3 — 2026-10-11 (v1.1): §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত); 2026-10-16 (v1.2): §4 Administration সরলীকরণ — contact visibility তিনটি column, campus ও user link পরে, Office scope, website গঠন; 2026-10-16 (v1.3): §6 Leadership — role holder / member, term-এর address, former, migration নেই |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 3](../02-SRS/03-SRS-People.md), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -164,6 +164,8 @@ Directory query: `administration_members JOIN administration_categories WHERE is
 ---
 
 ## 6. M-15 Leadership
+
+> *v1.3 (2026-10-16, build-এর সময়):* "একসাথে একজন" পদ (`is_single_holder`) kernel catalog-এর role `holder` (single holder) নেয়, বাকিগুলো `member` — তাই নতুন নিয়োগে আগের মেয়াদ শেষ করার নিয়ম Assignment engine-এরই (`endPrevious`, আগের দিন শেষ)। Term-এর web address ব্যক্তির নাম থেকে (`/leadership/{slug}`); `/leadership/former` = শেষ তারিখ পার হওয়া মেয়াদ। Website-এ term দেখায় যখন term, পদ ও assignment active + public এবং ব্যক্তি active। Legacy-তে leadership table নেই — migration step নেই; পদ ও পদধারী হাতে (Administration member বা manual person)।
 
 ### 6.1 `leadership_positions` — B (Assignable)
 

@@ -1,0 +1,48 @@
+<?php
+
+return [
+    'plural' => 'নেতৃত্ব',
+    'former' => 'সাবেক নেতৃত্ব',
+    'former_of' => 'সাবেক :position',
+    'former_one' => 'সাবেক',
+    'former_title' => 'সাবেক :position',
+    'current' => 'বর্তমান',
+    'vacant' => 'শূন্য',
+    'other' => 'অন্যান্য',
+    'none' => 'এখনো কেউ তালিকায় নেই।',
+    'no_former' => 'কোনো সাবেক পদধারী তালিকায় নেই।',
+    'terms' => 'পদধারী',
+    'appoint' => 'নিয়োগ দিন',
+    'tenure' => 'মেয়াদ',
+    'since' => ':year থেকে',
+    'until' => ':year পর্যন্ত',
+    'profile' => 'পূর্ণ profile',
+    'view_site' => 'Website-এ দেখুন',
+    'end_previous' => ':names-এর মেয়াদ আগের দিন শেষ করুন (তিনি "সাবেক" তালিকায় যাবেন)',
+    'position' => [
+        'singular' => 'পদ',
+    ],
+    'section' => [
+        'label' => 'নেতৃত্বের বার্তা',
+        'from' => ':position-এর বার্তা',
+        'read_more' => 'পুরো বার্তা পড়ুন',
+        'words' => 'কত শব্দ দেখাবে',
+    ],
+    'fields' => [
+        'title' => 'পদ',
+        'group' => 'Group',
+        'is_single_holder' => 'একসাথে একজন',
+        'person' => 'ব্যক্তি',
+        'is_public' => 'Website-এ দেখাবে',
+        'starts_on' => 'শুরু',
+        'ends_on' => 'শেষ',
+        'message' => 'বার্তা',
+        'biography' => 'জীবনী',
+    ],
+    'help' => [
+        'title' => 'যেমন "Vice Chancellor", "Member, Board of Trustees"।',
+        'is_single_holder' => 'Vice Chancellor-এর মতো পদে চালু রাখুন: নতুন নিয়োগে বর্তমান মেয়াদ শেষ হয়। অনেক সদস্যের board-এ বন্ধ।',
+        'ends_on' => 'পদে থাকাকালীন খালি। এই তারিখের পরে "সাবেক" তালিকায় দেখাবে।',
+        'biography' => 'এই পদের জন্য; ব্যক্তির directory profile-এর link-ও থাকে।',
+    ],
+];

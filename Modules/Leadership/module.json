@@ -1,0 +1,51 @@
+{
+    "name": "Leadership",
+    "alias": "leadership",
+    "description": "Leadership and authorities with their messages and terms, /leadership — M-15",
+    "keywords": [
+        "people",
+        "leadership"
+    ],
+    "priority": 64,
+    "providers": [
+        "Modules\\Leadership\\Providers\\LeadershipServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "leadership",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "leadership_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "administration"
+        ],
+        "morph_aliases": {
+            "leadership.position": "Modules\\Leadership\\Models\\Position",
+            "leadership.term": "Modules\\Leadership\\Models\\LeadershipTerm"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "assignable": true,
+            "searchable": true,
+            "sitemap": true,
+            "vocabularies": [
+                "leadership.group"
+            ],
+            "website_pages": true,
+            "homepage_sections": [
+                "leadership.message"
+            ],
+            "layouts": [
+                "leadership.listing"
+            ]
+        }
+    }
+}

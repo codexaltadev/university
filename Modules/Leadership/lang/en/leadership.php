@@ -1,0 +1,48 @@
+<?php
+
+return [
+    'plural' => 'Leadership',
+    'former' => 'Former leadership',
+    'former_of' => 'Former :position',
+    'former_one' => 'Former',
+    'former_title' => 'Former :position',
+    'current' => 'Current',
+    'vacant' => 'Vacant',
+    'other' => 'Other',
+    'none' => 'No one is listed yet.',
+    'no_former' => 'No former office holders are listed.',
+    'terms' => 'Holders',
+    'appoint' => 'Appoint',
+    'tenure' => 'Term',
+    'since' => 'Since :year',
+    'until' => 'Until :year',
+    'profile' => 'Full profile',
+    'view_site' => 'View on the website',
+    'end_previous' => 'End the term of :names the day before (they move to "Former")',
+    'position' => [
+        'singular' => 'Position',
+    ],
+    'section' => [
+        'label' => 'Message from the leadership',
+        'from' => 'Message from the :position',
+        'read_more' => 'Read the full message',
+        'words' => 'Words shown',
+    ],
+    'fields' => [
+        'title' => 'Position',
+        'group' => 'Group',
+        'is_single_holder' => 'One holder at a time',
+        'person' => 'Person',
+        'is_public' => 'Show on the website',
+        'starts_on' => 'From',
+        'ends_on' => 'Until',
+        'message' => 'Message',
+        'biography' => 'Biography',
+    ],
+    'help' => [
+        'title' => 'E.g. "Vice Chancellor", "Member, Board of Trustees".',
+        'is_single_holder' => 'On for posts like Vice Chancellor: appointing someone ends the current term. Off for boards with many members.',
+        'ends_on' => 'Empty while in office. After this date the person is listed under "Former".',
+        'biography' => 'For this post; the person\'s directory profile is linked too.',
+    ],
+];
