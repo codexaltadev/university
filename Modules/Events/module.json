@@ -1,0 +1,55 @@
+{
+    "name": "Events",
+    "alias": "events",
+    "description": "Seminars, workshops, conferences and other events, on the main site and in microsites — M-19",
+    "keywords": [
+        "content",
+        "events"
+    ],
+    "priority": 68,
+    "providers": [
+        "Modules\\Events\\Providers\\EventsServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "events",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "events_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "events.event": "Modules\\Events\\Models\\Event"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true,
+            "assignable": true,
+            "searchable": true,
+            "sitemap": true,
+            "menu_item_types": true,
+            "website_pages": true,
+            "vocabularies": [
+                "events.category"
+            ],
+            "homepage_sections": [
+                "events.upcoming",
+                "events.past"
+            ],
+            "layouts": [
+                "events.listing"
+            ],
+            "metrics": [
+                "events.count"
+            ],
+            "freshness_source": true
+        }
+    }
+}

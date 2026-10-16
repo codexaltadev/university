@@ -50,7 +50,7 @@ trait HasSlug
      */
     public function changeSlug(string $locale, string $wanted): string
     {
-        $slug = $this->uniqueSlug($locale, Str::slug($wanted) ?: (string) $this->getKey());
+        $slug = $this->uniqueSlug($locale, static::shortSlug(Str::slug($wanted)) ?: (string) $this->getKey());
 
         $existing = $this->slugs()->where('locale', $locale)->where('slug', $slug)->first();
 
@@ -83,6 +83,18 @@ trait HasSlug
         $record = $row ? static::query()->find($row->sluggable_id) : null;
 
         return $record ? [$record, $row->is_current] : null;
+    }
+
+    /** At most 150 characters, cut at a word ("-"), so a "-2" suffix still fits core_slugs.slug (191). */
+    public static function shortSlug(string $slug, int $max = 150): string
+    {
+        if (strlen($slug) <= $max) {
+            return $slug;
+        }
+        $cut = substr($slug, 0, $max);
+        $dash = strrpos($cut, '-');
+
+        return rtrim($dash !== false && $dash > $max / 2 ? substr($cut, 0, $dash) : $cut, '-');
     }
 
     /** @return list<string> */

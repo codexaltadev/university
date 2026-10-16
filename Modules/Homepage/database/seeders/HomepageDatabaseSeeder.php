@@ -25,7 +25,7 @@ class HomepageDatabaseSeeder extends Seeder
             ['core.statistics', null, ['set' => 'default', 'display' => 'counter']],
             ['program.list', ['en' => 'Our Programs', 'bn' => 'আমাদের Program'], ['source_mode' => 'highlighted_first', 'count' => 8]],
             ['news.latest', ['en' => 'Latest News', 'bn' => 'সর্বশেষ সংবাদ'], ['source_mode' => 'highlighted_first', 'count' => 6]],
-            ['event.upcoming', ['en' => 'Upcoming Events', 'bn' => 'আসন্ন অনুষ্ঠান'], ['source_mode' => 'latest', 'count' => 4]],
+            ['events.upcoming', ['en' => 'Upcoming Events', 'bn' => 'আসন্ন অনুষ্ঠান'], ['source_mode' => 'latest', 'count' => 4]],
             ['notice.board', ['en' => 'Notice Board', 'bn' => 'নোটিশ বোর্ড'], ['source_mode' => 'latest', 'count' => 8]],
             ['testimonial.list', ['en' => 'What Our Students Say', 'bn' => 'শিক্ষার্থীদের কথা'], ['source_mode' => 'highlighted_first', 'count' => 6]],
             ['partner.list', ['en' => 'Our Partners', 'bn' => 'আমাদের অংশীদার'], ['source_mode' => 'highlighted_first', 'count' => 12]],

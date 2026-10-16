@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-05 |
-| Version | 1.2 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration) |
+| Version | 1.3 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 4](../02-SRS/04-SRS-Content.md), BRD v1.6 (Q-26), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -106,16 +106,18 @@ Media: `featured_image`, `gallery`। Vocabulary: `news.category`, shared tags�
 | starts_at | DATETIME | IX | বাধ্যতামূলক (FR-EVT-01) |
 | ends_at | DATETIME | N, IX | ≥ starts_at |
 | is_all_day | TINYINT(1) | | |
-| campus_id | BIGINT UNSIGNED | N, IX | Campus optional |
+| ~~campus_id~~ | | | *v1.3:* M-08 Campus এলে; এখন `venue`-এ লেখা |
 | venue | JSON | N, T | Building / room / বাইরের স্থান |
 | online_url | VARCHAR(2048) | N | FR-EVT-10 |
 | organizer_label | JSON | N, T | |
 | registration_url | VARCHAR(2048) | N | |
 | registration_ends_at | DATETIME | N | FR-EVT-06 |
-| album_id | BIGINT UNSIGNED | N, IX | Gallery album (optional; FR-EVT-05) |
-| + common | | published_at |
+| ~~album_id~~ | | | *v1.3:* M-22 Gallery এলে; এখন Media `gallery` (FR-EVT-05 — Media Library থেকে) |
+| + common | | `active_at` *(v1.3)* — কখন থেকে website-এ দেখাবে (event-এর তারিখ নয়) |
 
 IX: `(starts_at, is_active)` — Upcoming / Past (FR-EVT-02)। Speaker: `core_assignments` (`role_key = speaker`)। Media: `featured_image`। Vocabulary: `events.category`।
+
+*(v1.3, build-এর আগে)* অবস্থা তারিখ থেকে: Upcoming = `starts_at` ভবিষ্যৎ, Ongoing = শুরু হয়েছে কিন্তু `ends_at` (না থাকলে all-day-এ দিনের শেষ, নইলে শুরু) পার হয়নি, Past = বাকি (AC-EVT-01)। কোথায় দেখাবে = "Show in" + main site (§1, Admin)। Speaker / moderator = kernel `PeopleManager` (role `speaker`, `moderator`)। Website: `/events` ও `/{entity}/events` — tab Upcoming (ongoing সহ, শুরুর ক্রমে) / Past (নতুন আগে), layout list / cards / timeline / calendar (month), category filter; `/events/{slug}` — তারিখ ও সময়, venue, online link, organizer, speaker, registration (শেষ তারিখ পার হলে "Registration closed"), gallery, `.ics` ও Google Calendar link (FR-EVT-07), JSON-LD `Event` (FR-EVT-09)। Homepage section: `events.upcoming` (countdown ঐচ্ছিক), `events.past` (Past highlights — সেই জায়গার highlight, না থাকলে সর্বশেষ past)। Migration S16E: `events` (৫৬৩) — `event_date` + `event_time` → `starts_at` (সময় নেই = all-day), department → relation, `is_home` → main site, lab → Lab module-এর পরে; `event_images` (৭৭) ও ছবি S03-এর পরে।
 
 ---
 
