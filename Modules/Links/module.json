@@ -1,0 +1,52 @@
+{
+    "name": "Links",
+    "alias": "links",
+    "description": "Important links of each site, with icons and groups, checked every week — M-29",
+    "keywords": [
+        "content",
+        "links"
+    ],
+    "priority": 70,
+    "providers": [
+        "Modules\\Links\\Providers\\LinksServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "links",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "links_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "links.link": "Modules\\Links\\Models\\Link"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true,
+            "website_pages": true,
+            "vocabularies": [
+                "links.group"
+            ],
+            "homepage_sections": [
+                "links.list"
+            ],
+            "footer_blocks": [
+                "links.footer"
+            ],
+            "notifications": [
+                "links.broken"
+            ],
+            "layouts": [
+                "links.listing"
+            ]
+        }
+    }
+}

@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-05 |
-| Version | 1.9 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section); 2026-10-16 (v1.4): §5 Notice (`active_at`, board / archive, attachment title, website, section); 2026-10-16 (v1.5): §6 Testimonials (`published_at` নেই, person, website, section); 2026-10-16 (v1.6): §7 Gallery (ছবি Media Library-তে, album-এ শুধু reference — `gallery_items` বাদ, link video `gallery_videos`; `album_type` বাদ; `event_images` → Event-এর Media); 2026-10-16 (v1.7): §8 Slider / Hero (এক slide = স্থির hero, অনেক = slider, background video; `active_at` / `expires_at`, `body` বাদ, `video_on_mobile`; section `slider.hero`, fallback); 2026-10-16 (v1.8): §9 Achievements (`active_at`, অর্জনকারী Person Picker, `team_name`, `related_post_id`, website, section, metric); 2026-10-16 (v1.9): §12 Documents (`document_type` তালিকা + `documents.category`, `session_label`, `allow_download`, `active_at`; নিজস্ব PDF.js flipbook) |
+| Version | 1.10 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section); 2026-10-16 (v1.4): §5 Notice (`active_at`, board / archive, attachment title, website, section); 2026-10-16 (v1.5): §6 Testimonials (`published_at` নেই, person, website, section); 2026-10-16 (v1.6): §7 Gallery (ছবি Media Library-তে, album-এ শুধু reference — `gallery_items` বাদ, link video `gallery_videos`; `album_type` বাদ; `event_images` → Event-এর Media); 2026-10-16 (v1.7): §8 Slider / Hero (এক slide = স্থির hero, অনেক = slider, background video; `active_at` / `expires_at`, `body` বাদ, `video_on_mobile`; section `slider.hero`, fallback); 2026-10-16 (v1.8): §9 Achievements (`active_at`, অর্জনকারী Person Picker, `team_name`, `related_post_id`, website, section, metric); 2026-10-16 (v1.9): §12 Documents (`document_type` তালিকা + `documents.category`, `session_label`, `allow_download`, `active_at`; নিজস্ব PDF.js flipbook); 2026-10-17 (v1.10): §14 Important Links ("Show in", website, section, footer block, সাপ্তাহিক check) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 4](../02-SRS/04-SRS-Content.md), BRD v1.6 (Q-26), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -330,10 +330,27 @@ Kernel: module-এর `public/` → `public/modules/{slug}/` (install / activate
 
 ---
 
-## 14. M-29 Important Links — `links_links` — B
+## 14. M-29 Important Links — `links_links` — B (attachable)
+
+*(v1.10, build-এর আগে — application standard: প্রতিটি জায়গার (main site, department, office …) নিজের link — "Show in" + main site; legacy-তে link table নেই, তাই migration step নেই। Menu-র "Quick links" location মেনুর জন্য; এটি বিবরণ, icon ও group সহ link-এর তালিকা।)*
 
 | Column | Type | Key / N | Default | বর্ণনা |
 |---|---|---|---|---|
+| id | BIGINT UNSIGNED | PK | | |
+| title | JSON | T | | |
+| url | VARCHAR(2048) | | | `https://…` বা site-এর ভেতরের `/…` |
+| description | JSON | N, T | | |
+| open_in_new_tab | BOOLEAN | | true | |
+| last_checked_at | TIMESTAMP | N | | FR-LINK-03 |
+| last_status_code | SMALLINT UNSIGNED | N | | 0 = উত্তর নেই; ≥ 400 = ভাঙা |
+| sort_order | INT UNSIGNED | | 0 | drag |
+| + common | | | | `is_active` |
+
+Media (Media Library reference): `icon`। Vocabulary: `links.group` ("Student Services", "Government" …)। কোথায় দেখাবে = "Show in" + main site (§1)।
+
+Website: `/links`, `/{entity}/links` — group অনুযায়ী (group-এর ক্রমে, ভেতরে drag-এর ক্রমে); layout `links.listing` = tiles / list। Homepage section `links.list` "Important Links" (group filter, tiles / list); **footer block** `links.footer` (Header & Footer-এর footer column-এ — kernel `$r->footerBlock()`, theme-এ নিজস্ব view না থাকলে module-এর view)। Sidebar widget — M-30 Widgets-এর সাথে। FR-LINK-03: `links:check` প্রতি সপ্তাহে (সোমবার ০৪:০০) বাইরের link-গুলো দেখে (HEAD, না হলে GET; ১০ সেকেন্ড), ভাঙা পেলে link-এর দায়িত্বে থাকা user-দের notification `links.broken`; admin তালিকায় "Broken" filter ও status।
+
+---|---|---|---|---|
 | id | BIGINT UNSIGNED | PK | | |
 | title | JSON | T | | |
 | url | VARCHAR(2048) | | | |

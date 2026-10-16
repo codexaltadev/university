@@ -17,7 +17,7 @@ class ManifestValidator
         'relation_target', 'attachable', 'person_source', 'assignable', 'scopeable', 'microsite',
         'layouts', 'homepage_sections', 'page_blocks', 'entity_tabs', 'entity_pages', 'entity_form_parts', 'microsite_tools', 'website_pages', 'menu_item_types', 'vocabularies',
         'metrics', 'searchable', 'sitemap', 'api', 'settings', 'notifications', 'freshness_source',
-        'dashboard_widgets', 'dynamic_permissions',
+        'dashboard_widgets', 'dynamic_permissions', 'footer_blocks',
     ];
 
     /**

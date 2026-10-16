@@ -7,7 +7,7 @@
                     <h2 class="site-footer__heading">{{ $heading }}</h2>
                 @endif
                 @foreach ($column['blocks'] ?? [] as $block)
-                    @includeIf('theme::partials.footer-blocks.'.($block['type'] ?? 'none'), ['block' => $block])
+                    <x-platform::footer-block :block="$block" />   {{-- the theme's view, else a module's block --}}
                 @endforeach
             </div>
         @empty

@@ -458,6 +458,7 @@ final class DepartmentExtension implements ModuleExtension
 | `notification()` | Notification type | Notification | FR-NOTI-03 |
 | `freshnessSource()` | Content Update Reminder-এর জন্য entity ↔ content সম্পর্ক ও "update" সময় | Notification (Reminder) | FR-NOTI-10 |
 | `dashboardWidget()` | Admin dashboard widget | Admin Panel | — |
+| `footerBlock()` | Header & Footer-এর footer column-এ block (`Platform\Website\FooterBlock`; theme-এর `partials/footer-blocks/{key}` থাকলে সেটি, নইলে module-এর view — `<x-platform::footer-block>`) | Header & Footer, theme | FR-HF-03, FR-LINK-02 |
 
 ### 7.3 Filament Integration
 
@@ -656,7 +657,7 @@ ZIP → install-এর একই validation → version নতুন কিন�
 | Runtime module-এর জায়গা (ADR-12 সংশোধন) | Symlink নয়: `config/platform.php` → `modules.runtime_path` (`UWMS_MODULE_RUNTIME_PATH`), nwidart `scan.paths`-এ যুক্ত। Production-এ shared folder-এ নির্দেশ করে |
 | Autoload (ADR-03) | `ModuleAutoloader` runtime module-এর PSR-4 Composer loader-এ যোগ করে। এজন্য nwidart auto-discovery বন্ধ (`composer.json` → `dont-discover`) এবং `bootstrap/providers.php`-এ kernel-এর **পরে** register — নইলে ZIP module-এর provider class পাওয়া যায় না |
 | Extension | `Platform\Registry\Registrar` (২১টি method + `filamentPlugin`), `Registry`, `ExtensionLoader`। Admin panel plugin এখন Extension-এর `filamentPlugin()` থেকে; Office-এর dynamic permission `dynamicPermissions()` থেকে |
-| `provides` key | `relation_target, attachable, person_source, assignable, scopeable, microsite, dynamic_permissions, layouts, homepage_sections, page_blocks, entity_tabs, menu_item_types, vocabularies, metrics, searchable, sitemap, api, settings, notifications, freshness_source, dashboard_widgets` — অচেনা key validator-এ বাতিল |
+| `provides` key | `relation_target, attachable, person_source, assignable, scopeable, microsite, dynamic_permissions, layouts, homepage_sections, page_blocks, entity_tabs, menu_item_types, vocabularies, metrics, searchable, sitemap, api, settings, notifications, freshness_source, dashboard_widgets, footer_blocks` — অচেনা key validator-এ বাতিল |
 | Table conflict | `migrate --pretend`-এর SQL থেকে table নাম; dry run-এ migration exception দিলে install সেখানেই বাতিল (কিছু migrate হওয়ার আগে) |
 | Database backup | Backup module (C-?) আসার আগে install / update-এ backup ধাপ `skipped` হিসেবে log হয় |
 | জানা সীমাবদ্ধতা | Laravel-এর Migrator একই PHP process-এ migration file path অনুযায়ী cache করে; long-running worker (queue, Octane)-এ module update করলে worker restart বাধ্যতামূলক (deploy-এর `horizon:terminate` ইতিমধ্যে আছে) |

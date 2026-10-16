@@ -28,6 +28,7 @@ use Platform\Context\MicrositeOwners;
 use Platform\Context\MicrositeTool;
 use Platform\Filament\Components\FallbackIndicator;
 use Platform\Filament\Components\TranslatableTabs;
+use Platform\Website\FooterBlocks;
 
 /**
  * Appearance › Header & Footer (C-09): pick an owner and a region (top bar, header,
@@ -188,6 +189,8 @@ class ManageHeaderFooter extends Page implements MicrositeTool
     protected function footerFields(): array
     {
         $is = fn (string $type): \Closure => fn (Get $get): bool => $get('type') === $type;
+        $moduleBlocks = app(FooterBlocks::class)->all();   // blocks of active modules (FooterBlock)
+        $label = fn (string $b): string => isset($moduleBlocks[$b]) ? $moduleBlocks[$b]::label() : __("headerfooter::headerfooter.blocks.{$b}");
 
         return [
             Repeater::make('columns')->label(__('headerfooter::headerfooter.fields.columns'))
@@ -200,13 +203,14 @@ class ManageHeaderFooter extends Page implements MicrositeTool
                     ]),
                     Repeater::make('blocks')->label(__('headerfooter::headerfooter.fields.blocks'))
                         ->defaultItems(1)->reorderable()->collapsible()
-                        ->itemLabel(fn (array $state): ?string => isset($state['type']) ? __("headerfooter::headerfooter.blocks.{$state['type']}") : null)
+                        ->itemLabel(fn (array $state): ?string => isset($state['type']) ? $label($state['type']) : null)
                         ->schema([
                             Select::make('type')->label(__('headerfooter::headerfooter.fields.block'))
                                 ->options(fn (): array => collect(static::BLOCKS)
                                     // Custom HTML can carry scripts: Super Admin only (like BRL-SET-02)
                                     ->reject(fn (string $b): bool => $b === 'custom_html' && ! Auth::user()?->isSuperAdmin())
-                                    ->mapWithKeys(fn (string $b): array => [$b => __("headerfooter::headerfooter.blocks.{$b}")])->all())
+                                    ->merge(array_keys($moduleBlocks))
+                                    ->mapWithKeys(fn (string $b): array => [$b => $label($b)])->all())
                                 ->required()->live()->selectablePlaceholder(false),
                             ...TranslatableTabs::inline(fn (string $locale, bool $isDefault, string $language): array => [
                                 Textarea::make("text.{$locale}")->label(__('headerfooter::headerfooter.fields.text')." ({$language})")
@@ -220,6 +224,8 @@ class ManageHeaderFooter extends Page implements MicrositeTool
                             Textarea::make('html')->label(__('headerfooter::headerfooter.fields.html'))
                                 ->rows(4)->visible($is('custom_html'))
                                 ->disabled(fn (): bool => ! Auth::user()?->isSuperAdmin()),
+                            // Each module block's own fields, shown when it is chosen
+                            ...collect($moduleBlocks)->map(fn (string $class, string $key) => Group::make($class::schema())->visible($is($key)))->values()->all(),
                         ]),
                 ]),
         ];

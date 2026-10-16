@@ -36,6 +36,7 @@ class Registrar
         'notification' => 'notifications',
         'freshnessSource' => 'freshness_source',
         'dashboardWidget' => 'dashboard_widgets',
+        'footerBlock' => 'footer_blocks',
     ];
 
     public function __construct(protected Registry $registry, public readonly string $module) {}
@@ -216,6 +217,12 @@ class Registrar
     public function dashboardWidget(string $widgetClass): static
     {
         return $this->add('dashboardWidget', ['class' => $widgetClass]);
+    }
+
+    /** A block for the footer columns of Header & Footer (Platform\Website\FooterBlock, FR-LINK-02). */
+    public function footerBlock(string $blockClass): static
+    {
+        return $this->add('footerBlock', ['class' => $blockClass]);
     }
 
     /** @param array<string, mixed> $entry */

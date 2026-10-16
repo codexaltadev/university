@@ -1,0 +1,16 @@
+{
+    "name": "uwms/links",
+    "description": "Links module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Links\\": "app/",
+            "Modules\\Links\\Database\\Factories\\": "database/factories/",
+            "Modules\\Links\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Links\\Tests\\": "tests/" }
+    }
+}

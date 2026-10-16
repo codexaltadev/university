@@ -285,7 +285,9 @@ Screen-এ লেখা থাকে, যেমন: *"This microsite uses Engine
 
 * নিজের না থাকলে parent-এর বা মূল website-এর দেখায় (Menu-র মতো)।
 * Header: logo (আপনার Department-এর নিজস্ব logo থাকলে), কোন menu।
-* Footer: column সংখ্যা ও প্রতিটি column-এ কী (About লেখা, menu, যোগাযোগ, social link, newsletter form)।
+* Footer: column সংখ্যা ও প্রতিটি column-এ কী (About লেখা, menu, যোগাযোগ, social link, newsletter form, **Important Links** — চাইলে একটি group)। চালু থাকা module-গুলো নিজেদের footer block এখানে যোগ করে।
+
+**Important Links** (**Content › Important Links**): UGC, Student Portal, Library-র মতো link — শিরোনাম, ঠিকানা (`https://…` বা এই site-এর `/…`), নতুন tab-এ খুলবে কিনা, Media Library থেকে লোগো, **Group** (যেমন "Government", "Student Services"), **Show in** (প্রতিটি department-এর নিজের link)। তালিকায় টেনে ক্রম সাজান। Website: `/links` (group অনুযায়ী); homepage-এ **Important Links** section; footer-এ উপরের block। প্রতি সোমবার system বাইরের link-গুলো যাচাই করে — কোনোটি না খুললে আপনি notification পাবেন; তালিকায় **Broken** filter ও **Check now**।
 
 ---
 

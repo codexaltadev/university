@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 4: Website Content Modules |
-| Version | 0.6 — 2026-10-16: FR-NEWS-01 `active_at` (owner: নতুন table-এ `published_at` নয়); v0.3: BRL-GAL-01 — album-এর ছবি Media Library-র ব্যবহার, আলাদা item record নয়; v0.4: FR-SLD-04/05 — hero video, একটি slide = স্থির hero; v0.5: FR-ACH-01 — অর্জনকারী Person Picker; v0.6: FR-DOC-02/03 — ধরন তালিকা, নিজস্ব flipbook |
+| Version | 0.7 — 2026-10-16: FR-NEWS-01 `active_at` (owner: নতুন table-এ `published_at` নয়); v0.3: BRL-GAL-01 — album-এর ছবি Media Library-র ব্যবহার, আলাদা item record নয়; v0.4: FR-SLD-04/05 — hero video, একটি slide = স্থির hero; v0.5: FR-ACH-01 — অর্জনকারী Person Picker; v0.6: FR-DOC-02/03 — ধরন তালিকা, নিজস্ব flipbook; v0.7: FR-LINK-02 — footer block hook |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md), [Part 1](01-SRS-Core.md), `project_diu` analysis |
@@ -404,7 +404,7 @@ Main homepage "Latest News" (Highlighted first, 6 টি):  এই news প্�
 | ID | Requirement | BRD Ref | Priority |
 |---|---|---|---|
 | FR-LINK-01 | Link CRUD, group ও ক্রম | — | Must |
-| FR-LINK-02 | Important Links page ও footer block / sidebar widget | BR-THM-05 | Must |
+| FR-LINK-02 | Important Links page ও footer block / sidebar widget *(v0.7: page `/links` ও `/{entity}/links`, homepage section, footer block kernel `$r->footerBlock()` দিয়ে; sidebar widget M-30-এর সাথে — DB-05 v1.10 §14)* | BR-THM-05 | Must |
 | FR-LINK-03 | Broken link check (সাপ্তাহিক), admin-এ সতর্কতা | — | Could |
 
 ### Permissions
