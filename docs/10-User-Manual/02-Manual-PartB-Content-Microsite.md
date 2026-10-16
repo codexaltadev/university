@@ -187,7 +187,15 @@ Page তৈরি করে **Menu**-তে যোগ না করলে visito
 ## 10. Achievement ও Testimonial
 
 * **Achievements:** পুরস্কার, প্রতিযোগিতা জয় — title, তারিখ, ছবি, অংশগ্রহণকারী (Person picker)।
-* **Testimonials:** ছাত্র / alumni-র মন্তব্য — নাম, পরিচয়, ছবি, মন্তব্য; **Show in** দিয়ে Program বা Department-এ।
+* **Testimonials** (**Content › Testimonials**): শিক্ষার্থী, alumni, অভিভাবক, নিয়োগকর্তা বা অংশীদারের কথা।
+  1. **Person** — Faculty Members, Administration বা Alumni থেকে খুঁজুন (নাম, ছবি, পদবি সেখান থেকে আসবে), না পেলে **+** দিয়ে নতুন ব্যক্তি যোগ করুন।
+  2. **Their title here** — নামের নিচে পদবির বদলে দেখাবে, যেমন "Parent of a CSE student"। খালি রাখলে পদবি দেখাবে।
+  3. **What they say** — প্রতিটি ভাষায়; **Type** (Student / Alumni / Parent / Employer / Partner), ইচ্ছা হলে **Rating** (১–৫ ★) ও **Video link** (YouTube / Google Drive)।
+  4. **Photo** — শুধু তখনই দেখাবে যখন ব্যক্তির নিজের ছবি নেই।
+  5. **Show in** — কোন Program / Department-এ দেখাবে; Admin চাইলে main site-এ। Program-এ দিলে Program-এর page-এ **Testimonials** tab আসে।
+  * ক্রম: তালিকায় **Reorder** চেপে টেনে সাজান — website ও homepage সেই ক্রমেই দেখায়।
+  * Website: `/testimonials` (microsite-এ `/{department}/testimonials`) — ধরন অনুযায়ী filter; Appearance › Layouts-এ Slider / Grid / Masonry / Video (Video = শুধু ভিডিও-ওয়ালাগুলো)।
+  * Homepage: **What People Say** section — চাইলে শুধু কিছু ধরন (যেমন শুধু Parents), Slider বা Grid।
 
 ---
 

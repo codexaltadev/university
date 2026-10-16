@@ -201,7 +201,7 @@ it('creates the main homepage\'s default sections once (FR-HOME-12)', function (
     (new HomepageDatabaseSeeder)->run();
 
     expect(HomeSection::pluck('section_type')->all())
-        ->toBe(['core.hero', 'core.statistics', 'program.list', 'news.latest', 'events.upcoming', 'notice.board', 'testimonial.list', 'partner.list']);
+        ->toBe(['core.hero', 'core.statistics', 'program.list', 'news.latest', 'events.upcoming', 'notice.board', 'testimonials.list', 'partner.list']);
 });
 
 it('renders the homepage sections through the active theme; none → the theme\'s default (C-06, FR-HOME-08)', function () {

@@ -1,0 +1,16 @@
+{
+    "name": "uwms/testimonials",
+    "description": "Testimonials module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Testimonials\\": "app/",
+            "Modules\\Testimonials\\Database\\Factories\\": "database/factories/",
+            "Modules\\Testimonials\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Testimonials\\Tests\\": "tests/" }
+    }
+}

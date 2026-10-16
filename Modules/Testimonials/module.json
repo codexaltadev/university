@@ -1,0 +1,47 @@
+{
+    "name": "Testimonials",
+    "alias": "testimonials",
+    "description": "What students, alumni, parents, employers and partners say — M-21",
+    "keywords": [
+        "content",
+        "testimonials"
+    ],
+    "priority": 70,
+    "providers": [
+        "Modules\\Testimonials\\Providers\\TestimonialsServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "testimonials",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "testimonials_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "program"
+        ],
+        "morph_aliases": {
+            "testimonials.testimonial": "Modules\\Testimonials\\Models\\Testimonial"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true,
+            "assignable": true,
+            "website_pages": true,
+            "homepage_sections": [
+                "testimonials.list"
+            ],
+            "layouts": [
+                "testimonials.listing"
+            ],
+            "entity_tabs": true
+        }
+    }
+}
