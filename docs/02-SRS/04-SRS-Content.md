@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 4: Website Content Modules |
-| Version | 0.3 — 2026-10-16: FR-NEWS-01 `active_at` (owner: নতুন table-এ `published_at` নয়); v0.3: BRL-GAL-01 — album-এর ছবি Media Library-র ব্যবহার, আলাদা item record নয় |
+| Version | 0.4 — 2026-10-16: FR-NEWS-01 `active_at` (owner: নতুন table-এ `published_at` নয়); v0.3: BRL-GAL-01 — album-এর ছবি Media Library-র ব্যবহার, আলাদা item record নয়; v0.4: FR-SLD-04/05 — hero video, একটি slide = স্থির hero |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md), [Part 1](01-SRS-Core.md), `project_diu` analysis |
@@ -250,8 +250,8 @@ Main homepage "Latest News" (Highlighted first, 6 টি):  এই news প্�
 | FR-SLD-01 | Slide CRUD; desktop ও mobile image আলাদা (mobile না দিলে desktop crop) | NFR-02 | Must |
 | FR-SLD-02 | ০–২টি button, বর্তমান program slider-এর মতো ০–৪টি bullet point | — | Must |
 | FR-SLD-03 | Placement: Main homepage, entity microsite hero (related entity দিয়ে), page banner | BR-MS-07 | Must |
-| FR-SLD-04 | Schedule: শুরু ও শেষ তারিখ (যেমন admission campaign) | — | Must |
-| FR-SLD-05 | Slider settings (Homepage Builder section-এ): autoplay, interval, transition, arrow / dot | FR-HOME-04 | Must |
+| FR-SLD-04 | Schedule: শুরু ও শেষ তারিখ (যেমন admission campaign) *(v0.4: `active_at` / `expires_at`)* | — | Must |
+| FR-SLD-05 | Slider settings (Homepage Builder section-এ): autoplay, interval, transition, arrow / dot *(v0.4: একটি slide = স্থির hero; slide-এ background video — autoplay, muted, loop, ছবি poster, phone-এ ঐচ্ছিক; একটি slide অনেক জায়গায় — DB-05 v1.7 §8)* | FR-HOME-04 | Must |
 | FR-SLD-06 | Microsite-এর নিজস্ব slide না থাকলে cover photo / default banner (theme-এর default অথবা parent entity-র) | BR-MS-05 | Should |
 | FR-SLD-07 | Image-এর জন্য প্রস্তাবিত size দেখানো ও crop tool | BR-MED-12 | Should |
 

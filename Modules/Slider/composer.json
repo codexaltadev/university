@@ -1,0 +1,16 @@
+{
+    "name": "uwms/slider",
+    "description": "Slider module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Slider\\": "app/",
+            "Modules\\Slider\\Database\\Factories\\": "database/factories/",
+            "Modules\\Slider\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Slider\\Tests\\": "tests/" }
+    }
+}

@@ -136,15 +136,19 @@ Page তৈরি করে **Menu**-তে যোগ না করলে visito
 
 **Content › Slider › + New slide**
 
+একটি জায়গার (main site, department, program, যেকোনো microsite) **hero = সেখানে দেখানো slide-গুলো**: **একটি slide = স্থির বড় ছবি / video**, একাধিক = slider।
+
 | ঘর | কী দেবেন |
 |---|---|
-| Type | **Hero** (homepage-এর বড় ঘূর্ণায়মান ছবি) বা **Page banner** (ভেতরের page-এর উপরের ছবি) |
-| Image * (desktop), Mobile image | Desktop ১৯২০ × ৮০০; mobile-এর জন্য আলাদা লম্বাটে ছবি ভালো |
-| Heading, Text, Buttons | ঐচ্ছিক; button-এর লেখা ও link |
-| Show in | কোন homepage-এ |
-| Expires | Admission-এর মতো সাময়িক slide-এর জন্য |
+| Use | **Hero slide** (homepage-এর উপরের বড় অংশ) বা **Page banner** (microsite-এর cover photo — hero slide না থাকলে এটি দেখায়) |
+| Title, Subtitle, Points, Buttons | ঐচ্ছিক; সর্বোচ্চ ৪টি point (যেমন "96% Placement Record"), ২টি button |
+| Picture * | Media Library থেকে, ১৯২০ × ১০৮০; **Picture on phones** ১০৮০ × ১৩৫০ (না দিলে উপরেরটি crop) |
+| Background video | Media Library-র ছোট, শব্দহীন MP4 / WebM — DIU-র এখনকার homepage-এর মতো লেখার পেছনে চলতে থাকে; ছবিটি poster। **Video on phones too** বন্ধ থাকলে phone-এ শুধু ছবি (data বাঁচে) |
+| Text, Darken | লেখা বামে / মাঝে / ডানে; ছবি কতটা অন্ধকার (লেখা পড়ার জন্য) |
+| Show in | **একসাথে অনেক জায়গা** — একই slide CSE, EEE ও main site-এ; বারবার বানাতে হয় না |
+| Show from, Expires | Admission campaign-এর মতো সাময়িক slide — নির্দিষ্ট দিন থেকে নির্দিষ্ট দিন পর্যন্ত |
 
-ছবির উপর লেখা পড়া যায় কিনা preview-তে দেখে নিন।
+ক্রম: তালিকায় **Reorder** দিয়ে টেনে সাজান। Homepage-এ **Hero** section বসান (My Microsite › Homepage) — autoplay, কত সেকেন্ড পর পর, slide / fade, arrow, dot, উচ্চতা (পুরো screen / বড় / মাঝারি)। কোনো microsite-এর নিজের slide বা banner না থাকলে তার parent-এর (যেমন department-এর না থাকলে faculty-র) hero দেখায়। ছবির উপর লেখা পড়া যায় কিনা দেখে নিন।
 
 ---
 

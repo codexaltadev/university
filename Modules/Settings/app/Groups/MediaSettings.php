@@ -35,7 +35,7 @@ class MediaSettings extends ModuleSettings
     public function defaults(): array
     {
         return [
-            'allowed_types' => ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip'],
+            'allowed_types' => ['jpg', 'jpeg', 'png', 'webp', 'gif', 'svg', 'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'zip', 'mp4', 'webm'],   // mp4 / webm: hero background video (FR-SLD), gallery
             'max_upload_mb' => 10,
             'image_quality' => 80,
         ];

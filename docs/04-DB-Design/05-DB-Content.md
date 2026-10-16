@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-05 |
-| Version | 1.6 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section); 2026-10-16 (v1.4): §5 Notice (`active_at`, board / archive, attachment title, website, section); 2026-10-16 (v1.5): §6 Testimonials (`published_at` নেই, person, website, section); 2026-10-16 (v1.6): §7 Gallery (ছবি Media Library-তে, album-এ শুধু reference — `gallery_items` বাদ, link video `gallery_videos`; `album_type` বাদ; `event_images` → Event-এর Media) |
+| Version | 1.7 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section); 2026-10-16 (v1.4): §5 Notice (`active_at`, board / archive, attachment title, website, section); 2026-10-16 (v1.5): §6 Testimonials (`published_at` নেই, person, website, section); 2026-10-16 (v1.6): §7 Gallery (ছবি Media Library-তে, album-এ শুধু reference — `gallery_items` বাদ, link video `gallery_videos`; `album_type` বাদ; `event_images` → Event-এর Media); 2026-10-16 (v1.7): §8 Slider / Hero (এক slide = স্থির hero, অনেক = slider, background video; `active_at` / `expires_at`, `body` বাদ, `video_on_mobile`; section `slider.hero`, fallback) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 4](../02-SRS/04-SRS-Content.md), BRD v1.6 (Q-26), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -207,23 +207,27 @@ Website: `/gallery` (album list, category filter, Photos / Videos), `/gallery/{s
 
 ---
 
-## 8. M-23 Slider / Banner — `slider_slides` — B
+## 8. M-23 Slider / Hero — `slider_slides` — B (attachable)
+
+*(v1.7, build-এর আগে — owner 2026-10-16: একটি slider যা বিভিন্ন জায়গায় — department site, অন্য microsite — ব্যবহার হবে; আধুনিক site-এ প্রায়ই একটি ছবি বা background video, যেমন DIU-র এখনকার homepage-এর full-screen video।)* একটি জায়গার **hero = সেখানে দেখানো slide-গুলো**: একটি slide = স্থির hero (arrow / autoplay নেই), একাধিক = slider; slide-এ video থাকলে full-screen background video (autoplay, muted, loop, playsinline; ছবি = poster)। একটি slide "Show in" দিয়ে একসাথে অনেক জায়গায় — বারবার বানাতে হয় না।
 
 | Column | Type | Key / N | Default | বর্ণনা |
 |---|---|---|---|---|
 | id | BIGINT UNSIGNED | PK | | |
-| placement | VARCHAR(20) | IX | `hero` | `hero` / `page_banner` (FR-SLD-03) |
+| placement | VARCHAR(20) | IX | `hero` | `hero` / `page_banner` (cover photo; FR-SLD-03/06) |
 | title | JSON | N, T | | |
 | subtitle | JSON | N, T | | |
-| body | JSON | N, T | | |
-| buttons | JSON | N | | `[{text: {en, bn}, url, style}]` সর্বোচ্চ ২ (FR-SLD-02) |
-| bullets | JSON | N, T | | সর্বোচ্চ ৪ |
-| text_position | VARCHAR(20) | | `left` | |
-| overlay_opacity | TINYINT UNSIGNED | | 40 | |
-| starts_at, ends_at | DATETIME | N, IX | | Schedule (FR-SLD-04) |
-| + common | | published_at, sort_order |
+| buttons | JSON | N | | `[{label: {en, bn}, url}]` সর্বোচ্চ ২ (FR-SLD-02) |
+| bullets | JSON | N, T | | ভাষা অনুযায়ী তালিকা, সর্বোচ্চ ৪ |
+| text_position | VARCHAR(10) | | `left` | `left` / `center` / `right` |
+| overlay_opacity | TINYINT UNSIGNED | | 40 | ০–৮০; theme-এর brand রঙে gradient |
+| video_on_mobile | BOOLEAN | | false | false = phone-এ শুধু ছবি (data বাঁচায়) |
+| sort_order | INT UNSIGNED | | | drag |
+| + common | | | | `is_active`, `active_at` (কবে থেকে), `expires_at` (কবে পর্যন্ত — admission campaign; FR-SLD-04); `published_at` / `starts_at` / `ends_at` নেই |
 
-কোথায় দেখাবে (main homepage / CSE hero / BSc in CSE hero): `core_relations` (Section 1)। Media: `image_desktop`, `image_mobile`, `video_background`।
+Media (Media Library reference, copy নয়): `image_desktop` (দরকার), `image_mobile` (না দিলে desktop ছবি crop), `video` (mp4 / webm, kind video)। `body` column বাদ (title, subtitle, button, bullet যথেষ্ট)।
+
+কোথায় দেখাবে = "Show in" + main site (§1); AC-SLD-01: BSc in CSE-এর slide শুধু তার hero-তে। Homepage section `slider.hero` "Hero" (যেকোনো homepage — main বা microsite): সেই জায়গার `hero` slide (ক্রমে); settings autoplay, interval, transition (slide / fade), arrows, dots, height (screen / large / medium)। Slide নেই → সেই জায়গার `page_banner` → parent entity-র hero / banner (`EntityHierarchy::ancestors`) → কিছু না (theme default; FR-SLD-06)। `prefers-reduced-motion` হলে autoplay ও video নয়। Alpine। Homepage-এর `core.hero` থাকে (Slider module বন্ধ থাকলে); migration-এ main homepage-এর `core.hero` → `slider.hero`। Recommended size form-এ (FR-SLD-07: desktop 1920×1080, mobile 1080×1350; crop Media Library-তে)।
 
 ---
 
@@ -418,8 +422,8 @@ Entity / main site placement: `core_relations` (Section 1)। Media: `image`।
 | `documentaries` (২৭) | gallery_videos — department-প্রতি একটি album "Documentaries" (`series_type = documentary`) | `department_id` → album-এর relation; lab-এরগুলো Lab module-এর পরে |
 | `lecture_series` (১৬) | gallery_videos — album "Lecture Series" (`lecture_series`, main site) | `lecture_no` → `episode_no`, `serial` → ক্রম, বক্তা → manual person (role `speaker`) |
 | `program_videos` (২) | gallery_videos — album "Program Videos" | কোন Program — review |
-| `sliders` (১৫৩) | slider_slides (`hero`) | `department_id` / `lab_facility_id` → relation; `show_departments` → একাধিক Department relation; `is_home` → `site:0` |
-| `cover_photos` (১৩) | slider_slides (`page_banner`), Department relation | |
+| `sliders` (১৫৩) | slider_slides (`hero`) | `department_id` → relation; `show_departments` → একাধিক Department relation; `is_home` → main site; `slider_title` / `slider_text` → title / subtitle, `url` + `button_text` → button; lab (২) Lab-এর সাথে; ছবি S03-এর পরে reference (v1.7) |
+| `cover_photos` (১৩) | slider_slides (`page_banner`), Department relation | ছবি S03-এর পরে |
 | `program_sliders` (৩), `mba_sliders` (৪) | slider_slides (`hero`), Program relation | `first_point` … `fourth_point` → bullets; দুটি button → buttons |
 | `flipbooks` (১৬) + categories (৩) | documents_documents (`show_as_flipbook = 1`) | **ঝুঁকি:** বর্তমানে ZIP (`filpbook_zip`); মূল PDF (`file_name`) না থাকলে PDF সংগ্রহ করতে হবে |
 | `prospectuses` (৪৫) | documents_documents (type Prospectus) | `semester_id` → session_id, `department_program_type_id` → program_id |

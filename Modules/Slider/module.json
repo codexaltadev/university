@@ -1,0 +1,40 @@
+{
+    "name": "Slider",
+    "alias": "slider",
+    "description": "Hero slides, background video and page banners for any site — M-23",
+    "keywords": [
+        "content",
+        "slider",
+        "hero"
+    ],
+    "priority": 70,
+    "providers": [
+        "Modules\\Slider\\Providers\\SliderServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "slider",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "slider_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "slider.slide": "Modules\\Slider\\Models\\Slide"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true,
+            "homepage_sections": [
+                "slider.hero"
+            ]
+        }
+    }
+}
