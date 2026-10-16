@@ -57,6 +57,7 @@ use Platform\Theme\LocationMenus;
 use Platform\Theme\SiteData;
 use Platform\Theme\ThemeBlade;
 use Platform\Theme\Themes;
+use Platform\Views\ViewCounter;
 use Platform\Website\Website;
 use Platform\Website\WebsiteController;
 
@@ -75,7 +76,7 @@ class PlatformServiceProvider extends ServiceProvider
             FallbackResolver::class, MicrositeResolver::class, Languages::class, Settings::class,
             Vocabularies::class, MediaLibrary::class, MediaUsages::class, Targets::class, MainSiteQueue::class, Statistics::class,
             Themes::class, DesignTokens::class, LayoutResolver::class, SiteData::class,
-            Seo::class, Sitemap::class, Website::class, SearchIndex::class, Notifications::class, Backups::class,
+            Seo::class, Sitemap::class, Website::class, SearchIndex::class, Notifications::class, Backups::class, ViewCounter::class,
         ] as $service) {
             $this->app->singleton($service);
         }
@@ -134,6 +135,7 @@ class PlatformServiceProvider extends ServiceProvider
                 Commands\ThemeCheckCommand::class,
                 Commands\SearchRebuildCommand::class,
                 Commands\SearchScheduledCommand::class,
+                Commands\FlushViewCountsCommand::class,
             ]);
         }
     }
@@ -221,6 +223,7 @@ class PlatformServiceProvider extends ServiceProvider
             $this->app->make(Vocabularies::class)->forgetModule($event->manifest->slug(), $types);
             $this->app->make(MediaUsages::class)->forgetTypes($types);
             $this->app->make(SearchIndex::class)->forgetTypes($types);
+            $this->app->make(ViewCounter::class)->forgetTypes($types);
         });
     }
 
@@ -231,6 +234,7 @@ class PlatformServiceProvider extends ServiceProvider
             $schedule->command('uwms:highlights:expire')->hourly();           // SAD Part B §3.5
             $schedule->command('uwms:activity:clean')->dailyAt('03:00');      // FR-LOG-07
             $schedule->command('uwms:search:scheduled')->everyMinute()->withoutOverlapping();   // FR-SRCH-09
+            $schedule->command('uwms:views:flush')->everyFiveMinutes()->withoutOverlapping();     // P-17, DB-02 §12.3
         });
     }
 }

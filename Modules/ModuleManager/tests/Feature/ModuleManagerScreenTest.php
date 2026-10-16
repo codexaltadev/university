@@ -32,7 +32,7 @@ it('is for Super Admins only', function () {
 
 it('filters by tab', function () {
     $this->actingAs(superAdmin());
-    $page = Livewire::test(ListModules::class);
+    $page = Livewire::test(ListModules::class)->set('tableRecordsPerPage', 100);   // more than one page of modules by now
     CoreModule::where('slug', 'faq')->update(['status' => CoreModule::STATUS_INSTALLED]);
 
     $page->set('activeTab', 'core')

@@ -1,0 +1,55 @@
+{
+    "name": "Calendar",
+    "alias": "calendar",
+    "description": "Academic calendars and their dates, /academic-calendar — M-11",
+    "keywords": [
+        "academic",
+        "calendar"
+    ],
+    "priority": 62,
+    "providers": [
+        "Modules\\Calendar\\Providers\\CalendarServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "calendar",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "calendar_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "faculty",
+            "program"
+        ],
+        "morph_aliases": {
+            "calendar.calendar": "Modules\\Calendar\\Models\\Calendar",
+            "calendar.event": "Modules\\Calendar\\Models\\CalendarEvent"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "searchable": true,
+            "sitemap": true,
+            "menu_item_types": true,
+            "vocabularies": [
+                "calendar.audience",
+                "calendar.event-type"
+            ],
+            "website_pages": true,
+            "page_blocks": true,
+            "homepage_sections": [
+                "calendar.upcoming"
+            ],
+            "layouts": [
+                "calendar.show"
+            ],
+            "entity_tabs": true
+        }
+    }
+}

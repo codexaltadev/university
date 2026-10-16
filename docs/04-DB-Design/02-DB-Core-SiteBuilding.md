@@ -444,6 +444,8 @@ BRD Q-27: Approval workflow নেই, তাই এই table ও P-19 বাদ
 
 View increment Redis-এ জমা হয়ে প্রতি ৫ মিনিটে batch-এ লেখা হয় (প্রতি page view-এ DB write নয়); bot user-agent বাদ (FR-CNT-C08)।
 
+*(2026-10-16, build-এর সময়)* তৈরি হয়েছে M-11 Calendar-এর সাথে: `Platform\Views\ViewCounter` app-এর cache store-এ জমায় (production-এ Redis, dev-এ database), `uwms:views:flush` প্রতি ৫ মিনিটে; model-এ `HasViewCount` (`countView()`, `withViewTotal()`, `mostViewed()`); legacy `total_views` migration-এ `seed()` দিয়ে।
+
 ---
 
 ## 13. C-06 Theme — `theme_themes` — S

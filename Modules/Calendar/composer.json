@@ -1,0 +1,16 @@
+{
+    "name": "uwms/calendar",
+    "description": "Calendar module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Calendar\\": "app/",
+            "Modules\\Calendar\\Database\\Factories\\": "database/factories/",
+            "Modules\\Calendar\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Calendar\\Tests\\": "tests/" }
+    }
+}
