@@ -1,5 +1,6 @@
 <?php
 
+use Platform\Modules\ModuleAssets;
 use Platform\Settings\Settings;
 use Platform\Theme\Themes;
 
@@ -21,5 +22,13 @@ if (! function_exists('theme_option')) {
     function theme_option(string $key, mixed $default = null): mixed
     {
         return app(Themes::class)->option($key, $default);
+    }
+}
+
+if (! function_exists('module_asset')) {
+    /** module_asset('documents', 'pdfjs/pdf.min.mjs') — a module's own public file (SAD Part A §9), versioned. */
+    function module_asset(string $slug, string $path): string
+    {
+        return app(ModuleAssets::class)->url($slug, $path);
     }
 }

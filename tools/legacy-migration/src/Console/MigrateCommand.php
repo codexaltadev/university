@@ -20,6 +20,7 @@ use Legacy\Migration\Steps\S15DepartmentSites;
 use Legacy\Migration\Steps\S16Events;
 use Legacy\Migration\Steps\S16News;
 use Legacy\Migration\Steps\S16Notices;
+use Legacy\Migration\Steps\S17Documents;
 use Legacy\Migration\Steps\S17Faqs;
 use Legacy\Migration\Steps\S17Gallery;
 use Legacy\Migration\Steps\S17Slider;
@@ -41,7 +42,7 @@ class MigrateCommand extends Command
     protected $description = 'Migrate DIU data from the legacy database (project_diu)';
 
     /** In the order of the plan (§5). */
-    public const STEPS = [S02Vocabularies::class, S04FacultiesDepartments::class, S06Programs::class, S07Fees::class, S07Scholarships::class, S08Admission::class, S09Calendars::class, S10Offices::class, S11Administration::class, S11Alumni::class, S13Committees::class, S15DepartmentSites::class, S16News::class, S16Events::class, S16Notices::class, S17Faqs::class, S17Testimonials::class, S17Gallery::class, S17Slider::class];
+    public const STEPS = [S02Vocabularies::class, S04FacultiesDepartments::class, S06Programs::class, S07Fees::class, S07Scholarships::class, S08Admission::class, S09Calendars::class, S10Offices::class, S11Administration::class, S11Alumni::class, S13Committees::class, S15DepartmentSites::class, S16News::class, S16Events::class, S16Notices::class, S17Faqs::class, S17Testimonials::class, S17Gallery::class, S17Slider::class, S17Documents::class];
 
     public function handle(): int
     {

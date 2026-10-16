@@ -1,0 +1,3 @@
+pdfjs-dist 4.10.38 (legacy build), Apache-2.0 — https://github.com/mozilla/pdf.js
+npm tarball sha1 3ee698003790dc266cc8b55c0e662ccb9ae18f53
+Update: download the tarball, copy legacy/build/pdf.min.mjs and pdf.worker.min.mjs here.

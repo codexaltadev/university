@@ -198,6 +198,7 @@ class ModuleManager
         Module::find($manifest->name())->enable();
         $this->modules->refresh();
         $this->extensions->reload();
+        app(ModuleAssets::class)->publish($manifest);   // public/ → public/modules/{slug}
 
         $registered = app(Registry::class)->forModule($slug);
         $this->permissions->syncAttachable($slug, array_column($registered['attachable'] ?? [], 'model'));
@@ -251,6 +252,7 @@ class ModuleManager
 
         ModuleUninstalling::dispatch($manifest, $deleteData);
         $op->step('kernel references cleaned');
+        app(ModuleAssets::class)->remove($slug);
 
         if ($deleteData) {
             if (is_dir($manifest->migrationsPath())) {

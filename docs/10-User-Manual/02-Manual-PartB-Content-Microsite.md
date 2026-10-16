@@ -156,10 +156,12 @@ Page তৈরি করে **Menu**-তে যোগ না করলে visito
 
 **Content › Documents › + New document**
 
-* Type: Prospectus, Guidebook, Charter, Policy, Form …
-* **File:** PDF (Media Library থেকে)।
-* **Show as flipbook:** চালু করলে website-এ বইয়ের মতো পাতা উল্টে পড়া যায় — শুধু PDF upload করলেই হবে, আলাদা ZIP লাগে না।
-* Prospectus-এর ক্ষেত্রে Session ও Program বেছে দিন।
+* **Type:** Form, Policy, Prospectus, Guidebook, Charter, Report, Other — ধরন অনুযায়ী ঘর বদলায়: **Policy** হলে Version, অনুমোদনের তারিখ, কার্যকর তারিখ; **Prospectus** হলে Session ("Fall 2026") ও Program।
+* **File:** Media Library থেকে (copy হয় না)। File অন্য কোথাও থাকলে (Google Drive) **Or an outside address**। **Cover:** কার্ড ও Prospectus section-এর ছবি।
+* **Flipbook:** চালু করলে PDF website-এ বইয়ের মতো খোলে — desktop-এ পাশাপাশি দুই পাতা, phone-এ এক পাতা; পাতা উল্টানো, পাতার ছোট ছবি (Pages), zoom, পুরো screen, নির্দিষ্ট পাতায় যাওয়া, পাতার link (`?page=12`)। শুধু PDF upload করলেই হবে — আলাদা ZIP বা software লাগে না।
+* **Can be downloaded:** বন্ধ করলে শুধু পড়া যাবে, Download button থাকবে না। **Private:** শুধু login করা user দেখবেন।
+* **নতুন version** (যেমন নীতিমালা হালনাগাদ): document খুলে উপরে **New version** → নতুন file, version ও তারিখ দিন। নতুনটি একই জায়গায় দেখাবে; পুরোনোটি তালিকা থেকে সরে যায়, তবে তার link কাজ করে এবং "নতুন version আছে" জানায়।
+* **Show in** দিয়ে department / office-এ; website: `/downloads` (ধরন, category, বছর, খোঁজা; table / cards / list)। Download সংখ্যা তালিকায় দেখা যায়। Homepage: **Downloads** ও **Prospectus** section; যেকোনো Page-এ **Documents** block (তালিকা বা flipbook)।
 
 ---
 

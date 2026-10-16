@@ -599,7 +599,7 @@ Kernel ও core-এর dispatch করা event। Module এগুলো listen
 | Livewire / Filament component | Module namespace-এর ভেতরে | — |
 | Event class | `Modules\{Name}\Events\{PastTense}` | `ProfileUpdated` |
 | Queue job | `Modules\{Name}\Jobs\{Verb}{Noun}` | `SyncExternalProfiles` |
-| Asset path | `modules/{slug}/` | `modules/faculty-member/app.css` |
+| Asset path | `modules/{slug}/` — module-এর `public/` folder activate-এ (ও `uwms:modules:sync`-এ) `public/modules/{slug}/`-এ copy, uninstall-এ মুছে যায় (`Platform\Modules\ModuleAssets`); Blade-এ `module_asset('{slug}', 'file')` (file-এর সময় দিয়ে version); CDN নয় | `modules/faculty-member/app.css`, `module_asset('documents', 'pdfjs/pdf.min.mjs')` |
 
 ---
 

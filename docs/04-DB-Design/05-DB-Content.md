@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-05 |
-| Version | 1.8 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section); 2026-10-16 (v1.4): §5 Notice (`active_at`, board / archive, attachment title, website, section); 2026-10-16 (v1.5): §6 Testimonials (`published_at` নেই, person, website, section); 2026-10-16 (v1.6): §7 Gallery (ছবি Media Library-তে, album-এ শুধু reference — `gallery_items` বাদ, link video `gallery_videos`; `album_type` বাদ; `event_images` → Event-এর Media); 2026-10-16 (v1.7): §8 Slider / Hero (এক slide = স্থির hero, অনেক = slider, background video; `active_at` / `expires_at`, `body` বাদ, `video_on_mobile`; section `slider.hero`, fallback); 2026-10-16 (v1.8): §9 Achievements (`active_at`, অর্জনকারী Person Picker, `team_name`, `related_post_id`, website, section, metric) |
+| Version | 1.9 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section); 2026-10-16 (v1.4): §5 Notice (`active_at`, board / archive, attachment title, website, section); 2026-10-16 (v1.5): §6 Testimonials (`published_at` নেই, person, website, section); 2026-10-16 (v1.6): §7 Gallery (ছবি Media Library-তে, album-এ শুধু reference — `gallery_items` বাদ, link video `gallery_videos`; `album_type` বাদ; `event_images` → Event-এর Media); 2026-10-16 (v1.7): §8 Slider / Hero (এক slide = স্থির hero, অনেক = slider, background video; `active_at` / `expires_at`, `body` বাদ, `video_on_mobile`; section `slider.hero`, fallback); 2026-10-16 (v1.8): §9 Achievements (`active_at`, অর্জনকারী Person Picker, `team_name`, `related_post_id`, website, section, metric); 2026-10-16 (v1.9): §12 Documents (`document_type` তালিকা + `documents.category`, `session_label`, `allow_download`, `active_at`; নিজস্ব PDF.js flipbook) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 4](../02-SRS/04-SRS-Content.md), BRD v1.6 (Q-26), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -278,27 +278,37 @@ Team: `core_assignments` (`role_key` = `pi` / `co_pi` / `member`)। Vocabulary:
 
 ---
 
-## 12. M-27 Documents — `documents_documents` — B
+## 12. M-27 Documents — `documents_documents` — B (attachable)
+
+*(v1.9, build-এর আগে — owner 2026-10-16: application standard বজায়; পুরোনো project-এর paid flipbook-এর চেয়ে ভালো নিজস্ব flipbook Blade / Livewire / Alpine দিয়ে, তাহলে পুরোনোটা লাগবে না।)*
 
 | Column | Type | Key / N | Default | বর্ণনা |
 |---|---|---|---|---|
 | id | BIGINT UNSIGNED | PK | | |
-| type_term_id | BIGINT UNSIGNED | FK core_terms (restrict), IX | | Vocabulary `documents.type`: Form, Policy, Prospectus, Flipbook, Guidebook, Charter, Report, Other (FR-DOC-02) |
+| document_type | VARCHAR(20) | IX | `other` | `form` / `policy` / `prospectus` / `guidebook` / `charter` / `report` / `other` — নির্দিষ্ট তালিকা, কারণ ধরন অনুযায়ী field বদলায় (AC-DOC-01) |
 | title | JSON | T | | |
 | description | JSON | N, T | | |
-| external_url | VARCHAR(2048) | N | | File না থাকলে |
+| external_url | VARCHAR(2048) | N | | File না থাকলে (FR-DOC-01) |
 | version_label | VARCHAR(30) | N | | Policy |
 | approved_on | DATE | N | | Policy |
 | effective_on | DATE | N | | |
-| session_id | BIGINT UNSIGNED | N, IX | | Prospectus (Session optional) |
-| program_id | BIGINT UNSIGNED | N, IX | | Prospectus (Program optional) |
-| superseded_by_id | BIGINT UNSIGNED | N, FK self (set null) | | Policy version history (FR-DOC-05) |
-| show_as_flipbook | TINYINT(1) | | 0 | PDF থেকে flip viewer (FR-DOC-03, Q-23) |
-| is_private | TINYINT(1) | | 0 | Signed URL (FR-DOC-07) |
+| session_label | VARCHAR(50) | N | | Prospectus — "Fall 2026" (M-05 Session আসা পর্যন্ত লেখা, Admission-এর মতো) |
+| program_id | BIGINT UNSIGNED | N, IX | | Prospectus (Program optional, FK নয়) |
+| superseded_by_id | BIGINT UNSIGNED | N, FK self (set null), IX | | নতুন version (FR-DOC-05): পুরোনোটি "Superseded" — তালিকায় নয়, link কাজ করে ও নতুনটি দেখায় |
+| show_as_flipbook | BOOLEAN | | false | PDF পাতা-উল্টানো viewer-এ (FR-DOC-03) |
+| allow_download | BOOLEAN | | true | false = শুধু পড়া (flipbook / preview), download button নেই |
+| is_private | BOOLEAN | | false | শুধু logged-in admin user; file signed URL (FR-DOC-07) |
 | download_count | INT UNSIGNED | | 0 | FR-DOC-06 |
-| + common | | published_at, sort_order |
+| sort_order | INT UNSIGNED | | | |
+| + common | | | | `is_active`, `active_at` (`published_at` নেই) |
 
-Media: `file`, `thumbnail`। IX: `(type_term_id, is_active, published_at)`।
+Media (Media Library reference, copy নয়): `file` (একটি; PDF হলে preview / flipbook), `thumbnail` (cover; না দিলে flipbook-এ PDF-এর প্রথম পাতা)। Vocabulary `documents.category` (hierarchical — "Academic", "Admission" …; ধরন নয়)। কোথায় দেখাবে = "Show in" + main site (§1)। IX: `(document_type, is_active, active_at)`।
+
+**Flipbook (FR-DOC-03):** শুধু PDF upload — ZIP বা আলাদা software নয়। Browser-এ PDF.js (Mozilla, Apache-2.0, module-এর সাথে self-hosted — `public/modules/documents/pdfjs`, CDN নয়) পাতা আঁকে; Alpine viewer: desktop-এ দুই পাতা (spread), phone-এ এক পাতা; 3D পাতা উল্টানো (reduced-motion-এ সরাসরি); ← → / swipe / কোণে click; thumbnail strip; zoom; full screen; পাতা নম্বরে যাওয়া ও `?page=` link; শুধু আশেপাশের পাতা render (৩০০ পাতার prospectus-ও দ্রুত); download (`allow_download` হলে); screen reader-এর জন্য পাতা নম্বর ঘোষণা। Server-এ কোনো tool (Imagick, Ghostscript) লাগে না।
+
+Website: `/downloads`, `/{entity}/downloads` — ধরন, category, বছর, search; layout `documents.listing` = table / cards / list (FR-DOC-04); `/downloads/{slug}` — বিবরণ, policy-র version / তারিখ ও পুরোনো version-গুলো, PDF preview বা flipbook, download; `/downloads/{slug}/file` — গণনা করে file-এ পাঠায় (private হলে login ও signed URL)। Homepage section `documents.downloads` "Downloads" ও `documents.prospectus` "Prospectus" (FR-DOC-08); page block "Document / Flipbook" (যেকোনো Page-এ)। Search, sitemap (private নয়)।
+
+Kernel: module-এর `public/` → `public/modules/{slug}/` (install / activate-এ copy; SAD Part A §9 asset path), Blade-এ `module_asset('documents', 'pdfjs/pdf.min.mjs')`।
 
 ---
 

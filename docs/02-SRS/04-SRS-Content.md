@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 4: Website Content Modules |
-| Version | 0.5 — 2026-10-16: FR-NEWS-01 `active_at` (owner: নতুন table-এ `published_at` নয়); v0.3: BRL-GAL-01 — album-এর ছবি Media Library-র ব্যবহার, আলাদা item record নয়; v0.4: FR-SLD-04/05 — hero video, একটি slide = স্থির hero; v0.5: FR-ACH-01 — অর্জনকারী Person Picker |
+| Version | 0.6 — 2026-10-16: FR-NEWS-01 `active_at` (owner: নতুন table-এ `published_at` নয়); v0.3: BRL-GAL-01 — album-এর ছবি Media Library-র ব্যবহার, আলাদা item record নয়; v0.4: FR-SLD-04/05 — hero video, একটি slide = স্থির hero; v0.5: FR-ACH-01 — অর্জনকারী Person Picker; v0.6: FR-DOC-02/03 — ধরন তালিকা, নিজস্ব flipbook |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md), [Part 1](01-SRS-Core.md), `project_diu` analysis |
@@ -352,8 +352,8 @@ Main homepage "Latest News" (Highlighted first, 6 টি):  এই news প্�
 | ID | Requirement | BRD Ref | Priority |
 |---|---|---|---|
 | FR-DOC-01 | Document CRUD; file Media Picker দিয়ে, অথবা external URL | BR-MED-05 | Must |
-| FR-DOC-02 | Document ধরন Taxonomy; ধরন অনুযায়ী অতিরিক্ত field (Policy: অনুমোদনের তারিখ, version; Prospectus: Session, Program) | Q-17 | Must |
-| FR-DOC-03 | Flipbook view: শুধু PDF upload; system PDF থেকে online পাতা-উল্টানো viewer দেখাবে (বর্তমান flipbook ZIP-এর বদলে) | Q-17, Q-23 | Should |
+| FR-DOC-02 | Document ধরন Taxonomy; ধরন অনুযায়ী অতিরিক্ত field (Policy: অনুমোদনের তারিখ, version; Prospectus: Session, Program) *(v0.6: ধরন নির্দিষ্ট তালিকা, category আলাদা Taxonomy — DB-05 v1.9 §12)* | Q-17 | Must |
+| FR-DOC-03 | Flipbook view: শুধু PDF upload; system PDF থেকে online পাতা-উল্টানো viewer দেখাবে (বর্তমান flipbook ZIP-এর বদলে) *(v0.6: নিজস্ব — PDF.js self-hosted + Alpine; দুই পাতা / এক পাতা, zoom, thumbnail, full screen, `?page=`, শুধু-পড়া option; পুরোনো paid flipbook লাগবে না)* | Q-17, Q-23 | Should |
 | FR-DOC-04 | Downloads page (`/downloads`): ধরন, entity, বছর দিয়ে filter; search; layout: Table, Card, List | BR-THM-02 | Must |
 | FR-DOC-05 | Policy-এর version history: নতুন version upload করলে পুরনোটি "Superseded" হিসেবে রাখা | — | Should |
 | FR-DOC-06 | Download count | — | Should |

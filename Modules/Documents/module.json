@@ -1,0 +1,55 @@
+{
+    "name": "Documents",
+    "alias": "documents",
+    "description": "Forms, policies, prospectus, guidebooks and reports to read or download, with a flipbook — M-27",
+    "keywords": [
+        "content",
+        "documents",
+        "downloads",
+        "flipbook"
+    ],
+    "priority": 70,
+    "providers": [
+        "Modules\\Documents\\Providers\\DocumentsServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "documents",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "documents_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "program"
+        ],
+        "morph_aliases": {
+            "documents.document": "Modules\\Documents\\Models\\Document"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true,
+            "searchable": true,
+            "sitemap": true,
+            "menu_item_types": true,
+            "website_pages": true,
+            "page_blocks": true,
+            "vocabularies": [
+                "documents.category"
+            ],
+            "homepage_sections": [
+                "documents.downloads",
+                "documents.prospectus"
+            ],
+            "layouts": [
+                "documents.listing"
+            ]
+        }
+    }
+}
