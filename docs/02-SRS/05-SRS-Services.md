@@ -29,6 +29,9 @@
 
 ## M-31 Transport
 
+> **v-note 2026-10-17 (owner):** Transport-এর চালু system (live, কাজ করছে) থাকবে; নতুন website তার public API (`/api/v2/public/transport`) থেকে দেখাবে — FR-TRN-01..05 / 08..10 (CRUD, driver ইত্যাদি) সেই system-এ; এখানে FR-TRN-06 (route finder) ও website দেখানো। DB-06 v1.1 §2।
+
+
 **Purpose:** বিশ্ববিদ্যালয়ের bus route, stop ও সময়সূচি প্রকাশ, এবং ছাত্রদের জন্য "আমার stop থেকে কোন bus" খোঁজা।
 
 **Actors:** Admin, Transport Office role, Visitor

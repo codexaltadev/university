@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-06 |
-| Version | 0.1 (Draft) |
+| Version | 1.1 — 2026-10-17: §2 M-31 Transport চালু transport system-এর public API থেকে দেখায় (নিজের table নয়, owner) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [DB-05](05-DB-Content.md) (Main site প্রকাশ), [SRS Part 5](../02-SRS/05-SRS-Services.md), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -52,6 +52,14 @@ erDiagram
 ---
 
 ## 2. M-31 Transport
+
+> **v1.1 (2026-10-17, owner):** "Transport যেভাবে আছে সেটাই রাখো — live-এ আছে ও কাজ করে; frontend-এর জন্য তার API দেখো।" তাই M-31 **নিজের table রাখে না**: DIU-র চালু transport system (`webbackend.daffodilvarsity.edu.bd`) data-র মালিক থাকে, নতুন website তার public API **`GET /api/v2/public/transport`** পড়ে দেখায়। নিচের table-গুলো (§2.1 থেকে) **এখন তৈরি হবে না** — ভবিষ্যতে transport system-টিই এখানে আনতে চাইলে এই design কাজে লাগবে।
+>
+> * API-র উত্তর: `title`, `semester`, `rules_policy_pdf`, `active_service_name` / `_code`, `data` = `regular_road`, `shuttle_road`, `friday_road` (প্রতিটি route: `name`, `start_stop`, `end_stop`, `order`, `map_url`, `day_off`, `message`, `service_name`, `stops[]` (`name`, `order`), `schedules.from_home[]` / `from_campus[]` (`time`, `schedule_type`, `off_day`))।
+> * Settings › Transport (`core_settings`, group `transport`): API ঠিকানা, cache মিনিট (default 30), timeout; উত্তর cache-এ থাকে, আর শেষ ভালো উত্তর আলাদা রাখা হয় — API না পেলে সেটিই দেখায় ("শেষ হালনাগাদ …")। Cache-এ শুধু array (object নয়)।
+> * Website: `/transport` — শিরোনাম, semester, নিয়মনীতি PDF, চলমান service; Regular / Shuttle / Friday tab; route-প্রতি stop-এর তালিকা, বাসা থেকে ও campus থেকে সময়, ছুটির দিন, নোট, map (চাইলে খোলে); **stop দিয়ে খোঁজা** (FR-TRN-06) — কোন route সেই stop দিয়ে যায়। Menu-র module page; homepage section `transport.finder` (stop খোঁজা + `/transport` link)।
+> * Legacy: transport data migrate হয় না (S18-এর transport অংশ বাদ) — live system-এই থাকে।
+
 
 ### 2.1 গঠন
 

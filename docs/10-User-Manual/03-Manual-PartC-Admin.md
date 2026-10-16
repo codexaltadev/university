@@ -143,6 +143,8 @@ Department / Office-এর content শুধু তাদের microsite-এ �
 | **Maintenance** | Website সাময়িক বন্ধের বার্তা |
 | অন্যান্য module | চালু module-এর নিজস্ব tab (Transport, FAQ …) |
 
+**Transport:** route, stop ও সময় DIU-র চালু transport system-এই রাখা ও বদলানো হয় — website শুধু তার API থেকে দেখায় (`/transport`, stop দিয়ে খোঁজা, homepage-এ "Find your bus")। **Settings › Transport**-এ API-র ঠিকানা, কত মিনিট উত্তর রাখা হবে, কত সেকেন্ড অপেক্ষা। API সাময়িক বন্ধ থাকলে website শেষ পাওয়া সূচিটি দেখায় ও জানিয়ে দেয়।
+
 ---
 
 ## 7. Admin Panel Branding

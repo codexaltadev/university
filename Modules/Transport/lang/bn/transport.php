@@ -1,0 +1,37 @@
+<?php
+
+return [
+    'title' => 'পরিবহন',
+    'description' => ':semester-এর bus route, stop ও সময়।',
+    'running' => 'এখন চলছে',
+    'policy' => 'পরিবহন নীতিমালা (PDF)',
+    'unavailable' => 'এই মুহূর্তে পরিবহন সূচি দেখানো যাচ্ছে না। একটু পরে আবার চেষ্টা করুন।',
+    'stale' => 'পরিবহন system এইমাত্র উত্তর দেয়নি — এটি :time-এর সূচি।',
+    'day_off' => 'Bus চলে না',
+    'to_campus' => 'Campus-এ যেতে',
+    'from_campus' => 'Campus থেকে',
+    'shuttle' => 'shuttle',
+    'stops' => '{1} :countটি stop|[2,*] :countটি stop',
+    'notes' => 'নোট',
+    'map' => 'ম্যাপ',
+    'all_routes' => 'সব route ও সময়',
+    'groups' => [
+        'regular_road' => 'নিয়মিত',
+        'shuttle_road' => 'শাটল',
+        'friday_road' => 'শুক্রবার',
+    ],
+    'finder' => [
+        'label' => 'আপনার bus খুঁজুন',
+        'placeholder' => 'আপনার stop লিখুন, যেমন Mirpur 10',
+        'none' => 'এই নামের stop দিয়ে কোনো route যায় না।',
+    ],
+    'section' => [
+        'label' => 'আপনার bus খুঁজুন (পরিবহন)',
+    ],
+    'settings' => [
+        'api_url' => 'পরিবহন API-র ঠিকানা',
+        'api_url_help' => 'চালু পরিবহন system-এর public API (GET, JSON)। Route ও সময় সেখানেই রাখা হয়।',
+        'cache_minutes' => 'উত্তর রাখা হবে (মিনিট)',
+        'timeout' => 'API-র জন্য সর্বোচ্চ অপেক্ষা',
+    ],
+];
