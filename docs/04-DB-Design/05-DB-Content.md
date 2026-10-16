@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-05 |
-| Version | 1.10 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section); 2026-10-16 (v1.4): §5 Notice (`active_at`, board / archive, attachment title, website, section); 2026-10-16 (v1.5): §6 Testimonials (`published_at` নেই, person, website, section); 2026-10-16 (v1.6): §7 Gallery (ছবি Media Library-তে, album-এ শুধু reference — `gallery_items` বাদ, link video `gallery_videos`; `album_type` বাদ; `event_images` → Event-এর Media); 2026-10-16 (v1.7): §8 Slider / Hero (এক slide = স্থির hero, অনেক = slider, background video; `active_at` / `expires_at`, `body` বাদ, `video_on_mobile`; section `slider.hero`, fallback); 2026-10-16 (v1.8): §9 Achievements (`active_at`, অর্জনকারী Person Picker, `team_name`, `related_post_id`, website, section, metric); 2026-10-16 (v1.9): §12 Documents (`document_type` তালিকা + `documents.category`, `session_label`, `allow_download`, `active_at`; নিজস্ব PDF.js flipbook); 2026-10-17 (v1.10): §14 Important Links ("Show in", website, section, footer block, সাপ্তাহিক check) |
+| Version | 1.11 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section); 2026-10-16 (v1.4): §5 Notice (`active_at`, board / archive, attachment title, website, section); 2026-10-16 (v1.5): §6 Testimonials (`published_at` নেই, person, website, section); 2026-10-16 (v1.6): §7 Gallery (ছবি Media Library-তে, album-এ শুধু reference — `gallery_items` বাদ, link video `gallery_videos`; `album_type` বাদ; `event_images` → Event-এর Media); 2026-10-16 (v1.7): §8 Slider / Hero (এক slide = স্থির hero, অনেক = slider, background video; `active_at` / `expires_at`, `body` বাদ, `video_on_mobile`; section `slider.hero`, fallback); 2026-10-16 (v1.8): §9 Achievements (`active_at`, অর্জনকারী Person Picker, `team_name`, `related_post_id`, website, section, metric); 2026-10-16 (v1.9): §12 Documents (`document_type` তালিকা + `documents.category`, `session_label`, `allow_download`, `active_at`; নিজস্ব PDF.js flipbook); 2026-10-17 (v1.10): §14 Important Links ("Show in", website, section, footer block, সাপ্তাহিক check); 2026-10-17 (v1.11): §15 Announcement Widgets (`active_at` / `expires_at`, `pages` home / all / selected, `after_end`, layout slot) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 4](../02-SRS/04-SRS-Content.md), BRD v1.6 (Q-26), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -365,10 +365,36 @@ Media: `icon`। Vocabulary: `links.group`।
 
 ---
 
-## 15. M-30 Announcement Widgets — `announcement_widgets` — B
+## 15. M-30 Announcement Widgets — `announcement_widgets` — B (attachable)
+
+*(v1.11, build-এর আগে — application standard: `published_at` / `starts_at` / `ends_at` নয়, `is_active` + `active_at` + `expires_at`; কোথায় = "Show in" + main site; কোন page = homepage / সব page / বাছাই করা module page।)*
 
 | Column | Type | Key / N | Default | বর্ণনা |
 |---|---|---|---|---|
+| id | BIGINT UNSIGNED | PK | | |
+| widget_type | VARCHAR(20) | IX | | `popup` / `ticker` / `countdown` / `bar` |
+| title | JSON | N, T | | |
+| body | JSON | N, T | | Popup-এর লেখা (rich text) / ticker ও bar-এর লেখা |
+| link_url | VARCHAR(2048) | N | | |
+| button_text | JSON | N, T | | |
+| target_at | DATETIME | N | | Countdown (FR-ANW-07) |
+| after_end | VARCHAR(10) | | `hide` | Countdown শেষে: `hide` / `message` |
+| after_end_text | JSON | N, T | | "Event started" |
+| frequency | VARCHAR(20) | | `daily` | Popup: `each_visit` / `daily` / `once` (browser-এ মনে রাখে; FR-ANW-04) |
+| is_dismissible | BOOLEAN | | true | Bar |
+| color_token | VARCHAR(30) | N | | Theme token: `color-primary` / `color-secondary` / `color-accent` / `color-danger` |
+| priority | SMALLINT | | 0 | বড় আগে; একটি page-এ একটিই popup (FR-ANW-05) |
+| pages | VARCHAR(10) | | `home` | `home` (সেই site-এর homepage) / `all` (সেই site-এর সব page) / `selected` |
+| route_keys | JSON | N | | `pages = selected` হলে module page key (kernel website page, যেমন `"notice.index"`, `"admission.result"`) অথবা site-এর ঠিকানা (`"/admission"` — নিচের page-গুলোতেও) — বর্তমান `is_admission` |
+| include_latest_notices | BOOLEAN | | false | Ticker: সেই জায়গার board-এর সর্বশেষ ৫টি notice-ও (Notice module থাকলে; FR-ANW-06) |
+| sort_order | INT UNSIGNED | | | ticker / bar-এর ক্রম |
+| + common | | | | `is_active`, `active_at` (কবে থেকে), `expires_at` (কবে পর্যন্ত; FR-ANW-03) |
+
+Media (Media Library reference): `image` (popup-এর ছবি)। কোথায় = "Show in" + main site (§1) — শুধু সেই জায়গার site-এ (main site-এর popup microsite-এ নয়)।
+
+Website: theme layout-এর slot — `announcement` (bar ও countdown), `ticker` (সব ticker একসাথে, চলমান; reduced-motion-এ থেমে থাকে), `popup` (একটি, priority অনুযায়ী; Esc / বোতামে বন্ধ, focus trap; Alpine)। Kernel: `<x-platform::slot>` theme-এর partial না থাকলে `SiteData` provider `slot:{name}`-এর content দেখায় — Announcement module তিনটি slot provide করে; module বন্ধ থাকলে খালি।
+
+---|---|---|---|---|
 | id | BIGINT UNSIGNED | PK | | |
 | widget_type | VARCHAR(20) | IX | | `popup` / `ticker` / `countdown` / `bar` |
 | title | JSON | N, T | | |
@@ -463,7 +489,7 @@ Entity / main site placement: `core_relations` (Section 1)। Media: `image`।
 | `policies` (১) + categories (২) | documents_documents (Policy) | `approve_date` → approved_on |
 | `faqs` (১,৩০৯) + `faq_categories` (৯) | faq_faqs + `faq.category` | `question` / `answer` → en; `serial` → sort_order; `publication_status` → is_active (১০টি inactive); `department_id` (১,১৮১) → সেই Department-এর relation (legacy-র office-"department" হলে সেই Office-এর); *(2026-10-11 যাচাই)* `is_home` কোনো row-এ "1" নয় (enum: "0" ১,২৫৪, খালি ৫৫) — তাই department নেই এমন ১২৮টি FAQ → `site:0` relation (legacy-র `/faq`-এ যা দেখাত); category (৯টি, slug রাখা) → term |
 | `accordions` (৩০) + `accordion_categories` (৬) | *(2026-10-10)* **Scholarship module**-এ (DB-03 v1.4 §11.3) — এগুলো DIU-র waiver / scholarship scheme, FAQ নয় | — |
-| `greetings` (৫) | announcement_widgets (`popup`) | `is_home` → `site:0`; `is_faculty` / `is_department` / `is_program` → `faculty_id` / `department_id` / `department_program_type_id` relation; `is_admission` → `route_keys = ["admission.index"]`; `start_date` / `expiry_date` → starts_at / ends_at |
+| `greetings` (৫) | announcement_widgets (`popup`) | `is_home` → main site; `is_faculty` / `is_department` / `is_program` → `faculty_id` / `department_id` / `department_program_type_id` relation; `is_admission` → `pages = selected`, `route_keys = ["/admission"]`; `start_date` / `expiry_date` → `active_at` / `expires_at` (v1.11) |
 | `news_tickers` (৪) | announcement_widgets (`ticker`) | |
 | `countdown_timers` (১) | announcement_widgets (`countdown`) | |
 | `lab_news` (১) | news_posts, Lab relation | |

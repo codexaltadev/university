@@ -187,9 +187,13 @@ Page তৈরি করে **Menu**-তে যোগ না করলে visito
 | **Popup** | Page খুললে ছোট window | ঈদ শুভেচ্ছা, admission ঘোষণা |
 | **Countdown** | Homepage-এ সময় গণনা | "Admission শেষ হতে ৫ দিন" |
 
-* **Starts / Ends** অবশ্যই দিন — পুরনো popup যেন থেকে না যায়।
-* Popup কতবার দেখাবে (প্রতি visit / দিনে একবার) ঠিক করুন।
-* কোন page-এ: সব page, শুধু homepage, বা নির্দিষ্ট page (যেমন Admission)।
+* **Show from / Expires** দিন — পুরনো popup যেন থেকে না যায়।
+* **Popup:** ছবি (Media Library), লেখা, button; **How often** — প্রতি visit / দিনে একবার / শুধু একবার (দর্শকের browser মনে রাখে); একই page-এ একটিই popup দেখায় — যার **Priority** বেশি। দর্শক Esc চেপে বা × দিয়ে বন্ধ করতে পারেন।
+* **Ticker:** এক লাইনের লেখা ও link; **Add the latest notices** চালু করলে এই site-এর notice board-এর নতুন notice-ও চলে।
+* **Countdown:** কোন মুহূর্ত পর্যন্ত; শেষ হলে লুকাবে নাকি বার্তা ("শুরু হয়ে গেছে!") দেখাবে।
+* **Bar:** রং (theme-এর রং থেকে), দর্শক বন্ধ করতে পারবেন কিনা।
+* **Pages:** শুধু homepage, সব page, বা **Chosen pages** — module page (Notices, Downloads …) অথবা এই site-এর যেকোনো ঠিকানা লিখে যোগ করুন, যেমন `/admission` (তার নিচের page-গুলোতেও)।
+* **Show in:** কোন department / program / faculty-র site-এ; main site-এরটা শুধু main site-এ দেখায়।
 
 ---
 

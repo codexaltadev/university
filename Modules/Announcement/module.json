@@ -1,0 +1,41 @@
+{
+    "name": "Announcement",
+    "alias": "announcement",
+    "description": "Greeting popup, news ticker, countdown and announcement bar for any site — M-30",
+    "keywords": [
+        "content",
+        "announcement",
+        "popup",
+        "ticker",
+        "countdown"
+    ],
+    "priority": 70,
+    "providers": [
+        "Modules\\Announcement\\Providers\\AnnouncementServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "announcement",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "announcement_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "notice"
+        ],
+        "morph_aliases": {
+            "announcement.widget": "Modules\\Announcement\\Models\\Widget"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true
+        }
+    }
+}

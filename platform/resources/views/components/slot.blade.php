@@ -2,7 +2,8 @@
     <x-platform::slot name="header" /> — one layout slot (Theme Guide §5). Top bar, header and
     footer use the region that applies here (own → parent … → main site) and its variant;
     a variant the theme does not have falls back to the theme's first one. Other slots
-    include theme::partials.{name} when the theme has it.
+    include theme::partials.{name} when the theme has it, else what an active module
+    provides as SiteData "slot:{name}" (an HtmlString; Announcement: announcement, ticker, popup).
 --}}
 @props(['name'])
 @php
@@ -24,4 +25,7 @@
 @endif
 @if ($view)
     @include($view, ['region' => $region, 'config' => (array) ($region['config'] ?? []), 'variant' => $variant, 'context' => $context])
+@else
+    {{-- No theme view: what an active module provides for the slot (announcement, ticker, popup …), else nothing --}}
+    {{ app(\Platform\Theme\SiteData::class)->get('slot:'.$name, $context) }}
 @endif

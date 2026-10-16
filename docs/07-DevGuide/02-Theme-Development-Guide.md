@@ -202,6 +202,8 @@ Kernel প্রতিটি page-কে layout-এর **নির্দিষ�
 | `footer` | Footer (নির্বাচিত variant) | FR-HF-03 |
 | `popup` | Popup announcement | FR-ANW-04 |
 
+> `announcement`, `ticker`, `popup` (ও অন্য সাধারণ slot): theme-এর `partials/{slot}.blade.php` থাকলে সেটি, নইলে চালু module যা দেয় (kernel `SiteData` provider `slot:{name}` — Announcement module এই তিনটি দেয়); module বন্ধ থাকলে খালি। Theme এগুলোর চেহারা বদলাতে চাইলে `views/modules/announcement/slots/*.blade.php` override করে।
+
 ```blade
 {{-- themes/campus/views/layouts/app.blade.php --}}
 <!DOCTYPE html>

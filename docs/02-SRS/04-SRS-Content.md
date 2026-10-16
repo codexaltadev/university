@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 4: Website Content Modules |
-| Version | 0.7 — 2026-10-16: FR-NEWS-01 `active_at` (owner: নতুন table-এ `published_at` নয়); v0.3: BRL-GAL-01 — album-এর ছবি Media Library-র ব্যবহার, আলাদা item record নয়; v0.4: FR-SLD-04/05 — hero video, একটি slide = স্থির hero; v0.5: FR-ACH-01 — অর্জনকারী Person Picker; v0.6: FR-DOC-02/03 — ধরন তালিকা, নিজস্ব flipbook; v0.7: FR-LINK-02 — footer block hook |
+| Version | 0.8 — 2026-10-16: FR-NEWS-01 `active_at` (owner: নতুন table-এ `published_at` নয়); v0.3: BRL-GAL-01 — album-এর ছবি Media Library-র ব্যবহার, আলাদা item record নয়; v0.4: FR-SLD-04/05 — hero video, একটি slide = স্থির hero; v0.5: FR-ACH-01 — অর্জনকারী Person Picker; v0.6: FR-DOC-02/03 — ধরন তালিকা, নিজস্ব flipbook; v0.7: FR-LINK-02 — footer block hook; v0.8: FR-ANW-02/03 — page বাছাই, `active_at` / `expires_at` |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md), [Part 1](01-SRS-Core.md), `project_diu` analysis |
@@ -431,8 +431,8 @@ Main homepage "Latest News" (Highlighted first, 6 টি):  এই news প্�
 | ID | Requirement | BRD Ref | Priority |
 |---|---|---|---|
 | FR-ANW-01 | চার ধরনের widget CRUD | Q-17 | Must |
-| FR-ANW-02 | Placement: Main homepage, সব page, নির্দিষ্ট entity microsite (Relation দিয়ে — বর্তমান `is_home`, `is_faculty`, `is_department`, `is_program`, `is_admission` flag-এর বদলে) | BR-CNT-02 | Must |
-| FR-ANW-03 | Schedule: শুরু ও শেষ তারিখ | — | Must |
+| FR-ANW-02 | Placement: Main homepage, সব page, নির্দিষ্ট entity microsite (Relation দিয়ে — বর্তমান `is_home`, `is_faculty`, `is_department`, `is_program`, `is_admission` flag-এর বদলে) *(v0.8: "Show in" + main site; page = homepage / সব page / বাছাই করা module page — DB-05 v1.11 §15)* | BR-CNT-02 | Must |
+| FR-ANW-03 | Schedule: শুরু ও শেষ তারিখ *(v0.8: `active_at` / `expires_at`)* | — | Must |
 | FR-ANW-04 | Popup frequency control (cookie দিয়ে) এবং accessible (Esc দিয়ে বন্ধ, focus trap) | NFR-USE-02 | Must |
 | FR-ANW-05 | একই page-এ একসাথে একটির বেশি popup দেখাবে না (priority ক্রম অনুযায়ী) | — | Must |
 | FR-ANW-06 | News Ticker-এ Notice module-এর সর্বশেষ notice automatically যোগ করার option | FR-NOT-06 | Should |
