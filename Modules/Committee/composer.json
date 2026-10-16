@@ -1,0 +1,16 @@
+{
+    "name": "uwms/committee",
+    "description": "Committee module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Committee\\": "app/",
+            "Modules\\Committee\\Database\\Factories\\": "database/factories/",
+            "Modules\\Committee\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Committee\\Tests\\": "tests/" }
+    }
+}

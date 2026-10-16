@@ -18,6 +18,8 @@ return [
     'designation' => 'পদবি',
     'organization' => 'প্রতিষ্ঠান',
     'manual' => 'হাতে যোগ করা',
+    'note' => 'নোট',
+    'note_help' => 'যেমন "Nominated by UGC", "Ex officio"।',
     'former' => 'পূর্বতন',
     'hidden' => 'লুকানো',
     'one_holder' => ':role একসাথে একজনই থাকতে পারেন — আগেরজনের শেষ তারিখ দিন।',

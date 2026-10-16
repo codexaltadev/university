@@ -32,13 +32,14 @@ use Platform\Support\MorphMap;
  */
 class PeopleManager
 {
-    public static function make(string $name = 'people'): Section
+    /** $withNote: a note per person and language, e.g. a committee member's "Nominated by UGC". */
+    public static function make(string $name = 'people', bool $withNote = false): Section
     {
         return Section::make(__('platform::people.title'))
             ->collapsible()
             ->schema([
                 Repeater::make($name)->hiddenLabel()
-                    ->schema(static::fields())
+                    ->schema([...static::fields(), ...($withNote ? static::noteFields() : [])])
                     ->itemLabel(fn (array $state): ?string => static::itemLabel($state))
                     ->reorderable()->collapsible()->collapsed()->defaultItems(0)
                     ->addActionLabel(__('platform::people.add'))
@@ -65,7 +66,7 @@ class PeopleManager
             Grid::make(2)->schema([
                 PersonPicker::make('person')->label(__('platform::people.person'))->required(),
                 Select::make('role_key')->label(__('platform::people.role'))
-                    ->options(fn (?Model $record): array => static::roleOptions($record))
+                    ->options(fn (?Model $record, Select $component): array => static::roleOptions($record ?? $component->getModel()))   // create page: the form's model class
                     ->required()->live(),
             ]),
             Grid::make(2)->schema(TranslatableTabs::inline(fn (string $locale, bool $isDefault, string $language): array => [
@@ -85,10 +86,21 @@ class PeopleManager
         ];
     }
 
-    /** @return array<string, string> role key => label, active roles of this kind of place */
-    public static function roleOptions(?Model $record): array
+    /** @return array<Component|Field> */
+    protected static function noteFields(): array
     {
-        if ($record === null) {
+        return [
+            Grid::make(2)->schema(TranslatableTabs::inline(fn (string $locale, bool $isDefault, string $language): array => [
+                TextInput::make("note.{$locale}")->label(__('platform::people.note')." ({$language})")
+                    ->helperText($isDefault ? __('platform::people.note_help') : null)->maxLength(191),
+            ])),
+        ];
+    }
+
+    /** @return array<string, string> role key => label, active roles of this kind of place */
+    public static function roleOptions(Model|string|null $record): array
+    {
+        if ($record === null || $record === '') {
             return [];
         }
 
@@ -110,6 +122,7 @@ class PeopleManager
             'ends_on' => $a->ends_on?->toDateString(),
             'is_public' => $a->is_public,
             'overrides' => (array) $a->overrides,
+            'note' => $a->getTranslations('note'),
         ])->all();
     }
 
@@ -136,6 +149,9 @@ class PeopleManager
                     'role_label' => array_filter((array) ($row['role_label'] ?? []), fn ($t): bool => filled($t)) ?: null,
                     'overrides' => array_filter((array) ($row['overrides'] ?? []), fn ($v): bool => filled($v)) ?: null,
                 ];
+                if (array_key_exists('note', $row)) {   // only forms with the note field change it
+                    $attributes['note'] = array_filter((array) $row['note'], fn ($t): bool => filled($t)) ?: null;
+                }
 
                 $existing = filled($row['id'] ?? null) ? $record->assignments()->find($row['id']) : null;
 

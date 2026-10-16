@@ -1,0 +1,47 @@
+{
+    "name": "Committee",
+    "alias": "committee",
+    "description": "Committees and their members, on the main site and in entities' microsites — M-16",
+    "keywords": [
+        "people",
+        "committee"
+    ],
+    "priority": 65,
+    "providers": [
+        "Modules\\Committee\\Providers\\CommitteeServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "committee",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "committee_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "committee.committee": "Modules\\Committee\\Models\\Committee"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true,
+            "assignable": true,
+            "searchable": true,
+            "sitemap": true,
+            "menu_item_types": true,
+            "vocabularies": [
+                "committee.category"
+            ],
+            "website_pages": true,
+            "layouts": [
+                "committee.listing"
+            ]
+        }
+    }
+}

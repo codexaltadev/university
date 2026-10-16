@@ -55,4 +55,10 @@ final class PersonView
     {
         return $this->assignment->role_key;
     }
+
+    /** The assignment's note in the current language ("Nominated by UGC"), or null. */
+    public function note(): ?string
+    {
+        return $this->assignment->getTranslation('note', app()->getLocale(), true) ?: null;
+    }
 }

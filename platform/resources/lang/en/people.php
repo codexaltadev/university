@@ -18,6 +18,8 @@ return [
     'designation' => 'Designation',
     'organization' => 'Organization',
     'manual' => 'added by hand',
+    'note' => 'Note',
+    'note_help' => 'E.g. "Nominated by UGC", "Ex officio".',
     'former' => 'former',
     'hidden' => 'hidden',
     'one_holder' => ':role can have one current holder only — give the previous one an end date.',

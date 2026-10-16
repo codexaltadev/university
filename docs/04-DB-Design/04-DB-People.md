@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-04 |
-| Version | 1.3 — 2026-10-11 (v1.1): §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত); 2026-10-16 (v1.2): §4 Administration সরলীকরণ — contact visibility তিনটি column, campus ও user link পরে, Office scope, website গঠন; 2026-10-16 (v1.3): §6 Leadership — role holder / member, term-এর address, former, migration নেই |
+| Version | 1.4 — 2026-10-11 (v1.1): §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত); 2026-10-16 (v1.2): §4 Administration সরলীকরণ — contact visibility তিনটি column, campus ও user link পরে, Office scope, website গঠন; 2026-10-16 (v1.3): §6 Leadership — role holder / member, term-এর address, former, migration নেই; 2026-10-16 (v1.4): §7 Committee — is_active, Show in, PeopleManager note, website, term copy |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 3](../02-SRS/03-SRS-People.md), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -197,6 +197,8 @@ Homepage-এ কোন পদের বার্তা — Homepage section sett
 
 ## 7. M-16 Committee — `committee_committees` — B (Assignable, Attachable)
 
+> *v1.4 (2026-10-16, build-এর আগে):* `published_at` নেই — ⚙-এর `is_active`। কোথায় দেখাবে = kernel-এর "Show in" (`RelatedToField`): entity-গুলো ও main site switch — Lab-এর committee main site-এ না দিলে শুধু Lab microsite-এ (AC-COM-02); scoped user নিজের entity-র committee দেখেন ও সাজান (scope path "relation")। সদস্য = kernel `PeopleManager` (`withNote`) — role `chairperson`, `convener`, `member`, `member_secretary` (catalog-এর ক্রমে), ঐচ্ছিক নিজস্ব পদ-নাম ও `note`। Website: main site `/committees` (category অনুযায়ী, layout table / cards / list) ও `/committees/{slug}`; microsite `/{entity}/committees`। Term: `term_ends_on` পার হলে "পূর্ববর্তী" (চলতি তালিকায় নয়, committee page-এ "Previous terms" chain); "Copy to new term" = নতুন committee (`previous_term_id`), চলতি সদস্যসহ, পুরনোটির `term_ends_on` নতুনের আগের দিন।
+
 | Column | Type | Key / N | Default | বর্ণনা |
 |---|---|---|---|---|
 | id | BIGINT UNSIGNED | PK | | |
@@ -207,7 +209,7 @@ Homepage-এ কোন পদের বার্তা — Homepage section sett
 | term_starts_on, term_ends_on | DATE | N | | মেয়াদ (FR-COM-05) |
 | previous_term_id | BIGINT UNSIGNED | N, FK self (set null) | | "Copy to new term" — archive chain |
 | sort_order | INT UNSIGNED | | 0 | |
-| published_at | TIMESTAMP | N | | |
+| ~~published_at~~ | | | | *v1.4:* `is_active` (⚙) |
 | ⚙ | | | | |
 
 * Member = `core_assignments` (`assignable = committee.committee`), `role_key` = Standard Role Catalog-এর Committee ভূমিকা (`chairperson` → `convener` → `member` → `member_secretary`; DB-01 Section 8.4), `note` = authority (যেমন "Nominated by UGC")।

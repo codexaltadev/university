@@ -1,0 +1,45 @@
+<?php
+
+return [
+    'singular' => 'committee',
+    'plural' => 'Committees',
+    'all' => 'All',
+    'other' => 'Other committees',
+    'none' => 'No committee is listed yet.',
+    'chair' => 'Head',
+    'members' => 'Members',
+    'member_count' => '{0} No members|{1} 1 member|[2,*] :count members',
+    'no_members' => 'Members will be listed soon.',
+    'role' => 'Role',
+    'contact' => 'Contact',
+    'term' => 'Term',
+    'since' => 'Since :date',
+    'until' => 'Until :date',
+    'previous_term' => 'Previous term',
+    'previous_terms' => 'Previous terms',
+    'see_current' => 'See the current committee',
+    'download_order' => 'Formation order (PDF)',
+    'view_site' => 'View on the website',
+    'view_page' => 'View page',
+    'copy' => [
+        'action' => 'Copy to new term',
+        'help' => 'A new committee with today\'s members, shown in the same places. This one ends the day before and stays as a previous term.',
+        'done' => 'New term started — check its members and order.',
+    ],
+    'fields' => [
+        'name' => 'Name',
+        'description' => 'Description',
+        'category' => 'Category',
+        'formed_on' => 'Formed on',
+        'term_starts_on' => 'Term from',
+        'term_ends_on' => 'Term until',
+        'order_pdf' => 'Formation order',
+    ],
+    'help' => [
+        'term_ends_on' => 'After it the committee is a previous term.',
+        'order_pdf' => 'The notification or order that formed it (PDF).',
+    ],
+    'errors' => [
+        'term' => 'The term ends before it starts.',
+    ],
+];
