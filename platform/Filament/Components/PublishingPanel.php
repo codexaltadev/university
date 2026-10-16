@@ -6,8 +6,10 @@ use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Component;
 use Filament\Schemas\Components\Section;
+use Platform\Concerns\HasActiveAt;
 use Platform\Concerns\HasExpiry;
 use Platform\Concerns\HasPublishDate;
+use Platform\Support\PublishDate;
 
 /**
  * Content form sidebar, "Publishing" (FR-GEN-10/11/13, UI/UX Part A §5.2): Active,
@@ -28,9 +30,13 @@ class PublishingPanel
                     ->default(fn () => now())
                     ->seconds(false)
                     ->visible(fn (Component $component): bool => static::uses($component, HasPublishDate::class)),
+                DateTimePicker::make('active_at')->label(__('platform::relations.active_at'))
+                    ->helperText(__('platform::relations.active_at_help'))
+                    ->seconds(false)
+                    ->visible(fn (Component $component): bool => static::uses($component, HasActiveAt::class)),
                 DateTimePicker::make('expires_at')->label(__('platform::relations.expires_at'))
                     ->seconds(false)
-                    ->after('published_at')
+                    ->after(fn (Component $component): string => PublishDate::column($component->getModel()) ?? 'published_at')
                     ->visible(fn (Component $component): bool => static::uses($component, HasExpiry::class)),
             ]);
     }

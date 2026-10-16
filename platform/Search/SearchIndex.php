@@ -15,6 +15,7 @@ use Platform\Models\BaseModel;
 use Platform\Registry\Registry;
 use Platform\Scope\UserScopeFilter;
 use Platform\Seo\Seo;
+use Platform\Support\PublishDate;
 
 /**
  * Website search (C-17, SAD Part B §3): one index row per visible record and
@@ -187,7 +188,7 @@ class SearchIndex
                 'body' => Str::limit(IsSearchable::plainText($document['body'] ?? ''), 60000, ''),
                 'url' => Seo::localized($url, $locale),
                 'weight' => $info['weight'],
-                'published_at' => $record->getAttribute('published_at'),
+                'published_at' => ($column = PublishDate::column($record)) ? $record->getAttribute($column) : null,   // published_at or active_at
             ]);
         }
     }

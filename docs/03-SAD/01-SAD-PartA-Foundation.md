@@ -303,7 +303,8 @@ Illuminate\Database\Eloquent\Model
 | Trait | কখন ব্যবহার | Column / Relation | SRS Ref |
 |---|---|---|---|
 | `HasTranslations` (spatie) + `$translatable` | Multi-language field | JSON column | FR-GEN-40 থেকে 43 |
-| `HasPublishDate` | Content-type model | `published_at` (default এখন; ভবিষ্যৎ = scheduled); `frontendVisible()` scope-এ যোগ হয় (`status` column নেই — BRD Q-27) | FR-GEN-10/11 |
+| `HasPublishDate` | Content-type model (পুরনো: Page, Program) | `published_at` (default এখন; ভবিষ্যৎ = scheduled); `frontendVisible()` scope-এ যোগ হয় (`status` column নেই — BRD Q-27) | FR-GEN-10/11 |
+| `HasActiveAt` *(2026-10-16)* | নতুন content module (News, Notice, Events …) | `active_at` — একই নিয়ম (খালি / অতীত = দেখায়, ভবিষ্যৎ = scheduled); owner: নতুন table-এ `published_at` নয়। Kernel-এর search, scheduled index, context ক্রম ও PublishingPanel দুটোই চেনে (`Platform\Support\PublishDate::column()`) | FR-GEN-10/11 |
 | `HasExpiry` | মেয়াদ অর্থবহ model (Notice, Slider, Announcement) | `expires_at` | FR-GEN-13 |
 | `HasSlug` | Frontend URL আছে | `core_slugs` table-এ locale অনুযায়ী slug (P-21, ADR-11); slug history → redirect | FR-GEN-30 থেকে 32 |
 | `HasSortOrder` | Drag & drop ক্রম | `sort_order` | FR-GEN-14 |

@@ -1,0 +1,66 @@
+<?php
+
+return [
+    'singular' => 'সংবাদ',
+    'plural' => 'সংবাদ',
+    'all' => 'সব',
+    'all_news' => 'সব সংবাদ',
+    'none' => 'এখনো কোনো সংবাদ নেই।',
+    'search' => 'খুঁজুন',
+    'search_placeholder' => 'সংবাদে খুঁজুন',
+    'archive' => 'Archive',
+    'related' => 'আরও সংবাদ',
+    'scheduled' => 'Scheduled',
+    'metric_count' => 'সংবাদ',
+    'actions' => [
+        'view_on_site' => 'Website-এ দেখুন',
+    ],
+    'layouts' => [
+        'grid' => 'Grid',
+        'list' => 'List',
+        'cards' => 'Cards',
+        'magazine' => 'Magazine',
+        'slider' => 'Slider',
+        'standard' => 'Standard',
+        'full_width' => 'পূর্ণ প্রস্থ',
+    ],
+    'section' => [
+        'latest' => 'সর্বশেষ সংবাদ',
+        'featured' => 'বিশেষ সংবাদ',
+        'by_category' => 'Category অনুযায়ী সংবাদ',
+        'display' => 'দেখানোর ধরন',
+        'count' => 'কয়টি',
+        'per_category' => 'প্রতি category-তে কয়টি',
+    ],
+    'sections' => [
+        'media' => 'ছবি, gallery ও video',
+        'classification' => 'Category ও tag',
+        'author' => 'লেখক',
+    ],
+    'fields' => [
+        'title' => 'শিরোনাম',
+        'subtitle' => 'উপশিরোনাম',
+        'excerpt' => 'সংক্ষেপ',
+        'body' => 'বিবরণ',
+        'featured_image' => 'ছবি',
+        'gallery' => 'ছবির gallery',
+        'video_url' => 'Video link',
+        'category' => 'Category',
+        'author' => 'লেখক',
+        'author_user' => 'লেখক (user)',
+        'author_label' => 'লেখক বা সূত্র',
+        'views' => 'দেখা হয়েছে',
+    ],
+    'help' => [
+        'video_url' => 'YouTube বা Google Drive link, লেখার নিচে দেখায়।',
+    ],
+    'block' => [
+        'categories_help' => 'খালি: সব category। একটি category-র মধ্যে তার sub-category-ও থাকে।',
+        'posts' => 'অথবা এই সংবাদগুলো',
+        'posts_help' => 'বাছাই করা সংবাদ এই ক্রমে দেখায়।',
+    ],
+    'settings' => [
+        'per_page' => 'প্রতি পাতায় কয়টি',
+        'show_author' => 'লেখক দেখাবে',
+    ],
+];

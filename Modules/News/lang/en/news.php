@@ -1,0 +1,66 @@
+<?php
+
+return [
+    'singular' => 'news post',
+    'plural' => 'News',
+    'all' => 'All',
+    'all_news' => 'All news',
+    'none' => 'No news yet.',
+    'search' => 'Search',
+    'search_placeholder' => 'Search the news',
+    'archive' => 'Archive',
+    'related' => 'More news',
+    'scheduled' => 'Scheduled',
+    'metric_count' => 'News',
+    'actions' => [
+        'view_on_site' => 'View on the website',
+    ],
+    'layouts' => [
+        'grid' => 'Grid',
+        'list' => 'List',
+        'cards' => 'Cards',
+        'magazine' => 'Magazine',
+        'slider' => 'Slider',
+        'standard' => 'Standard',
+        'full_width' => 'Full width',
+    ],
+    'section' => [
+        'latest' => 'Latest News',
+        'featured' => 'Featured News',
+        'by_category' => 'News by Category',
+        'display' => 'Show as',
+        'count' => 'How many',
+        'per_category' => 'How many per category',
+    ],
+    'sections' => [
+        'media' => 'Picture, gallery & video',
+        'classification' => 'Category & tags',
+        'author' => 'Author',
+    ],
+    'fields' => [
+        'title' => 'Title',
+        'subtitle' => 'Subtitle',
+        'excerpt' => 'Summary',
+        'body' => 'Text',
+        'featured_image' => 'Picture',
+        'gallery' => 'Photo gallery',
+        'video_url' => 'Video link',
+        'category' => 'Category',
+        'author' => 'Author',
+        'author_user' => 'Author (user)',
+        'author_label' => 'Author or source',
+        'views' => 'Views',
+    ],
+    'help' => [
+        'video_url' => 'YouTube or Google Drive link, shown below the text.',
+    ],
+    'block' => [
+        'categories_help' => 'Empty: every category. A category includes its sub-categories.',
+        'posts' => 'Or these posts',
+        'posts_help' => 'Picked posts are shown in this order.',
+    ],
+    'settings' => [
+        'per_page' => 'Posts per page',
+        'show_author' => 'Show the author',
+    ],
+];

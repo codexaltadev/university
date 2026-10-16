@@ -5,6 +5,8 @@ return [
     'main_site' => 'Main site',
     'publishing' => 'প্রকাশ',
     'active' => 'চালু',
+    'active_at' => 'কখন থেকে দেখাবে',
+    'active_at_help' => 'খালি: এখনই। ভবিষ্যতের সময় দিলে তখন পর্যন্ত লুকানো থাকবে (scheduled)।',
     'published_at' => 'প্রকাশের তারিখ',
     'published_at_help' => 'ভবিষ্যতের তারিখ দিলে সেই সময় পর্যন্ত লুকানো থাকবে (scheduled)।',
     'expires_at' => 'মেয়াদ শেষ',

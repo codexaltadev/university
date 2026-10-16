@@ -4,9 +4,9 @@ namespace Platform\Console\Commands;
 
 use Illuminate\Console\Command;
 use Platform\Concerns\HasExpiry;
-use Platform\Concerns\HasPublishDate;
 use Platform\Scope\UserScopeFilter;
 use Platform\Search\SearchIndex;
+use Platform\Support\PublishDate;
 
 /**
  * Scheduled content becomes visible (or expires) without being saved; this picks
@@ -27,7 +27,7 @@ class SearchScheduledCommand extends Command
         foreach (array_keys($index->registered()) as $class) {
             $traits = class_uses_recursive($class);
             $columns = array_filter([
-                in_array(HasPublishDate::class, $traits, true) ? 'published_at' : null,
+                PublishDate::column($class),   // published_at or active_at
                 in_array(HasExpiry::class, $traits, true) ? 'expires_at' : null,
             ]);
 

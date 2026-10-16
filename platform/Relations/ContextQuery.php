@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder as QueryBuilder;
 use InvalidArgumentException;
-use Platform\Concerns\HasPublishDate;
 use Platform\Hierarchy\EntityHierarchy;
+use Platform\Support\PublishDate;
 
 /**
  * Website content of one context (SAD Part B §3.3–3.4). Only frontendVisible()
@@ -161,8 +161,8 @@ class ContextQuery
     {
         $model = $this->modelInstance();
 
-        if (in_array(HasPublishDate::class, class_uses_recursive($model), true)) {
-            $query->orderByDesc($model->qualifyColumn('published_at'));
+        if ($column = PublishDate::column($model)) {
+            $query->orderByDesc($model->qualifyColumn($column));
         }
 
         return $query->orderByDesc($model->getQualifiedKeyName());

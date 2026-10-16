@@ -162,14 +162,14 @@ it('selects a module layout and falls back when the theme cannot draw it (FR-THE
         ->and($layouts->options('faq.archive'))->toBe(['per_row' => 2]);
 
     // A layout only the campus theme adds
-    campusTheme($this->runtime, ['layouts' => ['faq.archive' => ['magazine'], 'news.listing' => ['grid']]]);
+    campusTheme($this->runtime, ['layouts' => ['faq.archive' => ['magazine'], 'no-such-module.listing' => ['grid']]]);   // a page of a module that is not installed
     $layouts->choose('faq.archive', 'magazine');
     expect($layouts->for('faq.archive'))->toBe('accordion');                    // default theme cannot draw it
 
     $this->themes->activate('campus');
     expect($layouts->available('faq.archive'))->toBe(['accordion', 'list', 'magazine'])
         ->and($layouts->for('faq.archive'))->toBe('magazine')
-        ->and($layouts->pages())->not->toHaveKey('news.listing');               // module not active (T-4)
+        ->and($layouts->pages())->not->toHaveKey('no-such-module.listing');     // module not active (T-4)
 });
 
 it('previews a theme only for the admin who asked (FR-THEME-03)', function () {

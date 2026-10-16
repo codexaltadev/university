@@ -54,7 +54,7 @@ it('shows sections in their order and hides those of inactive modules (AC-HOME-0
     ($this->layoutWith)('site:0', [
         ['section_type' => 'core.spacer'],
         ['section_type' => 'faq.highlights', 'heading' => ['en' => 'Questions']],
-        ['section_type' => 'news.latest'],                                                         // module not installed
+        ['section_type' => 'no-such-module.latest'],                                               // module not installed
     ]);
 
     expect(keysOf($this->homepages->forOwner('site:0')))->toBe(['core.spacer', 'faq.highlights']);

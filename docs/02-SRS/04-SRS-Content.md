@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 4: Website Content Modules |
-| Version | 0.1 (Draft) |
+| Version | 0.2 — 2026-10-16: FR-NEWS-01 `active_at` (owner: নতুন table-এ `published_at` নয়) |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md), [Part 1](01-SRS-Core.md), `project_diu` analysis |
@@ -97,7 +97,7 @@ Main homepage "Latest News" (Highlighted first, 6 টি):  এই news প্�
 
 | ID | Requirement | BRD Ref | Priority |
 |---|---|---|---|
-| FR-NEWS-01 | News CRUD; `is_active` ও `published_at` (ভবিষ্যৎ তারিখে schedule) — FR-GEN-10/11 | BR-CNT-04 | Must |
+| FR-NEWS-01 | News CRUD; `is_active` ও `active_at` (ভবিষ্যৎ তারিখে schedule) — FR-GEN-10/11 *(v0.2)* | BR-CNT-04 | Must |
 | FR-NEWS-02 | Body-তে image, video embed, quote, table; শেষে photo gallery (Media Library থেকে একাধিক) | BR-MED-05 | Must |
 | FR-NEWS-03 | Listing layout: Grid, List, Card, Magazine; details layout: Standard, Full-width | BR-THM-02 | Must |
 | FR-NEWS-04 | Homepage section: "Latest News", "Featured News" (slider / grid), "News by Category" | FR-GEN-102 | Must |

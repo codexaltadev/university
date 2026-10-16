@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-05 |
-| Version | 1.1 — 2026-10-11: §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping |
+| Version | 1.2 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 4](../02-SRS/04-SRS-Content.md), BRD v1.6 (Q-26), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -66,12 +66,12 @@
 
 | Column | Type | বর্ণনা |
 |---|---|---|
-| published_at | TIMESTAMP N, IX | তারিখ দেখানো, ক্রম, ভবিষ্যৎ = schedule (FR-GEN-10/11; BRD Q-27 — `status` column নেই) |
+| ~~published_at~~ → `active_at` *(v1.2, owner 2026-10-10/11)* | TIMESTAMP N, IX | নতুন module-এ `published_at` নেই: দেখানো হবে কিনা = `is_active`; যে module-এ সময় ধরে প্রকাশ লাগে (News, Notice, Events …) সেখানে `active_at` — খালি বা অতীত = দেখায়, ভবিষ্যৎ = scheduled; তারিখ দেখানো ও ক্রম এটি দিয়ে (kernel `HasActiveAt`)। `status` column নেই (BRD Q-27) |
 | expires_at | TIMESTAMP N | যেখানে প্রযোজ্য (FR-GEN-13) |
 | sort_order | INT UNSIGNED | যেখানে ম্যানুয়াল ক্রম লাগে |
 | ⚙ | | `platformColumns()` |
 
-প্রতিটি content table-এ IX-5: `(is_active, deleted_at, published_at)`।
+প্রতিটি content table-এ IX-5: `(is_active, deleted_at, active_at)` (`active_at` থাকলে)।
 
 ---
 
@@ -86,9 +86,12 @@
 | body | JSON | N, T | Rich text; image / video embed / quote / table |
 | author_user_id | BIGINT UNSIGNED | N, FK users (set null) | FR-NEWS-06 |
 | author_label | JSON | N, T | Free text ("Public Relations Office") |
-| + common | | published_at |
+| video_url *(v1.2)* | VARCHAR(2048) | N | YouTube / Drive embed (SRS Data: video embed) |
+| + common | | `active_at` *(v1.2)* |
 
 Media: `featured_image`, `gallery`। Vocabulary: `news.category`, shared tags।
+
+*(v1.2, build-এর আগে)* কোথায় দেখাবে = "Show in" + main site (§1, `PublishMain:Post` শুধু Admin); "Featured" = সেই জায়গার Highlight (`core_relations.is_highlighted`, until সহ — AC-NEWS-04), আলাদা column নয়। Website: `/news` (main site-এ প্রকাশিত), `/{entity}/news` (সেই entity ও নিচের), `/news/{slug}`; filter category, tag, বছর / মাস archive (FR-NEWS-05); listing layout grid / list / cards / magazine, details standard / full-width (FR-NEWS-03)। Homepage section (FR-NEWS-04): `news.latest` (সর্বশেষ), `news.featured` (highlight, slider / grid), `news.by-category` (একটি বা কয়েকটি category)। Page block "News"। View count (P-17)। Migration: `blog_posts` (১) ও `lab_news` (১) → step S16N (Lab-এর news Lab module-এর পরে)।
 
 ---
 

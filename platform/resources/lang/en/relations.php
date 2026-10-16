@@ -5,6 +5,8 @@ return [
     'main_site' => 'Main site',
     'publishing' => 'Publishing',
     'active' => 'Active',
+    'active_at' => 'Show from',
+    'active_at_help' => 'Empty: now. A future time keeps it hidden until then (scheduled).',
     'published_at' => 'Publish date',
     'published_at_help' => 'A future date keeps it hidden until then (scheduled).',
     'expires_at' => 'Expires',
