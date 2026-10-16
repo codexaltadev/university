@@ -41,9 +41,11 @@ it('shows /transport with tabs, times, notes, the map on request and the stop se
     Http::fake([TransportSettings::DEFAULT_URL => Http::response($this->fixture)]);
 
     $this->get('/transport')->assertOk()
-        ->assertSee('Special Transport Schedule for Exam-2026')->assertSee('Transport rules (PDF)')
-        ->assertSeeInOrder(['Regular (2)', 'Shuttle (1)'])
-        ->assertSeeInOrder(['Dhanmondi &lt;&gt; DSC', 'To campus', '7:00 AM', '10:00 AM', 'From campus', '1:30 PM'], false)
+        ->assertSeeInOrder(['50+ dedicated buses', 'Get Your DIU Transport Pass', 'How to Get Your Pass', 'Why It Matters'])   // Settings › Transport defaults
+        ->assertSee('Regular Service Schedule @ DSC')->assertSee('Special Transport Schedule for Exam-2026')->assertSee('View Rules &amp; Policy', false)
+        ->assertSeeInOrder(['Regular', '(2)', 'Shuttle', '(1)'])
+        ->assertSeeInOrder(['Dhanmondi &lt;&gt; DSC', 'Departure from Dhanmondi - Sobhanbag Mosque', '7:00 AM', '10:00 AM', 'Departure from Daffodil Smart City-DSC', '1:30 PM'], false)
+        ->assertSeeInOrder(['Transport Fees', 'Tri-Semester', 'Bi-Semester', 'Dhanmondi', '3000/=tk', '4500/=tk'])
         ->assertSee('No bus on: Friday')
         ->assertSee('Shuttle : Technical Bus Stand')
         ->assertSee('Find your bus')->assertSee('<option value="Azampur Bus Stop">', false)

@@ -12,9 +12,12 @@ the website shows it through its API. So this module has **no tables and no admi
 | Safety | only `https://` map and PDF addresses are used; everything is escaped |
 | Legacy | nothing migrated — the data stays in the live system |
 
-Website: `/transport` (main site) — title, semester, running service, rules PDF; **Find your
-bus** (type a stop: the routes through it); tabs Regular / Shuttle / Friday (`?service=`); route
-cards with times (7:00 AM …), days off, stops and notes (open on click), map (loaded on click).
+Website: `/transport` (main site), in the order of DIU's current page — introduction and
+**Transport Pass** (Settings › Transport: text and picture, defaults = the current page); "Regular
+Service Schedule @ DSC", semester, **View Rules & Policy**; **Find your bus** (type a stop: the
+routes through it); tabs Regular / Shuttle / Friday (`?service=`); route cards — "Departure from
+{first stop}" / "Departure from {DSC}" with times (7:00 AM …), days off, stops and notes (open on
+click), map (loaded on click); **Transport Fees** table (Settings › Transport — not in the API).
 Menus › Module page "Transport". Homepage section `transport.finder` "Find your bus".
 
 Should the transport system move into this application one day, DB-06 §2.1 has the table design.

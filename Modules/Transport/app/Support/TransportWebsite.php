@@ -33,7 +33,25 @@ class TransportWebsite
             'timetable' => $timetable,
             'group' => is_string($group) && isset($timetable['groups'][$group]) ? $group : array_key_first($timetable['groups']),
             'stops' => self::allStops($timetable),
+            'page' => self::page(),
         ]);
+    }
+
+    /** The page's own text from Settings › Transport (not in the API), in the current language. */
+    public static function page(): array
+    {
+        $text = fn (string $key): ?string => ($v = settings()->translate(settings('transport.'.$key))) && is_string($v) && trim($v) !== '' ? trim($v) : null;
+
+        return [
+            'intro' => $text('intro'),
+            'pass_title' => $text('pass_title'),
+            'pass_subtitle' => $text('pass_subtitle'),
+            'pass_how' => $text('pass_how'),
+            'pass_why' => $text('pass_why'),
+            'pass_image' => settings()->media('transport.pass_image'),
+            'fees' => array_values(array_filter((array) settings('transport.fees'), fn ($f): bool => is_array($f) && filled($f['route'] ?? null))),
+            'fees_note' => $text('fees_note'),
+        ];
     }
 
     /** @return list<string> every stop once, A–Z, for the search list */
