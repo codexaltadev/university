@@ -13,5 +13,9 @@ return [
     'alt_text' => 'Alternative text',
     'alt_text_help' => 'Optional. Describes the picture for screen readers and search engines.',
     'no_alt' => 'No alternative text on :count picture(s) — add it in the Media Library',
+    'attachments' => 'Attachments',
+    'attachment_title' => 'Title',
+    'attachment_title_help' => 'Shown instead of the file name, e.g. "Exam routine — Fall 2026".',
+    'add_attachment' => 'Add a file',
     'file' => 'File',
 ];

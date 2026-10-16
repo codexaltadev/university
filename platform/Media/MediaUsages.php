@@ -15,14 +15,15 @@ class MediaUsages
      * The media of one field of a record, in this order.
      *
      * @param  list<int|string|null>  $ids
+     * @param  array<int, array<string, mixed>>|null  $meta  media id => this use's own data (an attachment's title …); null = leave as it is
      */
-    public function sync(Model $usable, string $field, array $ids): void
+    public function sync(Model $usable, string $field, array $ids, ?array $meta = null): void
     {
         $ids = array_values(array_unique(array_map('intval', array_filter($ids))));
         $type = $usable->getMorphClass();
         $key = $usable->getKey();
 
-        DB::transaction(function () use ($ids, $type, $key, $field): void {
+        DB::transaction(function () use ($ids, $type, $key, $field, $meta): void {
             $before = MediaUsage::query()->where(['usable_type' => $type, 'usable_id' => $key, 'field' => $field])->pluck('media_item_id')->all();
 
             MediaUsage::query()->where(['usable_type' => $type, 'usable_id' => $key, 'field' => $field])
@@ -31,7 +32,7 @@ class MediaUsages
             foreach ($ids as $order => $id) {
                 MediaUsage::query()->updateOrCreate(
                     ['usable_type' => $type, 'usable_id' => $key, 'field' => $field, 'media_item_id' => $id],
-                    ['sort_order' => $order],
+                    ['sort_order' => $order, ...($meta === null ? [] : ['meta' => ($meta[$id] ?? null) ?: null])],
                 );
             }
 

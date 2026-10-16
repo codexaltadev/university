@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-05 |
-| Version | 1.3 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section) |
+| Version | 1.5 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section); 2026-10-16 (v1.4): §5 Notice (`active_at`, board / archive, attachment title, website, section); 2026-10-16 (v1.5): §6 Testimonials (`published_at` নেই, person, website, section) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 4](../02-SRS/04-SRS-Content.md), BRD v1.6 (Q-26), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -131,9 +131,11 @@ IX: `(starts_at, is_active)` — Upcoming / Past (FR-EVT-02)। Speaker: `core_a
 | body | JSON | N, T | | |
 | is_pinned | TINYINT(1) | IX | 0 | FR-NOT-02 |
 | is_urgent | TINYINT(1) | | 0 | |
-| + common | | published_at, expires_at |
+| + common | | `active_at` *(v1.4)*, `expires_at` |
 
-IX: `(is_pinned, published_at)`। Attachment: Media usage `field = attachments`, প্রতিটির title `core_media_usages.meta.title`-এ (FR-NOT-01)। Vocabulary: `notice.category`।
+IX: `(is_pinned, active_at)` *(v1.4)*। Attachment: Media usage `field = attachments`, প্রতিটির title `core_media_usages.meta.title`-এ (FR-NOT-01)। Vocabulary: `notice.category`।
+
+*(v1.4, build-এর আগে)* `expires_at` = board-এ থাকার শেষ: পার হলে Notice Board, homepage ও ticker থেকে সরে, কিন্তু archive-এ ও নিজের পাতায় থাকে (FR-NOT-03) — তাই kernel `HasExpiry` নয় (সেটি website থেকে পুরো লুকায়), Notice-এর নিজস্ব scope `onBoard()` / `archived()`। Attachment form = kernel `AttachmentList` (প্রতি সারিতে file ও ভাষা অনুযায়ী title; `MediaUsages::sync(..., meta)`), Documents module-ও এটি নেবে। কোথায় দেখাবে = "Show in" + main site (§1)। Website: `/notices` ও `/{entity}/notices` — pinned আগে, তারপর নতুন; filter category, entity (main board-এ), তারিখের পরিসর, search (title ও reference no.), `?archive=1`; layout table / list / cards; "New" badge (Settings › Notice: কত দিন, default ৭ — FR-NOT-07); urgent আলাদা রঙে (FR-NOT-02); `/notices/{slug}` — PDF attachment inline preview ও download (FR-NOT-05)। Homepage section `notice.board` (সর্বশেষ N, pinned আগে) ও `notice.ticker` (FR-NOT-06)। Migration S16 (notice অংশ, S16T): `notices` (৩,৩৯১) — department relation, `is_home` → main site, `view_counter` → view count, category; `notice_files` (৩,৫৩২) S03-এর পরে।
 
 ---
 
@@ -146,9 +148,11 @@ IX: `(is_pinned, published_at)`। Attachment: Media usage `field = attachments`
 | testimonial_type | VARCHAR(20) | IX | `student` / `alumni` / `parent` / `employer` / `partner` |
 | rating | TINYINT UNSIGNED | N | ১–৫ |
 | video_url | VARCHAR(2048) | N | |
-| + common | | published_at, sort_order |
+| + common | | `sort_order` *(v1.5: `published_at` নেই — সময় ধরে প্রকাশ লাগে না, `is_active` যথেষ্ট)* |
 
 ব্যক্তি (নাম, পদবি, প্রতিষ্ঠান, ছবি): `core_assignments` (`role_key = author`) — Alumni বা অন্য person source, অথবা manual person (FR-TEST-01)।
+
+*(v1.5, build-এর আগে)* ঠিক একজন ব্যক্তি (form-এ Person Picker + role-এর নিজস্ব নাম, যেমন "Parent of a CSE student")। কোথায় দেখাবে = "Show in" + main site (§1); Program-এর testimonial তার page-এ tab। Website: `/testimonials` ও `/{entity}/testimonials` — `?type=` filter, layout slider / grid / masonry / video (FR-TEST-02); ক্রম drag (FR-TEST-04)। Homepage section `testimonials.list` "What People Say" — ধরন filter, সেই জায়গার testimonial (FR-TEST-03); homepage seeder-এর `testimonial.list` → `testimonials.list`। Migration S17 (testimonial অংশ, S17M): `testimonials` (২০) ও `mba_testimonials` (৫) → Program relation, ব্যক্তি manual person।
 
 ---
 

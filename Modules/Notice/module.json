@@ -1,0 +1,55 @@
+{
+    "name": "Notice",
+    "alias": "notice",
+    "description": "Official notices with files, on the main site and in microsites; Notice Board — M-20",
+    "keywords": [
+        "content",
+        "notice"
+    ],
+    "priority": 69,
+    "providers": [
+        "Modules\\Notice\\Providers\\NoticeServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "notice",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "notice_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "notice.notice": "Modules\\Notice\\Models\\Notice"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true,
+            "searchable": true,
+            "sitemap": true,
+            "menu_item_types": true,
+            "website_pages": true,
+            "vocabularies": [
+                "notice.category"
+            ],
+            "homepage_sections": [
+                "notice.board",
+                "notice.ticker"
+            ],
+            "layouts": [
+                "notice.listing"
+            ],
+            "metrics": [
+                "notice.count"
+            ],
+            "freshness_source": true,
+            "settings": true
+        }
+    }
+}

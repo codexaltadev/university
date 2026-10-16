@@ -41,6 +41,18 @@ trait HasMediaUsage
         return MediaItem::query()->whereIn('id', $ids)->get()->sortBy(fn (MediaItem $item) => array_search($item->id, $ids, true))->values();
     }
 
+    /**
+     * The uses of a field, in order, with their item and own data (an attachment's title is
+     * $usage->meta['title'][locale]) — only uses whose item still exists.
+     *
+     * @return Collection<int, MediaUsage>
+     */
+    public function mediaUsagesIn(string $field): Collection
+    {
+        return $this->mediaUsages()->where('field', $field)->orderBy('sort_order')->with('item')->get()
+            ->filter(fn (MediaUsage $usage): bool => $usage->item !== null)->values();
+    }
+
     public function firstMedia(string $field): ?MediaItem
     {
         return $this->mediaIn($field)->first();
@@ -52,9 +64,12 @@ trait HasMediaUsage
         return $this->mediaUsages()->where('field', $field)->orderBy('sort_order')->pluck('media_item_id')->all();
     }
 
-    /** @param list<int|string|null> $ids */
-    public function syncMedia(string $field, array $ids): void
+    /**
+     * @param  list<int|string|null>  $ids
+     * @param  array<int, array<string, mixed>>|null  $meta  media id => this use's own data
+     */
+    public function syncMedia(string $field, array $ids, ?array $meta = null): void
     {
-        app(MediaUsages::class)->sync($this, $field, $ids);
+        app(MediaUsages::class)->sync($this, $field, $ids, $meta);
     }
 }
