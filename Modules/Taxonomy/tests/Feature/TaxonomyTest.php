@@ -144,11 +144,11 @@ it('saves category and new tags from the FAQ form (FR-TAX-04)', function () {
     $general = term('faq.category', 'General');
 
     Livewire::test(CreateFaq::class)
-        ->fillForm(['question' => 'How to apply?', 'answer' => 'Online.', 'category' => $general->id])
+        ->fillForm(['question' => ['en' => 'How to apply?'], 'answer' => ['en' => 'Online.'], 'category' => $general->id])
         ->call('create')
         ->assertHasNoFormErrors();
 
-    $faq = Faq::where('question', 'How to apply?')->first();
+    $faq = Faq::where('question->en', 'How to apply?')->first();
     expect($faq->termIdsIn('faq.category'))->toBe([$general->id]);
 
     Livewire::test(EditFaq::class, ['record' => $faq->getRouteKey()])

@@ -58,7 +58,13 @@ class IdMap
      */
     public function record(string $legacyTable, int|string $legacyId, string $model): ?Model
     {
-        $id = $this->find($legacyTable, $legacyId);
+        if ((int) $legacyId === 0) {
+            return null;
+        }
+
+        // Only a record of this type: one legacy table may map to two (an office-"department" → Office, S10)
+        $id = DB::table(self::TABLE)->where('legacy_table', $legacyTable)->where('legacy_id', (int) $legacyId)
+            ->where('new_type', (new $model)->getMorphClass())->value('new_id');
 
         if ($id === null) {
             return null;

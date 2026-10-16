@@ -192,11 +192,11 @@ it('expired highlights stop counting at once and are switched off by the hourly 
 // ─── Reading a context (§3.3–3.4) ─────────────────────────────────────────
 
 it('reads a context in the four homepage modes, visible content only', function () {
-    $old = Faq::factory()->shownIn($this->cse)->create(['published_at' => now()->subDays(3)]);
-    $new = Faq::factory()->shownIn($this->cse)->create(['published_at' => now()->subDay()]);
-    $mid = Faq::factory()->shownIn($this->cse)->create(['published_at' => now()->subDays(2)]);
+    // FAQ has no publish date (DB-05 v1.1): newest = last added
+    $old = Faq::factory()->shownIn($this->cse)->create();
+    $mid = Faq::factory()->shownIn($this->cse)->create();
+    $new = Faq::factory()->shownIn($this->cse)->create();
     Faq::factory()->shownIn($this->cse)->create(['is_active' => false]);
-    Faq::factory()->shownIn($this->cse)->create(['published_at' => now()->addDay()]);
     Faq::factory()->shownIn($this->eee)->create();
 
     relations()->sync($old, [keyOf($this->cse)], highlights: [keyOf($this->cse) => ['order' => 1]]);

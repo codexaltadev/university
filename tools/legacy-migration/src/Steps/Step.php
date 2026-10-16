@@ -8,7 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Legacy\Migration\Support\IdMap;
+use Legacy\Migration\Support\Normalizer;
 use Legacy\Migration\Support\Report;
+use Platform\Assignments\ManualPerson;
 use Platform\Localization\Languages;
 
 /**
@@ -19,6 +21,9 @@ use Platform\Localization\Languages;
 abstract class Step
 {
     protected Report $report;
+
+    /** @var Collection<int, object>|null legacy admins by id (adminPerson) */
+    protected ?Collection $admins = null;
 
     public function __construct(protected IdMap $ids) {}
 
@@ -108,6 +113,47 @@ abstract class Step
             ->whereKeyNot($taken)
             ->orderBy((new $model)->getKeyName())
             ->first();
+    }
+
+    /**
+     * The manual person for a legacy admin (DB-04 v1.1 §11.1): one per admin, shared by every
+     * step (admission contacts, office team, support contacts …) until the Administration module
+     * (S11) turns them into staff members. Null when the admin does not exist.
+     */
+    protected function adminPerson(int|string|null $adminId): ?ManualPerson
+    {
+        if (blank($adminId) || (int) $adminId === 0) {
+            return null;
+        }
+
+        $this->admins ??= $this->legacy()->table('admins')->get()->keyBy('id');
+        $admin = $this->admins->get((int) $adminId);
+        if ($admin === null) {
+            return null;
+        }
+
+        return $this->manualPerson('admins@manual', $admin, $admin->name, $admin->designation, $admin->email, $admin->phone);
+    }
+
+    /** A manual person from a legacy row's own name / designation / email / phone (rows without an admin). */
+    protected function rowPerson(string $table, object $row): ?ManualPerson
+    {
+        return filled($row->name ?? null)
+            ? $this->manualPerson($table.'@person', $row, $row->name, $row->designation ?? null, $row->email ?? null, $row->phone ?? null)
+            : null;
+    }
+
+    protected function manualPerson(string $key, object $row, ?string $name, ?string $designation, ?string $email, ?string $phone): ManualPerson
+    {
+        $name = Normalizer::text($name);
+
+        return $this->upsert($key, $row, ManualPerson::class, [
+            'name' => Normalizer::en($name),
+            'designation' => Normalizer::en(Normalizer::text($designation)),
+            'email' => Normalizer::text($email),
+            'phone' => mb_substr((string) Normalizer::text($phone), 0, 30) ?: null,
+            'is_active' => true,
+        ], existing: $this->same(ManualPerson::class, ['name->en' => $name]));
     }
 
     /**

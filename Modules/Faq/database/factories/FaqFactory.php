@@ -15,8 +15,8 @@ class FaqFactory extends Factory
     public function definition(): array
     {
         return [
-            'question' => $this->faker->sentence().'?',
-            'answer' => $this->faker->paragraph(),
+            'question' => ['en' => $this->faker->sentence().'?'],
+            'answer' => ['en' => '<p>'.$this->faker->paragraph().'</p>'],
         ];
     }
 

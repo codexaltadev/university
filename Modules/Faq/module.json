@@ -24,7 +24,9 @@
         "license": "proprietary",
         "table_prefix": "faq_",
         "dependencies": {},
-        "optional_dependencies": [],
+        "optional_dependencies": [
+            "program"
+        ],
         "morph_aliases": {
             "faq.faq": "Modules\\Faq\\Models\\Faq"
         },
@@ -44,7 +46,11 @@
             "layouts": [
                 "faq.listing"
             ],
-            "freshness_source": true
+            "freshness_source": true,
+            "searchable": true,
+            "website_pages": true,
+            "page_blocks": true,
+            "entity_tabs": true
         }
     }
 }

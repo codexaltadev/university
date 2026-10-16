@@ -131,6 +131,7 @@ return [
         'admission', 'tuition-fees', 'waiver-calculator', 'scholarships', 'academic-calendar',
         'faculty-members', 'administration', 'leadership', 'committees', 'alumni', 'transport',
         'facilities', 'rankings', 'international', 'csr', 'partners', 'courses', 'curriculum',
+        'services', 'support-contacts',
     ],
     // Reserved first segments a main site page may take: the module's landing is a page (DB-02 v0.2 §8.1)
     'page_landing_paths' => ['contact', 'admission'],

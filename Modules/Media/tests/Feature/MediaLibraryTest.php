@@ -140,11 +140,11 @@ it('picks an existing picture in a form, no new upload (FR-MEDIA-04, AC-MEDIA-01
     $logo = library()->store(photo('logo.jpg'));
 
     Livewire::test(CreateOffice::class)
-        ->fillForm(['name' => 'Library Office', 'logo' => $logo->id])
+        ->fillForm(['name' => ['en' => 'Library Office'], 'logo' => $logo->id])
         ->call('create')
         ->assertHasNoFormErrors();
 
-    $office = Office::where('name', 'Library Office')->first();
+    $office = Office::where('name->en', 'Library Office')->first();
     expect($office->firstMedia('logo')?->id)->toBe($logo->id)
         ->and(MediaItem::count())->toBe(1);
 

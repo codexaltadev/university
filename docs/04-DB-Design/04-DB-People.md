@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-04 |
-| Version | 0.1 (Draft) |
+| Version | 1.1 — 2026-10-11: §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 3](../02-SRS/03-SRS-People.md), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -275,14 +275,16 @@ People module-এর table কম, কারণ ভূমিকা, সদস্
 
 | বর্তমান (row) | নতুন | রূপান্তর |
 |---|---|---|
-| `offices` (২৪) | office_offices | `title` → name, `show_page` → has_microsite, `serial` → sort_order; প্রতিটির জন্য dynamic permission তৈরি |
+| `offices` (২৪) | office_offices | `title` → name, `slug` রাখা, `show_page` → has_microsite, `serial` → sort_order, `publication_status` → is_active; প্রতিটির জন্য dynamic permission তৈরি |
+| *(2026-10-11)* legacy faculty "Office" ও "Institutional Programs"-এর ১২টি "department" (S04 বাদ রেখেছে) | office_offices | নাম / short name মিলিয়ে বিদ্যমান Office (Accounts Section → Accounts Office, Admission, CDC, Exam, Registrar, Transport, DSC Hall → Hall Office, HRDI) — id map-এ রাখা, যাতে তাদের FAQ ইত্যাদি সেই Office-এ যায়; না মিললে (DIL, DIUYSBC) নতুন Office; Ashulia ও Uttara Campus → Campus module (M-08), এখন report। এদের page / menu নেই |
 | `sections` (১) + `section_employees` (২) | office_sections + core_assignments (`team`) | |
 | `registrar_offices` (৪০) + categories (৭), `proctor_offices` (১৩) + categories (২) | page_pages (owner Office) + menu | DB-02 Section 18 |
-| `admins` (৬০৩) | administration_members | `unique_id` → employee_id, `admin_category_id` → category_id, `office_id` (১১৪টিতে আছে) → primary_office_id **ও** Office-এ `team` assignment, `campus` text → campus_id (Campus match) |
+| `admins` (৬০৩) | administration_members | `unique_id` → employee_id, `admin_category_id` → category_id, `office_id` (১১৪টিতে আছে) — *(2026-10-11 যাচাই: এটি office নয়, ৯ অঙ্কের employee code যেমন 710003029)* → employee_id-এর সাথে মিলিয়ে দেখা (S11); Office team আসে `office_admins` থেকে, `campus` text → campus_id (Campus match) |
 | `admin_categories` (১১) | administration_categories | `group` = `management` (Management) বা `officer` (বাকি); `serial` → sort_order |
 | `office_admins` (১৫, সবগুলো `admin_id` সহ) | core_assignments (Office, `team`) | Person = সংশ্লিষ্ট staff member; row-এর নিজস্ব phone / extension আলাদা হলে `overrides`-এ |
 | `coordination_officers` (৭৩: ৩১টি `admin_id` সহ, ৪২টি ছাড়া) | core_assignments (Department বা Program, `coordinator`) | `admin_id` থাকলে staff member; না থাকলে Section 11.2 অনুযায়ী match, না মিললে manual person; `department_program_name` text → Program match |
-| `support_contacts` (২২: ২১টি `admin_id` সহ) | office_support_contacts + core_assignments (`contact`) | `purpose` → purpose |
+| `support_contacts` (২২: ২১টি `admin_id` সহ) | office_support_contacts + core_assignments (`contact`) | `purpose` → purpose, `office_location` → location; একই office ও purpose-এর একাধিক row = একটি support contact-এ একাধিক ব্যক্তি |
+| *(2026-10-11)* ব্যক্তি (`admin_id`) — Administration module (M-13) আসার আগে | core_manual_persons | `admins`-এর নাম, পদবি, email, phone থেকে একজন manual person **প্রতি admin একবার** (S08, S10 একই id map ভাগ করে); M-13 এলে S11 এদের staff member-এ রূপান্তর করবে |
 | `contacts` (১১৪: ৮টি `admin_id` সহ, ১০৬টি ছাড়া) | core_assignments (Faculty / Department) | `contact_type` → Standard Role Catalog (DBQ-03 confirmed): **১ = Dean** (৭) → Faculty, `role_key = dean`; **২ = Head** (৪০) → Department, `role_key = head`; **৩ = Officer** (৬৭) → Faculty বা Department (`faculty_id` / `department_id` অনুযায়ী), `role_key = officer`; `designation` মূল লেখা ভিন্ন হলে `role_label`-এ; person Section 11.2 অনুযায়ী |
 | `staff` (৩৭৯), `staff_categories` (৫) | administration_members, administration_categories | একই table-এ; category `group` = `support`, `is_public` = 0, sort_order `admin_categories`-এর পরে; `campus` text → campus_id; `admins`-এর সাথে একই ব্যক্তি থাকলে Section 11.2 অনুযায়ী merge |
 | `committee_categories` (১৩) | **committee_committees** | বর্তমান "category"-ই আসলে committee (Syndicate, Academic Council ...) |

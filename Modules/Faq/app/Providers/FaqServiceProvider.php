@@ -2,45 +2,35 @@
 
 namespace Modules\Faq\Providers;
 
-use Illuminate\Console\Scheduling\Schedule;
+use Modules\Faq\Support\FaqWebsite;
+use Platform\Context\SiteContext;
 use Platform\Modules\ModuleServiceProvider;
+use Platform\Website\Website;
 
 class FaqServiceProvider extends ModuleServiceProvider
 {
-    /**
-     * The name of the module.
-     */
     protected string $name = 'Faq';
 
-    /**
-     * The lowercase version of the module name.
-     */
     protected string $nameLower = 'faq';
 
-    /**
-     * Command classes to register.
-     *
-     * @var string[]
-     */
-    // protected array $commands = [];
-
-    /**
-     * Provider classes to register.
-     *
-     * @var string[]
-     */
+    /** @var string[] */
     protected array $providers = [
         EventServiceProvider::class,
-        RouteServiceProvider::class,
+        RouteServiceProvider::class,   // "Was this helpful?" (routes/web.php)
     ];
 
-    /**
-     * Define module schedules.
-     *
-     * @param  $schedule
-     */
-    // protected function configureSchedules(Schedule $schedule): void
-    // {
-    //     $schedule->command('inspire')->hourly();
-    // }
+    public function register(): void
+    {
+        parent::register();
+
+        $this->app->singleton(FaqWebsite::class);
+    }
+
+    public function boot(): void
+    {
+        parent::boot();
+
+        // Website: /faq and /{entity}/faq (FR-FAQ-02/03)
+        $this->app->make(Website::class)->handle(fn (string $rest, SiteContext $context, string $locale) => $this->app->make(FaqWebsite::class)->respond($rest, $context, $locale));
+    }
 }

@@ -46,10 +46,15 @@ class SearchIndex
         return $models;
     }
 
-    /** @return array<string, string> module slug => group label */
+    /** @return array<string, string> module slug => group label (a module with several searchable models: its first, the main one) */
     public function modules(): array
     {
-        return collect($this->registered())->mapWithKeys(fn (array $info): array => [$info['module'] => $info['label']])->all();
+        $labels = [];
+        foreach ($this->registered() as $info) {
+            $labels[$info['module']] ??= $info['label'];
+        }
+
+        return $labels;
     }
 
     /** Index one record again (or remove it when it is gone, hidden or no longer registered). */

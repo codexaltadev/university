@@ -41,10 +41,10 @@ it('lets an Admin show content in entities and on the main site, highlighted (AC
 
     Livewire::test(CreateFaq::class)
         ->assertFormSet(['main_site' => true, 'is_active' => true])                 // on by default for those who decide
-        ->assertFormFieldIsVisible('published_at')                                   // FAQ has a publish date …
+        ->assertFormFieldIsHidden('published_at')                                    // FAQ has no publish date (DB-05 v1.1) …
         ->assertFormFieldIsHidden('expires_at')                                      // … but no expiry
         ->fillForm([
-            'question' => 'How do I apply?', 'answer' => 'Online.',
+            'question' => ['en' => 'How do I apply?'], 'answer' => ['en' => 'Online.'],
             'show_in' => [keyOfEntity($this->engineering), keyOfEntity($this->cse)],
             'main_site' => true,
         ])
@@ -52,7 +52,7 @@ it('lets an Admin show content in entities and on the main site, highlighted (AC
         ->call('create')
         ->assertHasNoFormErrors();
 
-    $faq = Faq::where('question', 'How do I apply?')->first();
+    $faq = Faq::where('question->en', 'How do I apply?')->first();
     expect($faq->targetKeys())->toEqualCanonicalizing([keyOfEntity($this->engineering), keyOfEntity($this->cse)])
         ->and($faq->isOnMainSite())->toBeTrue()
         ->and(app(RelationEngine::class)->highlightsOf($faq)[$site]['order'])->toBe(2);
@@ -83,19 +83,19 @@ it('keeps entity users inside their scope, their entity preselected, no main-sit
         ->assertFormSet(['show_in' => [keyOfEntity($this->cse)]])
         ->assertFormFieldIsHidden('main_site')
         ->assertFormFieldIsVisible('request_main_site')
-        ->fillForm(['question' => 'Lab hours?', 'answer' => '9-5', 'show_in' => [keyOfEntity($this->eee)]])
+        ->fillForm(['question' => ['en' => 'Lab hours?'], 'answer' => ['en' => '9-5'], 'show_in' => [keyOfEntity($this->eee)]])
         ->call('create')
         ->assertHasFormErrors(['show_in']);                                          // outside the scope
 
     Livewire::test(CreateFaq::class)
-        ->fillForm(['question' => 'Lab hours?', 'answer' => '9-5', 'show_in' => []])
+        ->fillForm(['question' => ['en' => 'Lab hours?'], 'answer' => ['en' => '9-5'], 'show_in' => []])
         ->call('create')
         ->assertHasFormErrors(['show_in']);                                          // at least one
 
     expect(Faq::count())->toBe(0);
 
     Livewire::test(CreateFaq::class)
-        ->fillForm(['question' => 'Lab hours?', 'answer' => '9-5', 'request_main_site' => true])
+        ->fillForm(['question' => ['en' => 'Lab hours?'], 'answer' => ['en' => '9-5'], 'request_main_site' => true])
         ->fillForm(['highlights' => [HighlightPanel::id(keyOfEntity($this->cse)) => ['on' => true, 'order' => 1]]])
         ->call('create')
         ->assertHasNoFormErrors();
@@ -134,7 +134,7 @@ it('cannot highlight on the main site without HighlightMain (FR-CNT-H02)', funct
     $site = RelationEngine::SITE_KEY;
 
     Livewire::test(CreateFaq::class)
-        ->fillForm(['question' => 'Fees?', 'answer' => 'See the fees page.', 'show_in' => [keyOfEntity($this->cse)], 'main_site' => true])
+        ->fillForm(['question' => ['en' => 'Fees?'], 'answer' => ['en' => 'See the fees page.'], 'show_in' => [keyOfEntity($this->cse)], 'main_site' => true])
         ->fillForm(['highlights' => [HighlightPanel::id($site) => ['on' => true, 'order' => 1]]])
         ->call('create')
         ->assertHasNoFormErrors();

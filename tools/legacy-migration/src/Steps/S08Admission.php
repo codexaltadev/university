@@ -13,7 +13,6 @@ use Modules\Admission\Models\Circular;
 use Modules\Admission\Models\ResultBatch;
 use Modules\Admission\Support\ResultImporter;
 use Platform\Assignments\Assignment;
-use Platform\Assignments\ManualPerson;
 use Platform\Assignments\RoleCatalog;
 use Platform\Taxonomy\Term;
 use Platform\Taxonomy\Vocabularies;
@@ -126,28 +125,17 @@ class S08Admission extends Step
             ], existing: $this->same(AdmissionContactGroup::class, ['name->en' => $name]));
         }
 
-        $admins = $this->legacy()->table('admins')->get()->keyBy('id');
         $photos = 0;
         foreach ($this->rows('admission_contacts') as $row) {
             $group = $this->ids->record('admission_contact_types', $row->admission_contact_type_id, AdmissionContactGroup::class);
-            $admin = $admins->get($row->admin_id);
-            if ($group === null || ($admin === null && blank($row->name))) {
+            // One manual person per legacy admin (the same officer may be in both groups); S11 links them to Administration later
+            $person = $this->adminPerson($row->admin_id) ?? $this->rowPerson('admission_contacts', $row);
+            if ($group === null || $person === null) {
                 $this->report->skipped('admission_contacts', 'no contact group, or no person');
 
                 continue;
             }
-
-            // One manual person per legacy admin (the same officer may be in both groups); S11 links them to Administration later
-            $source = (object) ['id' => $admin->id ?? 'c'.$row->id];
-            $name = Normalizer::text($admin->name ?? $row->name);
-            $person = $this->upsert('admins@admission', $source, ManualPerson::class, [
-                'name' => Normalizer::en($name),
-                'designation' => Normalizer::en(Normalizer::text($admin->designation ?? $row->designation)),
-                'email' => Normalizer::text($admin->email ?? $row->email),
-                'phone' => mb_substr((string) Normalizer::text($admin->phone ?? $row->phone), 0, 30) ?: null,
-                'is_active' => true,
-            ], existing: $this->same(ManualPerson::class, ['name->en' => $name]));
-            $photos += filled($admin->photo ?? $row->photo) ? 1 : 0;
+            $photos += filled($row->photo) || filled($this->admins?->get((int) $row->admin_id)?->photo) ? 1 : 0;
 
             $this->upsert('admission_contacts', $row, Assignment::class, [
                 'person_type' => $person->getMorphClass(),

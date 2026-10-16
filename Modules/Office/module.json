@@ -26,7 +26,10 @@
         "dependencies": {},
         "optional_dependencies": [],
         "morph_aliases": {
-            "office.office": "Modules\\Office\\Models\\Office"
+            "office.office": "Modules\\Office\\Models\\Office",
+            "office.section": "Modules\\Office\\Models\\OfficeSection",
+            "office.service": "Modules\\Office\\Models\\OfficeService",
+            "office.support-contact": "Modules\\Office\\Models\\OfficeSupportContact"
         },
         "custom_permissions": [],
         "provides": {
@@ -36,8 +39,17 @@
             "dynamic_permissions": true,
             "searchable": true,
             "metrics": [
-                "office.count"
-            ]
+                "office.count",
+                "office.services",
+                "office.team"
+            ],
+            "vocabularies": [
+                "office.type"
+            ],
+            "layouts": [
+                "office.listing"
+            ],
+            "website_pages": true
         }
     }
 }

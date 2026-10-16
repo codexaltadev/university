@@ -99,16 +99,19 @@ it('Blameable fills created_by, updated_by, deleted_by and clears deleted_by on 
 // ─── frontendVisible() ─────────────────────────────────────────────────────
 
 it('frontendVisible() hides inactive, scheduled and deleted records (FR-GEN-12)', function () {
-    $visible = Faq::factory()->create(['published_at' => now()->subDay()]);
-    $noDate = Faq::factory()->create(['published_at' => null]);
-    Faq::factory()->create(['is_active' => false]);
-    Faq::factory()->create(['published_at' => now()->addDay()]);
-    Faq::factory()->create()->delete();
+    $parent = FixtureParent::create(['name' => 'P']);
+    $child = fn (string $code, array $attributes = []) => FixtureChild::create(['parent_id' => $parent->id, 'name' => $code, 'code' => $code, ...$attributes]);
 
-    expect(Faq::frontendVisible()->pluck('id')->sort()->values()->all())
+    $visible = $child('A', ['published_at' => now()->subDay()]);
+    $noDate = $child('B', ['published_at' => null]);
+    $child('C', ['is_active' => false]);
+    $child('D', ['published_at' => now()->addDay()]);
+    $child('E')->delete();
+
+    expect(FixtureChild::frontendVisible()->pluck('id')->sort()->values()->all())
         ->toBe(collect([$visible->id, $noDate->id])->sort()->values()->all());
 
-    expect(Faq::scheduled()->count())->toBe(1);
+    expect(FixtureChild::scheduled()->count())->toBe(1);
 });
 
 it('frontendVisible() hides expired records (HasExpiry)', function () {

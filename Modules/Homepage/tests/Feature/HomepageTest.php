@@ -67,7 +67,7 @@ it('shows sections in their order and hides those of inactive modules (AC-HOME-0
 it('fills content sections from the homepage\'s own context, highlights first (FR-HOME-05/11)', function () {
     $engine = app(RelationEngine::class);
     $faq = function (string $q, $entity, bool $main = false) use ($engine): Faq {
-        $f = Faq::factory()->create(['question' => $q, 'published_at' => now()->subDays(strlen($q))]);
+        $f = Faq::factory()->create(['question' => $q]);   // created in order: the first is the oldest
         $engine->sync($f, [($this->k)($entity)], mainSite: $main, user: null);
 
         return $f;
@@ -185,7 +185,7 @@ it('renders the homepage sections through the active theme; none → the theme\'
         ['section_type' => 'faq.highlights', 'heading' => ['en' => 'Common questions'], 'subheading' => ['en' => 'Asked most often']],
         ['section_type' => 'core.spacer'],
     ]);
-    Faq::factory()->create(['question' => 'How do I apply?', 'published_at' => now()->subDay()]);
+    Faq::factory()->create(['question' => 'How do I apply?']);
 
     $this->get('/')->assertOk()
         ->assertSeeInOrder(['Common questions', 'Asked most often'])

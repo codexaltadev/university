@@ -24,7 +24,7 @@ beforeEach(function () {
         'content' => ['en' => [['type' => 'text', 'data' => ['body' => '<p>Penetration testing and <b>forensics</b>.</p>']]],
             'bn' => [['type' => 'text', 'data' => ['body' => '<p>ভর্তি ও বৃত্তি তথ্য।</p>']]]],
     ]);
-    $this->office = Office::create(['name' => 'Cyber Security Office']);
+    $this->office = Office::create(['name' => ['en' => 'Cyber Security Office', 'bn' => 'সাইবার নিরাপত্তা অফিস']]);   // the name per language: indexed in both
 });
 
 it('indexes visible records per language, with their text and address (FR-SRCH-01/04/09)', function () {

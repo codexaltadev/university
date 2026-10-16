@@ -30,6 +30,7 @@ class FaqsTable
         return $table
             ->modifyQueryUsing(fn (Builder $query) => $query->with(['contentRelations', 'terms']))
             ->defaultSort('sort_order')
+            ->reorderable('sort_order')
             ->columns([
                 TextColumn::make('question')->label(__('faq::faq.fields.question'))
                     ->searchable()->wrap()->limit(120)->weight('medium'),
@@ -43,11 +44,9 @@ class FaqsTable
                         ->pluck('name')->all())
                     ->badge()->color('info'),
                 IconColumn::make('is_active')->label(__('platform::relations.active'))->boolean(),
-                TextColumn::make('published_at')->label(__('platform::relations.published_at'))
-                    ->date('d M Y')->sortable()
-                    ->badge(fn (Faq $record): bool => $record->published_at?->isFuture() ?? false)
-                    ->color(fn (Faq $record): ?string => $record->published_at?->isFuture() ? 'warning' : null)
-                    ->description(fn (Faq $record): ?string => $record->published_at?->isFuture() ? __('platform::relations.scheduled') : null),
+                TextColumn::make('helpful_yes')->label(__('faq::faq.fields.helpful'))->sortable()
+                    ->formatStateUsing(fn (Faq $record): string => "👍 {$record->helpful_yes} · 👎 {$record->helpful_no}")
+                    ->toggleable(),
                 TextColumn::make('updated_at')->label(__('faq::faq.fields.updated'))->since()->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])

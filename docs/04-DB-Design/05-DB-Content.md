@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-05 |
-| Version | 0.1 (Draft) |
+| Version | 1.1 — 2026-10-11: §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 4](../02-SRS/04-SRS-Content.md), BRD v1.6 (Q-26), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -278,12 +278,16 @@ Media: `file`, `thumbnail`। IX: `(type_term_id, is_active, published_at)`।
 | Column | Type | Key / N | বর্ণনা |
 |---|---|---|---|
 | id | BIGINT UNSIGNED | PK | |
-| question | JSON | T | |
-| answer | JSON | T | |
+| question | JSON | T | *(v1.1: আগে VARCHAR — Phase 1-এর fixture)* |
+| answer | JSON | T | rich text |
 | helpful_yes, helpful_no | INT UNSIGNED | | FR-FAQ-05 |
-| + common | | published_at, sort_order |
+| sort_order | INT UNSIGNED | | |
+| ⚙ | | | `is_active` |
 
-Category: vocabulary `faq.category` (hierarchical; category-র ছবি Media, উপরের / নিচের বিবরণ `core_terms.description` — FR-FAQ-01)।
+* *(v1.1, owner 2026-10-11)* **`published_at` নেই** — FAQ সময় ধরে প্রকাশ হয় না, দেখানো হবে কিনা = `is_active`। নিয়ম: নতুন table-এ `published_at` নয়; কোনো module-এ সত্যিই নির্দিষ্ট সময়ে প্রকাশ লাগলে column-এর নাম `active_at` (News, Notice, Events-এর সময় ঠিক হবে)।
+* Category: vocabulary `faq.category` (hierarchical; category-র উপরের বিবরণ `core_terms.description` — FR-FAQ-01)।
+* কোথায় দেখাবে: Attachable (`core_relations`) — Department / Program / Office-এর FAQ (FR-FAQ-03, entity page-এর "FAQ" tab), main site = `site:0` relation।
+* Website: `/faq` — category অনুযায়ী accordion, instant search (browser-এ, Alpine), `?category={slug}`, FAQPage JSON-LD; "Was this helpful?" (Yes / No, প্রতি visitor একবার, rate limit); page block "FAQ" (category / entity / বাছাই করা)। Excel / CSV import (Question, Answer, Category)।
 
 ---
 
@@ -401,7 +405,7 @@ Entity / main site placement: `core_relations` (Section 1)। Media: `image`।
 | `prospectuses` (৪৫) | documents_documents (type Prospectus) | `semester_id` → session_id, `department_program_type_id` → program_id |
 | `charter_guidebooks` (৮৬) + categories (৪) | documents_documents (Charter / Guidebook) | |
 | `policies` (১) + categories (২) | documents_documents (Policy) | `approve_date` → approved_on |
-| `faqs` (১,৩০৯) + `faq_categories` (৯) | faq_faqs + `faq.category` | `department_id` → relation |
+| `faqs` (১,৩০৯) + `faq_categories` (৯) | faq_faqs + `faq.category` | `question` / `answer` → en; `serial` → sort_order; `publication_status` → is_active (১০টি inactive); `department_id` (১,১৮১) → সেই Department-এর relation (legacy-র office-"department" হলে সেই Office-এর); *(2026-10-11 যাচাই)* `is_home` কোনো row-এ "1" নয় (enum: "0" ১,২৫৪, খালি ৫৫) — তাই department নেই এমন ১২৮টি FAQ → `site:0` relation (legacy-র `/faq`-এ যা দেখাত); category (৯টি, slug রাখা) → term |
 | `accordions` (৩০) + `accordion_categories` (৬) | *(2026-10-10)* **Scholarship module**-এ (DB-03 v1.4 §11.3) — এগুলো DIU-র waiver / scholarship scheme, FAQ নয় | — |
 | `greetings` (৫) | announcement_widgets (`popup`) | `is_home` → `site:0`; `is_faculty` / `is_department` / `is_program` → `faculty_id` / `department_id` / `department_program_type_id` relation; `is_admission` → `route_keys = ["admission.index"]`; `start_date` / `expiry_date` → starts_at / ends_at |
 | `news_tickers` (৪) | announcement_widgets (`ticker`) | |

@@ -109,6 +109,10 @@ class MicrositeResolver
             if (! ($node instanceof BaseModel ? $node->isFrontendVisible() : (bool) $node->is_active)) {
                 return null;
             }
+            // An entity may have no microsite of its own (an office shown as a contact card only, FR-OFF-11)
+            if (method_exists($node, 'hasMicrosite') && ! $node->hasMicrosite()) {
+                return null;
+            }
         }
 
         $rest = implode('/', array_slice($segments, $i));
