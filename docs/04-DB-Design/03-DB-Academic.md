@@ -4,8 +4,8 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-03 |
-| Version | 1.5 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়); v1.4: Scholarship নিজের module `scholarship`, parent / child ও category vocabulary (§11.3); v1.5: Admission (§10) — `published_at` নয় `is_active`, session লেখা, result label, subscriber topic, website গঠন |
-| Date | 2026-10-11 (v1.0 confirmed 2026-10-08) |
+| Version | 1.5 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়); v1.4: Scholarship নিজের module `scholarship`, parent / child ও category vocabulary (§11.3); v1.5: Admission (§10) — `published_at` নয় `is_active`, session লেখা, result label, subscriber topic, website গঠন; v1.6: Academic Calendar (§12) — `is_active`, session লেখা, Faculty সম্পর্ক, audience event-এ, `starts_on` ঐচ্ছিক, website গঠন |
+| Date | 2026-10-16 (v1.0 confirmed 2026-10-08) |
 | Status | ✔ Confirmed — v1.3 approved 2026-10-10 (Tuition, Waiver আলাদা module); v1.1 approved 2026-10-10: entry করা rule ও data অক্ষত থাকবে; logic বদলানো যাবে যদি ফলাফল হুবহু একই থাকে (golden master দিয়ে প্রমাণ) |
 | Based on | [DB-01](01-DB-Core-Kernel.md) (conventions), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 2](../02-SRS/02-SRS-Academic.md), `project_diu` |
 
@@ -40,7 +40,7 @@
 | M-10 Tuition | `tuition` (v1.3) | `tuition_` | Program (hard → FK; level = program type), Department / Faculty (filter); Session (optional → index) |
 | M-10 Waiver Calculator | `waiver` | `waiver_` | Tuition (hard → FK: category, tuition), Program (hard → FK: level); Faculty (hard → FK, rule condition) |
 | M-10 Scholarship | `scholarship` (v1.4) | `scholarship_` | — (কোনো dependency নেই) |
-| M-11 Academic Calendar | `calendar` | `calendar_` | Session, Program (optional → index) |
+| M-11 Academic Calendar | `calendar` | `calendar_` | Faculty (optional → `core_relations`, v1.6); Session পরে (v1.6: এখন লেখা) |
 
 ---
 
@@ -411,12 +411,19 @@ Scholarship waiver rule, tuition বা board-এর সাথে যুক্�
 
 ## 12. M-11 Academic Calendar
 
+> *v1.6 (2026-10-16, legacy `project_diu` দেখে):* `published_at` নেই — ⚙-এর `is_active` (scheduling দরকার নেই, তাই `active_at`-ও নয়)। Session আপাতত লেখা (`session_label`, যেমন "Spring 2026"), কারণ M-05 Session module সবার শেষে; Session এলে `session_id` N যোগ হবে ও লেখা থেকে মিলিয়ে পূরণ হবে (Admission-এর মতো, §10)। DIU-তে একই session-এ আলাদা calendar হয় faculty-গোষ্ঠী অনুযায়ী ("Spring-2026 (TRI)" = FBE, FHSS, FHLS, FSIT; "(BI)" = FE) — তাই calendar ↔ Faculty সম্পর্ক (`core_relations`, ঐচ্ছিক, বহু; খালি = সব faculty)। Audience (Undergraduate / Graduate) legacy-তে **event-এ** (`calendar_event_calender_program`), calendar-এ নয়। Event-এর তারিখ legacy-তে শুধু লেখা, তাই `starts_on` N। "চলতি / আসন্ন / পুরনো" (legacy `active_status` 0/1/2) রাখা হয় না — event-এর তারিখ থেকে বের হয়।
+
 | Table | শ্রেণী | Column (⚙ ছাড়া) | Key | Ref |
 |---|---|---|---|---|
-| `calendar_calendars` | B | `title` (T), `session_id` N (index), `year` SMALLINT, `duration_label` (T, N), `published_at`; audience → vocabulary `calendar.audience` (termables, বহু); Media `pdf` (hard copy); view count → `core_view_counts` | IX `(session_id)`, `(year)` | FR-CAL-01/05 |
-| `calendar_events` | B | `calendar_id` (FK cascade), `title` (T), `starts_on` DATE, `ends_on` DATE N, `date_label` (T, N) ("Week 1"), `type_term_id` (FK core_terms, N; vocabulary `calendar.event-type`), `sort_order`; audience → termables (বহু) | IX `(calendar_id, starts_on)`, `(starts_on)` | FR-CAL-02/03/07 |
+| `calendar_calendars` | B | `title` (T), `session_label` VARCHAR(50) N *(v1.6)*, `year` SMALLINT, `duration_label` (T, N) ("January – June"), `show_on_home` TINYINT(1) DEFAULT 1 *(v1.6)*, `sort_order` *(v1.6)*; Faculty → `core_relations` (Attachable, বহু, ঐচ্ছিক) *(v1.6)*; Media `hard_copy` (PDF বা ছবি); slug `/academic-calendar/{slug}`; view count → `core_view_counts` | IX `(year)`, `(session_label)` | FR-CAL-01/05 |
+| `calendar_events` | B | `calendar_id` (FK cascade), `title` (T), `starts_on` DATE N *(v1.6)*, `ends_on` DATE N, `date_label` (T, N) ("1st week of March"), `type_term_id` (FK core_terms, N; vocabulary `calendar.event-type`, রং সহ), `sort_order`; audience → vocabulary `calendar.audience` (termables, বহু; খালি = সবার জন্য) | IX `(calendar_id, sort_order)`, `(starts_on)` | FR-CAL-02/03/07 |
 
-Program-এর সাথে সম্পর্ক audience term দিয়ে (FR-CAL-09); Program-এ সরাসরি FK নেই।
+* *(v1.6)* Website: `/academic-calendar` = চলতি calendar(গুলো) (আজকের তারিখ যে calendar-এর event-এর মধ্যে, না হলে সবচেয়ে নতুন) + বাকিগুলোর তালিকা; filter year / session / faculty / audience (AC-CAL-01); `/academic-calendar/{slug}` একটি calendar (Table / Month / Timeline, PDF, `.ics`); `/academic-calendar/{slug}.ics` (শুধু structured তারিখের event)। পুরনো slug 301।
+* *(v1.6)* Homepage section "Upcoming Academic Dates": `show_on_home` calendar-গুলোর আজ বা পরের ৫টি event (`starts_on` আছে এমন)।
+* *(v1.6)* Program page (FR-CAL-09): Program-এর Faculty-র calendar (বা faculty ছাড়া calendar), audience = Program level-এর নামের সাথে মেলে এমন event — Program-এ সরাসরি FK নেই।
+* *(v1.6)* Faculty microsite-এ সেই faculty-র calendar (module page)।
+
+Program-এর সাথে সম্পর্ক audience term ও Faculty দিয়ে (FR-CAL-09); Program-এ সরাসরি FK নেই।
 
 ---
 
@@ -485,7 +492,7 @@ Program-এর সাথে সম্পর্ক audience term দিয়ে 
 | `boards` (৮), `waiver_categories` (২১), `waivers` (৯২) + ৫টি pivot | waiver_boards, waiver_categories, waiver_rules + pivot | `waiver_rate` → waiver_percent, `hsc_golden` / `ssc_golden` → require_*_golden, `undergraduate_min / max` → ug_cgpa_*; `international_undergraduate_*` → আলাদা rule (is_international = 1); `gender_waiver.gender_id` → gender string |
 | `scholarship_categories` (৭) + `scholarships` (২৭) | scholarship_scholarships *(v1.4)* | category → মূল scholarship (`detail` → details, `serial` → sort_order, `publication_status` → is_active, slug রাখা); scholarship → তার category-র অধীন অংশ (২৭টিই Erasmus-এর; ১৬টি অপ্রকাশিত → inactive); যোগ্যতা / আবেদন আলাদা field বর্তমান data-য় নেই — details-এ থাকে |
 | `accordion_categories` (৬) + `accordions` (৩০) | scholarship_scholarships + `scholarship.category` *(v1.4)* | মূল category ("scholarship")-র `top_content` / `bottom_content` → settings intro / outro; ৫টি sub-category → category term (slug রাখা); প্রতিটি accordion → category সহ মূল scholarship (`description` → details, `serial`, `publication_status` → is_active) |
-| `calenders` (১৮) + `calender_programs` (২) + `calendar_events` (১৯২) + pivot (৩৮০) | calendar_calendars, calendar_events + audience term | `date_explanation` → date_label; structured `starts_on` বর্তমান data-তে নেই → manual পূরণ বা parse (সীমাবদ্ধতা) |
+| `calenders` (১৮) + `calender_programs` (২) + `calendar_events` (১৯২) + pivot (৩৮০) | calendar_calendars, calendar_events + audience term | `date_explanation` → date_label; structured `starts_on` / `ends_on` বর্তমান data-তে নেই → parse করা যায় এমনগুলো স্বয়ংক্রিয় ("9 May–15 May 2026", "January 9 – 18, 2025"), বাকিগুলো ("1st week of March") শুধু লেখা *(v1.6)*; title-এর বন্ধনী ("(FBE,FHSS,FHLS,FSIT)", "(FE)", "(TRI)", "(BI)") → Faculty সম্পর্ক; `serial` → `sort_order`; `total_views` → view count; `active_status` বাদ |
 | `coordination_officers` (৭৩) | core_assignments (Department / Program, `role_key = coordinator`) | DB-04-এ বিস্তারিত (Administration person) |
 | Course, Curriculum, Faculty Member, Campus | — | বর্তমান DB-তে নেই; নতুন করে entry বা import |
 

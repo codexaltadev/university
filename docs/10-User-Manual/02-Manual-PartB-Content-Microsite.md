@@ -400,11 +400,11 @@ Program খুললে বাম দিকে একই অংশগুলো �
 
 **Academic › Academic Calendar**
 
-1. **+ New calendar:** Session, audience (যেমন Undergraduate Day, Graduate), PDF (hard copy, ঐচ্ছিক)।
-2. **Events** tab: প্রতিটি তারিখ — শুরু ও শেষ তারিখ (ঘরে), title, ধরন (Class, Exam, Holiday …), প্রয়োজনে লিখিত ব্যাখ্যা।
+1. **+ New calendar:** title, Session (যেমন "Spring 2026"), বছর, সময়কাল, Faculty (যে faculty-গুলোর জন্য; খালি রাখলে সবার), PDF বা ছবি (hard copy, ঐচ্ছিক), homepage-এ দেখাবে কিনা।
+2. **Events** অংশ: প্রতিটি তারিখ — শুরু ও শেষ তারিখ (ঘরে), title, ধরন (Class, Exam, Holiday …), audience (Undergraduate / Graduate; খালি = সবার), প্রয়োজনে লিখিত ব্যাখ্যা ("1st week of March")। ঘরে তারিখ না দিলে event শুধু লেখা হিসেবে দেখায়, Google Calendar ও "Upcoming Academic Dates"-এ আসে না।
 3. অনেক তারিখ একসাথে: **Import** (Excel)।
 
-Website-এ Table / Month / Timeline view-তে দেখায় এবং visitor Google Calendar-এ যোগ করতে পারেন।
+Website-এ `/academic-calendar`-এ চলতি calendar আগে দেখায়; Table / Month / Timeline view, PDF download, এবং visitor Google Calendar-এ যোগ করতে পারেন (`.ics`)। Faculty microsite ও Program page-এ সেই faculty-র calendar দেখায়।
 
 ---
 

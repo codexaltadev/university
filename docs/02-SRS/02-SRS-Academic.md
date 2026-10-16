@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 2: Academic Modules |
-| Version | 0.3 — 2026-10-10: M-10 তিনটি module — `tuition`, `waiver`, `scholarship` (DB-03 v1.4); 2026-10-11: M-09 Admission website গঠন, FR-ADM-13 থেকে 16 (DB-03 v1.5) |
+| Version | 0.4 — 2026-10-10: M-10 তিনটি module — `tuition`, `waiver`, `scholarship` (DB-03 v1.4); 2026-10-11: M-09 Admission website গঠন, FR-ADM-13 থেকে 16 (DB-03 v1.5); v0.4 2026-10-16: M-11 Calendar — Faculty সম্পর্ক, audience event-এ, তারিখ ঐচ্ছিক, website গঠন (DB-03 v1.6) |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md), [SRS Part 1](01-SRS-Core.md), `project_diu` analysis |
@@ -456,8 +456,8 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 
 | অংশ | তথ্য |
 |---|---|
-| Calendar | title, slug, Session / বছর, সময়কাল, প্রযোজ্য audience group (যেমন Undergraduate, Graduate, Diploma — বর্তমান `calender_programs`), printable PDF (hard copy), homepage-এ দেখাবে কিনা, view count |
-| Calendar Event | calendar, তারিখ বা তারিখের পরিসর (structured), তারিখের লিখিত ব্যাখ্যা (যেমন "Week 1"), title, ধরন (Class, Exam, Holiday, Registration, Result ইত্যাদি), audience group, ক্রম |
+| Calendar | title, slug, Session (আপাতত লেখা, M-05 এলে select) / বছর, সময়কাল, প্রযোজ্য Faculty (ঐচ্ছিক, বহু; খালি = সব — DIU-র "(TRI)" / "(BI)" calendar), printable PDF বা ছবি (hard copy), homepage-এ দেখাবে কিনা, ক্রম, view count *(v0.4)* |
+| Calendar Event | calendar, তারিখ বা তারিখের পরিসর (structured, ঐচ্ছিক), তারিখের লিখিত ব্যাখ্যা (যেমন "1st week of March"), title, ধরন (Class, Exam, Holiday, Registration, Result ইত্যাদি), audience group (যেমন Undergraduate, Graduate — বর্তমান `calender_programs`; খালি = সবার জন্য), ক্রম *(v0.4)* |
 
 ### Functional Requirements
 
@@ -466,12 +466,12 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 | FR-CAL-01 | Calendar CRUD; একাধিক audience group | Q-16 | Must |
 | FR-CAL-02 | Calendar Event CRUD, structured শুরু ও শেষ তারিখ এবং ঐচ্ছিক লিখিত ব্যাখ্যা | Q-16 | Must |
 | FR-CAL-03 | Event ধরন একটি Taxonomy vocabulary (রং সহ) | Q-16 | Should |
-| FR-CAL-04 | Calendar page (`/academic-calendar`): Session ও audience group দিয়ে filter; layout: Table, Month view, Timeline | BR-THM-02 | Must |
+| FR-CAL-04 | Calendar page (`/academic-calendar`): চলতি calendar আগে; বছর, Session, Faculty ও audience group দিয়ে filter; একটি calendar `/academic-calendar/{slug}`; layout: Table, Month view, Timeline *(v0.4)* | BR-THM-02 | Must |
 | FR-CAL-05 | PDF download (upload করা hard copy) | Q-16 | Must |
 | FR-CAL-06 | iCal (`.ics`) export, যাতে Google Calendar-এ যোগ করা যায় | — | Could |
 | FR-CAL-07 | Homepage section: "Upcoming Academic Dates" (পরবর্তী ৫টি event) | FR-GEN-102 | Should |
 | FR-CAL-08 | Excel import (তারিখ, title, ধরন, audience) | — | Should |
-| FR-CAL-09 | Program page-এ সংশ্লিষ্ট audience group-এর calendar link (extension point) | FR-PROG-18 | Should |
+| FR-CAL-09 | Program page-এ সংশ্লিষ্ট calendar (Program-এর Faculty-র, audience = Program level) — extension point; Faculty microsite-এ সেই faculty-র calendar *(v0.4)* | FR-PROG-18 | Should |
 
 ### Permissions
 
