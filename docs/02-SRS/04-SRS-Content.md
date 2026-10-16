@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 4: Website Content Modules |
-| Version | 0.2 — 2026-10-16: FR-NEWS-01 `active_at` (owner: নতুন table-এ `published_at` নয়) |
+| Version | 0.3 — 2026-10-16: FR-NEWS-01 `active_at` (owner: নতুন table-এ `published_at` নয়); v0.3: BRL-GAL-01 — album-এর ছবি Media Library-র ব্যবহার, আলাদা item record নয় |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md), [Part 1](01-SRS-Core.md), `project_diu` analysis |
@@ -229,7 +229,7 @@ Main homepage "Latest News" (Highlighted first, 6 টি):  এই news প্�
 
 ### Business Rules
 
-* **BRL-GAL-01:** Album item Media Library file reference করবে, copy নয়; একই ছবি একাধিক album-এ থাকতে পারবে।
+* **BRL-GAL-01:** Album item Media Library file reference করবে, copy নয়; একই ছবি একাধিক album-এ থাকতে পারবে। *(v0.3: album-এর ছবি = Media Library item-এর ব্যবহার, আলাদা item record নেই — DB-05 v1.6 §7; YouTube / Vimeo / Facebook link-এর জন্য শুধু video row।)*
 
 ### Permissions
 

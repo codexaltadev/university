@@ -123,9 +123,12 @@ Page তৈরি করে **Menu**-তে যোগ না করলে visito
 
 **Content › Gallery › + New album**
 
-* Album-এর নাম, তারিখ, cover ছবি → **Items** tab-এ ছবি যোগ (একসাথে অনেক upload করা যায়) বা YouTube / Facebook video link।
-* Album-এর ধরন: Photo, Video, Documentary, Lecture series।
-* ছবির ক্রম টেনে বদলান; প্রতিটি ছবির caption ঐচ্ছিক।
+* ছবি থাকে **Media Library**-তে — album শুধু সেগুলো ব্যবহার করে, নতুন copy হয় না। একই ছবি অনেক album, News বা Event-এ দেওয়া যায়; Media Library-তে ছবি বদলালে সবখানে বদলায়।
+* অনেক ছবি একসাথে: আগে **Media › Upload** দিয়ে একটি folder-এ (যেমন "Convocation 2026") তুলে নিন, তারপর album-এ **Add a folder** — folder-এর সব ছবি ও video একবারে যোগ হয়। অথবা **Pick from the library** দিয়ে কয়েকটি বাছুন (সেখান থেকেও upload করা যায়)।
+* ছবির ক্রম টেনে বদলান। **Caption here** ঐচ্ছিক — শুধু এই album-এর জন্য; খালি রাখলে Media Library-র caption দেখায়।
+* নাম, বিবরণ, তারিখ, **Cover** (খালি = প্রথম ছবি), **Series** (Documentary / Lecture series), **Event** (দিলে Event-এর page-এ album দেখাবে), **Category**, **Show in**।
+* YouTube / Vimeo / Facebook video: album save করার পর নিচে **Videos** tab → **New** — link, শিরোনাম, পর্ব, দৈর্ঘ্য, বক্তা (Person Picker)। Video file হলে ছবির মতোই Media Library থেকে যোগ করুন।
+* Website: `/gallery` (Photos / Videos, category), album page-এ ছবি বড় করে দেখা (← → Esc, phone-এ swipe); layout Appearance › Layouts-এ (masonry / grid / carousel)। Homepage: **Photo Gallery** ও **Video Gallery** section।
 
 ---
 

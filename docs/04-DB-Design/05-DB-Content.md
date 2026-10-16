@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-05 |
-| Version | 1.5 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section); 2026-10-16 (v1.4): §5 Notice (`active_at`, board / archive, attachment title, website, section); 2026-10-16 (v1.5): §6 Testimonials (`published_at` নেই, person, website, section) |
+| Version | 1.6 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section); 2026-10-16 (v1.4): §5 Notice (`active_at`, board / archive, attachment title, website, section); 2026-10-16 (v1.5): §6 Testimonials (`published_at` নেই, person, website, section); 2026-10-16 (v1.6): §7 Gallery (ছবি Media Library-তে, album-এ শুধু reference — `gallery_items` বাদ, link video `gallery_videos`; `album_type` বাদ; `event_images` → Event-এর Media) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 4](../02-SRS/04-SRS-Content.md), BRD v1.6 (Q-26), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -158,41 +158,52 @@ IX: `(is_pinned, active_at)` *(v1.4)*। Attachment: Media usage `field = attach
 
 ## 7. M-22 Gallery
 
-### 7.1 `gallery_albums` — B
+*(v1.6, build-এর আগে — owner 2026-10-16: "image যেন আবার individual না হয়")* ছবি ও upload করা video **Media Library-তেই থাকে**; album শুধু reference রাখে — আলাদা item table নেই, copy নেই (BRL-GAL-01)। একই ছবি News, Event, Album সবখানে একটাই file।
+
+### 7.1 `gallery_albums` — B (attachable)
 
 | Column | Type | Key / N | বর্ণনা |
 |---|---|---|---|
 | id | BIGINT UNSIGNED | PK | |
 | title | JSON | T | |
 | description | JSON | N, T | |
-| album_type | VARCHAR(10) | IX | `photo` / `video` / `mixed` |
-| series_type | VARCHAR(20) | N, IX | `documentary` / `lecture_series` (FR-GAL-04) |
-| event_id | BIGINT UNSIGNED | N, IX | Events optional (FR-GAL-06) |
-| occurred_on | DATE | N | |
-| + common | | published_at, sort_order |
+| series_type | VARCHAR(20) | N, IX | `documentary` / `lecture_series` (FR-GAL-04); খালি = সাধারণ album |
+| event_id | BIGINT UNSIGNED | N, IX | Events optional (FR-GAL-06), FK নয় |
+| occurred_on | DATE | N | কবের ছবি (listing-এর ক্রম, নতুন আগে) |
+| sort_order | INT UNSIGNED | | |
+| + common | | | `is_active`, `active_at` (`published_at` নেই) |
 
-Media: `cover`। Vocabulary: `gallery.category` (hierarchical; FR-GAL-03)।
+Media (kernel `core_media_usages`):
 
-### 7.2 `gallery_items` — B
+| field | কী | ক্রম / নিজস্ব তথ্য |
+|---|---|---|
+| `items` | album-এর ছবি ও upload করা video (Media Library item, kind image / video) | `sort_order` = album-এর ক্রম (drag); `meta.caption` (ভাষা অনুযায়ী) = এই album-এ নিজস্ব caption, না থাকলে Media item-এর caption |
+| `cover` | cover ছবি | না দিলে `items`-এর প্রথম ছবি |
+
+Vocabulary: `gallery.category` (hierarchical; FR-GAL-03)। কোথায় দেখাবে = "Show in" + main site (§1)। Album-এ ছবি / video আছে কিনা item থেকেই বোঝা যায় — `album_type` column নেই।
+
+Form: Media Picker (একসাথে অনেক বাছাই, সেখানেই upload), **Add a folder** (Media Library-র একটি folder-এর সব ছবি একবারে), drag ক্রম, প্রতি ছবির caption (ঐচ্ছিক)।
+
+### 7.2 `gallery_videos` — B (assignable: speaker)
+
+শুধু বাইরের link (YouTube / Vimeo / Facebook) — এগুলো file নয়, তাই Media Library-তে রাখা যায় না।
 
 | Column | Type | Key / N | বর্ণনা |
 |---|---|---|---|
 | id | BIGINT UNSIGNED | PK | |
 | album_id | BIGINT UNSIGNED | FK gallery_albums (cascade), IX | |
-| item_type | VARCHAR(10) | | `image` / `video` |
-| media_item_id | BIGINT UNSIGNED | N, FK core_media_items (restrict) | Image বা upload করা video (BRL-GAL-01: reference, copy নয়) |
-| video_url | VARCHAR(2048) | N | YouTube / Vimeo / Facebook |
-| video_provider | VARCHAR(20) | N | |
-| caption | JSON | N, T | |
-| speaker_name, speaker_designation, speaker_organization | JSON | N, T | Lecture series (বর্তমান `lecture_series`) |
-| episode_no | SMALLINT UNSIGNED | N | |
+| url | VARCHAR(2048) | | |
+| provider | VARCHAR(20) | | `youtube` / `vimeo` / `facebook` (url থেকে) |
+| provider_id | VARCHAR(100) | N, IX | video id (embed ও thumbnail, FR-GAL-02) |
+| title | JSON | N, T | |
+| episode_no | SMALLINT UNSIGNED | N | Lecture series / documentary পর্ব |
 | duration_seconds | INT UNSIGNED | N | |
-| sort_order | INT UNSIGNED | | |
-| ⚙ | | | |
+| sort_order | INT UNSIGNED | | album-এর মধ্যে drag |
+| + common | | | `is_active` |
 
-IX: `(album_id, sort_order)`।
+IX: `(album_id, sort_order)`। বক্তা = kernel assignment (role `speaker`, Person Picker)। Thumbnail provider থেকে (YouTube); অন্যগুলোতে album-এর cover।
 
-> Gallery item `core_media_items`-কে সরাসরি FK দিয়ে reference করে (kernel table, তাই FK নিরাপদ) — `core_media_usages`-এর বদলে, কারণ প্রতিটি item-এর নিজস্ব caption ও ক্রম আছে। Usage tracking-এর জন্য item save হলে `core_media_usages`-এ একটি row-ও লেখা হয় (FR-MEDIA-09)।
+Website: `/gallery` (album list, category filter, Photos / Videos), `/gallery/{slug}` (ছবি masonry / grid / carousel + lightbox — keyboard ও swipe, Alpine; video embed, পর্ব ও বক্তা), `/{entity}/gallery`। Layout `gallery.album` = masonry / grid / carousel, `gallery.listing` = cards / grid। Event page-এ সেই event-এর album (FR-GAL-06)। Homepage section `gallery.photos` "Photo Gallery" (সেই জায়গার album-গুলোর ছবি) ও `gallery.videos` "Video Gallery" (FR-GAL-07)। Zip download (FR-GAL-08, Could) — পরে।
 
 ---
 
@@ -371,7 +382,7 @@ Entity / main site placement: `core_relations` (Section 1)। Media: `image`।
 | Events | events_events | ১ |
 | Notice | notice_notices | ১ |
 | Testimonials | testimonials_testimonials | ১ |
-| Gallery | gallery_albums, gallery_items | ২ |
+| Gallery | gallery_albums, gallery_videos | ২ |
 | Slider | slider_slides | ১ |
 | Achievements | achievements_achievements | ১ |
 | Publications | publications_publications, publications_journals | ২ |
@@ -393,7 +404,7 @@ Entity / main site placement: `core_relations` (Section 1)। Media: `image`।
 | `notices` (৩,৩৯১; সবগুলোতে `department_id`) | notice_notices | `department_id` → Department relation; **`is_home = 1` (২,৮০৮) → `site:0` relation (main site-এ প্রকাশিত, highlight নয়)**; `view_counter` → core_view_counts; `notice_category_id` → term |
 | `notice_files` (৩,৫৩২) | Media Library + usage (`attachments`, title `meta`) | `notices.file_name` সব খালি — file শুধু `notice_files`-এ |
 | `events` (৫৬৩) | events_events | `department_id` (৫৪০) → relation; `lab_facility_id` (১২) → Lab relation; `is_home = 1` (৩৩৪) → `site:0`; `event_date` + `event_time` → starts_at; `location` → venue; `url` → registration_url বা link (manual যাচাই) |
-| `event_images` (৭৭) | gallery_albums (event-প্রতি একটি) + gallery_items | album.event_id = নতুন event |
+| `event_images` (৭৭) | Event-এর Media `gallery` (v1.6) | S03-এর পরে S16E আবার চালালে |
 | `event_categories` (৫) | `events.category` | |
 | `blog_posts` (১) + categories / tags | news_posts | News নতুন করে শুরু (Q-21); এই একটি post migrate |
 | `articles` (২৮৫) | page_pages | DB-02 Section 18 |
@@ -401,12 +412,12 @@ Entity / main site placement: `core_relations` (Section 1)। Media: `image`।
 | `testimonials` (২০; সবগুলো Program-এর — `App\Models\DepartmentProgramType`) | testimonials_testimonials | `testimonialable_id` → Program relation; নাম / পদবি / প্রতিষ্ঠান / ছবি → manual person + assignment |
 | `mba_testimonials` (৫) | testimonials_testimonials | MBA Program relation |
 | `gallery_categories` (১৪), `gallery_sub_categories` (১৮) | `gallery.category` (hierarchical) | `assign_department` → album-এর Department relation |
-| `gallery_photos` (২৪৬) | gallery_albums (sub-category অনুযায়ী) + gallery_items | `is_home = 1` (২৮) → album-এর `site:0` |
+| `gallery_photos` (২৪৬) | gallery_albums (sub-category অনুযায়ী; sub-category নেই → category-র নামে) + Media `items` | ছবি S03-এ Media Library-তে একবার, album-এ শুধু reference; `photo_title` → `meta.caption`; department → album-এর relation; `is_home = 1` (২৮) → album main site-এ |
 | `gallery_folders` (৪) | Media Library folder | |
-| `lab_galleries` (৫৬৪) | gallery_albums (Lab-প্রতি) + items, Lab relation | DB-06-এ Lab id mapping |
-| `documentaries` (২৭) | gallery album (`series_type = documentary`, video) | `department_id` / `lab_facility_id` → relation |
-| `lecture_series` (১৬) | gallery album (`lecture_series`) + items | speaker field |
-| `program_videos` (২) | gallery video item, Program relation | |
+| `lab_galleries` (৫৬৪) | gallery_albums (Lab-প্রতি) + Media `items`, Lab relation | Lab module-এর পরে (DB-06 Lab id mapping) |
+| `documentaries` (২৭) | gallery_videos — department-প্রতি একটি album "Documentaries" (`series_type = documentary`) | `department_id` → album-এর relation; lab-এরগুলো Lab module-এর পরে |
+| `lecture_series` (১৬) | gallery_videos — album "Lecture Series" (`lecture_series`, main site) | `lecture_no` → `episode_no`, `serial` → ক্রম, বক্তা → manual person (role `speaker`) |
+| `program_videos` (২) | gallery_videos — album "Program Videos" | কোন Program — review |
 | `sliders` (১৫৩) | slider_slides (`hero`) | `department_id` / `lab_facility_id` → relation; `show_departments` → একাধিক Department relation; `is_home` → `site:0` |
 | `cover_photos` (১৩) | slider_slides (`page_banner`), Department relation | |
 | `program_sliders` (৩), `mba_sliders` (৪) | slider_slides (`hero`), Program relation | `first_point` … `fourth_point` → bullets; দুটি button → buttons |

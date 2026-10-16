@@ -69,6 +69,14 @@
                     </div>
                 </section>
             @endif
+
+            {{-- What other modules add to an event (Gallery's albums, FR-GAL-06) — kernel EntityTabs --}}
+            @foreach (app(\Platform\Website\EntityTabs::class)->render($event) as $tab)
+                <section id="{{ $tab['key'] }}" style="margin-top:var(--space-8, 32px)">
+                    <h2>{{ $tab['label'] }}</h2>
+                    {!! $tab['html'] !!}
+                </section>
+            @endforeach
         </div>
     </article>
 </x-theme::layout>

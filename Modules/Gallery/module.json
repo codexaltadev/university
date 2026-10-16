@@ -1,0 +1,56 @@
+{
+    "name": "Gallery",
+    "alias": "gallery",
+    "description": "Photo and video albums from the Media Library — M-22",
+    "keywords": [
+        "content",
+        "gallery"
+    ],
+    "priority": 70,
+    "providers": [
+        "Modules\\Gallery\\Providers\\GalleryServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "gallery",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "gallery_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "events"
+        ],
+        "morph_aliases": {
+            "gallery.album": "Modules\\Gallery\\Models\\Album",
+            "gallery.video": "Modules\\Gallery\\Models\\Video"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true,
+            "assignable": true,
+            "searchable": true,
+            "sitemap": true,
+            "menu_item_types": true,
+            "website_pages": true,
+            "vocabularies": [
+                "gallery.category"
+            ],
+            "homepage_sections": [
+                "gallery.photos",
+                "gallery.videos"
+            ],
+            "layouts": [
+                "gallery.album",
+                "gallery.listing"
+            ],
+            "entity_tabs": true
+        }
+    }
+}
