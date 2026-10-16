@@ -135,7 +135,7 @@ class CommitteeResource extends Resource
                 SelectFilter::make('category_term_id')->label(__('committee::committee.fields.category'))
                     ->options(fn (): array => app(Vocabularies::class)->options(Committee::CATEGORY)),
                 TernaryFilter::make('previous')->label(__('committee::committee.previous_term'))
-                    ->queries(true: fn (Builder $q) => $q->where('term_ends_on', '<', Carbon::today()->toDateString()), false: fn (Builder $q) => $q->running(), blank: fn (Builder $q) => $q),
+                    ->queries(true: fn (Builder $query) => $query->where('term_ends_on', '<', Carbon::today()->toDateString()), false: fn (Builder $query) => $query->running(), blank: fn (Builder $query) => $query),
                 TrashedFilter::make(),
             ])
             ->recordActions([static::copyAction(), EditAction::make(), DeleteAction::make(), RestoreAction::make(), ForceDeleteAction::make()]);

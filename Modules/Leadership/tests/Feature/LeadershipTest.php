@@ -94,6 +94,10 @@ it('appoints from the position page, offering to end the current term (FR-LEAD-0
 
     expect($this->vc->terms()->current()->get()->map->name()->all())->toBe(['Prof. Rahman'])
         ->and($this->kabirTerm->fresh()->assignment->ends_on->toDateString())->toBe('2026-02-28');
+
+    Livewire::test(TermsRelationManager::class, ['ownerRecord' => $this->vc, 'pageClass' => EditPosition::class])
+        ->filterTable('former', true)->assertCanSeeTableRecords([$this->kabirTerm])
+        ->filterTable('former', false)->assertCanNotSeeTableRecords([$this->kabirTerm]);
 });
 
 it('hides people who left or terms that are not public', function () {

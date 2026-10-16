@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-04 |
-| Version | 1.4 — 2026-10-11 (v1.1): §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত); 2026-10-16 (v1.2): §4 Administration সরলীকরণ — contact visibility তিনটি column, campus ও user link পরে, Office scope, website গঠন; 2026-10-16 (v1.3): §6 Leadership — role holder / member, term-এর address, former, migration নেই; 2026-10-16 (v1.4): §7 Committee — is_active, Show in, PeopleManager note, website, term copy |
+| Version | 1.5 — 2026-10-11 (v1.1): §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত); 2026-10-16 (v1.2): §4 Administration সরলীকরণ — contact visibility তিনটি column, campus ও user link পরে, Office scope, website গঠন; 2026-10-16 (v1.3): §6 Leadership — role holder / member, term-এর address, former, migration নেই; 2026-10-16 (v1.4): §7 Committee — is_active, Show in, PeopleManager note, website, term copy; 2026-10-16 (v1.5): §8 Alumni — is_active, contact switches, faculty member link পরে, Pride section, website |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 3](../02-SRS/03-SRS-People.md), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -220,6 +220,8 @@ Homepage-এ কোন পদের বার্তা — Homepage section sett
 
 ## 8. M-17 Alumni — `alumni_alumni` — B (Person Source)
 
+> *v1.5 (2026-10-16, build-এর আগে, সরলীকরণ):* `published_at` নেই — ⚙-এর `is_active` (public form-এর জমা `is_active = 0`, Alumni Office চালু করলে প্রকাশ)। `contact_visibility` JSON-এর বদলে `show_email`, `show_phone`, `show_address` (default 0, FR-ALUM-06) — Administration-এর মতো। `faculty_member_id` এখন নেই (M-07 Faculty Member এলে)। Video = `video_url` (YouTube / Drive link); upload করা video file পরে Media-তে। Homepage "Our Pride Alumni" = `is_pride` alumni ক্রম অনুযায়ী (আলাদা "homepage-এ দেখাবে" flag ও highlight নেই)। Scope: Department / Program user নিজের alumni (`department_id`, `program_id`); Program দিলে Department তার থেকে আসে। Website: `/alumni` (filter Department, Program, batch, পাসের বছর, চাকরির ধরন, প্রতিষ্ঠান / নাম search; grid / list / cards), `/alumni/{slug}`, `/alumni/submit` (public form, honeypot + throttle), microsite `/{department|program}/alumni`।
+
 | Column | Type | Key / N | Default | বর্ণনা |
 |---|---|---|---|---|
 | id | BIGINT UNSIGNED | PK | | |
@@ -238,10 +240,10 @@ Homepage-এ কোন পদের বার্তা — Homepage section sett
 | video_url | VARCHAR(2048) | N | | YouTube ইত্যাদি |
 | story | JSON | N, T | | বিস্তারিত |
 | is_pride | TINYINT(1) | IX | 0 | Pride Alumni (FR-ALUM-04) |
-| faculty_member_id | BIGINT UNSIGNED | N, IX | | এখন শিক্ষক (FR-ALUM-08) |
-| contact_visibility | JSON | N | | Default সব `false` (FR-ALUM-06) |
+| ~~faculty_member_id~~ | | | | *v1.5:* M-07-এর সাথে (FR-ALUM-08) |
+| show_email, show_phone, show_address *(v1.5)* | TINYINT(1) | | 0, 0, 0 | Website-এ দেখাবে কিনা (FR-ALUM-06) |
 | submission_source | VARCHAR(20) | | `admin` | `admin` / `public_form` (FR-ALUM-07) |
-| published_at | TIMESTAMP | N | | Public form-এর জমা `is_active = 0` অবস্থায় আসে; Alumni Office active করলে প্রকাশ (FR-ALUM-07) |
+| ~~published_at~~ | | | | *v1.5:* `is_active` — public form-এর জমা `is_active = 0`; Alumni Office active করলে প্রকাশ (FR-ALUM-07) |
 | sort_order | INT UNSIGNED | | 0 | |
 | ⚙ | | | | |
 

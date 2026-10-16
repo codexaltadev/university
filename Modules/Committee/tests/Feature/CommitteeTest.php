@@ -15,6 +15,7 @@ use Modules\Administration\Models\Member;
 use Modules\Committee\Database\Seeders\CommitteeDatabaseSeeder;
 use Modules\Committee\Filament\Resources\Committees\Pages\CreateCommittee;
 use Modules\Committee\Filament\Resources\Committees\Pages\EditCommittee;
+use Modules\Committee\Filament\Resources\Committees\Pages\ListCommittees;
 use Modules\Committee\Models\Committee;
 use Modules\Office\Models\Office;
 use Platform\Assignments\AssignmentEngine;
@@ -114,6 +115,8 @@ it('starts a new term with today\'s members and keeps the old one as a previous 
 
     $this->actingAs(superAdmin());
     Livewire::test(EditCommittee::class, ['record' => $this->syndicate->id])->assertActionHidden('newTerm');   // already has a next term
+    Livewire::test(ListCommittees::class)->filterTable('previous', true)
+        ->assertCanSeeTableRecords([$this->syndicate])->assertCanNotSeeTableRecords([$next]);
 });
 
 it('puts committees in search and the sitemap', function () {

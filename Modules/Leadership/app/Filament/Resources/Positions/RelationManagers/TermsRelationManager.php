@@ -77,7 +77,7 @@ class TermsRelationManager extends RelationManager
             ])
             ->filters([
                 TernaryFilter::make('former')->label(__('leadership::leadership.former_one'))
-                    ->queries(true: fn (Builder $q) => $q->former(), false: fn (Builder $q) => $q->current(), blank: fn (Builder $q) => $q),
+                    ->queries(true: fn (Builder $query) => $query->former(), false: fn (Builder $query) => $query->current(), blank: fn (Builder $query) => $query),
             ])
             ->headerActions([
                 CreateAction::make()->label(__('leadership::leadership.appoint'))->modalWidth('4xl')

@@ -1,0 +1,16 @@
+{
+    "name": "uwms/alumni",
+    "description": "Alumni module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Alumni\\": "app/",
+            "Modules\\Alumni\\Database\\Factories\\": "database/factories/",
+            "Modules\\Alumni\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Alumni\\Tests\\": "tests/" }
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "name": "Alumni",
+    "alias": "alumni",
+    "description": "Alumni directory, stories and Pride Alumni; a person source, /alumni — M-17",
+    "keywords": [
+        "people",
+        "alumni"
+    ],
+    "priority": 66,
+    "providers": [
+        "Modules\\Alumni\\Providers\\AlumniServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "alumni",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "alumni_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "department",
+            "program"
+        ],
+        "morph_aliases": {
+            "alumni.alumnus": "Modules\\Alumni\\Models\\Alumnus"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "person_source": true,
+            "scopeable": true,
+            "searchable": true,
+            "sitemap": true,
+            "menu_item_types": true,
+            "website_pages": true,
+            "homepage_sections": [
+                "alumni.pride"
+            ],
+            "layouts": [
+                "alumni.directory"
+            ]
+        }
+    }
+}
