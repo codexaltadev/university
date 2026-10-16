@@ -2,6 +2,7 @@
 
 namespace Legacy\Migration\Steps;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Schema;
 use Legacy\Migration\Support\Normalizer;
@@ -9,7 +10,6 @@ use Modules\Office\Models\Office;
 use Modules\Office\Models\OfficeSection;
 use Modules\Office\Models\OfficeSupportContact;
 use Platform\Assignments\Assignment;
-use Platform\Assignments\ManualPerson;
 use Platform\Assignments\RoleCatalog;
 
 /**
@@ -199,7 +199,7 @@ class S10Offices extends Step
     }
 
     /** @param array<string, string> $overrides */
-    protected function assign(string $table, object $row, ManualPerson $person, $place, string $role, int $order, bool $public, array $overrides = []): void
+    protected function assign(string $table, object $row, Model $person, $place, string $role, int $order, bool $public, array $overrides = []): void
     {
         $this->upsert($table, $row, Assignment::class, [
             'person_type' => $person->getMorphClass(),

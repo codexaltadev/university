@@ -116,14 +116,19 @@ abstract class Step
     }
 
     /**
-     * The manual person for a legacy admin (DB-04 v1.1 §11.1): one per admin, shared by every
-     * step (admission contacts, office team, support contacts …) until the Administration module
-     * (S11) turns them into staff members. Null when the admin does not exist.
+     * The person for a legacy admin (DB-04 v1.1 §11.1): their Administration member once S11 has
+     * run, else one manual person per admin, shared by every step (admission contacts, office
+     * team, support contacts …). Null when the admin does not exist.
      */
-    protected function adminPerson(int|string|null $adminId): ?ManualPerson
+    protected function adminPerson(int|string|null $adminId): ?Model
     {
         if (blank($adminId) || (int) $adminId === 0) {
             return null;
+        }
+
+        $member = 'Modules\\Administration\\Models\\Member';
+        if (class_exists($member) && ($found = $this->ids->record('admins', $adminId, $member))) {
+            return $found;
         }
 
         $this->admins ??= $this->legacy()->table('admins')->get()->keyBy('id');

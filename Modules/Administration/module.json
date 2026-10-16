@@ -1,0 +1,49 @@
+{
+    "name": "Administration",
+    "alias": "administration",
+    "description": "Everyone but teachers — management, officers and support staff; a person source, /administration — M-13",
+    "keywords": [
+        "people",
+        "administration",
+        "staff"
+    ],
+    "priority": 63,
+    "providers": [
+        "Modules\\Administration\\Providers\\AdministrationServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "administration",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "administration_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "office"
+        ],
+        "morph_aliases": {
+            "administration.category": "Modules\\Administration\\Models\\AdministrationCategory",
+            "administration.member": "Modules\\Administration\\Models\\Member"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "person_source": true,
+            "scopeable": true,
+            "searchable": true,
+            "sitemap": true,
+            "menu_item_types": true,
+            "website_pages": true,
+            "layouts": [
+                "administration.directory"
+            ],
+            "settings": true
+        }
+    }
+}

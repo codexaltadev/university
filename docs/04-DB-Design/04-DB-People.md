@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-04 |
-| Version | 1.1 — 2026-10-11: §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত) |
+| Version | 1.2 — 2026-10-11 (v1.1): §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত); 2026-10-16 (v1.2): §4 Administration সরলীকরণ — contact visibility তিনটি column, campus ও user link পরে, Office scope, website গঠন |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 3](../02-SRS/03-SRS-People.md), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -116,6 +116,8 @@ IX (প্রতিটিতে): `(office_id, is_active, sort_order)`। `offic
 
 শিক্ষক ছাড়া সব employee — উচ্চ ব্যবস্থাপনা, কর্মকর্তা ও সহায়ক কর্মী — **একটি** table-এ। কে কোথায় কোন ভূমিকায় দেখাবেন তা `core_assignments` দিয়ে।
 
+> *v1.2 (2026-10-16, build-এর আগে, সরলীকরণ):* `contact_visibility` JSON-এর বদলে তিনটি সাধারণ column `show_email`, `show_phone`, `show_extension` (form, filter ও query সহজ)। `campus_id` এখন নেই — M-08 Campus module এলে যোগ হবে। `user_id` (FR-ADMN-08, Could) এখন নেই — self-service profile পরে। Office scope (BRL-ADMN-02): Office user-এর list-এ primary Office তার scope-এ এমন member। Profile page `/administration/{slug}` (Settings › Administration-এ বন্ধ করা যায়); directory `/administration` — group / category / Office filter, নাম ও পদবি search, layout grid / list / table। Inactive member presenter-এ inactive, তাই সব assignment থেকে নিজে থেকেই লুকায় (FR-ADMN-09)।
+
 ### 4.1 `administration_categories` — B
 
 একটি ক্রমযুক্ত তালিকা (উচ্চ → নিম্ন)। Taxonomy-র বদলে নিজস্ব table, কারণ `group` ও `is_public` business নিয়ম।
@@ -139,13 +141,13 @@ IX (প্রতিটিতে): `(office_id, is_active, sort_order)`। `offic
 | name | JSON | T | | |
 | designation | JSON | N, T | | Free text: "Director (F & A)" |
 | primary_office_id | BIGINT UNSIGNED | N, IX | | Office optional → FK নয় |
-| campus_id | BIGINT UNSIGNED | N, IX | | |
+| ~~campus_id~~ | | | | *v1.2:* M-08 Campus-এর সাথে আসবে |
 | email | VARCHAR(191) | N, IX | | Dedupe ও lookup |
 | phone | VARCHAR(50) | N | | |
 | extension | VARCHAR(20) | N | | |
 | biography | JSON | N, T | | |
-| contact_visibility | JSON | N | | `{email: true, phone: false, extension: true}` (FR-ADMN-07) |
-| user_id | BIGINT UNSIGNED | N, FK users (set null), UQ | | Self-service (FR-ADMN-08) |
+| show_email, show_phone, show_extension *(v1.2)* | TINYINT(1) | | 1, 1, 1 | Website-এ দেখাবে কিনা (FR-ADMN-07) |
+| ~~user_id~~ | | | | *v1.2:* self-service (FR-ADMN-08) পরে |
 | sort_order | INT UNSIGNED | | 0 | Category-র ভেতরে ক্রম |
 | ⚙ | | | | |
 
