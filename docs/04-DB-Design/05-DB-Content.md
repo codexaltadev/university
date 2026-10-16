@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-05 |
-| Version | 1.7 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section); 2026-10-16 (v1.4): §5 Notice (`active_at`, board / archive, attachment title, website, section); 2026-10-16 (v1.5): §6 Testimonials (`published_at` নেই, person, website, section); 2026-10-16 (v1.6): §7 Gallery (ছবি Media Library-তে, album-এ শুধু reference — `gallery_items` বাদ, link video `gallery_videos`; `album_type` বাদ; `event_images` → Event-এর Media); 2026-10-16 (v1.7): §8 Slider / Hero (এক slide = স্থির hero, অনেক = slider, background video; `active_at` / `expires_at`, `body` বাদ, `video_on_mobile`; section `slider.hero`, fallback) |
+| Version | 1.8 — 2026-10-11 (v1.1): §13 FAQ (question / answer ভাষা অনুযায়ী, `published_at` নেই — `is_active`; সময় লাগলে `active_at`), §18 FAQ mapping; 2026-10-16 (v1.2): §2 common column `active_at`, §3 News (website, homepage section, migration); 2026-10-16 (v1.3): §4 Events (Campus ও Gallery আসা পর্যন্ত লেখা venue ও Media gallery, website, section); 2026-10-16 (v1.4): §5 Notice (`active_at`, board / archive, attachment title, website, section); 2026-10-16 (v1.5): §6 Testimonials (`published_at` নেই, person, website, section); 2026-10-16 (v1.6): §7 Gallery (ছবি Media Library-তে, album-এ শুধু reference — `gallery_items` বাদ, link video `gallery_videos`; `album_type` বাদ; `event_images` → Event-এর Media); 2026-10-16 (v1.7): §8 Slider / Hero (এক slide = স্থির hero, অনেক = slider, background video; `active_at` / `expires_at`, `body` বাদ, `video_on_mobile`; section `slider.hero`, fallback); 2026-10-16 (v1.8): §9 Achievements (`active_at`, অর্জনকারী Person Picker, `team_name`, `related_post_id`, website, section, metric) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 4](../02-SRS/04-SRS-Content.md), BRD v1.6 (Q-26), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -231,7 +231,9 @@ Media (Media Library reference, copy নয়): `image_desktop` (দরকা�
 
 ---
 
-## 9. M-24 Achievements — `achievements_achievements` — B
+## 9. M-24 Achievements — `achievements_achievements` — B (attachable, assignable)
+
+*(v1.8, build-এর আগে — owner 2026-10-16: নতুন application-এর standard বজায় থাকবে, পুরোনো design দেখে বদলাবে না। Legacy-তে achievement table নেই — নতুন করে শুরু, migration step নেই।)*
 
 | Column | Type | Key / N | বর্ণনা |
 |---|---|---|---|
@@ -239,15 +241,18 @@ Media (Media Library reference, copy নয়): `image_desktop` (দরকা�
 | title | JSON | T | |
 | summary | JSON | N, T | |
 | body | JSON | N, T | |
-| achieved_on | DATE | IX | |
-| achievers | JSON | N, T | ছাত্র / দল / শিক্ষকের নাম (free text) |
+| achieved_on | DATE | IX | listing-এর ক্রম (নতুন আগে), বছর filter |
+| team_name | JSON | N, T | দলের নাম ("Team DIU Mavericks"); ব্যক্তিরা assignment-এ |
 | competition | JSON | N, T | প্রতিযোগিতা / award |
 | issuer | JSON | N, T | প্রদানকারী প্রতিষ্ঠান |
 | level | VARCHAR(20) | IX | `international` / `national` / `regional` / `institutional` |
 | position_label | JSON | N, T | "Champion", "Runner-up" |
-| + common | | published_at |
+| related_post_id | BIGINT UNSIGNED | N, IX | একই অর্জনের News post (FR-ACH-04); News optional, তাই FK নয় |
+| + common | | | `is_active`, `active_at` (`published_at` নেই) |
 
-Media: `image`, `gallery`। Vocabulary: `achievements.category`।
+অর্জনকারী = kernel assignment (role `achiever`, Person Picker — Faculty Member, Alumni, Administration বা manual person; নিজস্ব note, যেমন "Team lead") — free-text `achievers` column বাদ। Media (Media Library reference): `image` (cover), `gallery`। Vocabulary: `achievements.category`। কোথায় দেখাবে = "Show in" + main site (§1), Highlight।
+
+Website: `/achievements`, `/{entity}/achievements` — বছর, level, category filter; layout `achievements.listing` = cards / timeline / grid (FR-ACH-02); `/achievements/{slug}` — ছবি (lightbox), অর্জনকারী, প্রতিযোগিতা, প্রদানকারী, JSON-LD। Homepage section `achievements.recent` "Recent Achievements" (source mode, level filter); metric `achievements.count` (level অনুযায়ী — "100+ International Awards", FR-ACH-03)। Related News (FR-ACH-04, Could): `related_post_id` — News module থাকলে form-এ post বাছাই, detail page-এ link। View count, search, sitemap।
 
 ---
 

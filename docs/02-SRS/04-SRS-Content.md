@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 4: Website Content Modules |
-| Version | 0.4 — 2026-10-16: FR-NEWS-01 `active_at` (owner: নতুন table-এ `published_at` নয়); v0.3: BRL-GAL-01 — album-এর ছবি Media Library-র ব্যবহার, আলাদা item record নয়; v0.4: FR-SLD-04/05 — hero video, একটি slide = স্থির hero |
+| Version | 0.5 — 2026-10-16: FR-NEWS-01 `active_at` (owner: নতুন table-এ `published_at` নয়); v0.3: BRL-GAL-01 — album-এর ছবি Media Library-র ব্যবহার, আলাদা item record নয়; v0.4: FR-SLD-04/05 — hero video, একটি slide = স্থির hero; v0.5: FR-ACH-01 — অর্জনকারী Person Picker |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md), [Part 1](01-SRS-Core.md), `project_diu` analysis |
@@ -275,7 +275,7 @@ Main homepage "Latest News" (Highlighted first, 6 টি):  এই news প্�
 
 | ID | Requirement | BRD Ref | Priority |
 |---|---|---|---|
-| FR-ACH-01 | Achievement CRUD | — | Must |
+| FR-ACH-01 | Achievement CRUD *(v0.5: অর্জনকারী Person Picker দিয়ে, দলের নাম ঐচ্ছিক — DB-05 v1.8 §9)* | FR-REL-09 | Must |
 | FR-ACH-02 | Listing: বছর, পর্যায়, category, entity দিয়ে filter; layout: Card, Timeline, Grid | BR-THM-02 | Must |
 | FR-ACH-03 | Homepage section: "Recent Achievements", counter ("100+ International Awards") | FR-GEN-102 | Should |
 | FR-ACH-04 | Related News link (একই অর্জনের সংবাদ) | — | Could |

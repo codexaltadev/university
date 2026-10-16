@@ -193,7 +193,11 @@ Page তৈরি করে **Menu**-তে যোগ না করলে visito
 
 ## 10. Achievement ও Testimonial
 
-* **Achievements:** পুরস্কার, প্রতিযোগিতা জয় — title, তারিখ, ছবি, অংশগ্রহণকারী (Person picker)।
+* **Achievements** (**Content › Achievements**): পুরস্কার, প্রতিযোগিতা জয়।
+  * Title, তারিখ, **Level** (International / National / Regional / Institutional), প্রতিযোগিতা / পুরস্কার, প্রদানকারী, স্থান (Champion, Runner-up …), দলের নাম, বিস্তারিত।
+  * **Achieved by** — Person Picker দিয়ে শিক্ষার্থী, শিক্ষক বা alumni (তাঁদের directory থেকে নাম-ছবি আসে) বা নতুন ব্যক্তি; প্রত্যেকের note (যেমন "Team lead")।
+  * ছবি ও আরো ছবি Media Library থেকে; **Related news** — একই অর্জনের সংবাদ থাকলে বেছে দিন।
+  * **Show in** দিয়ে department / program / club-এ; Admin চাইলে main site-এ। Website: `/achievements` (বছর, level, category; cards / timeline / grid)। Homepage: **Recent Achievements** section (চাইলে শুধু International)। Statistics-এ counter: **Achievements** metric, level দিয়ে (যেমন "100+ International Awards")।
 * **Testimonials** (**Content › Testimonials**): শিক্ষার্থী, alumni, অভিভাবক, নিয়োগকর্তা বা অংশীদারের কথা।
   1. **Person** — Faculty Members, Administration বা Alumni থেকে খুঁজুন (নাম, ছবি, পদবি সেখান থেকে আসবে), না পেলে **+** দিয়ে নতুন ব্যক্তি যোগ করুন।
   2. **Their title here** — নামের নিচে পদবির বদলে দেখাবে, যেমন "Parent of a CSE student"। খালি রাখলে পদবি দেখাবে।

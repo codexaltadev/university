@@ -1,0 +1,55 @@
+{
+    "name": "Achievements",
+    "alias": "achievements",
+    "description": "Awards and competition wins of students, teams and teachers — M-24",
+    "keywords": [
+        "content",
+        "achievements"
+    ],
+    "priority": 70,
+    "providers": [
+        "Modules\\Achievements\\Providers\\AchievementsServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "achievements",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "achievements_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "news"
+        ],
+        "morph_aliases": {
+            "achievements.achievement": "Modules\\Achievements\\Models\\Achievement"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true,
+            "assignable": true,
+            "searchable": true,
+            "sitemap": true,
+            "menu_item_types": true,
+            "website_pages": true,
+            "vocabularies": [
+                "achievements.category"
+            ],
+            "homepage_sections": [
+                "achievements.recent"
+            ],
+            "layouts": [
+                "achievements.listing"
+            ],
+            "metrics": [
+                "achievements.count"
+            ]
+        }
+    }
+}

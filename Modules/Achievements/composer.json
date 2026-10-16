@@ -1,0 +1,16 @@
+{
+    "name": "uwms/achievements",
+    "description": "Achievements module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Achievements\\": "app/",
+            "Modules\\Achievements\\Database\\Factories\\": "database/factories/",
+            "Modules\\Achievements\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Achievements\\Tests\\": "tests/" }
+    }
+}
