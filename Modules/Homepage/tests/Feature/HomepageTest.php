@@ -7,7 +7,9 @@
 */
 
 use Filament\Facades\Filament;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Modules\Faq\Models\Faq;
@@ -15,6 +17,7 @@ use Modules\Homepage\Database\Seeders\HomepageDatabaseSeeder;
 use Modules\Homepage\Filament\Pages\ManageHomepage;
 use Modules\Homepage\Models\HomeSection;
 use Modules\Homepage\Models\Layout;
+use Modules\Homepage\Support\CachedItems;
 use Modules\Homepage\Support\Homepages;
 use Platform\Context\MicrositeOwners;
 use Platform\Media\MediaLibrary;
@@ -89,6 +92,29 @@ it('fills content sections from the homepage\'s own context, highlights first (F
     $layout->sections()->first()->update(['settings' => ['source_mode' => 'manual', 'manual_ids' => [$new->id]]]);
     Homepages::flush();
     expect($this->homepages->forOwner(($this->k)($this->cse))[0]['items']->pluck('question')->all())->toBe(['CSE question']);
+});
+
+it('reads section items back from a real cache store, where objects are not unserialized', function () {
+    config(['cache.default' => 'database']);   // serializes like production (cache.serializable_classes = false)
+    Cache::store('database')->flush();
+
+    $faq = Faq::factory()->create(['question' => 'Cached question']);
+    app(RelationEngine::class)->sync($faq, [], mainSite: true, user: null);
+    ($this->layoutWith)('site:0', [['section_type' => 'faq.highlights', 'settings' => ['source_mode' => 'latest']]]);
+
+    $first = $this->homepages->forOwner('site:0')[0]['items'];
+    $second = $this->homepages->forOwner('site:0')[0]['items'];   // from the cache
+    expect($second)->toBeInstanceOf(Collection::class)
+        ->and($second->first())->toBeInstanceOf(Faq::class)
+        ->and($second->pluck('question')->all())->toBe($first->pluck('question')->all());
+
+    // Nested shapes (News by Category: [category, posts]) survive too, in order
+    $frozen = CachedItems::freeze(collect([['category' => $faq, 'posts' => Faq::query()->get()], 'plain' => 3]));
+    expect(unserialize(serialize($frozen), ['allowed_classes' => false]))->toBe($frozen);
+    $thawed = CachedItems::thaw($frozen);
+    expect($thawed[0]['category']->is($faq))->toBeTrue()
+        ->and($thawed[0]['posts'])->toBeInstanceOf(Collection::class)
+        ->and($thawed['plain'])->toBe(3);
 });
 
 it('uses the theme default without an own active homepage, and can start from the main one (FR-HOME-08/10)', function () {

@@ -111,8 +111,9 @@ class Homepages
                     'heading' => $section->getTranslation('heading', $locale, true) ?: null,
                     'subheading' => $section->getTranslation('subheading', $locale, true) ?: null,
                     'settings' => (array) $section->settings,
-                    'items' => Cache::remember("homepage:{$version}:{$section->id}:{$locale}", 600,
-                        fn () => UserScopeFilter::withoutScope(fn () => app($class)->items($ctx))),
+                    // Cached as plain values (models as [class, id]) — the cache unserializes no objects
+                    'items' => UserScopeFilter::withoutScope(fn () => CachedItems::thaw(Cache::remember("homepage:{$version}:{$section->id}:{$locale}", 600,
+                        fn () => CachedItems::freeze(app($class)->items($ctx))))),
                 ];
             })
             ->values()->all();
