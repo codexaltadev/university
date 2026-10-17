@@ -13,7 +13,7 @@ use Platform\Settings\ModuleSettings;
 /** FR-SET-03: social media links, any platform. */
 class SocialSettings extends ModuleSettings
 {
-    public const PLATFORMS = ['facebook' => 'Facebook', 'youtube' => 'YouTube', 'linkedin' => 'LinkedIn', 'x' => 'X', 'instagram' => 'Instagram', 'tiktok' => 'TikTok', 'whatsapp' => 'WhatsApp'];
+    public const PLATFORMS = ['facebook' => 'Facebook', 'youtube' => 'YouTube', 'linkedin' => 'LinkedIn', 'x' => 'X', 'twitter' => 'Twitter', 'instagram' => 'Instagram', 'tiktok' => 'TikTok', 'whatsapp' => 'WhatsApp', 'pinterest' => 'Pinterest', 'email' => 'Email'];
 
     public function group(): string
     {
@@ -52,7 +52,9 @@ class SocialSettings extends ModuleSettings
                         ->required(fn (Get $get): bool => $get('platform') === 'other')
                         ->visible(fn (Get $get): bool => $get('platform') === 'other')
                         ->maxLength(50),
-                    TextInput::make('url')->label(__('settings::settings.fields.url'))->url()->required()->maxLength(500),
+                    // A web address, or mailto: for the Email platform
+                    TextInput::make('url')->label(__('settings::settings.fields.url'))->required()->maxLength(500)
+                        ->rule('regex:/^(https?:\/\/|mailto:)\S+$/i'),
                 ])
                 ->columns(3)
                 ->reorderable()

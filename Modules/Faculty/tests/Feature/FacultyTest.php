@@ -130,7 +130,7 @@ it('shows a default microsite home with overview, Dean and counters (AC-FAC-01, 
         ->assertSee('Welcome to FSIT.')
         ->assertSee('Prof. Dr. Touhid Bhuiyan')
         ->assertSee('12,000+')
-        ->assertSee('microsite-bar', false);                    // the theme's microsite layout, main menu fallback
+        ->assertSee('microsite-name', false);                    // the theme's microsite layout, main menu fallback
 
     $this->get('/bn'.$this->fsit->url('bn'))->assertOk()->assertSee('বিজ্ঞান ও তথ্যপ্রযুক্তি অনুষদ');
 });

@@ -52,12 +52,13 @@ it('styles every class of the module UI contract', function (string $class) {
     'page', 'page__title', 'page-grid', 'home-section', 'home-section__title', 'home-section__sub',
 ]);
 
-it('takes colours only from the design tokens (T-2)', function () {
+it('takes brand colours only from the design tokens (T-2)', function () {
     $css = defaultThemeCss();
 
-    // No palette and no theme-written token values: the kernel's :root decides
-    expect($css)->not->toMatch('/--color-(red|blue|green|gray|slate|zinc|neutral)-\d+/')
-        ->and($css)->not->toMatch('/--color-primary:\s*var\(--color-primary\)/')
+    // Tailwind's palette stays for DIU's greys and accents (owner 2026-10-17: a copy of the live
+    // site); the brand colours are the kernel's :root values, never written by the theme
+    expect($css)->not->toMatch('/--color-(primary|secondary|accent):\s*(#|var\(--color-(primary|secondary|accent)\))/')
+        ->and($css)->not->toMatch('/--text-base:\s*var\(/')   // Tailwind's type scale, not the kernel's variable
         ->and($css)->toContain('var(--color-primary)');
 
     $sources = collect(File::allFiles(defaultThemePath('views')))

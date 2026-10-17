@@ -1,4 +1,4 @@
-{{-- The Newsletter module's form, while it is on (T-4) --}}
+{{-- The Newsletter module's sign-up form, while it is on (T-4) --}}
 @moduleActive('newsletter')
-    @includeIf('newsletter::livewire.subscribe-form')
+    <livewire:newsletter.subscribe source="footer" :compact="true" />
 @endmoduleActive

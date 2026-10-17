@@ -5,20 +5,20 @@
     "requires_core": "^1.0",
     "author": { "name": "DIU Web Team", "email": "web@example.edu" },
     "license": "proprietary",
-    "description": "The bundled website theme: clean header with the primary menu, column footer and token-based colours.",
+    "description": "The bundled website theme — the look of daffodilvarsity.edu.bd: glass header with utility links and mega menus, grid launcher, campus footer.",
     "screenshot": "screenshot.png",
 
     "layouts": {},
 
     "menu_locations": {
         "primary": "Primary (header)",
-        "topbar": "Top bar",
+        "topbar": "Utility links (above the primary menu)",
         "footer-1": "Footer column 1",
         "footer-2": "Footer column 2",
         "footer-3": "Footer column 3",
         "footer-4": "Footer column 4",
         "quick-links": "Quick links",
-        "quick-links-icon": "Quick links (icon tiles)",
+        "quick-links-icon": "Services (grid icon in the header)",
         "sidebar": "Sidebar"
     },
 
@@ -34,15 +34,24 @@
         "color-secondary": "#002652",
         "color-accent": "#39B54A",
         "color-surface": "#F3F4F9",
-        "font-heading": "Montserrat",
+        "font-heading": "Manrope",
         "font-body": "Manrope",
         "font-bn": "Hind Siliguri"
     },
 
     "options": [
-        { "key": "sticky_header", "type": "toggle", "label": "Sticky header", "default": true },
+        { "key": "sticky_header", "type": "toggle", "label": "Header stays on top while scrolling", "default": true },
         { "key": "hero_height", "type": "select", "label": "Hero height", "options": ["medium", "tall"], "default": "tall" },
-        { "key": "header_cta_url", "type": "text", "label": "Header button link (empty = no button)", "default": "" },
-        { "key": "header_cta_label", "type": "text", "label": "Header button text (empty = Apply Now)", "default": "" }
+        { "key": "header_cta_url", "type": "text", "label": "Apply button link (empty = no button)", "default": "https://admission.daffodilvarsity.edu.bd/" },
+        { "key": "header_cta_label", "type": "text", "label": "Apply button text (empty = Apply Now)", "default": "" },
+        { "key": "footer_band_1_label", "type": "text", "label": "Footer band, left link text (empty = no band)", "default": "Campus Life in 60 Seconds" },
+        { "key": "footer_band_1_url", "type": "text", "label": "Footer band, left link", "default": "https://annisulhuq.daffodil.university/vt/" },
+        { "key": "footer_band_2_label", "type": "text", "label": "Footer band, right link text", "default": "Get a Virtual Tour" },
+        { "key": "footer_band_2_url", "type": "text", "label": "Footer band, right link", "default": "https://annisulhuq.daffodil.university/vt/" },
+        { "key": "footer_cta_title", "type": "text", "label": "Footer call-to-action title (empty = none; | = line break)", "default": "Start Your Journey|with Us" },
+        { "key": "footer_cta_text", "type": "text", "label": "Footer call-to-action text", "default": "Explore our programs, meet inspiring faculty, and become part of a thriving academic network. Your future begins here." },
+        { "key": "footer_cta_image", "type": "image", "label": "Footer call-to-action picture (empty = campus photo)" },
+        { "key": "footer_cta_info_label", "type": "text", "label": "Footer second button text", "default": "Request for Information" },
+        { "key": "footer_cta_info_url", "type": "text", "label": "Footer second button link", "default": "/admission-contact" }
     ]
 }

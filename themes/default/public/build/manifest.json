@@ -1,15 +1,27 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-BOro2SEV.css",
+    "file": "assets/app-CvzGk_B3.css",
     "name": "app",
     "names": [
       "app.css"
     ],
     "src": "resources/css/app.css",
-    "isEntry": true
+    "isEntry": true,
+    "assets": [
+      "assets/mina-700-latin-DkgfOKzP.woff2",
+      "assets/mina-700-bengali-gGQePSSq.woff2"
+    ]
+  },
+  "resources/fonts/mina-700-bengali.woff2": {
+    "file": "assets/mina-700-bengali-gGQePSSq.woff2",
+    "src": "resources/fonts/mina-700-bengali.woff2"
+  },
+  "resources/fonts/mina-700-latin.woff2": {
+    "file": "assets/mina-700-latin-DkgfOKzP.woff2",
+    "src": "resources/fonts/mina-700-latin.woff2"
   },
   "resources/js/app.js": {
-    "file": "assets/app-B-RIinvr.js",
+    "file": "assets/app-CrvRiBc1.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true

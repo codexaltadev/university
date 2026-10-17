@@ -180,7 +180,7 @@ it('saves colours, fonts and options; warns on low contrast; resets (FR-THEME-04
     expect($css)->toContain('--color-primary: #7A1F5C;')->toContain('"Poppins"');
 
     Livewire::test(ManageDesign::class)->call('resetDesign')
-        ->assertSchemaStateSet(['tokens.color-primary' => '#034EA2', 'tokens.font-heading' => 'Montserrat']);
+        ->assertSchemaStateSet(['tokens.color-primary' => '#034EA2', 'tokens.font-heading' => 'Manrope']);
     expect(app(DesignTokens::class)->overrides($theme))->toBe([])
         ->and(theme_option('hero_height'))->toBe('tall');
 });

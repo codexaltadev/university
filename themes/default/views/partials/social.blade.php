@@ -1,12 +1,10 @@
-{{-- Social icons (Settings › Social, FR-SET-03). Contract: $links (platform, url, label), $class --}}
-<ul class="social {{ $class ?? '' }}">
+{{-- Social icons (Settings › Social, FR-SET-03) as DIU's footer shows them. Contract: $links (platform, url, label), $class --}}
+<div class="social flex items-center flex-wrap gap-3 {{ $class ?? '' }}">
     @foreach ($links as $link)
         @continue(blank($link['url'] ?? null))
-        <li>
-            <a href="{{ $link['url'] }}" target="_blank" rel="noopener" class="social__link">
-                <x-theme::icon :name="$link['platform'] ?? 'external'" width="16" height="16" />
-                <span class="sr-only">{{ $link['label'] ?? ucfirst($link['platform'] ?? '') }}</span>
-            </a>
-        </li>
+        <a href="{{ $link['url'] }}" target="_blank" rel="noopener noreferrer" class="inline-flex p-[9px] items-center justify-center rounded-full ring-1 ring-white/15 text-white hover:bg-white/10">
+            <x-theme::icon :name="$link['platform'] ?? 'external'" width="24" height="24" />
+            <span class="sr-only">{{ $link['label'] ?? ucfirst($link['platform'] ?? '') }}</span>
+        </a>
     @endforeach
-</ul>
+</div>

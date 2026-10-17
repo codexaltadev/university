@@ -61,7 +61,7 @@ it('shows an entity\'s pages on its microsite only (FR-PAGE-05)', function () {
     $office = Office::create(['name' => 'Exam Office']);
     Page::factory()->ownedBy($office)->create(['title' => ['en' => 'Contact Desk']]);
 
-    $this->get('/office/exam-office/contact-desk')->assertOk()->assertSee('Contact Desk')->assertSee('microsite-bar', false);
+    $this->get('/office/exam-office/contact-desk')->assertOk()->assertSee('Contact Desk')->assertSee('microsite-name', false);
     $this->get('/contact-desk')->assertNotFound();
     $this->get('/office/no-such-office/contact-desk')->assertNotFound();
 });

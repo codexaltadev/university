@@ -23,4 +23,8 @@ export default defineConfig({
         outDir: `${root}public/build`,
         emptyOutDir: true,
     },
+    // Fonts and images inside the CSS: relative URLs, the theme is served from /themes/{slug}/build
+    experimental: {
+        renderBuiltUrl: () => ({ relative: true }),
+    },
 });

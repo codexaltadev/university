@@ -247,7 +247,7 @@ it('shows a default microsite home with about, Head and counters (FR-DEPT-03/07)
         ->assertSee('Dr. Sheak Rashed Haider Noori')
         ->assertSee('3,500+')
         ->assertSee($this->fsit->url(), false)                    // back to its Faculty
-        ->assertSee('microsite-bar', false);
+        ->assertSee('microsite-name', false);
 
     $this->get('/bn'.$this->cse->url('bn'))->assertOk()->assertSee('কম্পিউটার বিজ্ঞান ও প্রকৌশল বিভাগ');
 });

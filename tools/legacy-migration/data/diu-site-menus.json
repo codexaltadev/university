@@ -1,0 +1,1162 @@
+{
+  "source": "https://daffodilvarsity.edu.bd",
+  "taken_at": "2026-10-17",
+  "primary": [
+    {
+      "title": "Admissions",
+      "url": null,
+      "mega": true,
+      "columns": 3,
+      "children": [
+        {
+          "title": "Admission Informations",
+          "url": null,
+          "children": [
+            {
+              "title": "Admission",
+              "url": "/admission",
+              "new_tab": false
+            },
+            {
+              "title": "Admission Test Schedule",
+              "url": "/admission/schedule",
+              "new_tab": false
+            },
+            {
+              "title": "Admission Test Seat Plan",
+              "url": "/seat-plan",
+              "new_tab": false
+            },
+            {
+              "title": "Admission Test Result",
+              "url": "/admission-test-result",
+              "new_tab": false
+            },
+            {
+              "title": "Admission Contact",
+              "url": "/admission-contact",
+              "new_tab": false
+            },
+            {
+              "title": "Programs",
+              "url": "/programs",
+              "new_tab": false
+            },
+            {
+              "title": "Apply Online",
+              "url": "https://admission.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            }
+          ]
+        },
+        {
+          "title": "Guidelines",
+          "url": null,
+          "children": [
+            {
+              "title": "Admission Eligibility",
+              "url": "/admission/faculty/fsit",
+              "new_tab": false
+            },
+            {
+              "title": "Admission Process",
+              "url": "https://webbackend.daffodilvarsity.edu.bd/photos/pdf/Admission-Flow-Chart19.pdf",
+              "new_tab": true
+            },
+            {
+              "title": "Admission Checklist and Documents",
+              "url": "https://webbackend.daffodilvarsity.edu.bd/photos/pdf/admission-checklist.pdf",
+              "new_tab": true
+            },
+            {
+              "title": "Credit Transfer Guidelines",
+              "url": "/article/credit-transfer",
+              "new_tab": false
+            },
+            {
+              "title": "Guidelines for Guardians",
+              "url": "/article/guidelines-for-guardians",
+              "new_tab": false
+            }
+          ]
+        },
+        {
+          "title": "Fees and Funding",
+          "url": null,
+          "children": [
+            {
+              "title": "Tuition Fees for Local Students",
+              "url": "/tuition-fees",
+              "new_tab": false
+            },
+            {
+              "title": "Tuition Fees for International Students",
+              "url": "/int-tuition-fees",
+              "new_tab": false
+            },
+            {
+              "title": "Payment Guidelines for All Students",
+              "url": "https://webbackend.daffodilvarsity.edu.bd/photos/pdf/payment-guidelines.pdf",
+              "new_tab": true
+            },
+            {
+              "title": "Scholarships for Local Students",
+              "url": "/scholarship",
+              "new_tab": false
+            },
+            {
+              "title": "Scholarships for International Students",
+              "url": "/int-scholarship/scholarship-int?content_type=content",
+              "new_tab": false
+            },
+            {
+              "title": "Waiver & Tuition Fee Calculator",
+              "url": "/tuition-fee-calculator",
+              "new_tab": false
+            },
+            {
+              "title": "Financial Aid & Scholarship",
+              "url": "https://financialaid.daffodilvarsity.edu.bd/?app=home",
+              "new_tab": true
+            },
+            {
+              "title": "Life Insurance",
+              "url": "/article/life-insurance-for-student-and-guardian",
+              "new_tab": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Academics",
+      "url": null,
+      "mega": true,
+      "columns": 3,
+      "children": [
+        {
+          "title": "Faculty Directory",
+          "url": null,
+          "children": [
+            {
+              "title": "Our Programs",
+              "url": "/programs",
+              "new_tab": false
+            },
+            {
+              "title": "Faculties",
+              "url": "/faculties",
+              "new_tab": false
+            },
+            {
+              "title": "Departments",
+              "url": "/departments",
+              "new_tab": false
+            },
+            {
+              "title": "Deans & Heads",
+              "url": "/article/deans-heads",
+              "new_tab": false
+            },
+            {
+              "title": "Associate Deans & Heads",
+              "url": "/article/associate-deans-heads",
+              "new_tab": false
+            },
+            {
+              "title": "Faculty Members",
+              "url": "https://faculty.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "International Advisor",
+              "url": "/article/international-adviser",
+              "new_tab": false
+            },
+            {
+              "title": "Visiting Professors",
+              "url": "/article/visiting-professors",
+              "new_tab": false
+            }
+          ]
+        },
+        {
+          "title": "Academics",
+          "url": null,
+          "children": [
+            {
+              "title": "IQAC",
+              "url": "https://iqac.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Handbook for Academic Administration",
+              "url": "https://webbackend.daffodilvarsity.edu.bd/academic/academic-handbook/",
+              "new_tab": true
+            },
+            {
+              "title": "Academia Lecture Series",
+              "url": "/lecture-series",
+              "new_tab": false
+            },
+            {
+              "title": "Non Resident Daffodil Alumni",
+              "url": "https://nrda.daffodil.family/",
+              "new_tab": true
+            },
+            {
+              "title": "Industrial Innovation Centre",
+              "url": "https://iic.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "BSCIC Industrial Support Centre",
+              "url": "/bscic",
+              "new_tab": false
+            },
+            {
+              "title": "Certificate Verification",
+              "url": "http://erp.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Blockchain Powered Certificate Verification",
+              "url": "https://certificate.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "AI Ethics & Implementation Guideline",
+              "url": "https://webbackend.daffodilvarsity.edu.bd/photos/pdf/ai-guideline.pdf",
+              "new_tab": true
+            }
+          ]
+        },
+        {
+          "title": "Our Institutions",
+          "url": null,
+          "children": [
+            {
+              "title": "Students' Affairs",
+              "url": "https://studentsaffairs.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Human Resource Development Institute",
+              "url": "https://hrdi.ac/",
+              "new_tab": true
+            },
+            {
+              "title": "Career Development Center",
+              "url": "https://cdc.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Daffodil Institute of Languages & Culture",
+              "url": "https://dil.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Daffodil Institute of Social Sciences",
+              "url": "https://daffodil.social/",
+              "new_tab": true
+            },
+            {
+              "title": "Daffodil Islamic Center",
+              "url": "https://ic.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Daffodil Angel's Day Care",
+              "url": "/daycare",
+              "new_tab": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Campus",
+      "url": null,
+      "mega": true,
+      "columns": 4,
+      "children": [
+        {
+          "title": "Campus Activities",
+          "url": null,
+          "children": [
+            {
+              "title": "Notice Board",
+              "url": "/noticeboard",
+              "new_tab": false
+            },
+            {
+              "title": "Events",
+              "url": "/events",
+              "new_tab": false
+            },
+            {
+              "title": "Student Activities",
+              "url": "/article/student-activities",
+              "new_tab": false
+            },
+            {
+              "title": "Virtual Tour",
+              "url": "https://annisulhuq.daffodil.university/vt/",
+              "new_tab": true
+            },
+            {
+              "title": "Campus Life",
+              "url": "/campus-life",
+              "new_tab": false
+            },
+            {
+              "title": "Campus TV",
+              "url": "http://www.campustv.ac/",
+              "new_tab": true
+            },
+            {
+              "title": "Campus Radio",
+              "url": "http://campusradio.ac/",
+              "new_tab": true
+            },
+            {
+              "title": "Industrial Linkage",
+              "url": "/article/industrial-linkage",
+              "new_tab": false
+            },
+            {
+              "title": "Delegates Abroad",
+              "url": "/delegates/delegates-abroad",
+              "new_tab": false
+            },
+            {
+              "title": "CSR Activities",
+              "url": "/csr-activities",
+              "new_tab": false
+            },
+            {
+              "title": "Corona updates",
+              "url": "/article/corona",
+              "new_tab": false
+            }
+          ]
+        },
+        {
+          "title": "Facilities",
+          "url": null,
+          "children": [
+            {
+              "title": "Residential Facilities",
+              "url": "https://dsc.creative-bd.com",
+              "new_tab": true
+            },
+            {
+              "title": "Transport Facilities",
+              "url": "/transport",
+              "new_tab": false
+            },
+            {
+              "title": "Lab Facility",
+              "url": "/lab-facilities",
+              "new_tab": false
+            },
+            {
+              "title": "Gymnasium",
+              "url": "/article/gymnasium",
+              "new_tab": false
+            },
+            {
+              "title": "DIU Medical Center",
+              "url": "/medical/diu-medical-center",
+              "new_tab": false
+            },
+            {
+              "title": "PC Purchase Schemes",
+              "url": "/article/pc-purchase-schemes",
+              "new_tab": false
+            },
+            {
+              "title": "Alumni Career Destinations",
+              "url": "/article/valued-employers",
+              "new_tab": false
+            },
+            {
+              "title": "Extra Curricular Activities",
+              "url": "/article/extra-curricular",
+              "new_tab": false
+            },
+            {
+              "title": "DIU Clubs",
+              "url": "https://clubs.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Safety and Security",
+              "url": "/safetyandsecurity",
+              "new_tab": false
+            }
+          ]
+        },
+        {
+          "title": "Students",
+          "url": null,
+          "children": [
+            {
+              "title": "Library",
+              "url": "https://library.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Academic Guidelines",
+              "url": "/article/academic-guidelines",
+              "new_tab": false
+            },
+            {
+              "title": "Academic Calendar",
+              "url": "/registrar-office/academic-calendar",
+              "new_tab": false
+            },
+            {
+              "title": "Semester Schedules",
+              "url": "/article/semester-schedule",
+              "new_tab": false
+            },
+            {
+              "title": "DIU Blended Learning Center",
+              "url": "https://elearn.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Student Portal",
+              "url": "https://studentportal.diu.edu.bd/#/login",
+              "new_tab": true
+            }
+          ]
+        },
+        {
+          "title": "DIU RAK Campus",
+          "url": null,
+          "children": [
+            {
+              "title": "DIU RAK Campus Homepage",
+              "url": "https://daffodiluniversity.ae",
+              "new_tab": true
+            },
+            {
+              "title": "Faculty Members",
+              "url": "https://daffodiluniversity.ae/article/faculties",
+              "new_tab": true
+            },
+            {
+              "title": "Tuition Fees",
+              "url": "https://daffodiluniversity.ae/int-tuition-fees",
+              "new_tab": true
+            },
+            {
+              "title": "Admission Guidelines",
+              "url": "https://daffodiluniversity.ae/article/admission-guidelines",
+              "new_tab": true
+            },
+            {
+              "title": "Contact DIU RAK Campus",
+              "url": "https://daffodiluniversity.ae/article/contact",
+              "new_tab": true
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Research",
+      "url": null,
+      "mega": true,
+      "columns": 3,
+      "children": [
+        {
+          "title": "Research",
+          "url": null,
+          "children": [
+            {
+              "title": "Division of Research",
+              "url": "https://research.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Sustainability Wing (SW)",
+              "url": "https://sustainability4d.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Research Projects",
+              "url": "/article/research-projects",
+              "new_tab": false
+            }
+          ]
+        },
+        {
+          "title": "Journals",
+          "url": null,
+          "children": [
+            {
+              "title": "Science & Technology",
+              "url": "https://diujst.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Business & Entrepreneurship",
+              "url": "https://diujbe.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Humanities & Social Sciences",
+              "url": "https://diujhss.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Emerging Global Health (JEGH)",
+              "url": "https://jegh.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Institutional Digital Repository (DSpace)",
+              "url": "http://dspace.daffodilvarsity.edu.bd:8080/",
+              "new_tab": true
+            }
+          ]
+        },
+        {
+          "title": "Initiatives",
+          "url": null,
+          "children": [
+            {
+              "title": "Green Campus",
+              "url": "/article/green-campus",
+              "new_tab": false
+            },
+            {
+              "title": "Daffodil Agro Complex",
+              "url": "/article/daffodil-agro-complex",
+              "new_tab": false
+            },
+            {
+              "title": "Pilot Training 6 Aircraft",
+              "url": "/article/pt-6ac-aircraft-a-gift-of-knowledge-from-the-skies",
+              "new_tab": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "International",
+      "url": null,
+      "mega": true,
+      "columns": 3,
+      "children": [
+        {
+          "title": "International Admission",
+          "url": null,
+          "children": [
+            {
+              "title": "International Contact",
+              "url": "/international/international-contact",
+              "new_tab": false
+            },
+            {
+              "title": "Tuition Fees (Int)",
+              "url": "/int-tuition-fees",
+              "new_tab": false
+            },
+            {
+              "title": "Scholarships (Int)",
+              "url": "/int-scholarship/scholarship-int?content_type=content",
+              "new_tab": false
+            },
+            {
+              "title": "International Alumni",
+              "url": "/international/international-alumni",
+              "new_tab": false
+            },
+            {
+              "title": "Policy for Int. Student",
+              "url": "/international/policy-for-int-student",
+              "new_tab": false
+            },
+            {
+              "title": "Guidelines for International Students",
+              "url": "https://webbackend.daffodilvarsity.edu.bd/photos/international/Booklet-for-Int-Students.pdf",
+              "new_tab": true
+            }
+          ]
+        },
+        {
+          "title": "International Affairs",
+          "url": null,
+          "children": [
+            {
+              "title": "International Linkage",
+              "url": "/international-linkage",
+              "new_tab": false
+            },
+            {
+              "title": "Membership",
+              "url": "/mps/members",
+              "new_tab": false
+            },
+            {
+              "title": "Partners",
+              "url": "/mps/partners",
+              "new_tab": false
+            },
+            {
+              "title": "International Event",
+              "url": "/international/international-event",
+              "new_tab": false
+            },
+            {
+              "title": "Apply: Incoming Student Exchange",
+              "url": "/international/incoming-student-exchange",
+              "new_tab": false
+            },
+            {
+              "title": "Apply: Outgoing Student Exchange",
+              "url": "/list/international",
+              "new_tab": false
+            }
+          ]
+        },
+        {
+          "title": "Collaborations",
+          "url": null,
+          "children": [
+            {
+              "title": "Featured Partner",
+              "url": "/featured-partner",
+              "new_tab": false
+            },
+            {
+              "title": "APSP 2026",
+              "url": "https://apsp.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "APFDP 2026",
+              "url": "https://apfdp.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "IAUP Semi-Annual Meeting 2026",
+              "url": "https://iaup-bd2026.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "International Conferences",
+              "url": "/conferences/international-conferences",
+              "new_tab": false
+            },
+            {
+              "title": "International Internship Program (IIP)",
+              "url": "/conferences/iip",
+              "new_tab": false
+            },
+            {
+              "title": "Volunteer Internship Program (VIP)",
+              "url": "/conferences/vip",
+              "new_tab": false
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "About",
+      "url": null,
+      "mega": true,
+      "columns": 4,
+      "children": [
+        {
+          "title": "About Us",
+          "url": null,
+          "children": [
+            {
+              "title": "DIU at a glance",
+              "url": "/article/at-a-glance",
+              "new_tab": false
+            },
+            {
+              "title": "Why DIU Stands Out",
+              "url": "/article/diu-best",
+              "new_tab": false
+            },
+            {
+              "title": "Unseen Pillars of DIU",
+              "url": "/unseen-pillars-diu",
+              "new_tab": false
+            },
+            {
+              "title": "History",
+              "url": "/article/history",
+              "new_tab": false
+            },
+            {
+              "title": "DIU Vision and Mission",
+              "url": "/article/vision-mission",
+              "new_tab": false
+            },
+            {
+              "title": "DIU Silver Jubilee",
+              "url": "https://silverjubilee.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Ranking",
+              "url": "/rankings",
+              "new_tab": false
+            }
+          ]
+        },
+        {
+          "title": "DIU's Leadership",
+          "url": null,
+          "children": [
+            {
+              "title": "Chancellor",
+              "url": "/article/chancellor-profile",
+              "new_tab": false
+            },
+            {
+              "title": "Chairman",
+              "url": "/article/cm-profile",
+              "new_tab": false
+            },
+            {
+              "title": "Vice-Chancellor",
+              "url": "https://vc.daffodilvarsity.edu.bd/",
+              "new_tab": true
+            },
+            {
+              "title": "Pro Vice-Chancellor",
+              "url": "/article/provc-profile",
+              "new_tab": false
+            },
+            {
+              "title": "Chairman Message",
+              "url": "/article/chairman-message",
+              "new_tab": false
+            },
+            {
+              "title": "VC Message",
+              "url": "/article/vc-message",
+              "new_tab": false
+            },
+            {
+              "title": "Administration Directory",
+              "url": "/administration",
+              "new_tab": false
+            }
+          ]
+        },
+        {
+          "title": "Governing Bodies",
+          "url": null,
+          "children": [
+            {
+              "title": "Board of Trustees",
+              "url": "/committee/board-of-trustees",
+              "new_tab": false
+            },
+            {
+              "title": "Syndicate",
+              "url": "/committee/syndicate",
+              "new_tab": false
+            },
+            {
+              "title": "Academic Council",
+              "url": "/committee/academic-council",
+              "new_tab": false
+            }
+          ]
+        },
+        {
+          "title": "Offices",
+          "url": null,
+          "children": [
+            {
+              "title": "Office of the Registrar",
+              "url": "/registrar-office/office-of-the-registrar",
+              "new_tab": false
+            },
+            {
+              "title": "Office of the Examinations",
+              "url": "/office/exam",
+              "new_tab": false
+            },
+            {
+              "title": "Office of the Proctor",
+              "url": "/proctor-office/proctor-office",
+              "new_tab": false
+            },
+            {
+              "title": "Technology Transfer Office",
+              "url": "/office/tto",
+              "new_tab": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "topbar": [
+    {
+      "title": "DIU News",
+      "url": "https://news.daffodilvarsity.edu.bd/",
+      "new_tab": true
+    },
+    {
+      "title": "Forum",
+      "url": "https://forum.daffodilvarsity.edu.bd/",
+      "new_tab": true
+    },
+    {
+      "title": "Students",
+      "url": "/students",
+      "new_tab": false
+    },
+    {
+      "title": "Parents",
+      "url": "https://parents.daffodilvarsity.edu.bd/",
+      "new_tab": true
+    },
+    {
+      "title": "Teachers",
+      "url": "/teachers",
+      "new_tab": false
+    },
+    {
+      "title": "Alumni",
+      "url": "https://alumni.daffodilvarsity.edu.bd/",
+      "new_tab": true
+    },
+    {
+      "title": "Administration",
+      "url": "/administration",
+      "new_tab": false
+    },
+    {
+      "title": "Help Desk",
+      "url": "https://pd.daffodilvarsity.edu.bd/support_ticket",
+      "new_tab": true
+    },
+    {
+      "title": "Sitemap",
+      "url": "/article/sitemap",
+      "new_tab": true
+    }
+  ],
+  "services": [
+    {
+      "title": "Library",
+      "url": "https://library.daffodilvarsity.edu.bd/",
+      "new_tab": true,
+      "icon": "book-open"
+    },
+    {
+      "title": "Admission",
+      "url": "https://admission.daffodilvarsity.edu.bd/",
+      "new_tab": true,
+      "icon": "graduation-cap"
+    },
+    {
+      "title": "Photo",
+      "url": "https://campuslife.daffodil.university/",
+      "new_tab": true,
+      "icon": "image"
+    },
+    {
+      "title": "Notice",
+      "url": "/noticeboard",
+      "new_tab": true,
+      "icon": "users"
+    },
+    {
+      "title": "AOL",
+      "url": "https://artofliving.social/",
+      "new_tab": true,
+      "icon": "coffee"
+    },
+    {
+      "title": "ERP",
+      "url": "/erp",
+      "new_tab": true,
+      "icon": "globe"
+    },
+    {
+      "title": "DIL",
+      "url": "https://dil.daffodilvarsity.edu.bd/",
+      "new_tab": true,
+      "icon": "languages"
+    },
+    {
+      "title": "CDC",
+      "url": "https://cdc.daffodilvarsity.edu.bd/",
+      "new_tab": true,
+      "icon": "briefcase"
+    },
+    {
+      "title": "IQAC",
+      "url": "https://iqac.daffodilvarsity.edu.bd/",
+      "new_tab": true,
+      "icon": "clipboard-list"
+    },
+    {
+      "title": "HRDI",
+      "url": "https://hrdi.ac/",
+      "new_tab": true,
+      "icon": "calculator"
+    },
+    {
+      "title": "Skill Jobs",
+      "url": "https://skill.jobs/",
+      "new_tab": true,
+      "icon": "building"
+    }
+  ],
+  "footer_columns": [
+    {
+      "title": "Get in Touch",
+      "children": [
+        {
+          "title": "Contact",
+          "url": "/article/contact",
+          "new_tab": false
+        },
+        {
+          "title": "Meet With Us",
+          "url": "https://pd.daffodilvarsity.edu.bd/contact-us",
+          "new_tab": false
+        },
+        {
+          "title": "Privacy Statement",
+          "url": "#",
+          "new_tab": false
+        },
+        {
+          "title": "Report Copyright Infringement",
+          "url": "/article/copyright-issue",
+          "new_tab": false
+        },
+        {
+          "title": "Report on Security Issues",
+          "url": "/article/security-issues",
+          "new_tab": false
+        },
+        {
+          "title": "Recom. For Traffic Mgt",
+          "url": "https://webbackend.daffodilvarsity.edu.bd/photos/pdf/Report-on-traffic-mgt.pdf",
+          "new_tab": true
+        },
+        {
+          "title": "Newsletters",
+          "url": "https://newsletter.daffodilvarsity.edu.bd/",
+          "new_tab": true
+        },
+        {
+          "title": "Location Map",
+          "url": "/location",
+          "new_tab": false
+        },
+        {
+          "title": "Covid-19 updates",
+          "url": "/article/corona",
+          "new_tab": false
+        },
+        {
+          "title": "Logos (Daffodil Group)",
+          "url": "https://daffodil.group/about/family-logo",
+          "new_tab": true
+        }
+      ]
+    },
+    {
+      "title": "Branding",
+      "children": [
+        {
+          "title": "DIU Branding",
+          "url": "https://bd.daffodil.family/",
+          "new_tab": true
+        },
+        {
+          "title": "Career",
+          "url": "/career",
+          "new_tab": false
+        },
+        {
+          "title": "Bangladesh Corner",
+          "url": "/article/bangladesh-corner",
+          "new_tab": false
+        },
+        {
+          "title": "Blog",
+          "url": "https://blog.daffodilvarsity.edu.bd",
+          "new_tab": true
+        },
+        {
+          "title": "Photo Gallery",
+          "url": "https://campuslife.daffodil.university/",
+          "new_tab": true
+        },
+        {
+          "title": "DIU Press",
+          "url": "https://diupress.com/",
+          "new_tab": true
+        },
+        {
+          "title": "Employability 360",
+          "url": "https://employability.daffodilvarsity.edu.bd",
+          "new_tab": true
+        },
+        {
+          "title": "DIU IT",
+          "url": "https://it.daffodilvarsity.edu.bd",
+          "new_tab": true
+        },
+        {
+          "title": "Artofliving",
+          "url": "https://artofliving.social/",
+          "new_tab": true
+        }
+      ]
+    },
+    {
+      "title": "Useful Links",
+      "children": [
+        {
+          "title": "skill.jobs",
+          "url": "https://skill.jobs/",
+          "new_tab": true
+        },
+        {
+          "title": "Internship Portal",
+          "url": "https://internship.daffodilvarsity.edu.bd",
+          "new_tab": true
+        },
+        {
+          "title": "Convocation",
+          "url": "https://convocation.daffodilvarsity.edu.bd",
+          "new_tab": true
+        },
+        {
+          "title": "DIU Annual Report",
+          "url": "/flipbook/diu-annual-report",
+          "new_tab": false
+        },
+        {
+          "title": "Brochure",
+          "url": "/flipbook/brochure",
+          "new_tab": false
+        },
+        {
+          "title": "Prospectus",
+          "url": "/prospectus",
+          "new_tab": false
+        },
+        {
+          "title": "Forms",
+          "url": "/article/forms",
+          "new_tab": false
+        },
+        {
+          "title": "Brand Documents",
+          "url": "/article/downloads",
+          "new_tab": false
+        },
+        {
+          "title": "Apps",
+          "url": "/article/apps",
+          "new_tab": false
+        },
+        {
+          "title": "Discount Partners",
+          "url": "/discount-partners",
+          "new_tab": false
+        },
+        {
+          "title": "FAQ",
+          "url": "/faq",
+          "new_tab": false
+        }
+      ]
+    },
+    {
+      "title": "Quick Links",
+      "children": [
+        {
+          "title": "DIU News",
+          "url": "https://news.daffodilvarsity.edu.bd/",
+          "new_tab": true
+        },
+        {
+          "title": "Forum",
+          "url": "https://forum.daffodilvarsity.edu.bd/",
+          "new_tab": true
+        },
+        {
+          "title": "Students",
+          "url": "/students",
+          "new_tab": false
+        },
+        {
+          "title": "Parents",
+          "url": "https://parents.daffodilvarsity.edu.bd/",
+          "new_tab": true
+        },
+        {
+          "title": "Teachers",
+          "url": "/teachers",
+          "new_tab": false
+        },
+        {
+          "title": "Alumni",
+          "url": "https://alumni.daffodilvarsity.edu.bd/",
+          "new_tab": true
+        },
+        {
+          "title": "Administration",
+          "url": "/administration",
+          "new_tab": false
+        }
+      ]
+    }
+  ],
+  "social": [
+    {
+      "platform": "facebook",
+      "url": "https://www.facebook.com/daffodilvarsity.edu.bd"
+    },
+    {
+      "platform": "twitter",
+      "url": "https://twitter.com/daffodilvarsity"
+    },
+    {
+      "platform": "instagram",
+      "url": "https://www.instagram.com/daffodil.university/"
+    },
+    {
+      "platform": "youtube",
+      "url": "https://www.youtube.com/user/webmasterdiu"
+    },
+    {
+      "platform": "linkedin",
+      "url": "https://www.linkedin.com/school/daffodil-international-university/posts/?feedView=all"
+    },
+    {
+      "platform": "pinterest",
+      "url": "https://www.pinterest.com/daffodilvarsity/"
+    },
+    {
+      "platform": "email",
+      "url": "mailto:admission@daffodilvarsity.edu.bd"
+    }
+  ],
+  "copyright": "Copyright © 2026 Daffodil International University.All Rights Reserved."
+}

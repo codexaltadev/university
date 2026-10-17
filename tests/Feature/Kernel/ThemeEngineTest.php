@@ -122,7 +122,7 @@ it('turns design tokens into a hashed CSS file with the admin\'s colours (FR-THE
 
     $first = $tokens->stylesheetUrl($theme);
     expect($tokens->css($theme))->toContain('--color-primary: #034EA2;')
-        ->toContain('--font-heading: "Montserrat"')
+        ->toContain('--font-heading: "Manrope"')   // default theme = DIU copy: Manrope for headings too
         ->toContain(':lang(bn)');
 
     $tokens->save($theme, ['color-primary' => '#7A1F5C', 'color-secondary' => '#002652']);

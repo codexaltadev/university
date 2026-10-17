@@ -4,12 +4,14 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | UI/UX Part B: Frontend |
-| Version | 0.3 — v0.1 approved 2026-10-08; v0.2: microsite URL hierarchy অনুযায়ী (§3, FR-GEN-34); v0.3: module UI class contract (§9.1, Phase 4.1) |
+| Version | 0.4 — v0.1 approved 2026-10-08; v0.2: microsite URL hierarchy অনুযায়ী (§3, FR-GEN-34); v0.3: module UI class contract (§9.1, Phase 4.1); v0.4: default theme = live DIU site-এর কপি (owner 2026-10-17) |
 | Date | 2026-10-08 |
 | Status | ✔ Approved — prototype v3 সহ (2026-10-08); v0.2 (URL) approved 2026-10-10 |
 | Based on | BRD v1.7, SRS v1.0, SAD Part B §6 (Microsite), §8 (Theme Engine), UI/UX Part A |
 | পাঠক | Theme developer, frontend developer, designer, tester |
 
+> **Owner সিদ্ধান্ত 2026-10-17 (v0.4):** default theme হবে live **daffodilvarsity.edu.bd**-এর হুবহু কপি — header, menu, footer, রং, font, মাপ ও প্রতিটি page-এর গঠন live site থেকে; prototype v3 আর লক্ষ্য নয়। পরের theme-গুলো নিজস্ব design পাবে। এই document-এর slot, URL, accessibility ও Section 9-এর contract আগের মতোই বহাল; চেহারার বর্ণনা যেখানে live site-এর সাথে মেলে না, সেখানে live site-ই ঠিক। Default theme Tailwind-এর palette ও type scale ব্যবহার করে (DIU-র মতো); brand রং token থেকে, theme-এ hex নিষেধ।
+>
 > এই document **default theme**-এর গঠন ও নিয়ম ঠিক করে। নতুন theme নিজের চেহারা দিতে পারবে, কিন্তু Section 9-এর contract (view, slot, CSS variable) মানতে হবে। Wireframe low-fidelity।
 
 ---

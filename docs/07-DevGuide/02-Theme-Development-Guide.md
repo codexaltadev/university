@@ -303,7 +303,9 @@ Tailwind **v4.3.3** CSS-first: `tailwind.config.js` নেই; সব config `re
 }
 ```
 
-এখন Blade-এ `bg-primary`, `text-muted`, `font-heading`, `rounded-md`, `max-w-container` — সবই admin-এর রং মেনে চলে। `bg-blue-700`, `text-[#034EA2]` CI lint fail করবে।
+এখন Blade-এ `bg-primary`, `text-muted`, `font-heading`, `rounded-md`, `max-w-container` — সবই admin-এর রং মেনে চলে। `text-[#034EA2]`-এর মতো hex রং CI lint fail করবে।
+
+> **Default theme-এর ব্যতিক্রম (owner 2026-10-17):** default theme live DIU site-এর হুবহু কপি, তাই সেটি Tailwind-এর palette (`text-gray-600`, `bg-blue-50` …), type scale ও container রাখে — brand রং (primary / secondary / accent) তবুও শুধু token থেকে, hex কোথাও নয়। Kernel-এর `--text-*` / `--radius-*` variable Tailwind-এর একই নামের variable-কে ঢেকে দেয়; Tailwind-এর মাপ চাইলে theme-এ `@theme inline`-এ মানগুলো সরাসরি দিন (default theme-এর `app.css` দেখুন)।
 
 * `package.json`-এ `tailwindcss` ও `@tailwindcss/vite` দুটোই ঠিক `4.3.3` (pin); version বদলানো = আলাদা সিদ্ধান্ত, CHANGELOG-এ লেখা।
 * `vite.config.js`-এ `@tailwindcss/vite` plugin (PostCSS config লাগে না)।

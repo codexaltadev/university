@@ -5,26 +5,38 @@ document.documentElement.classList.add('js');
 document.addEventListener('alpine:init', () => {
     const Alpine = window.Alpine;
 
-    // Header: search panel, mobile drawer, shadow once the page scrolls (UI/UX Part B §4, §6)
+    // Header (DIU): search window, mobile menu, utility links fold away once the page scrolls.
+    // The header floats over the page; --header-h (its unscrolled height) keeps content below it.
     Alpine.data('siteHeader', () => ({
         search: false,
         drawer: false,
         scrolled: false,
 
         init() {
-            const onScroll = () => { this.scrolled = window.scrollY > 8; };
+            const root = document.documentElement;
+            const measure = () => {
+                if (!this.scrolled) {
+                    root.style.setProperty('--header-h', `${this.$root.offsetHeight}px`);
+                }
+            };
+            const onScroll = () => {
+                this.scrolled = window.scrollY > 40;
+                this.$root.classList.toggle('is-scrolled', this.scrolled);
+            };
+
             window.addEventListener('scroll', onScroll, { passive: true });
+            window.addEventListener('resize', measure, { passive: true });
             onScroll();
-            this.$watch('scrolled', (value) => this.$root.classList.toggle('is-scrolled', value));
-            // Leaving the mobile width closes the drawer
+            measure();
+            document.fonts?.ready.then(measure);
+            // Leaving the mobile width closes the menu
             window.matchMedia('(min-width: 1024px)').addEventListener('change', (e) => { if (e.matches) this.drawer = false; });
         },
 
-        toggleSearch() {
-            this.search = !this.search;
-            if (this.search) {
-                this.$nextTick(() => this.$root.querySelector('#site-search input[type="search"]')?.focus());
-            }
+        openSearch() {
+            this.drawer = false;
+            this.search = true;
+            this.$nextTick(() => document.querySelector('#site-search input[type="search"]')?.focus());
         },
 
         openDrawer() {

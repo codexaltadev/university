@@ -260,7 +260,7 @@ it('shows the program page with facts, apply button, eligibility and counters (F
         ->assertSee('https://admission.example.edu/apply', false)
         ->assertSee('15 January 2027')
         ->assertSee($this->cse->url(), false)
-        ->assertSee('microsite-bar', false);
+        ->assertSee('microsite-name', false);
 
     $this->get('/bn'.$this->bsc->url('bn'))->assertOk()->assertSee('কম্পিউটার বিজ্ঞান ও প্রকৌশলে বিএসসি');
 
