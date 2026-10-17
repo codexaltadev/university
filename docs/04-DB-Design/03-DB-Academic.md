@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-03 |
-| Version | 1.5 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়); v1.4: Scholarship নিজের module `scholarship`, parent / child ও category vocabulary (§11.3); v1.5: Admission (§10) — `published_at` নয় `is_active`, session লেখা, result label, subscriber topic, website গঠন; v1.6: Academic Calendar (§12) — `is_active`, session লেখা, Faculty সম্পর্ক, audience event-এ, `starts_on` ঐচ্ছিক, website গঠন |
+| Version | 1.5 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়); v1.4: Scholarship নিজের module `scholarship`, parent / child ও category vocabulary (§11.3); v1.5: Admission (§10) — `published_at` নয় `is_active`, session লেখা, result label, subscriber topic, website গঠন; v1.6: Academic Calendar (§12) — `is_active`, session লেখা, Faculty সম্পর্ক, audience event-এ, `starts_on` ঐচ্ছিক, website গঠন; v1.7 (2026-10-17): Faculty Member (§8) — আলাদা faculty site-এর data-র read-only copy, source JSON / API, `profile_items` JSON, `photo_url`, sync (§8.3) |
 | Date | 2026-10-16 (v1.0 confirmed 2026-10-08) |
 | Status | ✔ Confirmed — v1.3 approved 2026-10-10 (Tuition, Waiver আলাদা module); v1.1 approved 2026-10-10: entry করা rule ও data অক্ষত থাকবে; logic বদলানো যাবে যদি ফলাফল হুবহু একই থাকে (golden master দিয়ে প্রমাণ) |
 | Based on | [DB-01](01-DB-Core-Kernel.md) (conventions), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 2](../02-SRS/02-SRS-Academic.md), `project_diu` |
@@ -34,7 +34,7 @@
 | M-04 Course | `course` | `course_` | Program (hard → FK); Department transitively hard |
 | M-05 Session | `session` | `session_` | — |
 | M-06 Curriculum | `curriculum` | `curriculum_` | Program, Course (hard → FK); Session (optional → index) |
-| M-07 Faculty Member | `faculty-member` | `faculty_member_` | Department (hard → FK) |
+| M-07 Faculty Member | `faculty-member` | `faculty_member_` | Department (hard → FK, null on delete — v1.7) |
 | M-08 Campus | `campus` | `campus_` | — |
 | M-09 Admission Info | `admission` | `admission_` | Program (optional → index); Session পরে (v1.5: এখন লেখা) |
 | M-10 Tuition | `tuition` (v1.3) | `tuition_` | Program (hard → FK; level = program type), Department / Faculty (filter); Session (optional → index) |
@@ -53,7 +53,6 @@ erDiagram
     department_departments ||--o{ course_courses : "owns"
     department_departments ||--o{ faculty_member_profiles : "primary"
     faculty_member_profiles ||--o{ faculty_member_departments : "also in"
-    faculty_member_profiles ||--o{ faculty_member_profile_items : "education etc."
     program_programs ||--o{ program_majors : ""
     program_programs ||--o{ program_list_items : "career, industry"
     program_programs ||--o{ program_facilitators : ""
@@ -249,36 +248,53 @@ UQ: `(year, term_type, active_key)`।
 
 ## 8. M-07 Faculty Member
 
-### 8.1 `faculty_member_profiles` — B (Person Source)
+> *v1.7 (2026-10-17, owner সিদ্ধান্ত, SRS Academic v0.5):* শিক্ষকের data **আলাদা faculty site-এর**; এখানে তার **read-only copy**, যা `faculty-member:sync` source থেকে ভরে (FR-FM-08)। Source: `json` (file; এখন module-এর dummy file) বা `api` (পরে)। তাই — (১) source-এর field শুধু sync লেখে, admin শুধু ⓛ চিহ্নিত local field বদলান; (২) ছবি copy করা হয় না, source-এর address `photo_url`-এ (Media Library-তে নয়); (৩) profile section-গুলো sub-table নয়, একটি JSON column `profile_items` — পুরোটা source থেকে একসাথে বদলায়, কখনো আলাদা query হয় না; (৪) Department না মিললে শিক্ষক Department ছাড়া থাকেন (BRL-FM-04), তাই `department_id` N ও Department মুছলে null; (৫) source-এ নেই = soft delete, ফিরে এলে restore (assignment অক্ষত)।
+
+### 8.1 `faculty_member_profiles` — B (Person Source, read-only copy)
 
 | Column | Type | Key / N | Default | বর্ণনা |
 |---|---|---|---|---|
 | id | BIGINT UNSIGNED | PK | | |
-| department_id | BIGINT UNSIGNED | FK department_departments (restrict), IX | | Primary Department |
-| designation_term_id | BIGINT UNSIGNED | FK core_terms (restrict), IX | | Vocabulary `faculty-member.designation` (ordered; FR-FM-05/06) |
+| external_ref | VARCHAR(100) | | | Source-এর ID (FR-FM-08) — sync এটা দিয়েই মেলায় |
+| department_id | BIGINT UNSIGNED | N, FK department_departments (null on delete), IX | | Primary Department (source-এর short name থেকে) |
+| designation_term_id | BIGINT UNSIGNED | N, FK core_terms (null on delete), IX | | Vocabulary `faculty-member.designation` (ordered; FR-FM-05/06; নতুন পদবি sync তৈরি করে) |
 | designation_note | JSON | N, T | | যেমন "and Head" |
 | employee_id | VARCHAR(30) | N | | |
 | name | JSON | T | | |
 | email | VARCHAR(191) | N | | |
 | phone, extension | VARCHAR(50), VARCHAR(20) | N | | |
 | office_room | VARCHAR(100) | N | | |
+| photo_url | VARCHAR(500) | N | | Source-এর ছবির address (copy নয়) |
 | employment_type | VARCHAR(20) | IX | `full_time` | `full_time` / `part_time` / `adjunct` / `on_leave` (BRL-FM-02) |
 | biography | JSON | N, T | | |
 | research_interests | JSON | N, T | | |
 | links | JSON | N | | `{google_scholar, orcid, researchgate, linkedin, website}` |
-| contact_visibility | JSON | N | | কোন contact public (FR-FM-09 সহ) |
-| external_ref | VARCHAR(100) | N, IX | | External faculty portal-এর ID (FR-FM-08) |
-| sort_order | INT UNSIGNED | | 0 | Designation-এর ভেতরে ক্রম |
-| ⚙ | | | | |
+| profile_items | JSON | N | | `{education: [...], experience: [...], training: [...], award: [...], membership: [...], publication: [...]}` — প্রতিটি item `{title, institution, start_year, end_year, description}` (FR-FM-02) |
+| source_hash | CHAR(40) | N | | Source record-এর hash — না বদলালে sync লেখে না |
+| synced_at | TIMESTAMP | N | | শেষ যে sync-এ পাওয়া গেছে |
+| show_email, show_phone, show_extension | TINYINT(1) | | 1 | ⓛ কোন contact website-এ দেখাবে (FR-FM-09, FR-FM-11) |
+| sort_order | INT UNSIGNED | | 0 | ⓛ Designation-এর ভেতরে ক্রম |
+| ⚙ | | | | `is_active` source-এর active / inactive |
 
-UQ: `(employee_id, active_key)` (NULL employee_id একাধিক থাকতে পারে)। IX: `(department_id, is_active, designation_term_id, sort_order)`। Media: `photo`।
+UQ: `(external_ref, active_key)`, `(employee_id, active_key)` (NULL employee_id একাধিক থাকতে পারে)। IX: `(department_id, is_active, designation_term_id, sort_order)`।
 
 ### 8.2 Sub-table
 
 | Table | শ্রেণী | Column | Key | Ref |
 |---|---|---|---|---|
-| `faculty_member_departments` | P | `profile_id` (FK cascade), `department_id` (FK department_departments cascade), timestamps | PK `(profile_id, department_id)`; IX `(department_id)` | FR-FM-01 (অতিরিক্ত Department) |
-| `faculty_member_profile_items` | B | `profile_id` (FK cascade), `item_type` VARCHAR(20) (`education` / `experience` / `award` / `membership`), `title` (T), `institution` (T, N), `start_year`, `end_year` SMALLINT N, `description` (T, N), `sort_order`, ⚙ | IX `(profile_id, item_type, sort_order)` | FR-FM-02 |
+| `faculty_member_departments` | P | `profile_id` (FK cascade), `department_id` (FK department_departments cascade), timestamps | PK `(profile_id, department_id)`; IX `(department_id)` | FR-FM-05 (অতিরিক্ত Department; sync পুরোটা নতুন করে লেখে) |
+| ~~`faculty_member_profile_items`~~ | | | | *v1.7:* `profile_items` JSON column-এ |
+
+### 8.3 Sync ও source (v1.7)
+
+| বিষয় | নিয়ম |
+|---|---|
+| Source | Settings › Faculty Members: `source` = `json` (`json_path`; খালি = module-এর `resources/data/faculty-members.json` dummy) অথবা `api` (`api_url`, `api_token` encrypted, private)। Driver interface `FacultyMemberSource::records()`; API পেলে শুধু driver / field mapping যোগ হয় |
+| Record format | `{"data": [{id, employee_id, name, designation, designation_note, department, other_departments[], email, phone, extension, office_room, photo_url, employment_type, status, biography, research_interests, links{}, profile{education[], experience[], training[], award[], membership[], publication[]}}]}`; লেখার field string বা `{en, bn}` |
+| মেলানো | `external_ref` (withTrashed) → update / restore; নতুন হলে create; Department short name (case বাদে) → `department_id`; পদবি নাম → term (না থাকলে তৈরি) |
+| সরানো | এই sync-এ নেই এমন record soft delete (BRL-FM-05: source খালি / ভুল হলে sync থামে, কিছু মোছে না) |
+| ফল | Settings `faculty-member.last_sync` (সময়, যোগ / update / সরানো / অপরিবর্তিত, না মেলা Department, ভুল) — admin তালিকার ওপরে দেখায় |
+| সময় | দিনে একবার (`faculty-member:sync`, 05:30), admin "Sync now" (`Sync:FacultyMember`) |
 
 ---
 
@@ -452,13 +468,13 @@ Program-এর সাথে সম্পর্ক audience term ও Faculty দ�
 | Course | course_courses, course_program, course_prerequisites, course_outcomes | ৪ |
 | Session | session_sessions | ১ |
 | Curriculum | curriculum_curricula, curriculum_terms, curriculum_elective_groups, curriculum_items | ৪ |
-| Faculty Member | faculty_member_profiles, faculty_member_departments, faculty_member_profile_items | ৩ |
+| Faculty Member | faculty_member_profiles, faculty_member_departments *(v1.7: profile items JSON column-এ)* | ২ |
 | Campus | campus_campuses, campus_buildings | ২ |
 | Admission | admission_circulars, admission_highlights, admission_steps, admission_contact_groups, admission_result_batches, admission_results, admission_subscribers | ৭ |
 | Tuition + Waiver | tuition_categories, tuition_fees, tuition_fee_lines, waiver_boards, waiver_categories, waiver_category_includes *(v1.1)*, waiver_rules, 5টি waiver pivot | ১২ |
 | Scholarship *(v1.4)* | scholarship_scholarships | ১ |
 | Calendar | calendar_calendars, calendar_events | ২ |
-| **মোট** | | **৪৫** |
+| **মোট** | | **৪৪** |
 
 ---
 

@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 2: Academic Modules |
-| Version | 0.4 — 2026-10-10: M-10 তিনটি module — `tuition`, `waiver`, `scholarship` (DB-03 v1.4); 2026-10-11: M-09 Admission website গঠন, FR-ADM-13 থেকে 16 (DB-03 v1.5); v0.4 2026-10-16: M-11 Calendar — Faculty সম্পর্ক, audience event-এ, তারিখ ঐচ্ছিক, website গঠন (DB-03 v1.6) |
+| Version | 0.4 — 2026-10-10: M-10 তিনটি module — `tuition`, `waiver`, `scholarship` (DB-03 v1.4); 2026-10-11: M-09 Admission website গঠন, FR-ADM-13 থেকে 16 (DB-03 v1.5); v0.4 2026-10-16: M-11 Calendar — Faculty সম্পর্ক, audience event-এ, তারিখ ঐচ্ছিক, website গঠন (DB-03 v1.6); v0.5 2026-10-17: M-07 Faculty Member — data আলাদা faculty site-এর, এখানে read-only copy, source JSON (এখন dummy) / API (FR-FM-08 Must, FR-FM-11/12; CRUD ও import বাদ; DB-03 v1.7) |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md), [SRS Part 1](01-SRS-Core.md), `project_diu` analysis |
@@ -276,37 +276,46 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 
 **Purpose:** শিক্ষকদের profile directory।
 
-**Actors:** Admin, Scoped User (নিজের Department-এর শিক্ষক), শিক্ষক নিজে (ভবিষ্যতে; এই phase-এ নয়, Out of Scope 4.2)
+> **v0.5 (2026-10-17, owner সিদ্ধান্ত):** DIU-র শিক্ষকদের data থাকে **আলাদা faculty site-এ**; এই application নিজে শিক্ষকের data entry রাখে না, **সেখান থেকে পড়ে** (FR-FM-08 এখন Must)। পড়া data একটি **read-only local copy**-তে রাখা হয় (DB-03 §8), কারণ Dean / Head / Committee member ইত্যাদি assignment (FR-FM-10), search, statistics ও scope একটি local record চায়। Source বদলানো যায়: এখন **JSON file (dummy data)**, faculty site-এর API পাওয়া গেলে Settings-এ API address দিলেই সেখান থেকে আসবে — module-এর বাকি অংশ বদলাবে না। তাই আগের CRUD (FR-FM-01) ও CSV import (FR-FM-07) বাদ।
 
-**Data:** নাম, পদবি, Department (primary ও অতিরিক্ত), employee ID, ছবি, email, phone, extension, অফিস রুম, শিক্ষাগত যোগ্যতা, research interest, biography, publication link, Google Scholar / ORCID / ResearchGate / LinkedIn, প্রশাসনিক দায়িত্ব (যেমন Head, Coordinator), শিক্ষকতার ধরন (Full-time / Part-time / Adjunct / On leave), ক্রম।
+**Actors:** Admin (sync চালানো, source ঠিক করা, ক্রম ও contact দেখানো), Scoped User (নিজের Department-এর শিক্ষক দেখা ও ক্রম), external faculty site (data-র মালিক)
+
+**Data (source থেকে):** source ID, নাম, পদবি (ও "and Head"-এর মতো note), Department (primary ও অতিরিক্ত, short name দিয়ে মেলানো), employee ID, ছবির address, email, phone, extension, অফিস রুম, শিক্ষকতার ধরন (Full-time / Part-time / Adjunct / On leave), active কিনা, biography, research interest, Google Scholar / ORCID / ResearchGate / LinkedIn / website, profile section (education, experience, training, award, membership, publication)। **এখানে (local):** ক্রম, কোন contact website-এ দেখাবে।
 
 ### Functional Requirements
 
 | ID | Requirement | BRD Ref | Priority |
 |---|---|---|---|
-| FR-FM-01 | Faculty Member CRUD; primary Department বাধ্যতামূলক; একাধিক Department-এ যুক্ত করা যাবে | BR-CNT-01 | Must |
-| FR-FM-02 | Profile section: education, experience, research interest, award, membership (repeatable) | BR-CNT-01 | Must |
+| ~~FR-FM-01~~ | *v0.5:* CRUD নেই — data source থেকে আসে (FR-FM-08); admin-এ শুধু দেখা, ক্রম ও contact দেখানো (FR-FM-11) | BR-CNT-01 | — |
+| FR-FM-02 | Profile section: education, experience, training, award, membership, publication (source যা দেয়) | BR-CNT-01 | Must |
 | FR-FM-03 | Directory page (`/faculty-members`): Faculty, Department, পদবি দিয়ে filter, নাম দিয়ে search; layout: Grid, List, Profile Card | BR-THM-02 | Must |
-| FR-FM-04 | Profile page (`/faculty-member/{slug}`) এবং সংশ্লিষ্ট Publication ও Research (M-25, M-26 active থাকলে) | BR-CNT-01 | Must |
-| FR-FM-05 | Department microsite-এ শিক্ষকদের তালিকা, পদবির ক্রম অনুযায়ী (পদবির ক্রম configurable: Professor → Associate Professor → ...) | BR-MS-07 | Must |
-| FR-FM-06 | পদবি (Designation) একটি Taxonomy vocabulary, ক্রম সহ | — | Must |
-| FR-FM-07 | CSV / Excel bulk import | — | Must |
-| FR-FM-08 | External faculty profile system থেকে API-র মাধ্যমে sync (যেমন DIU-র আলাদা faculty portal থাকলে); sync করা field admin-এ read-only | — | Could |
+| FR-FM-04 | Profile page (`/faculty-members/{slug}` — v0.5: Alumni / Administration-এর মতো, reserved path-এর ভেতরে) এবং সংশ্লিষ্ট Publication ও Research (M-25, M-26 active থাকলে) | BR-CNT-01 | Must |
+| FR-FM-05 | Department microsite-এ শিক্ষকদের তালিকা (`{department}/faculty-members` ও homepage section "Faculty Members"), পদবির ক্রম অনুযায়ী (পদবির ক্রম configurable: Professor → Associate Professor → ...) | BR-MS-07 | Must |
+| FR-FM-06 | পদবি (Designation) একটি Taxonomy vocabulary, ক্রম সহ; sync নতুন পদবি পেলে term তৈরি করে (ক্রম admin Taxonomy-তে ঠিক করেন) | — | Must |
+| ~~FR-FM-07~~ | *v0.5:* CSV / Excel import বাদ — source-ই data দেয় | — | — |
+| FR-FM-08 | **Source থেকে sync** (v0.5: Must): Settings › Faculty Members-এ source — `json` (file, এখন dummy) বা `api` (address ও token); `faculty-member:sync` দিনে একবার নিজে চলে, admin "Sync now" চাপতে পারেন; source ID (`external_ref`) দিয়ে মেলানো — নতুন যোগ, বদলানো update, source-এ নেই এমন শিক্ষক সরানো (soft delete; ফিরে এলে আগের record ও assignment ফিরে আসে); শেষ sync-এর ফল (কত যোগ / update / সরানো, কোন Department মেলেনি) admin-এ দেখায়; source না পাওয়া গেলে বা ভুল data এলে কিছুই মোছা হয় না | — | Must |
 | FR-FM-09 | Email address frontend-এ spam bot থেকে সুরক্ষিত করে দেখানো | NFR-SEC | Should |
 | FR-FM-10 | **Person Source** হিসেবে register (FR-REL-09), যাতে Dean, Head, Coordinator, Committee member, Event speaker, Publication author ইত্যাদিতে শিক্ষককে assign করা যায় | Q-08 | Must |
+| FR-FM-11 | *v0.5:* Admin › People › Faculty Members: তালিকা (Department, পদবি, ধরন দিয়ে filter), profile দেখা (source-এর field read-only); এখানে বদলানো যায় শুধু পদবির ভেতরে ক্রম ও কোন contact (email, phone, extension) website-এ দেখাবে — sync এগুলো বদলায় না | — | Must |
+| FR-FM-12 | *v0.5:* Statistics metric `faculty-member.count` (Main Site, Faculty, Department — নিজের ও অধীনের শিক্ষক) | BR-STAT-01 | Must |
 
 ### Business Rules
 
-* **BRL-FM-01:** Employee ID অনন্য (দেওয়া হলে)।
-* **BRL-FM-02:** "On leave" শিক্ষক directory-তে চিহ্নসহ দেখাবে; inactive শিক্ষক দেখাবে না।
+* **BRL-FM-01:** Source ID (`external_ref`) অনন্য; employee ID অনন্য (দেওয়া হলে)।
+* **BRL-FM-02:** "On leave" শিক্ষক directory-তে চিহ্নসহ দেখাবে; inactive শিক্ষক (source-এ inactive) দেখাবে না।
+* **BRL-FM-03:** *(v0.5)* Source-এর field শুধু sync বদলায়; admin বদলাতে পারেন শুধু local field (FR-FM-11)।
+* **BRL-FM-04:** *(v0.5)* Source-এর Department এখানে না মিললে শিক্ষক Department ছাড়া থাকে (main directory-তে দেখায়, কোনো microsite-এ নয়) এবং sync-এর ফলে তা লেখা থাকে।
+* **BRL-FM-05:** *(v0.5)* Source থেকে খালি তালিকা বা ভুল data এলে sync থেমে যায়, কিছু মোছে না (ভুল করে সব শিক্ষক মুছে যাওয়া ঠেকাতে)।
 
 ### Permissions
 
-`faculty-member.view`, `faculty-member.create`, `faculty-member.update`, `faculty-member.delete`, `faculty-member.import`
+`ViewAny:FacultyMember`, `View:FacultyMember`, `Update:FacultyMember` (local field), `Reorder:FacultyMember`, `Sync:FacultyMember` (v0.5: create / delete / import নেই)
 
 ### Acceptance Criteria
 
 * **AC-FM-01:** CSE Department microsite-এ শুধু CSE-এর active শিক্ষক পদবির ক্রম অনুযায়ী দেখাবে।
+* **AC-FM-02:** *(v0.5)* Source-এ একজন শিক্ষকের পদবি বদলালে পরের sync-এর পর directory, profile ও তিনি যেখানে assign (যেমন CSE-এর Head) — সব জায়গায় নতুন পদবি; source থেকে বাদ পড়লে সব জায়গা থেকে সরে যায়, ফিরে এলে আগের assignment সহ ফিরে আসে।
+* **AC-FM-03:** *(v0.5)* Source খালি তালিকা দিলে বা পাওয়া না গেলে sync ব্যর্থ বলে জানায় এবং একজন শিক্ষকও সরে না।
 
 ---
 

@@ -1,0 +1,3559 @@
+{
+  "_note": "DUMMY DATA — fictional teachers for development until the faculty site's API is available (DB-03 §8.3). Replace the source in Settings › Faculty Members.",
+  "data": [
+    {
+      "id": "T-1001",
+      "employee_id": "710100037",
+      "name": {
+        "en": "Arif Alam"
+      },
+      "designation": "Assistant Professor",
+      "department": "CSE",
+      "email": "arif.alam.cse@diu.example.edu",
+      "phone": "+880 1847-630893",
+      "extension": "65640",
+      "office_room": "AB3-214",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Arif Alam teaches at the Department of CSE and has been with the university since 2004.</p>",
+      "research_interests": "Machine learning, computer vision, natural language processing",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Leeds",
+            "end_year": 1998
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Dhaka",
+            "end_year": 1995
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2004
+          }
+        ],
+        "publication": []
+      },
+      "designation_note": "and Head"
+    },
+    {
+      "id": "T-1002",
+      "employee_id": "710100074",
+      "name": {
+        "en": "Dr. Tanvir Haque"
+      },
+      "designation": "Lecturer",
+      "department": "SWE",
+      "email": "tanvir.haque.swe@diu.example.edu",
+      "phone": "+880 1847-778279",
+      "extension": "65549",
+      "office_room": "AB3-823",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Tanvir Haque teaches at the Department of SWE and has been with the university since 2012.</p>",
+      "research_interests": "Software testing, requirements engineering, DevOps",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0002"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Leeds",
+            "end_year": 2009
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Malaya",
+            "end_year": 2006
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Tokyo",
+            "end_year": 2003
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2012
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on software testing (1)",
+            "end_year": 2013
+          },
+          {
+            "title": "A study on software testing (2)",
+            "end_year": 2014
+          }
+        ]
+      },
+      "designation_note": "and Head"
+    },
+    {
+      "id": "T-1003",
+      "employee_id": "710100111",
+      "name": {
+        "en": "Dr. Sharmin Talukder"
+      },
+      "designation": "Professor",
+      "department": "CIS",
+      "email": "sharmin.talukder.cis@diu.example.edu",
+      "phone": "+880 1847-185509",
+      "extension": "65572",
+      "office_room": "AB4-495",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Sharmin Talukder teaches at the Department of CIS and has been with the university since 2018.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0003"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Daffodil International University",
+            "end_year": 2017
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Dhaka",
+            "end_year": 2012
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Tokyo",
+            "end_year": 2010
+          }
+        ],
+        "experience": [
+          {
+            "title": "Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2018
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2019
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2020
+          }
+        ]
+      },
+      "other_departments": [
+        "SWE"
+      ]
+    },
+    {
+      "id": "T-1004",
+      "employee_id": "710100148",
+      "name": {
+        "en": "Arif Begum"
+      },
+      "designation": "Assistant Professor",
+      "department": "ITM",
+      "email": "arif.begum.itm@diu.example.edu",
+      "phone": "+880 1847-161259",
+      "extension": "65525",
+      "office_room": "AB3-229",
+      "photo_url": null,
+      "employment_type": "on_leave",
+      "status": "active",
+      "biography": "<p>Arif Begum teaches at the Department of ITM and has been with the university since 2016.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "Jahangirnagar University",
+            "end_year": 2011
+          },
+          {
+            "title": "BSc",
+            "institution": "Daffodil International University",
+            "end_year": 2009
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2016
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1005",
+      "employee_id": "710100185",
+      "name": {
+        "en": "Nadia Sarker"
+      },
+      "designation": "Lecturer",
+      "department": "MCT",
+      "email": "nadia.sarker.mct@diu.example.edu",
+      "phone": "+880 1847-561382",
+      "extension": "65751",
+      "office_room": "AB1-710",
+      "photo_url": null,
+      "employment_type": "part_time",
+      "status": "active",
+      "biography": "<p>Nadia Sarker teaches at the Department of MCT and has been with the university since 2017.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Dhaka",
+            "end_year": 2014
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Leeds",
+            "end_year": 2008
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2017
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1006",
+      "employee_id": "710100222",
+      "name": {
+        "en": "Tahmina Hossain"
+      },
+      "designation": "Adjunct Faculty",
+      "department": "RME",
+      "email": "tahmina.hossain.rme@diu.example.edu",
+      "phone": "+880 1847-724446",
+      "extension": "65196",
+      "office_room": "AB3-425",
+      "photo_url": null,
+      "employment_type": "adjunct",
+      "status": "active",
+      "biography": "<p>Tahmina Hossain teaches at the Department of RME and has been with the university since 2014.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Malaya",
+            "end_year": 2010
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Tokyo",
+            "end_year": 2007
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2014
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1007",
+      "employee_id": "710100259",
+      "name": {
+        "en": "Rezaul Begum"
+      },
+      "designation": "Assistant Professor",
+      "department": "BBA",
+      "email": "rezaul.begum.bba@diu.example.edu",
+      "phone": "+880 1847-316267",
+      "extension": "65305",
+      "office_room": "AB1-400",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "inactive",
+      "biography": "<p>Rezaul Begum teaches at the Department of BBA and has been with the university since 2019.</p>",
+      "research_interests": "Strategic management, entrepreneurship",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Tokyo",
+            "end_year": 2014
+          },
+          {
+            "title": "BSc",
+            "institution": "BUET",
+            "end_year": 2011
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2019
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1008",
+      "employee_id": "710100296",
+      "name": {
+        "en": "Dr. Tanvir Hossain",
+        "bn": "ডেমো শিক্ষক"
+      },
+      "designation": "Professor",
+      "department": "MGT",
+      "email": "tanvir.hossain.mgt@diu.example.edu",
+      "phone": "+880 1847-167088",
+      "extension": "65115",
+      "office_room": "AB4-207",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Tanvir Hossain teaches at the Department of MGT and has been with the university since 2006.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0008"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Jahangirnagar University",
+            "end_year": 2005
+          },
+          {
+            "title": "MSc",
+            "institution": "Monash University",
+            "end_year": 2003
+          },
+          {
+            "title": "BSc",
+            "institution": "Daffodil International University",
+            "end_year": 1998
+          }
+        ],
+        "experience": [
+          {
+            "title": "Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2006
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2007
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2008
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1009",
+      "employee_id": "710100333",
+      "name": {
+        "en": "Dr. Arif Uddin"
+      },
+      "designation": "Professor",
+      "department": "MKT",
+      "email": "arif.uddin.mkt@diu.example.edu",
+      "phone": "+880 1847-701643",
+      "extension": "65390",
+      "office_room": "AB3-333",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Arif Uddin teaches at the Department of MKT and has been with the university since 2005.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0009"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "BUET",
+            "end_year": 2003
+          },
+          {
+            "title": "MSc",
+            "institution": "Monash University",
+            "end_year": 2000
+          },
+          {
+            "title": "BSc",
+            "institution": "Daffodil International University",
+            "end_year": 1997
+          }
+        ],
+        "experience": [
+          {
+            "title": "Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2005
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2006
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2007
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1010",
+      "employee_id": "710100370",
+      "name": {
+        "en": "Dr. Nusrat Siddique"
+      },
+      "designation": "Associate Professor",
+      "department": "FINANCE",
+      "email": "nusrat.siddique.finance@diu.example.edu",
+      "phone": "+880 1847-343604",
+      "extension": "65842",
+      "office_room": "AB3-435",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Nusrat Siddique teaches at the Department of FINANCE and has been with the university since 2021.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0010"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Monash University",
+            "end_year": 2018
+          },
+          {
+            "title": "MSc",
+            "institution": "Jahangirnagar University",
+            "end_year": 2018
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Dhaka",
+            "end_year": 2012
+          }
+        ],
+        "experience": [
+          {
+            "title": "Associate Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2021
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2022
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1011",
+      "employee_id": "710100407",
+      "name": {
+        "en": "Dr. Tahmina Siddique"
+      },
+      "designation": "Professor",
+      "department": "ACCOUNTING",
+      "email": "tahmina.siddique.accounting@diu.example.edu",
+      "phone": "+880 1847-942525",
+      "extension": "65390",
+      "office_room": "AB1-544",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Tahmina Siddique teaches at the Department of ACCOUNTING and has been with the university since 2004.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0011"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Leeds",
+            "end_year": 2002
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Malaya",
+            "end_year": 1998
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Tokyo",
+            "end_year": 1995
+          }
+        ],
+        "experience": [
+          {
+            "title": "Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2004
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2005
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2006
+          },
+          {
+            "title": "A study on education (3)",
+            "end_year": 2007
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1012",
+      "employee_id": "710100444",
+      "name": {
+        "en": "Dr. Rokeya Begum"
+      },
+      "designation": "Associate Professor",
+      "department": "THM",
+      "email": "rokeya.begum.thm@diu.example.edu",
+      "phone": "+880 1847-721074",
+      "extension": "65654",
+      "office_room": "AB3-570",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Rokeya Begum teaches at the Department of THM and has been with the university since 2009.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0012"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Dhaka",
+            "end_year": 2007
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Dhaka",
+            "end_year": 2004
+          },
+          {
+            "title": "BSc",
+            "institution": "BUET",
+            "end_year": 2002
+          }
+        ],
+        "experience": [
+          {
+            "title": "Associate Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2009
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2010
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2011
+          },
+          {
+            "title": "A study on education (3)",
+            "end_year": 2012
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1013",
+      "employee_id": "710100481",
+      "name": {
+        "en": "Shafiq Karim"
+      },
+      "designation": "Lecturer",
+      "department": "BRE",
+      "email": "shafiq.karim.bre@diu.example.edu",
+      "phone": "+880 1847-973729",
+      "extension": "65748",
+      "office_room": "AB4-660",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Shafiq Karim teaches at the Department of BRE and has been with the university since 2017.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "BUET",
+            "end_year": 2011
+          },
+          {
+            "title": "BSc",
+            "institution": "Monash University",
+            "end_year": 2010
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2017
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1014",
+      "employee_id": "710100518",
+      "name": {
+        "en": "Rokeya Siddique"
+      },
+      "designation": "Assistant Professor",
+      "department": "DE",
+      "email": "rokeya.siddique.de@diu.example.edu",
+      "phone": "+880 1847-150334",
+      "extension": "65293",
+      "office_room": "AB2-204",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Rokeya Siddique teaches at the Department of DE and has been with the university since 2018.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "Monash University",
+            "end_year": 2012
+          },
+          {
+            "title": "BSc",
+            "institution": "Daffodil International University",
+            "end_year": 2010
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2018
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1015",
+      "employee_id": "710100555",
+      "name": {
+        "en": "Dr. Zahid Rahman"
+      },
+      "designation": "Associate Professor",
+      "department": "ENGLISH",
+      "email": "zahid.rahman.english@diu.example.edu",
+      "phone": "+880 1847-697468",
+      "extension": "65867",
+      "office_room": "AB4-698",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Zahid Rahman teaches at the Department of ENGLISH and has been with the university since 2018.</p>",
+      "research_interests": "Applied linguistics, postcolonial literature",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0015"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "BUET",
+            "end_year": 2015
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Dhaka",
+            "end_year": 2013
+          },
+          {
+            "title": "BSc",
+            "institution": "Daffodil International University",
+            "end_year": 2009
+          }
+        ],
+        "experience": [
+          {
+            "title": "Associate Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2018
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on applied linguistics (1)",
+            "end_year": 2019
+          },
+          {
+            "title": "A study on applied linguistics (2)",
+            "end_year": 2020
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1016",
+      "employee_id": "710100592",
+      "name": {
+        "en": "Laila Karim"
+      },
+      "designation": "Lecturer",
+      "department": "LAW",
+      "email": "laila.karim.law@diu.example.edu",
+      "phone": "+880 1847-400382",
+      "extension": "65299",
+      "office_room": "AB3-548",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Laila Karim teaches at the Department of LAW and has been with the university since 2020.</p>",
+      "research_interests": "Constitutional law, human rights",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Dhaka",
+            "end_year": 2014
+          },
+          {
+            "title": "BSc",
+            "institution": "BUET",
+            "end_year": 2013
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2020
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1017",
+      "employee_id": "710100629",
+      "name": {
+        "en": "Dr. Sadia Uddin"
+      },
+      "designation": "Lecturer",
+      "department": "JMC",
+      "email": "sadia.uddin.jmc@diu.example.edu",
+      "phone": "+880 1847-713883",
+      "extension": "65634",
+      "office_room": "AB2-551",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Sadia Uddin teaches at the Department of JMC and has been with the university since 2014.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0017"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Daffodil International University",
+            "end_year": 2014
+          },
+          {
+            "title": "MSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2008
+          },
+          {
+            "title": "BSc",
+            "institution": "Monash University",
+            "end_year": 2005
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2014
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2015
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1018",
+      "employee_id": "710100666",
+      "name": {
+        "en": "Tanvir Bhuiyan"
+      },
+      "designation": "Senior Lecturer",
+      "department": "DS",
+      "email": "tanvir.bhuiyan.ds@diu.example.edu",
+      "phone": "+880 1847-569972",
+      "extension": "65600",
+      "office_room": "AB3-634",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Tanvir Bhuiyan teaches at the Department of DS and has been with the university since 2019.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Tokyo",
+            "end_year": 2013
+          },
+          {
+            "title": "BSc",
+            "institution": "BUET",
+            "end_year": 2012
+          }
+        ],
+        "experience": [
+          {
+            "title": "Senior Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2019
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1019",
+      "employee_id": "710100703",
+      "name": {
+        "en": "Jannat Akter"
+      },
+      "designation": "Assistant Professor",
+      "department": "EEE",
+      "email": "jannat.akter.eee@diu.example.edu",
+      "phone": "+880 1847-467489",
+      "extension": "65899",
+      "office_room": "AB2-184",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Jannat Akter teaches at the Department of EEE and has been with the university since 2014.</p>",
+      "research_interests": "Power systems, renewable energy, embedded systems",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "Jahangirnagar University",
+            "end_year": 2009
+          },
+          {
+            "title": "BSc",
+            "institution": "BUET",
+            "end_year": 2005
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2014
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1020",
+      "employee_id": "710100740",
+      "name": {
+        "en": "Dr. Shafiq Hossain"
+      },
+      "designation": "Assistant Professor",
+      "department": "CE",
+      "email": "shafiq.hossain.ce@diu.example.edu",
+      "phone": "+880 1847-750711",
+      "extension": "65523",
+      "office_room": "AB3-417",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Shafiq Hossain teaches at the Department of CE and has been with the university since 2013.</p>",
+      "research_interests": "Structural engineering, earthquake-resistant design",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0020"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Monash University",
+            "end_year": 2010
+          },
+          {
+            "title": "MSc",
+            "institution": "Daffodil International University",
+            "end_year": 2007
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Leeds",
+            "end_year": 2004
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2013
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on structural engineering (1)",
+            "end_year": 2014
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1021",
+      "employee_id": "710100777",
+      "name": {
+        "en": "Dr. Mahfuz Talukder"
+      },
+      "designation": "Assistant Professor",
+      "department": "ARCHITECTURE",
+      "email": "mahfuz.talukder.architecture@diu.example.edu",
+      "phone": "+880 1847-286748",
+      "extension": "65332",
+      "office_room": "AB2-644",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Mahfuz Talukder teaches at the Department of ARCHITECTURE and has been with the university since 2019.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0021"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Malaya",
+            "end_year": 2019
+          },
+          {
+            "title": "MSc",
+            "institution": "Monash University",
+            "end_year": 2016
+          },
+          {
+            "title": "BSc",
+            "institution": "Daffodil International University",
+            "end_year": 2010
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2019
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2020
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1022",
+      "employee_id": "710100814",
+      "name": {
+        "en": "Arif Chowdhury"
+      },
+      "designation": "Lecturer",
+      "department": "TE",
+      "email": "arif.chowdhury.te@diu.example.edu",
+      "phone": "+880 1847-976857",
+      "extension": "65193",
+      "office_room": "AB3-663",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Arif Chowdhury teaches at the Department of TE and has been with the university since 2020.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Malaya",
+            "end_year": 2014
+          },
+          {
+            "title": "BSc",
+            "institution": "Jahangirnagar University",
+            "end_year": 2012
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2020
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1023",
+      "employee_id": "710100851",
+      "name": {
+        "en": "Mahfuz Bhuiyan"
+      },
+      "designation": "Assistant Professor",
+      "department": "ICE",
+      "email": "mahfuz.bhuiyan.ice@diu.example.edu",
+      "phone": "+880 1847-696790",
+      "extension": "65476",
+      "office_room": "AB1-171",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Mahfuz Bhuiyan teaches at the Department of ICE and has been with the university since 2010.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2006
+          },
+          {
+            "title": "BSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2001
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2010
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1024",
+      "employee_id": "710100888",
+      "name": {
+        "en": "Dr. Jannat Ahmed"
+      },
+      "designation": "Assistant Professor",
+      "department": "PHARMACY",
+      "email": "jannat.ahmed.pharmacy@diu.example.edu",
+      "phone": "+880 1847-530767",
+      "extension": "65583",
+      "office_room": "AB4-560",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Jannat Ahmed teaches at the Department of PHARMACY and has been with the university since 2019.</p>",
+      "research_interests": "Pharmacology, drug delivery systems",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0024"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Tokyo",
+            "end_year": 2018
+          },
+          {
+            "title": "MSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2016
+          },
+          {
+            "title": "BSc",
+            "institution": "Jahangirnagar University",
+            "end_year": 2010
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2019
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on pharmacology (1)",
+            "end_year": 2020
+          },
+          {
+            "title": "A study on pharmacology (2)",
+            "end_year": 2021
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1025",
+      "employee_id": "710100925",
+      "name": {
+        "en": "Dr. Mehnaz Siddique"
+      },
+      "designation": "Assistant Professor",
+      "department": "PH",
+      "email": "mehnaz.siddique.ph@diu.example.edu",
+      "phone": "+880 1847-412709",
+      "extension": "65257",
+      "office_room": "AB3-659",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Mehnaz Siddique teaches at the Department of PH and has been with the university since 2018.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0025"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Monash University",
+            "end_year": 2016
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Dhaka",
+            "end_year": 2012
+          },
+          {
+            "title": "BSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2011
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2018
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2019
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2020
+          },
+          {
+            "title": "A study on education (3)",
+            "end_year": 2021
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1026",
+      "employee_id": "710100962",
+      "name": {
+        "en": "Dr. Arif Talukder"
+      },
+      "designation": "Assistant Professor",
+      "department": "NFE",
+      "email": "arif.talukder.nfe@diu.example.edu",
+      "phone": "+880 1847-494340",
+      "extension": "65468",
+      "office_room": "AB4-723",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Arif Talukder teaches at the Department of NFE and has been with the university since 2005.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0026"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Jahangirnagar University",
+            "end_year": 2003
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Tokyo",
+            "end_year": 2002
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Dhaka",
+            "end_year": 1998
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2005
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2006
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2007
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1027",
+      "employee_id": "710100999",
+      "name": {
+        "en": "Habib Karim"
+      },
+      "designation": "Assistant Professor",
+      "department": "ESDM",
+      "email": "habib.karim.esdm@diu.example.edu",
+      "phone": "+880 1847-743184",
+      "extension": "65344",
+      "office_room": "AB1-731",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Habib Karim teaches at the Department of ESDM and has been with the university since 2011.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2005
+          },
+          {
+            "title": "BSc",
+            "institution": "BUET",
+            "end_year": 2002
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2011
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1028",
+      "employee_id": "710101036",
+      "name": {
+        "en": "Dr. Habib Siddique"
+      },
+      "designation": "Associate Professor",
+      "department": "GEB",
+      "email": "habib.siddique.geb@diu.example.edu",
+      "phone": "+880 1847-668306",
+      "extension": "65665",
+      "office_room": "AB4-321",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Habib Siddique teaches at the Department of GEB and has been with the university since 2016.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0028"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Leeds",
+            "end_year": 2014
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Malaya",
+            "end_year": 2010
+          },
+          {
+            "title": "BSc",
+            "institution": "BUET",
+            "end_year": 2007
+          }
+        ],
+        "experience": [
+          {
+            "title": "Associate Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2016
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2017
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2018
+          },
+          {
+            "title": "A study on education (3)",
+            "end_year": 2019
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1029",
+      "employee_id": "710101073",
+      "name": {
+        "en": "Dr. Rokeya Alam"
+      },
+      "designation": "Lecturer",
+      "department": "PESS",
+      "email": "rokeya.alam.pess@diu.example.edu",
+      "phone": "+880 1847-200915",
+      "extension": "65869",
+      "office_room": "AB3-826",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Rokeya Alam teaches at the Department of PESS and has been with the university since 2004.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0029"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Jahangirnagar University",
+            "end_year": 2004
+          },
+          {
+            "title": "MSc",
+            "institution": "Daffodil International University",
+            "end_year": 1999
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Tokyo",
+            "end_year": 1996
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2004
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2005
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2006
+          },
+          {
+            "title": "A study on education (3)",
+            "end_year": 2007
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1030",
+      "employee_id": "710101110",
+      "name": {
+        "en": "Arif Siddique"
+      },
+      "designation": "Lecturer",
+      "department": "AGS",
+      "email": "arif.siddique.ags@diu.example.edu",
+      "phone": "+880 1847-106254",
+      "extension": "65990",
+      "office_room": "AB2-303",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Arif Siddique teaches at the Department of AGS and has been with the university since 2013.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Malaya",
+            "end_year": 2010
+          },
+          {
+            "title": "BSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2004
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2013
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1031",
+      "employee_id": "710101147",
+      "name": {
+        "en": "Dr. Tanvir Islam"
+      },
+      "designation": "Assistant Professor",
+      "department": "FISHERIES",
+      "email": "tanvir.islam.fisheries@diu.example.edu",
+      "phone": "+880 1847-588761",
+      "extension": "65993",
+      "office_room": "AB4-547",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Tanvir Islam teaches at the Department of FISHERIES and has been with the university since 2016.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0031"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Leeds",
+            "end_year": 2015
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Malaya",
+            "end_year": 2013
+          },
+          {
+            "title": "BSc",
+            "institution": "Monash University",
+            "end_year": 2007
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2016
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2017
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2018
+          },
+          {
+            "title": "A study on education (3)",
+            "end_year": 2019
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1032",
+      "employee_id": "710101184",
+      "name": {
+        "en": "Dr. Rokeya Akter"
+      },
+      "designation": "Professor",
+      "department": "ICTED",
+      "email": "rokeya.akter.icted@diu.example.edu",
+      "phone": "+880 1847-646002",
+      "extension": "65904",
+      "office_room": "AB3-460",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Rokeya Akter teaches at the Department of ICTED and has been with the university since 2018.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0032"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Malaya",
+            "end_year": 2017
+          },
+          {
+            "title": "MSc",
+            "institution": "BUET",
+            "end_year": 2015
+          },
+          {
+            "title": "BSc",
+            "institution": "Daffodil International University",
+            "end_year": 2011
+          }
+        ],
+        "experience": [
+          {
+            "title": "Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2018
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2019
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2020
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1033",
+      "employee_id": "710101221",
+      "name": {
+        "en": "Habib Ahmed"
+      },
+      "designation": "Assistant Professor",
+      "department": "ISLM",
+      "email": "habib.ahmed.islm@diu.example.edu",
+      "phone": "+880 1847-294323",
+      "extension": "65332",
+      "office_room": "AB3-509",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Habib Ahmed teaches at the Department of ISLM and has been with the university since 2016.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Tokyo",
+            "end_year": 2010
+          },
+          {
+            "title": "BSc",
+            "institution": "Monash University",
+            "end_year": 2009
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2016
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1034",
+      "employee_id": "710101258",
+      "name": {
+        "en": "Sharmin Bhuiyan"
+      },
+      "designation": "Lecturer",
+      "department": "CSE",
+      "email": "sharmin.bhuiyan.cse@diu.example.edu",
+      "phone": "+880 1847-444062",
+      "extension": "65832",
+      "office_room": "AB1-772",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Sharmin Bhuiyan teaches at the Department of CSE and has been with the university since 2015.</p>",
+      "research_interests": "Machine learning, computer vision, natural language processing",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Malaya",
+            "end_year": 2012
+          },
+          {
+            "title": "BSc",
+            "institution": "BUET",
+            "end_year": 2006
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2015
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1035",
+      "employee_id": "710101295",
+      "name": {
+        "en": "Dr. Afroza Bhuiyan"
+      },
+      "designation": "Associate Professor",
+      "department": "CIS",
+      "email": "afroza.bhuiyan.cis@diu.example.edu",
+      "phone": "+880 1847-312266",
+      "extension": "65298",
+      "office_room": "AB3-209",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Afroza Bhuiyan teaches at the Department of CIS and has been with the university since 2015.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0035"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Jahangirnagar University",
+            "end_year": 2012
+          },
+          {
+            "title": "MSc",
+            "institution": "Monash University",
+            "end_year": 2011
+          },
+          {
+            "title": "BSc",
+            "institution": "BUET",
+            "end_year": 2008
+          }
+        ],
+        "experience": [
+          {
+            "title": "Associate Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2015
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2016
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2017
+          },
+          {
+            "title": "A study on education (3)",
+            "end_year": 2018
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1036",
+      "employee_id": "710101332",
+      "name": {
+        "en": "Nadia Haque"
+      },
+      "designation": "Senior Lecturer",
+      "department": "MKT",
+      "email": "nadia.haque.mkt@diu.example.edu",
+      "phone": "+880 1847-202507",
+      "extension": "65111",
+      "office_room": "AB2-575",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Nadia Haque teaches at the Department of MKT and has been with the university since 2008.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Malaya",
+            "end_year": 2002
+          },
+          {
+            "title": "BSc",
+            "institution": "BUET",
+            "end_year": 1999
+          }
+        ],
+        "experience": [
+          {
+            "title": "Senior Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2008
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1037",
+      "employee_id": "710101369",
+      "name": {
+        "en": "Afroza Sarker"
+      },
+      "designation": "Senior Lecturer",
+      "department": "SWE",
+      "email": "afroza.sarker.swe@diu.example.edu",
+      "phone": "+880 1847-362568",
+      "extension": "65994",
+      "office_room": "AB4-292",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Afroza Sarker teaches at the Department of SWE and has been with the university since 2018.</p>",
+      "research_interests": "Software testing, requirements engineering, DevOps",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2013
+          },
+          {
+            "title": "BSc",
+            "institution": "Daffodil International University",
+            "end_year": 2011
+          }
+        ],
+        "experience": [
+          {
+            "title": "Senior Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2018
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1038",
+      "employee_id": "710101406",
+      "name": {
+        "en": "Rezaul Ahmed"
+      },
+      "designation": "Assistant Professor",
+      "department": "ITM",
+      "email": "rezaul.ahmed.itm@diu.example.edu",
+      "phone": "+880 1847-593741",
+      "extension": "65557",
+      "office_room": "AB3-142",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Rezaul Ahmed teaches at the Department of ITM and has been with the university since 2021.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "Monash University",
+            "end_year": 2016
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Malaya",
+            "end_year": 2014
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2021
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1039",
+      "employee_id": "710101443",
+      "name": {
+        "en": "Tanvir Uddin"
+      },
+      "designation": "Lecturer",
+      "department": "BBA",
+      "email": "tanvir.uddin.bba@diu.example.edu",
+      "phone": "+880 1847-966782",
+      "extension": "65818",
+      "office_room": "AB3-494",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Tanvir Uddin teaches at the Department of BBA and has been with the university since 2009.</p>",
+      "research_interests": "Strategic management, entrepreneurship",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Dhaka",
+            "end_year": 2005
+          },
+          {
+            "title": "BSc",
+            "institution": "Monash University",
+            "end_year": 2002
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2009
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1040",
+      "employee_id": "710101480",
+      "name": {
+        "en": "Rakib Bhuiyan"
+      },
+      "designation": "Lecturer",
+      "department": "MKT",
+      "email": "rakib.bhuiyan.mkt@diu.example.edu",
+      "phone": "+880 1847-725803",
+      "extension": "65119",
+      "office_room": "AB1-125",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Rakib Bhuiyan teaches at the Department of MKT and has been with the university since 2013.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Leeds",
+            "end_year": 2010
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Malaya",
+            "end_year": 2004
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2013
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1041",
+      "employee_id": "710101517",
+      "name": {
+        "en": "Dr. Masud Rahman"
+      },
+      "designation": "Professor",
+      "department": "CSE",
+      "email": "masud.rahman.cse@diu.example.edu",
+      "phone": "+880 1847-864023",
+      "extension": "65506",
+      "office_room": "AB2-435",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Masud Rahman teaches at the Department of CSE and has been with the university since 2017.</p>",
+      "research_interests": "Machine learning, computer vision, natural language processing",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0041"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Tokyo",
+            "end_year": 2017
+          },
+          {
+            "title": "MSc",
+            "institution": "Jahangirnagar University",
+            "end_year": 2013
+          },
+          {
+            "title": "BSc",
+            "institution": "Daffodil International University",
+            "end_year": 2010
+          }
+        ],
+        "experience": [
+          {
+            "title": "Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2017
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on machine learning (1)",
+            "end_year": 2018
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1042",
+      "employee_id": "710101554",
+      "name": {
+        "en": "Dr. Shafiq Uddin"
+      },
+      "designation": "Associate Professor",
+      "department": "CSE",
+      "email": "shafiq.uddin.cse@diu.example.edu",
+      "phone": "+880 1847-228656",
+      "extension": "65700",
+      "office_room": "AB1-673",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Shafiq Uddin teaches at the Department of CSE and has been with the university since 2021.</p>",
+      "research_interests": "Machine learning, computer vision, natural language processing",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0042"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Dhaka",
+            "end_year": 2021
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Tokyo",
+            "end_year": 2018
+          },
+          {
+            "title": "BSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2012
+          }
+        ],
+        "experience": [
+          {
+            "title": "Associate Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2021
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on machine learning (1)",
+            "end_year": 2022
+          },
+          {
+            "title": "A study on machine learning (2)",
+            "end_year": 2023
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1043",
+      "employee_id": "710101591",
+      "name": {
+        "en": "Sadia Rahman"
+      },
+      "designation": "Senior Lecturer",
+      "department": "BBA",
+      "email": "sadia.rahman.bba@diu.example.edu",
+      "phone": "+880 1847-282108",
+      "extension": "65982",
+      "office_room": "AB4-532",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Sadia Rahman teaches at the Department of BBA and has been with the university since 2018.</p>",
+      "research_interests": "Strategic management, entrepreneurship",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "Monash University",
+            "end_year": 2012
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Malaya",
+            "end_year": 2010
+          }
+        ],
+        "experience": [
+          {
+            "title": "Senior Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2018
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1044",
+      "employee_id": "710101628",
+      "name": {
+        "en": "Tahmina Begum"
+      },
+      "designation": "Assistant Professor",
+      "department": "CSE",
+      "email": "tahmina.begum.cse@diu.example.edu",
+      "phone": "+880 1847-613590",
+      "extension": "65208",
+      "office_room": "AB1-295",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Tahmina Begum teaches at the Department of CSE and has been with the university since 2011.</p>",
+      "research_interests": "Machine learning, computer vision, natural language processing",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "BUET",
+            "end_year": 2006
+          },
+          {
+            "title": "BSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2002
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2011
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1045",
+      "employee_id": "710101665",
+      "name": {
+        "en": "Dr. Kamrul Akter"
+      },
+      "designation": "Lecturer",
+      "department": "THM",
+      "email": "kamrul.akter.thm@diu.example.edu",
+      "phone": "+880 1847-910012",
+      "extension": "65613",
+      "office_room": "AB2-675",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Kamrul Akter teaches at the Department of THM and has been with the university since 2015.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0045"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2012
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Tokyo",
+            "end_year": 2010
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Tokyo",
+            "end_year": 2008
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2015
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2016
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2017
+          },
+          {
+            "title": "A study on education (3)",
+            "end_year": 2018
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1046",
+      "employee_id": "710101702",
+      "name": {
+        "en": "Sharmin Hossain"
+      },
+      "designation": "Senior Lecturer",
+      "department": "CIS",
+      "email": "sharmin.hossain.cis@diu.example.edu",
+      "phone": "+880 1847-301286",
+      "extension": "65920",
+      "office_room": "AB1-462",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Sharmin Hossain teaches at the Department of CIS and has been with the university since 2021.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "BUET",
+            "end_year": 2017
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Leeds",
+            "end_year": 2013
+          }
+        ],
+        "experience": [
+          {
+            "title": "Senior Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2021
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1047",
+      "employee_id": "710101739",
+      "name": {
+        "en": "Sadia Bhuiyan"
+      },
+      "designation": "Senior Lecturer",
+      "department": "MCT",
+      "email": "sadia.bhuiyan.mct@diu.example.edu",
+      "phone": "+880 1847-629160",
+      "extension": "65983",
+      "office_room": "AB4-481",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Sadia Bhuiyan teaches at the Department of MCT and has been with the university since 2012.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Leeds",
+            "end_year": 2006
+          },
+          {
+            "title": "BSc",
+            "institution": "Monash University",
+            "end_year": 2005
+          }
+        ],
+        "experience": [
+          {
+            "title": "Senior Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2012
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1048",
+      "employee_id": "710101776",
+      "name": {
+        "en": "Imran Islam"
+      },
+      "designation": "Assistant Professor",
+      "department": "THM",
+      "email": "imran.islam.thm@diu.example.edu",
+      "phone": "+880 1847-876380",
+      "extension": "65432",
+      "office_room": "AB3-274",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Imran Islam teaches at the Department of THM and has been with the university since 2005.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Malaya",
+            "end_year": 2000
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Malaya",
+            "end_year": 1997
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2005
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1049",
+      "employee_id": "710101813",
+      "name": {
+        "en": "Dr. Shafiq Mia"
+      },
+      "designation": "Senior Lecturer",
+      "department": "BBA",
+      "email": "shafiq.mia.bba@diu.example.edu",
+      "phone": "+880 1847-122161",
+      "extension": "65525",
+      "office_room": "AB4-133",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Shafiq Mia teaches at the Department of BBA and has been with the university since 2018.</p>",
+      "research_interests": "Strategic management, entrepreneurship",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0049"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2017
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Tokyo",
+            "end_year": 2013
+          },
+          {
+            "title": "BSc",
+            "institution": "Daffodil International University",
+            "end_year": 2010
+          }
+        ],
+        "experience": [
+          {
+            "title": "Senior Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2018
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on strategic management (1)",
+            "end_year": 2019
+          },
+          {
+            "title": "A study on strategic management (2)",
+            "end_year": 2020
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1050",
+      "employee_id": "710101850",
+      "name": {
+        "en": "Dr. Sohel Sarker"
+      },
+      "designation": "Assistant Professor",
+      "department": "MGT",
+      "email": "sohel.sarker.mgt@diu.example.edu",
+      "phone": "+880 1847-822919",
+      "extension": "65348",
+      "office_room": "AB4-762",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Sohel Sarker teaches at the Department of MGT and has been with the university since 2009.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0050"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Jahangirnagar University",
+            "end_year": 2008
+          },
+          {
+            "title": "MSc",
+            "institution": "Daffodil International University",
+            "end_year": 2005
+          },
+          {
+            "title": "BSc",
+            "institution": "Monash University",
+            "end_year": 2002
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2009
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2010
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1051",
+      "employee_id": "710101887",
+      "name": {
+        "en": "Dr. Arif Karim"
+      },
+      "designation": "Professor",
+      "department": "CSE",
+      "email": "arif.karim.cse@diu.example.edu",
+      "phone": "+880 1847-979121",
+      "extension": "65476",
+      "office_room": "AB4-718",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Arif Karim teaches at the Department of CSE and has been with the university since 2017.</p>",
+      "research_interests": "Machine learning, computer vision, natural language processing",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0051"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Tokyo",
+            "end_year": 2015
+          },
+          {
+            "title": "MSc",
+            "institution": "Daffodil International University",
+            "end_year": 2012
+          },
+          {
+            "title": "BSc",
+            "institution": "BUET",
+            "end_year": 2008
+          }
+        ],
+        "experience": [
+          {
+            "title": "Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2017
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on machine learning (1)",
+            "end_year": 2018
+          },
+          {
+            "title": "A study on machine learning (2)",
+            "end_year": 2019
+          },
+          {
+            "title": "A study on machine learning (3)",
+            "end_year": 2020
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1052",
+      "employee_id": "710101924",
+      "name": {
+        "en": "Dr. Imran Chowdhury"
+      },
+      "designation": "Associate Professor",
+      "department": "SWE",
+      "email": "imran.chowdhury.swe@diu.example.edu",
+      "phone": "+880 1847-542893",
+      "extension": "65376",
+      "office_room": "AB4-202",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Imran Chowdhury teaches at the Department of SWE and has been with the university since 2015.</p>",
+      "research_interests": "Software testing, requirements engineering, DevOps",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0052"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Malaya",
+            "end_year": 2014
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Malaya",
+            "end_year": 2011
+          },
+          {
+            "title": "BSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2007
+          }
+        ],
+        "experience": [
+          {
+            "title": "Associate Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2015
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on software testing (1)",
+            "end_year": 2016
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1053",
+      "employee_id": "710101961",
+      "name": {
+        "en": "Dr. Jannat Chowdhury"
+      },
+      "designation": "Lecturer",
+      "department": "SWE",
+      "email": "jannat.chowdhury.swe@diu.example.edu",
+      "phone": "+880 1847-531035",
+      "extension": "65559",
+      "office_room": "AB1-114",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Jannat Chowdhury teaches at the Department of SWE and has been with the university since 2010.</p>",
+      "research_interests": "Software testing, requirements engineering, DevOps",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0053"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Daffodil International University",
+            "end_year": 2010
+          },
+          {
+            "title": "MSc",
+            "institution": "Monash University",
+            "end_year": 2005
+          },
+          {
+            "title": "BSc",
+            "institution": "Jahangirnagar University",
+            "end_year": 2001
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2010
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on software testing (1)",
+            "end_year": 2011
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1054",
+      "employee_id": "710101998",
+      "name": {
+        "en": "Nusrat Islam"
+      },
+      "designation": "Assistant Professor",
+      "department": "BBA",
+      "email": "nusrat.islam.bba@diu.example.edu",
+      "phone": "+880 1847-853325",
+      "extension": "65881",
+      "office_room": "AB4-293",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Nusrat Islam teaches at the Department of BBA and has been with the university since 2004.</p>",
+      "research_interests": "Strategic management, entrepreneurship",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "Jahangirnagar University",
+            "end_year": 2000
+          },
+          {
+            "title": "BSc",
+            "institution": "Jahangirnagar University",
+            "end_year": 1997
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2004
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1055",
+      "employee_id": "710102035",
+      "name": {
+        "en": "Dr. Sadia Mia"
+      },
+      "designation": "Assistant Professor",
+      "department": "MGT",
+      "email": "sadia.mia.mgt@diu.example.edu",
+      "phone": "+880 1847-773178",
+      "extension": "65891",
+      "office_room": "AB2-892",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Sadia Mia teaches at the Department of MGT and has been with the university since 2020.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0055"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Jahangirnagar University",
+            "end_year": 2017
+          },
+          {
+            "title": "MSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2015
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Malaya",
+            "end_year": 2013
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2020
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2021
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2022
+          },
+          {
+            "title": "A study on education (3)",
+            "end_year": 2023
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1056",
+      "employee_id": "710102072",
+      "name": {
+        "en": "Sadia Karim"
+      },
+      "designation": "Lecturer",
+      "department": "CSE",
+      "email": "sadia.karim.cse@diu.example.edu",
+      "phone": "+880 1847-179159",
+      "extension": "65474",
+      "office_room": "AB3-374",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Sadia Karim teaches at the Department of CSE and has been with the university since 2008.</p>",
+      "research_interests": "Machine learning, computer vision, natural language processing",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Tokyo",
+            "end_year": 2003
+          },
+          {
+            "title": "BSc",
+            "institution": "Monash University",
+            "end_year": 2000
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2008
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1057",
+      "employee_id": "710102109",
+      "name": {
+        "en": "Dr. Masud Siddique"
+      },
+      "designation": "Lecturer",
+      "department": "MKT",
+      "email": "masud.siddique.mkt@diu.example.edu",
+      "phone": "+880 1847-320261",
+      "extension": "65879",
+      "office_room": "AB2-651",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Masud Siddique teaches at the Department of MKT and has been with the university since 2006.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0057"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Tokyo",
+            "end_year": 2006
+          },
+          {
+            "title": "MSc",
+            "institution": "BUET",
+            "end_year": 2002
+          },
+          {
+            "title": "BSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 1999
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2006
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2007
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1058",
+      "employee_id": "710102146",
+      "name": {
+        "en": "Arif Bhuiyan"
+      },
+      "designation": "Lecturer",
+      "department": "CSE",
+      "email": "arif.bhuiyan.cse@diu.example.edu",
+      "phone": "+880 1847-713902",
+      "extension": "65323",
+      "office_room": "AB2-570",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Arif Bhuiyan teaches at the Department of CSE and has been with the university since 2008.</p>",
+      "research_interests": "Machine learning, computer vision, natural language processing",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Dhaka",
+            "end_year": 2004
+          },
+          {
+            "title": "BSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 1999
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2008
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1059",
+      "employee_id": "710102183",
+      "name": {
+        "en": "Dr. Sharmin Ahmed"
+      },
+      "designation": "Associate Professor",
+      "department": "MKT",
+      "email": "sharmin.ahmed.mkt@diu.example.edu",
+      "phone": "+880 1847-292255",
+      "extension": "65991",
+      "office_room": "AB1-704",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Sharmin Ahmed teaches at the Department of MKT and has been with the university since 2006.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0059"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Leeds",
+            "end_year": 2003
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Dhaka",
+            "end_year": 2003
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Leeds",
+            "end_year": 1997
+          }
+        ],
+        "experience": [
+          {
+            "title": "Associate Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2006
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2007
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1060",
+      "employee_id": "710102220",
+      "name": {
+        "en": "Masud Haque"
+      },
+      "designation": "Assistant Professor",
+      "department": "ITM",
+      "email": "masud.haque.itm@diu.example.edu",
+      "phone": "+880 1847-293373",
+      "extension": "65458",
+      "office_room": "AB3-291",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Masud Haque teaches at the Department of ITM and has been with the university since 2006.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "Daffodil International University",
+            "end_year": 2000
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Tokyo",
+            "end_year": 1998
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2006
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1061",
+      "employee_id": "710102257",
+      "name": {
+        "en": "Dr. Masud Talukder"
+      },
+      "designation": "Professor",
+      "department": "CSE",
+      "email": "masud.talukder.cse@diu.example.edu",
+      "phone": "+880 1847-655874",
+      "extension": "65549",
+      "office_room": "AB1-412",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Masud Talukder teaches at the Department of CSE and has been with the university since 2017.</p>",
+      "research_interests": "Machine learning, computer vision, natural language processing",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0061"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Monash University",
+            "end_year": 2015
+          },
+          {
+            "title": "MSc",
+            "institution": "BUET",
+            "end_year": 2011
+          },
+          {
+            "title": "BSc",
+            "institution": "Jahangirnagar University",
+            "end_year": 2010
+          }
+        ],
+        "experience": [
+          {
+            "title": "Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2017
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on machine learning (1)",
+            "end_year": 2018
+          },
+          {
+            "title": "A study on machine learning (2)",
+            "end_year": 2019
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1062",
+      "employee_id": "710102294",
+      "name": {
+        "en": "Sadia Chowdhury"
+      },
+      "designation": "Assistant Professor",
+      "department": "CIS",
+      "email": "sadia.chowdhury.cis@diu.example.edu",
+      "phone": "+880 1847-598724",
+      "extension": "65466",
+      "office_room": "AB4-858",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Sadia Chowdhury teaches at the Department of CIS and has been with the university since 2010.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "Jahangirnagar University",
+            "end_year": 2004
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Malaya",
+            "end_year": 2001
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2010
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1063",
+      "employee_id": "710102331",
+      "name": {
+        "en": "Arif Islam"
+      },
+      "designation": "Senior Lecturer",
+      "department": "BBA",
+      "email": "arif.islam.bba@diu.example.edu",
+      "phone": "+880 1847-308638",
+      "extension": "65192",
+      "office_room": "AB2-457",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Arif Islam teaches at the Department of BBA and has been with the university since 2007.</p>",
+      "research_interests": "Strategic management, entrepreneurship",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Tokyo",
+            "end_year": 2001
+          },
+          {
+            "title": "BSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 1999
+          }
+        ],
+        "experience": [
+          {
+            "title": "Senior Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2007
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1064",
+      "employee_id": "710102368",
+      "name": {
+        "en": "Zahid Islam"
+      },
+      "designation": "Assistant Professor",
+      "department": "MGT",
+      "email": "zahid.islam.mgt@diu.example.edu",
+      "phone": "+880 1847-470077",
+      "extension": "65122",
+      "office_room": "AB1-488",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Zahid Islam teaches at the Department of MGT and has been with the university since 2014.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Dhaka",
+            "end_year": 2009
+          },
+          {
+            "title": "BSc",
+            "institution": "Daffodil International University",
+            "end_year": 2005
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2014
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1065",
+      "employee_id": "710102405",
+      "name": {
+        "en": "Dr. Shafiq Talukder"
+      },
+      "designation": "Associate Professor",
+      "department": "FINANCE",
+      "email": "shafiq.talukder.finance@diu.example.edu",
+      "phone": "+880 1847-224225",
+      "extension": "65644",
+      "office_room": "AB3-137",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Shafiq Talukder teaches at the Department of FINANCE and has been with the university since 2004.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0065"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Leeds",
+            "end_year": 2001
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Dhaka",
+            "end_year": 2001
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Tokyo",
+            "end_year": 1996
+          }
+        ],
+        "experience": [
+          {
+            "title": "Associate Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2004
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2005
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2006
+          },
+          {
+            "title": "A study on education (3)",
+            "end_year": 2007
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1066",
+      "employee_id": "710102442",
+      "name": {
+        "en": "Rokeya Sarker"
+      },
+      "designation": "Senior Lecturer",
+      "department": "ACCOUNTING",
+      "email": "rokeya.sarker.accounting@diu.example.edu",
+      "phone": "+880 1847-834928",
+      "extension": "65632",
+      "office_room": "AB4-725",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Rokeya Sarker teaches at the Department of ACCOUNTING and has been with the university since 2010.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "University of Tokyo",
+            "end_year": 2005
+          },
+          {
+            "title": "BSc",
+            "institution": "Daffodil International University",
+            "end_year": 2003
+          }
+        ],
+        "experience": [
+          {
+            "title": "Senior Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2010
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1067",
+      "employee_id": "710102479",
+      "name": {
+        "en": "Rakib Talukder"
+      },
+      "designation": "Lecturer",
+      "department": "THM",
+      "email": "rakib.talukder.thm@diu.example.edu",
+      "phone": "+880 1847-976069",
+      "extension": "65486",
+      "office_room": "AB3-112",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Rakib Talukder teaches at the Department of THM and has been with the university since 2007.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {},
+      "profile": {
+        "education": [
+          {
+            "title": "MSc",
+            "institution": "Monash University",
+            "end_year": 2001
+          },
+          {
+            "title": "BSc",
+            "institution": "BUET",
+            "end_year": 1999
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2007
+          }
+        ],
+        "publication": []
+      }
+    },
+    {
+      "id": "T-1068",
+      "employee_id": "710102516",
+      "name": {
+        "en": "Dr. Afroza Haque"
+      },
+      "designation": "Professor",
+      "department": "ITM",
+      "email": "afroza.haque.itm@diu.example.edu",
+      "phone": "+880 1847-102753",
+      "extension": "65945",
+      "office_room": "AB1-264",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Afroza Haque teaches at the Department of ITM and has been with the university since 2017.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0068"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Leeds",
+            "end_year": 2017
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Tokyo",
+            "end_year": 2012
+          },
+          {
+            "title": "BSc",
+            "institution": "Monash University",
+            "end_year": 2008
+          }
+        ],
+        "experience": [
+          {
+            "title": "Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2017
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2018
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1069",
+      "employee_id": "710102553",
+      "name": {
+        "en": "Dr. Zahid Karim"
+      },
+      "designation": "Associate Professor",
+      "department": "FINANCE",
+      "email": "zahid.karim.finance@diu.example.edu",
+      "phone": "+880 1847-120049",
+      "extension": "65363",
+      "office_room": "AB3-503",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Zahid Karim teaches at the Department of FINANCE and has been with the university since 2019.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0069"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "BUET",
+            "end_year": 2016
+          },
+          {
+            "title": "MSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2015
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Malaya",
+            "end_year": 2011
+          }
+        ],
+        "experience": [
+          {
+            "title": "Associate Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2019
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2020
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2021
+          },
+          {
+            "title": "A study on education (3)",
+            "end_year": 2022
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1070",
+      "employee_id": "710102590",
+      "name": {
+        "en": "Dr. Farzana Sarker"
+      },
+      "designation": "Assistant Professor",
+      "department": "THM",
+      "email": "farzana.sarker.thm@diu.example.edu",
+      "phone": "+880 1847-603076",
+      "extension": "65870",
+      "office_room": "AB4-538",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Farzana Sarker teaches at the Department of THM and has been with the university since 2013.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0070"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Leeds",
+            "end_year": 2010
+          },
+          {
+            "title": "MSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2010
+          },
+          {
+            "title": "BSc",
+            "institution": "Jahangirnagar University",
+            "end_year": 2005
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2013
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2014
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2015
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1071",
+      "employee_id": "710102627",
+      "name": {
+        "en": "Dr. Ruma Hossain"
+      },
+      "designation": "Lecturer",
+      "department": "BBA",
+      "email": "ruma.hossain.bba@diu.example.edu",
+      "phone": "+880 1847-803729",
+      "extension": "65263",
+      "office_room": "AB2-753",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Ruma Hossain teaches at the Department of BBA and has been with the university since 2004.</p>",
+      "research_interests": "Strategic management, entrepreneurship",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0071"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "University of Malaya",
+            "end_year": 2001
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Leeds",
+            "end_year": 2001
+          },
+          {
+            "title": "BSc",
+            "institution": "University of Dhaka",
+            "end_year": 1997
+          }
+        ],
+        "experience": [
+          {
+            "title": "Lecturer",
+            "institution": "Daffodil International University",
+            "start_year": 2004
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on strategic management (1)",
+            "end_year": 2005
+          },
+          {
+            "title": "A study on strategic management (2)",
+            "end_year": 2006
+          }
+        ]
+      }
+    },
+    {
+      "id": "T-1072",
+      "employee_id": "710102664",
+      "name": {
+        "en": "Dr. Kamrul Islam"
+      },
+      "designation": "Assistant Professor",
+      "department": "CIS",
+      "email": "kamrul.islam.cis@diu.example.edu",
+      "phone": "+880 1847-108685",
+      "extension": "65896",
+      "office_room": "AB3-103",
+      "photo_url": null,
+      "employment_type": "full_time",
+      "status": "active",
+      "biography": "<p>Dr. Kamrul Islam teaches at the Department of CIS and has been with the university since 2014.</p>",
+      "research_interests": "Teaching and learning, curriculum development",
+      "links": {
+        "google_scholar": "https://scholar.google.com/citations?user=DUMMY0072"
+      },
+      "profile": {
+        "education": [
+          {
+            "title": "PhD",
+            "institution": "Jahangirnagar University",
+            "end_year": 2014
+          },
+          {
+            "title": "MSc",
+            "institution": "University of Leeds",
+            "end_year": 2011
+          },
+          {
+            "title": "BSc",
+            "institution": "Universiti Teknologi Malaysia",
+            "end_year": 2006
+          }
+        ],
+        "experience": [
+          {
+            "title": "Assistant Professor",
+            "institution": "Daffodil International University",
+            "start_year": 2014
+          }
+        ],
+        "publication": [
+          {
+            "title": "A study on education (1)",
+            "end_year": 2015
+          },
+          {
+            "title": "A study on education (2)",
+            "end_year": 2016
+          }
+        ]
+      }
+    }
+  ]
+}

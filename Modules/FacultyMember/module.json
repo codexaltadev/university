@@ -1,0 +1,60 @@
+{
+    "name": "FacultyMember",
+    "alias": "facultymember",
+    "description": "Teachers' directory read from the university's faculty site (JSON file now, API later); a person source, /faculty-members — M-07",
+    "keywords": [
+        "people",
+        "faculty member",
+        "teacher"
+    ],
+    "priority": 62,
+    "providers": [
+        "Modules\\FacultyMember\\Providers\\FacultyMemberServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "faculty-member",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "faculty_member_",
+        "dependencies": {
+            "department": "^1.0",
+            "faculty": "^1.0"
+        },
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "faculty-member.member": "Modules\\FacultyMember\\Models\\FacultyMember"
+        },
+        "custom_permissions": [
+            "Sync:FacultyMember"
+        ],
+        "provides": {
+            "person_source": true,
+            "scopeable": true,
+            "searchable": true,
+            "sitemap": true,
+            "menu_item_types": true,
+            "website_pages": true,
+            "metrics": [
+                "faculty-member.count"
+            ],
+            "vocabularies": [
+                "faculty-member.designation"
+            ],
+            "homepage_sections": [
+                "faculty-member.list"
+            ],
+            "layouts": [
+                "faculty-member.directory"
+            ],
+            "settings": true
+        }
+    }
+}

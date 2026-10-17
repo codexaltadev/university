@@ -36,7 +36,7 @@
 | Upload করা file | `https://webbackend.daffodilvarsity.edu.bd/{path}` (DB-তে relative path, যেমন `noticeFile/…pdf`, `images/faculty/…webp`; notice file ৩,৫৩২টি সহ) → Media Library |
 | পুরনো website-এর URL | Sitemap + Analytics-এর শীর্ষ URL → 301 redirect |
 
-**নতুন করে entry (legacy-তে নেই):** Course, Curriculum, Faculty Member, Campus, Contact inquiry, News (BRD Q-21 — একটি blog post ছাড়া)।
+**নতুন করে entry (legacy-তে নেই):** Course, Curriculum, Campus, Contact inquiry, News (BRD Q-21 — একটি blog post ছাড়া)। **Faculty Member** *(2026-10-17)*: entry বা migration নয় — DIU-র আলাদা faculty site থেকে `faculty-member:sync` (DB-03 §8.3); go-live-এর আগে Settings-এ API address।
 
 ---
 
@@ -193,7 +193,7 @@ Dependency অনুযায়ী — আগের ধাপের id পর�
 | 7.2 | Person merge review | `admins`-এর ২১টি একই-নামের group, নাম + পদবি দিয়ে প্রস্তাবিত merge | HR বা Registrar (DBQ-04) | Dry-run ২-এর আগে |
 | 7.3 | Program review | `program_credit_duration` parse যাচাই; একাধিক `eligibilities` row-এর merge; `institutional_programs` ও `mba_programs`-এর level বা একত্রীকরণ; `tuitions.majors` text | Admission office + department | Dry-run ২-এর আগে |
 | 7.4 | Campus তালিকা | Campus নাম ও ঠিকানা; `admins.campus` text → campus match | Web team | Dry-run ১-এর আগে |
-| 7.5 | নতুন content | Course, Curriculum, Faculty Member — legacy-তে নেই | প্রতিটি department | Go-live-এর আগে (staging-এ entry, final run-এর পর production-এ — Section 9 দেখুন) |
+| 7.5 | নতুন content | Course, Curriculum — legacy-তে নেই (Faculty Member faculty site থেকে sync, DB-03 §8.3) | প্রতিটি department | Go-live-এর আগে (staging-এ entry, final run-এর পর production-এ — Section 9 দেখুন) |
 | 7.6 | Calendar তারিখ | `date_explanation` থেকে parse না হওয়া তারিখ | Registrar / Academic | Go-live-এর আগে (চলতি session শুধু) |
 | 7.7 | Flipbook PDF | ১৬টি flipbook-এর মূল PDF (legacy-তে ZIP) — নতুন system-এর নিজস্ব flipbook শুধু PDF চায় (S17D-এর document-গুলোতে PDF দিলেই চলবে) | Web team | Dry-run ২-এর আগে |
 | 7.8 | Services data | Ranking-এর agency / rank parse যাচাই; ২টি অমিল `country_id` (DBQ-05); ৪টি `mps_categories`-এর অর্থ (DBQ-06); `events.url`-এর ধরন | International Affairs, Web team | Dry-run ২-এর আগে |
@@ -228,7 +228,7 @@ Dependency অনুযায়ী — আগের ধাপের id পর�
 
 Legacy admin panel-এ পরিবর্তন বন্ধ থাকে **final snapshot থেকে DNS switch পর্যন্ত** (DR-3-এর সময় অনুযায়ী, আনুমানিক কয়েক ঘণ্টা)। জরুরি notice এই সময়ে এলে: নতুন system-এ (switch-এর পর) সরাসরি entry।
 
-Faculty Member, Course, Curriculum (৭.৫) staging-এ entry করা হলে final run-এর পর একটি export / import command দিয়ে production-এ আনা হয় — legacy থেকে নয়, তাই freeze-এর প্রভাব নেই।
+Course, Curriculum (৭.৫) staging-এ entry করা হলে final run-এর পর একটি export / import command দিয়ে production-এ আনা হয় — legacy থেকে নয়, তাই freeze-এর প্রভাব নেই।
 
 ### 9.3 Timeline
 
@@ -275,7 +275,7 @@ Faculty Member, Course, Curriculum (৭.৫) staging-এ entry করা হল�
 | `migration_id_map` archive (CSV) ও table মুছে ফেলা | T+30 |
 | `LEGACY_DB_*` ও legacy DB user মুছে ফেলা; `tools/legacy-migration` production server থেকে সরানো | T+30 |
 | Legacy DB ও file-এর পূর্ণ archive (offsite, ১ বছর) | T+30 |
-| Faculty Member data এলে person matching আবার (DB-04 §11.2 ধাপ ৬) | Faculty Member module-এর data import-এর সময় |
+| Faculty Member data এলে person matching আবার (DB-04 §11.2 ধাপ ৬) | Faculty site-এর API দিয়ে প্রথম sync-এর পর |
 | Content Update Reminder চালু (migration-এর সময় বন্ধ ছিল) | T+7 (hypercare-এর পর, যাতে প্রথম দিনেই সবাইকে reminder না যায়) |
 | Migration-এর শিক্ষা — অন্য university-র জন্য সাধারণ "Import guide" (CSV import) User Manual-এ | ধাপ ১০ |
 

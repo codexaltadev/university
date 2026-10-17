@@ -1,0 +1,16 @@
+{
+    "name": "uwms/faculty-member",
+    "description": "Faculty Member module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\FacultyMember\\": "app/",
+            "Modules\\FacultyMember\\Database\\Factories\\": "database/factories/",
+            "Modules\\FacultyMember\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\FacultyMember\\Tests\\": "tests/" }
+    }
+}
