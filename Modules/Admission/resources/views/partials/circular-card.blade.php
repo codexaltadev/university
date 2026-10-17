@@ -2,7 +2,7 @@
 <article class="admission-circular card" style="padding:var(--space-6, 24px);border:1px solid var(--color-border);border-radius:var(--radius-md, 8px);background:var(--color-surface);{{ $circular->isClosed() ? 'opacity:.75' : '' }}">
     <div style="display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--space-3, 12px);align-items:baseline">
         <h3 style="margin:0"><a href="{{ $circular->url() }}">{{ $circular->title }}</a></h3>
-        <span class="badge {{ $circular->isClosed() ? 'badge-muted' : 'badge-success' }}">{{ __($circular->isClosed() ? 'admission::admission.closed' : 'admission::admission.open') }}</span>
+        <span class="badge {{ $circular->isClosed() ? 'badge--muted' : 'badge--success' }}">{{ __($circular->isClosed() ? 'admission::admission.closed' : 'admission::admission.open') }}</span>
     </div>
     @if (! $circular->isClosed() && ($next = $circular->nextDate()))
         @php($days = max(0, (int) today()->diffInDays($next['date'], false)))

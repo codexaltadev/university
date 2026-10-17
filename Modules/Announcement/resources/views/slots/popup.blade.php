@@ -21,7 +21,7 @@
                     <h2 id="anw-popup-title-{{ $widget->id }}" style="margin-top:0">{{ $widget->title ?: __('announcement::announcement.types.popup') }}</h2>
                     @if ($widget->body)<div class="prose">{!! $widget->body !!}</div>@endif
                     @if ($href = $widget->href())
-                        <p style="margin-top:16px"><a class="button" href="{{ $href }}">{{ $widget->button_text ?: __('announcement::announcement.more') }}</a></p>
+                        <p style="margin-top:16px"><a class="btn" href="{{ $href }}">{{ $widget->button_text ?: __('announcement::announcement.more') }}</a></p>
                     @endif
                 </div>
             </div>

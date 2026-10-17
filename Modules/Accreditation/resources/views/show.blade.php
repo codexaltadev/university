@@ -5,7 +5,7 @@
         @include('accreditation::partials.accreditation', ['accreditation' => $accreditation, 'base' => $base])
         <div class="prose" style="margin-top:var(--space-6, 24px)">{!! $accreditation->body !!}</div>
         @if ($accreditation->website_url)
-            <p style="margin-top:var(--space-6, 24px)"><a class="button" href="{{ $accreditation->website_url }}" target="_blank" rel="noopener">{{ __('accreditation::accreditation.visit') }}</a></p>
+            <p style="margin-top:var(--space-6, 24px)"><a class="btn" href="{{ $accreditation->website_url }}" target="_blank" rel="noopener">{{ __('accreditation::accreditation.visit') }}</a></p>
         @endif
     </article>
 </x-theme::layout>

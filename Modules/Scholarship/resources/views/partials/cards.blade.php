@@ -12,7 +12,7 @@
             @if ($scholarship->parts_count)
                 <p style="margin:0;font-size:var(--text-sm, 14px)">{{ trans_choice('scholarship::scholarship.parts_count', $scholarship->parts_count, ['count' => $scholarship->parts_count]) }}</p>
             @endif
-            <a href="{{ $scholarship->url() }}" class="button" style="margin-top:auto">{{ __('scholarship::scholarship.details') }}</a>
+            <a href="{{ $scholarship->url() }}" class="btn" style="margin-top:auto">{{ __('scholarship::scholarship.details') }}</a>
         </article>
     @endforeach
 </div>

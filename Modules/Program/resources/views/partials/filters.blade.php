@@ -51,7 +51,7 @@
         </select>
     </label>
     <div style="display:flex;gap:.5rem">
-        <button type="submit" class="btn btn-primary">{{ __('program::program.filter') }}</button>
+        <button type="submit" class="btn btn--primary">{{ __('program::program.filter') }}</button>
         <a href="{{ url('/programs') }}" class="btn">{{ __('program::program.reset') }}</a>
     </div>
 </form>

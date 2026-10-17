@@ -8,9 +8,9 @@
 
         @if (count($types) > 1)
             <nav aria-label="{{ __('testimonials::testimonials.fields.type') }}" style="display:flex;flex-wrap:wrap;gap:var(--space-2, 8px);margin-top:var(--space-4, 16px)">
-                <a href="{{ url($base.'/testimonials').(request('view') ? '?view='.request('view') : '') }}" @class(['button', 'button--outline' => $type !== null])>{{ __('testimonials::testimonials.all') }}</a>
+                <a href="{{ url($base.'/testimonials').(request('view') ? '?view='.request('view') : '') }}" @class(['btn', 'btn--outline' => $type !== null])>{{ __('testimonials::testimonials.all') }}</a>
                 @foreach ($types as $t)
-                    <a href="{{ url($base.'/testimonials').'?'.http_build_query(array_filter(['type' => $t, 'view' => request('view')])) }}" @class(['button', 'button--outline' => $type !== $t])>{{ __("testimonials::testimonials.types_plural.{$t}") }}</a>
+                    <a href="{{ url($base.'/testimonials').'?'.http_build_query(array_filter(['type' => $t, 'view' => request('view')])) }}" @class(['btn', 'btn--outline' => $type !== $t])>{{ __("testimonials::testimonials.types_plural.{$t}") }}</a>
                 @endforeach
             </nav>
         @endif

@@ -14,7 +14,7 @@
                 <img src="{{ $photo }}" alt="{{ $person->name() }}" style="width:220px;height:220px;border-radius:var(--radius-md, 8px);object-fit:cover">
             @endif
             <div style="flex:1;min-width:240px">
-                <h1 style="margin-top:0">{{ $person->name() }}@if ($alumnus->is_pride) <span class="badge badge-success">{{ __('alumni::alumni.pride_badge') }}</span>@endif</h1>
+                <h1 style="margin-top:0">{{ $person->name() }}@if ($alumnus->is_pride) <span class="badge badge--success">{{ __('alumni::alumni.pride_badge') }}</span>@endif</h1>
                 @if ($headline = $alumnus->headline())<p class="lead">{{ $headline }}</p>@endif
                 <p>
                     @if ($program = $alumnus->program()){{ $program->name }}@elseif ($department = $alumnus->department()){{ $department->name }}@endif

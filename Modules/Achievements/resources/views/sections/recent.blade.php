@@ -9,5 +9,5 @@
             </div>
         @endforeach
     </div>
-    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Achievements\Models\Achievement::PATH.(($settings['level'] ?? null) ? '?level='.$settings['level'] : '')) }}" class="button">{{ __('achievements::achievements.all_achievements') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Achievements\Models\Achievement::PATH.(($settings['level'] ?? null) ? '?level='.$settings['level'] : '')) }}" class="btn">{{ __('achievements::achievements.all_achievements') }}</a></p>
 @endif

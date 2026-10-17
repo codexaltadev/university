@@ -14,7 +14,7 @@
     <div style="padding:var(--space-4, 16px);display:grid;gap:var(--space-1, 4px)">
         <p style="margin:0;font-size:.85em;color:var(--color-muted, #6b7280)">
             {{ $event->when() }}
-            @if ($state !== 'upcoming') <span class="badge {{ $state === 'ongoing' ? 'badge-success' : 'badge-muted' }}">{{ __("events::events.states.{$state}") }}</span>@endif
+            @if ($state !== 'upcoming') <span class="badge {{ $state === 'ongoing' ? 'badge--success' : 'badge--muted' }}">{{ __("events::events.states.{$state}") }}</span>@endif
         </p>
         <h3 style="margin:0;font-size:1.1em"><a href="{{ $href }}">{{ $event->title }}</a></h3>
         @if (filled($event->venue))<p style="margin:0;font-size:.9em">{{ $event->venue }}</p>@endif

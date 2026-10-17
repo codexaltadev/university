@@ -14,11 +14,11 @@
                 @foreach (\Modules\International\Models\Institution::AGREEMENTS as $a)<option value="{{ $a }}" @selected($type === $a)>{{ __('international::international.agreements.'.$a) }}</option>@endforeach
             </select>
             <input type="hidden" name="view" value="{{ $layout }}">
-            <button class="button" type="submit">{{ __('international::international.go') }}</button>
+            <button class="btn" type="submit">{{ __('international::international.go') }}</button>
         </form>
         <nav style="display:flex;gap:var(--space-2, 8px);margin-top:var(--space-3, 12px)">
             @foreach (\Modules\International\Support\InternationalWebsite::VIEWS as $v)
-                <a href="{{ $path.'?'.http_build_query(array_filter(['q' => $q, 'country' => $country?->iso2, 'type' => $type, 'view' => $v])) }}" @class(['button', 'button--outline' => $layout !== $v])>{{ __('international::international.layouts.'.$v) }}</a>
+                <a href="{{ $path.'?'.http_build_query(array_filter(['q' => $q, 'country' => $country?->iso2, 'type' => $type, 'view' => $v])) }}" @class(['btn', 'btn--outline' => $layout !== $v])>{{ __('international::international.layouts.'.$v) }}</a>
             @endforeach
         </nav>
 

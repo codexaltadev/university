@@ -37,7 +37,7 @@
         @endif
         <div style="display:flex;flex-wrap:wrap;gap:.75rem;align-items:center">
             @if ($entity->application_url)
-                <a href="{{ $entity->application_url }}" class="btn btn-primary" target="_blank" rel="noopener">{{ __('program::program.apply') }}</a>
+                <a href="{{ $entity->application_url }}" class="btn btn--primary" target="_blank" rel="noopener">{{ __('program::program.apply') }}</a>
             @endif
             @if ($brochure)
                 <a href="{{ $brochure->url() }}" class="btn" download>{{ __('program::program.brochure') }}</a>

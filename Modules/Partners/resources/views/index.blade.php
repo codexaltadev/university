@@ -6,12 +6,12 @@
         @if ($types->count() > 1 || $hasDiscounts)
             <nav style="display:flex;flex-wrap:wrap;gap:var(--space-2, 8px);margin-top:var(--space-4, 16px)">
                 @if ($types->count() > 1)
-                    <a href="{{ $path }}" @class(['button', 'button--outline' => $type !== null])>{{ __('partners::partners.all') }}</a>
+                    <a href="{{ $path }}" @class(['btn', 'btn--outline' => $type !== null])>{{ __('partners::partners.all') }}</a>
                     @foreach ($types as $t)
-                        <a href="{{ $path.'?type='.$t }}" @class(['button', 'button--outline' => $type !== $t])>{{ __('partners::partners.types.'.$t) }}</a>
+                        <a href="{{ $path.'?type='.$t }}" @class(['btn', 'btn--outline' => $type !== $t])>{{ __('partners::partners.types.'.$t) }}</a>
                     @endforeach
                 @endif
-                @if ($hasDiscounts)<a class="button button--outline" href="{{ url($base.'/'.\Modules\Partners\Models\Partner::DISCOUNT_PATH) }}">{{ __('partners::partners.see_discounts') }}</a>@endif
+                @if ($hasDiscounts)<a class="btn btn--outline" href="{{ url($base.'/'.\Modules\Partners\Models\Partner::DISCOUNT_PATH) }}">{{ __('partners::partners.see_discounts') }}</a>@endif
             </nav>
         @endif
         @if ($partners->isEmpty())

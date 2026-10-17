@@ -4,7 +4,9 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "build:theme": "vite build --config themes/default/vite.config.js",
+        "dev:theme": "vite --config themes/default/vite.config.js"
     },
     "devDependencies": {
         "@tailwindcss/vite": "4.3.3",

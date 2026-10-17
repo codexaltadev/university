@@ -56,7 +56,7 @@
                 @endforeach
             </div>
             @if ($items[$kind]->count() > 6 || $kind !== 'scope')
-                <p style="margin-top:var(--space-4, 16px)"><a class="button button--outline" href="{{ $base.'/'.\Modules\Lab\Models\LabItem::SEGMENTS[$kind] }}">{{ __('lab::lab.see_all') }}</a></p>
+                <p style="margin-top:var(--space-4, 16px)"><a class="btn btn--outline" href="{{ $base.'/'.\Modules\Lab\Models\LabItem::SEGMENTS[$kind] }}">{{ __('lab::lab.see_all') }}</a></p>
             @endif
         </x-theme::section>
     @endif

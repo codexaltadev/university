@@ -16,7 +16,7 @@
                     @foreach (['category', 'tag', 'year', 'month', 'view'] as $keep)
                         @if (request($keep))<input type="hidden" name="{{ $keep }}" value="{{ request($keep) }}">@endif
                     @endforeach
-                    <button type="submit" class="button">{{ __('news::news.search') }}</button>
+                    <button type="submit" class="btn">{{ __('news::news.search') }}</button>
                 </form>
 
                 @if ($categories->isNotEmpty())

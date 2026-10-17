@@ -11,7 +11,7 @@
         @if ($facts = $document->fileFacts())<small style="color:var(--color-muted, #6b7280)">{{ $facts }}</small>@endif
     </div>
     <p style="margin:var(--space-2, 8px) 0 0;display:flex;gap:var(--space-2, 8px);flex-wrap:wrap">
-        @if ($document->flipbook())<a class="button button--outline" href="{{ $href }}">{{ __('documents::documents.read') }}</a>@endif
-        @if ($document->allow_download && ($document->fileItem() || $document->external_url))<a class="button" href="{{ $href }}/file">{{ __('documents::documents.download') }}</a>@endif
+        @if ($document->flipbook())<a class="btn btn--outline" href="{{ $href }}">{{ __('documents::documents.read') }}</a>@endif
+        @if ($document->allow_download && ($document->fileItem() || $document->external_url))<a class="btn" href="{{ $href }}/file">{{ __('documents::documents.download') }}</a>@endif
     </p>
 </article>

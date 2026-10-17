@@ -32,7 +32,7 @@
                 </label>
             @endif
             @if (request('view'))<input type="hidden" name="view" value="{{ request('view') }}">@endif
-            <button type="submit" class="button">{{ __('documents::documents.search') }}</button>
+            <button type="submit" class="btn">{{ __('documents::documents.search') }}</button>
         </form>
 
         @if ($documents->isEmpty())

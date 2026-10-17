@@ -31,7 +31,7 @@
                 <iframe src="{{ $reader }}#view=FitH" title="{{ $document->title }}" loading="lazy" style="width:100%;height:80vh;border:1px solid var(--color-border);border-radius:var(--radius-sm, 4px)"></iframe>
             @endif
             @if ($download && ! $document->flipbook())
-                <p style="margin-top:var(--space-4, 16px)"><a class="button" href="{{ $download }}">{{ __('documents::documents.download') }}</a></p>
+                <p style="margin-top:var(--space-4, 16px)"><a class="btn" href="{{ $download }}">{{ __('documents::documents.download') }}</a></p>
             @endif
         </div>
 

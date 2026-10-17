@@ -10,7 +10,7 @@
                 @csrf
                 <label for="reason">{{ __('newsletter::newsletter.unsubscribe.why') }}</label>
                 <textarea id="reason" name="reason" rows="3" maxlength="255" style="padding:var(--space-3, 12px);border:1px solid var(--color-border);border-radius:var(--radius-sm, 4px)"></textarea>
-                <div><button class="button" type="submit">{{ __('newsletter::newsletter.unsubscribe.send') }}</button></div>
+                <div><button class="btn" type="submit">{{ __('newsletter::newsletter.unsubscribe.send') }}</button></div>
             </form>
         @endif
         <p style="margin-top:var(--space-6, 24px)"><a href="{{ url('/') }}">← {{ __('newsletter::newsletter.home') }}</a></p>

@@ -9,5 +9,5 @@
             </li>
         @endforeach
     </ul>
-    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Notice\Models\Notice::PATH) }}" class="button">{{ __('notice::notice.all_notices') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Notice\Models\Notice::PATH) }}" class="btn">{{ __('notice::notice.all_notices') }}</a></p>
 @endif

@@ -9,5 +9,5 @@
             @endforeach
         </div>
     </div>
-    <p style="margin-top:var(--space-4, 16px)"><a class="button" href="{{ url($base.'/'.\Modules\International\Support\InternationalWebsite::ROOT.'/partners') }}">{{ __('international::international.see_all') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px)"><a class="btn" href="{{ url($base.'/'.\Modules\International\Support\InternationalWebsite::ROOT.'/partners') }}">{{ __('international::international.see_all') }}</a></p>
 @endif

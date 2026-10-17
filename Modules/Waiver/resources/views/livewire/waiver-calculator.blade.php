@@ -87,7 +87,7 @@
                 @error('cgpa') <small class="error" style="color:var(--color-danger, #b91c1c)">{{ $message }}</small> @enderror
             </label>
         @endif
-        <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">{{ __('waiver::waiver.calculator.calculate') }}</button>
+        <button type="submit" class="btn btn--primary" wire:loading.attr="disabled">{{ __('waiver::waiver.calculator.calculate') }}</button>
     </form>
 
     <div class="waiver-result" aria-live="polite">

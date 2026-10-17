@@ -20,7 +20,7 @@
             </section>
         @endif
         @if ($facility->external_url)
-            <p style="margin-top:var(--space-6, 24px)"><a class="button" href="{{ $facility->external_url }}" @if ($facility->open_in_new_tab) target="_blank" rel="noopener" @endif>{{ __('facilities::facilities.more') }}</a></p>
+            <p style="margin-top:var(--space-6, 24px)"><a class="btn" href="{{ $facility->external_url }}" @if ($facility->open_in_new_tab) target="_blank" rel="noopener" @endif>{{ __('facilities::facilities.more') }}</a></p>
         @endif
     </article>
 </x-theme::layout>

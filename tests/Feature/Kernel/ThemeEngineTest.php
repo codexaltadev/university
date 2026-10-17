@@ -197,5 +197,5 @@ it('gives themes Blade helpers: options, module checks, assets (Theme Guide §5,
         ->and(settings()->group('theme.default')['options'])->toBe(['hero_height' => 'medium']);
 
     expect(Blade::render("@moduleActive('faq')on @endmoduleActive|@moduleActive('nothing')on @endmoduleActive"))->toBe('on |')
-        ->and((string) $this->themes->vite(['resources/css/app.css']))->toContain('/themes/default/build/assets/app-1a0c.css');
+        ->and((string) $this->themes->vite(['resources/css/app.css']))->toMatch('#/themes/default/build/assets/app-[\w-]+\.css#');
 });

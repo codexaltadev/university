@@ -47,7 +47,7 @@
                 </select>
             </label>
             @if (request('view'))<input type="hidden" name="view" value="{{ request('view') }}">@endif
-            <button type="submit" class="button">{{ __('alumni::alumni.search') }}</button>
+            <button type="submit" class="btn">{{ __('alumni::alumni.search') }}</button>
         </form>
 
         <p style="margin-top:var(--space-3, 12px);color:var(--color-muted, #6b7280)">{{ trans_choice('alumni::alumni.count', $alumni->total(), ['count' => $alumni->total()]) }}</p>

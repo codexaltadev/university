@@ -12,7 +12,7 @@
 
         @if ($groups->count() > 1 || $selected)
             <nav class="faq-categories" aria-label="{{ __('faq::faq.fields.category') }}" style="display:flex;flex-wrap:wrap;gap:var(--space-2, 8px);margin-bottom:var(--space-6, 24px)">
-                <a href="{{ url()->current() }}" class="badge {{ $selected ? '' : 'badge-success' }}">{{ __('faq::faq.all') }}</a>
+                <a href="{{ url()->current() }}" class="badge {{ $selected ? '' : 'badge--success' }}">{{ __('faq::faq.all') }}</a>
                 @foreach ($groups as $group)
                     @if ($group['category'])
                         <a href="{{ url()->current().'?category='.urlencode($group['category']->slug()) }}" class="badge">{{ $group['category']->name }}</a>

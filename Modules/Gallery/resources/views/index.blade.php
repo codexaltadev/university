@@ -8,7 +8,7 @@
 
         <nav style="display:flex;flex-wrap:wrap;gap:var(--space-2, 8px);margin-top:var(--space-4, 16px)">
             @foreach ([null => __('gallery::gallery.all'), 'photos' => __('gallery::gallery.photos'), 'videos' => __('gallery::gallery.videos')] as $k => $label)
-                <a href="{{ url($base.'/gallery').'?'.http_build_query(array_filter(['kind' => $k ?: null, 'category' => request('category'), 'view' => request('view')])) }}" @class(['button', 'button--outline' => $kind !== ($k ?: null)])>{{ $label }}</a>
+                <a href="{{ url($base.'/gallery').'?'.http_build_query(array_filter(['kind' => $k ?: null, 'category' => request('category'), 'view' => request('view')])) }}" @class(['btn', 'btn--outline' => $kind !== ($k ?: null)])>{{ $label }}</a>
             @endforeach
         </nav>
 
@@ -26,7 +26,7 @@
                     </select>
                 </label>
                 @if ($kind)<input type="hidden" name="kind" value="{{ $kind }}">@endif
-                <noscript><button type="submit" class="button">{{ __('gallery::gallery.filter') }}</button></noscript>
+                <noscript><button type="submit" class="btn">{{ __('gallery::gallery.filter') }}</button></noscript>
             </form>
         @endif
 

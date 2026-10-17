@@ -8,7 +8,7 @@
         @if (count($groups) > 1)
             <nav style="display:flex;flex-wrap:wrap;gap:var(--space-2, 8px);margin-top:var(--space-4, 16px)">
                 @foreach ($groups as $i => $group)
-                    <a class="button button--outline" href="#discounts-{{ $i }}">{{ $group['term']?->name ?? __('partners::partners.other_discounts') }}</a>
+                    <a class="btn btn--outline" href="#discounts-{{ $i }}">{{ $group['term']?->name ?? __('partners::partners.other_discounts') }}</a>
                 @endforeach
             </nav>
         @endif

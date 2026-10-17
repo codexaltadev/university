@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | UI/UX Part B: Frontend |
-| Version | 0.2 — v0.1 approved 2026-10-08; v0.2: microsite URL hierarchy অনুযায়ী (§3, FR-GEN-34) |
+| Version | 0.3 — v0.1 approved 2026-10-08; v0.2: microsite URL hierarchy অনুযায়ী (§3, FR-GEN-34); v0.3: module UI class contract (§9.1, Phase 4.1) |
 | Date | 2026-10-08 |
 | Status | ✔ Approved — prototype v3 সহ (2026-10-08); v0.2 (URL) approved 2026-10-10 |
 | Based on | BRD v1.7, SRS v1.0, SAD Part B §6 (Microsite), §8 (Theme Engine), UI/UX Part A |
@@ -346,6 +346,24 @@ Event: date badge, time, venue map, speakers (person card), [ Add to calendar ] 
 | Module override (ঐচ্ছিক) | `views/modules/{slug}/...` — না দিলে module-এর default |
 | Accessibility | Section 8 পূরণ; theme install-এর আগে automated check (axe) staging-এ |
 | Screenshot | `screenshot.png` (Theme Manager-এ দেখানোর জন্য) |
+| Module UI contract | Section 9.1-এর সব class style করা |
+
+### 9.1 Module UI class contract (v0.3, Phase 4.1)
+
+Module-এর website view theme জানে না, তাই সে শুধু এই class ও token utility (`bg-primary`, `text-muted`, `font-heading`, `rounded-lg` …) ব্যবহার করে; প্রতিটি theme এগুলোকে নিজের চেহারা দেয়। নতুন নাম লাগলে আগে এখানে যোগ করতে হবে।
+
+| Class | কাজ |
+|---|---|
+| `btn`, `btn--primary`, `btn--secondary`, `btn--outline`, `btn--sm` | Link / button (touch target ≥ 44px) |
+| `badge`, `badge--success`, `badge--muted`, `badge--warning`, `badge--danger` | অবস্থা (Open / Closed, New, Archived) |
+| `card` | সাধারণ box |
+| `prose`, `lead` | Editor-এর rich text; ভূমিকা বাক্য |
+| `table` | Data table |
+| `accordion__item`, `accordion__title`, `accordion__body` | Accordion (FAQ, scholarship) |
+| `empty-state`, `form-error`, `no-print`, `sr-only` | খালি তালিকা, field error, print-এ লুকানো, শুধু screen reader |
+| `page`, `page__title`, `page-grid`, `home-section` (`--alt`, `--dark`, `__title`, `__sub`) | Page ও homepage section-এর কাঠামো |
+
+Default theme-এর test (`tests/Feature/Theme/DefaultThemeAssetsTest.php`) যাচাই করে যে build-এ প্রতিটি class আছে।
 
 ---
 

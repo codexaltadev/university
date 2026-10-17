@@ -28,7 +28,7 @@
             </select>
         </label>
         <div style="display:flex;gap:.5rem">
-            <button type="submit" class="btn btn-primary">{{ __('tuition::tuition.filter') }}</button>
+            <button type="submit" class="btn btn--primary">{{ __('tuition::tuition.filter') }}</button>
             <button type="button" class="btn" onclick="window.print()">{{ __('tuition::tuition.print') }}</button>
         </div>
     </form>

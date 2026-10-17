@@ -11,5 +11,5 @@
             @endforeach
         </div>
     @endif
-    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Gallery\Models\Album::PATH.'?kind=photos') }}" class="button">{{ __('gallery::gallery.all_albums') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Gallery\Models\Album::PATH.'?kind=photos') }}" class="btn">{{ __('gallery::gallery.all_albums') }}</a></p>
 @endif

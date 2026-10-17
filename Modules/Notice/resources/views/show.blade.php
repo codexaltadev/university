@@ -36,8 +36,8 @@
                                 <div style="display:flex;flex-wrap:wrap;gap:var(--space-3, 12px);justify-content:space-between;align-items:center">
                                     <strong>{{ $title }}</strong>
                                     <span style="display:flex;gap:var(--space-2, 8px)">
-                                        @if ($pdf)<button type="button" class="button" x-on:click="open = ! open" x-text="open ? @js(__('notice::notice.hide_preview')) : @js(__('notice::notice.preview'))">{{ __('notice::notice.preview') }}</button>@endif
-                                        <a href="{{ $usage->item->url() }}" class="button button-primary" download>{{ __('notice::notice.download') }}</a>
+                                        @if ($pdf)<button type="button" class="btn" x-on:click="open = ! open" x-text="open ? @js(__('notice::notice.hide_preview')) : @js(__('notice::notice.preview'))">{{ __('notice::notice.preview') }}</button>@endif
+                                        <a href="{{ $usage->item->url() }}" class="btn btn--primary" download>{{ __('notice::notice.download') }}</a>
                                     </span>
                                 </div>
                                 @if ($pdf)

@@ -48,7 +48,7 @@
                     </select>
                 </label>
             @endif
-            <noscript><button type="submit" class="button">{{ __('calendar::calendar.filter') }}</button></noscript>
+            <noscript><button type="submit" class="btn">{{ __('calendar::calendar.filter') }}</button></noscript>
         </form>
 
         @forelse ($current as $item)

@@ -7,5 +7,5 @@
             @include('facilities::partials.card', ['facility' => $facility, 'base' => $base, 'layout' => $layout])
         @endforeach
     </div>
-    <p style="margin-top:var(--space-4, 16px)"><a class="button" href="{{ url($base.'/'.\Modules\Facilities\Models\Facility::PATH) }}">{{ __('facilities::facilities.all_facilities') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px)"><a class="btn" href="{{ url($base.'/'.\Modules\Facilities\Models\Facility::PATH) }}">{{ __('facilities::facilities.all_facilities') }}</a></p>
 @endif

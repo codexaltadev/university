@@ -16,7 +16,7 @@
         <p style="color:var(--color-muted, #6b7280)">
             {{ $committee->category?->name }}
             @if ($term = $committee->termLabel()) · {{ __('committee::committee.term') }}: {{ $term }}@endif
-            @if ($committee->isPrevious()) <span class="badge badge-muted">{{ __('committee::committee.previous_term') }}</span>@endif
+            @if ($committee->isPrevious()) <span class="badge badge--muted">{{ __('committee::committee.previous_term') }}</span>@endif
         </p>
         @if ($next)
             <p><a href="{{ url($base.'/committees/'.$next->slug()) }}">{{ __('committee::committee.see_current') }}</a></p>
@@ -60,7 +60,7 @@
         </section>
 
         @if ($orderPdf)
-            <p style="margin-top:var(--space-6, 24px)"><a href="{{ $orderPdf->url() }}" class="button" target="_blank" rel="noopener">{{ __('committee::committee.download_order') }}</a></p>
+            <p style="margin-top:var(--space-6, 24px)"><a href="{{ $orderPdf->url() }}" class="btn" target="_blank" rel="noopener">{{ __('committee::committee.download_order') }}</a></p>
         @endif
 
         @if ($previous->isNotEmpty())

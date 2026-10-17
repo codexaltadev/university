@@ -37,7 +37,7 @@
                     @if ($timetable['title'] && ! str_contains(strtolower($timetable['title']), 'regular'))<p style="margin:4px 0 0;font-weight:600">{{ $timetable['title'] }}</p>@endif
                     @if ($timetable['semester'])<p style="margin:4px 0 0;color:var(--color-muted, #6b7280)">{{ $timetable['semester'] }}</p>@endif
                 </div>
-                @if ($timetable['policy_pdf'])<a class="button" href="{{ $timetable['policy_pdf'] }}" target="_blank" rel="noopener">{{ __('transport::transport.policy') }}</a>@endif
+                @if ($timetable['policy_pdf'])<a class="btn" href="{{ $timetable['policy_pdf'] }}" target="_blank" rel="noopener">{{ __('transport::transport.policy') }}</a>@endif
             </section>
             @if ($timetable['stale'])
                 <p role="status" style="margin-top:var(--space-3, 12px);padding:8px 12px;border-radius:var(--radius-sm, 4px);background:color-mix(in srgb, var(--color-accent, #39B54A) 15%, transparent)">
@@ -92,7 +92,7 @@
                                     </details>
                                 @endif
                                 @if ($route['map'])
-                                    <p style="margin-top:var(--space-3, 12px)"><button type="button" class="button button--outline" x-on:click="map = ! map" x-bind:aria-expanded="map">{{ __('transport::transport.map') }}</button></p>
+                                    <p style="margin-top:var(--space-3, 12px)"><button type="button" class="btn btn--outline" x-on:click="map = ! map" x-bind:aria-expanded="map">{{ __('transport::transport.map') }}</button></p>
                                     <template x-if="map">
                                         <iframe src="{{ $route['map'] }}" title="{{ __('transport::transport.map') }} — {{ $route['name'] }}" loading="lazy" style="width:100%;height:320px;border:0;border-radius:var(--radius-sm, 4px)"></iframe>
                                     </template>

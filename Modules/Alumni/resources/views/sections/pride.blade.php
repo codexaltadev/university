@@ -8,5 +8,5 @@
             </div>
         @endforeach
     </div>
-    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url('/alumni') }}" class="button">{{ __('alumni::alumni.all_alumni') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url('/alumni') }}" class="btn">{{ __('alumni::alumni.all_alumni') }}</a></p>
 @endif

@@ -1,0 +1,253 @@
+/*
+ * University Default theme (Theme Guide §6, §12; UI/UX Part B §2).
+ * Every colour, font, radius and size comes from the kernel's design tokens
+ * (:root, written by Platform\Theme\DesignTokens) — never a value here (T-2).
+ */
+@import "tailwindcss";
+
+/* Views whose classes must be in the build: the theme's and every module's */
+@source "../../views";
+@source "../../../../Modules/*/resources/views";
+@source "../../../../platform/resources/views";
+
+/*
+ * Tokens → utilities. The default palette, type scale and radii are removed, so
+ * `bg-blue-700` or an arbitrary `text-[…]` colour simply do not exist (T-2); `bg-primary`,
+ * `text-muted`, `font-heading`, `rounded-md`, `max-w-container` follow the admin's choice.
+ */
+@theme inline reference {
+    --color-*: initial;
+    --color-white: white;
+    --color-black: black;
+    --color-primary: var(--color-primary);
+    --color-primary-contrast: var(--color-primary-contrast);
+    --color-secondary: var(--color-secondary);
+    --color-secondary-contrast: var(--color-secondary-contrast);
+    --color-accent: var(--color-accent);
+    --color-accent-contrast: var(--color-accent-contrast);
+    --color-bg: var(--color-bg);
+    --color-surface: var(--color-surface);
+    --color-text: var(--color-text);
+    --color-muted: var(--color-text-muted);
+    --color-border: var(--color-border);
+    --color-success: var(--color-success);
+    --color-warning: var(--color-warning);
+    --color-danger: var(--color-danger);
+
+    --font-*: initial;
+    --font-sans: var(--font-body);
+    --font-heading: var(--font-heading);
+    --font-body: var(--font-body);
+    --font-bn: var(--font-bn);
+
+    --text-*: initial;
+    --text-xs: var(--text-xs);
+    --text-sm: var(--text-sm);
+    --text-base: var(--text-base);
+    --text-lg: var(--text-lg);
+    --text-xl: var(--text-xl);
+    --text-2xl: var(--text-2xl);
+    --text-3xl: var(--text-3xl);
+    --text-4xl: var(--text-4xl);
+
+    --radius-*: initial;
+    --radius-sm: var(--radius-sm);
+    --radius-md: var(--radius-md);
+    --radius-lg: var(--radius-lg);
+    --radius-full: 9999px;
+
+    --shadow-*: initial;
+    --shadow-card: var(--shadow-card);
+
+    --container-container: var(--container-max);
+}
+
+/* Tailwind's own .container (fixed breakpoints) is replaced by the token width */
+@utility container {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--space-4);
+}
+
+/* ─── Base ──────────────────────────────────────────────────────────────── */
+
+@layer base {
+    [x-cloak] { display: none !important; }
+
+    body.site {
+        margin: 0;
+        background: var(--color-bg);
+        color: var(--color-text);
+        font-family: var(--font-body);
+        font-size: var(--font-size-base);
+        line-height: var(--line-height-body);
+        -webkit-font-smoothing: antialiased;
+    }
+
+    /* Bangla: own font and taller line come from the kernel tokens (:lang(bn)) */
+    :lang(bn) { letter-spacing: 0; }
+
+    h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); line-height: 1.25; color: var(--color-secondary); font-weight: 700; }
+    h1 { font-size: var(--text-3xl); }
+    h2 { font-size: var(--text-2xl); }
+    h3 { font-size: var(--text-xl); }
+    h4 { font-size: var(--text-lg); }
+
+    a { color: var(--color-primary); }
+    a:hover { text-decoration: underline; }
+    img, video { max-width: 100%; height: auto; }
+
+    :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; }
+
+    input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"]), select, textarea {
+        width: 100%;
+        min-height: 44px;
+        padding: var(--space-2) var(--space-3);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-sm);
+        background: var(--color-bg);
+        color: var(--color-text);
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--color-primary); }
+    label { font-weight: 600; }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+}
+
+/*
+ * ─── Module UI contract ──────────────────────────────────────────────────
+ * Module views use only these classes plus token utilities (UI/UX Part B §9,
+ * Theme Guide §9). Every theme must style them.
+ */
+@layer components {
+    .skip-link { position: absolute; left: -9999px; top: var(--space-2); background: var(--color-primary); color: var(--color-primary-contrast); padding: var(--space-2) var(--space-4); z-index: 100; }
+    .skip-link:focus { left: var(--space-2); }
+
+    /* Buttons: .btn, .btn--primary, .btn--secondary, .btn--outline, .btn--sm */
+    .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: var(--space-2);
+        min-height: 44px; padding: var(--space-2) var(--space-5);
+        border: 1px solid var(--color-primary); border-radius: var(--radius-md);
+        background: var(--color-bg); color: var(--color-primary);
+        font: 600 var(--text-sm)/1.3 var(--font-heading); text-decoration: none; cursor: pointer;
+        transition: background-color .15s, color .15s, box-shadow .15s;
+    }
+    .btn:hover { background: var(--color-surface); text-decoration: none; }
+    .btn:disabled, .btn[aria-disabled="true"] { opacity: .55; cursor: not-allowed; }
+    .btn--primary { background: var(--gradient-primary); border-color: transparent; color: var(--color-primary-contrast); }
+    .btn--primary:hover { background: var(--color-secondary); color: var(--color-secondary-contrast); }
+    .btn--secondary { background: var(--color-accent); border-color: transparent; color: var(--color-accent-contrast); }
+    .btn--secondary:hover { background: var(--color-secondary); color: var(--color-secondary-contrast); }
+    .btn--outline { background: transparent; }
+    .btn--sm { min-height: 36px; padding: var(--space-1) var(--space-3); font-size: var(--text-xs); }
+
+    /* Status labels: .badge, .badge--success, .badge--muted, .badge--warning, .badge--danger */
+    .badge {
+        display: inline-flex; align-items: center; gap: var(--space-1);
+        padding: 2px var(--space-2); border-radius: var(--radius-full);
+        background: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg)); color: var(--color-primary);
+        font: 600 var(--text-xs)/1.5 var(--font-heading); vertical-align: middle; text-decoration: none;
+    }
+    .badge--success { background: color-mix(in srgb, var(--color-success) 12%, var(--color-bg)); color: var(--color-success); }
+    .badge--muted { background: var(--color-surface); color: var(--color-text-muted); }
+    .badge--warning { background: color-mix(in srgb, var(--color-warning) 12%, var(--color-bg)); color: var(--color-warning); }
+    .badge--danger { background: color-mix(in srgb, var(--color-danger) 12%, var(--color-bg)); color: var(--color-danger); }
+
+    .card { background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: var(--space-6); }
+
+    .lead { font-size: var(--text-lg); color: var(--color-text-muted); }
+    .empty-state { padding: var(--space-10) var(--space-4); text-align: center; color: var(--color-text-muted); background: var(--color-surface); border-radius: var(--radius-lg); }
+    .form-error { color: var(--color-danger); font-size: var(--text-xs); margin-top: var(--space-1); }
+
+    /* Rich text from the editor */
+    .prose { max-width: 75ch; }
+    .prose > * + * { margin-top: var(--space-4); }
+    .prose h2 { font-size: var(--text-2xl); margin-top: var(--space-8); }
+    .prose h3 { font-size: var(--text-xl); margin-top: var(--space-6); }
+    .prose ul { list-style: disc; padding-inline-start: var(--space-6); }
+    .prose ol { list-style: decimal; padding-inline-start: var(--space-6); }
+    .prose li + li { margin-top: var(--space-1); }
+    .prose blockquote { border-inline-start: 4px solid var(--color-accent); padding-inline-start: var(--space-4); color: var(--color-text-muted); }
+    .prose img { border-radius: var(--radius-md); }
+    .prose table { width: 100%; border-collapse: collapse; }
+    .prose th, .prose td { border: 1px solid var(--color-border); padding: var(--space-2) var(--space-3); text-align: start; }
+
+    .table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+    .table th { background: var(--color-surface); color: var(--color-secondary); font-family: var(--font-heading); font-weight: 600; }
+    .table th, .table td { padding: var(--space-3); border-bottom: 1px solid var(--color-border); text-align: start; vertical-align: top; }
+
+    .accordion__item { border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); }
+    .accordion__item + .accordion__item { margin-top: var(--space-2); }
+    .accordion__title { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: var(--space-3); padding: var(--space-4); background: none; border: 0; font: 600 var(--text-base)/1.4 var(--font-heading); color: var(--color-secondary); text-align: start; cursor: pointer; }
+    .accordion__body { padding: 0 var(--space-4) var(--space-4); }
+
+    /* Page and homepage section frames */
+    .page { padding-block: var(--space-10); }
+    .page__title { font-size: var(--text-3xl); }
+    .page-grid { display: grid; gap: var(--space-8); }
+    @media (min-width: 1024px) { .page-grid { grid-template-columns: minmax(0, 1fr) 320px; } }
+
+    .home-section { padding-block: var(--space-12); }
+    .home-section--alt { background: var(--color-surface); }
+    .home-section--dark { background: var(--color-secondary); color: var(--color-secondary-contrast); }
+    .home-section--dark h2 { color: inherit; }
+    .home-section__title { font-size: var(--text-2xl); margin: 0 0 var(--space-2); }
+    .home-section__sub { color: var(--color-text-muted); margin: 0 0 var(--space-8); }
+
+    @media print { .no-print { display: none !important; } }
+}
+
+/* ─── Theme chrome (redesigned in 4.2) ─────────────────────────────────── */
+
+@layer components {
+    .topbar { background: var(--color-secondary); color: var(--color-secondary-contrast); font-size: var(--text-xs); }
+    .topbar a { color: inherit; text-decoration: none; }
+    .topbar__inner { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); padding-block: var(--space-2); }
+    .topbar__contact { display: flex; gap: var(--space-4); }
+
+    .site-header { background: var(--color-bg); border-bottom: 1px solid var(--color-border); }
+    .site-header.is-sticky { position: sticky; top: 0; z-index: 40; }
+    .site-header__inner { display: flex; align-items: center; justify-content: space-between; gap: var(--space-6); padding-block: var(--space-3); }
+    .site-header--centered .site-header__inner { flex-direction: column; }
+    .site-logo { height: 48px; width: auto; display: block; }
+    .site-name { font-family: var(--font-heading); font-weight: 800; font-size: var(--text-xl); color: var(--color-secondary); }
+    .site-header__brand { text-decoration: none; }
+
+    .nav__list, .nav__sub, .link-list { list-style: none; margin: 0; padding: 0; }
+    .nav__list { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+    .nav__item { position: relative; }
+    .nav__link { display: block; padding: var(--space-2) var(--space-3); background: none; border: 0; font: 600 var(--text-sm)/1.4 var(--font-heading); color: var(--color-text); text-decoration: none; cursor: pointer; border-radius: var(--radius-sm); }
+    .nav__link:hover, .nav__link[aria-current="page"] { color: var(--color-primary); text-decoration: none; }
+    .nav__panel { position: absolute; top: 100%; left: 0; min-width: 240px; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); padding: var(--space-3); z-index: 50; }
+    .nav__panel--mega { display: flex; gap: var(--space-6); min-width: min(90vw, 960px); }
+    .mega__columns { display: grid; grid-template-columns: repeat(var(--mega-columns, 4), minmax(0, 1fr)); gap: var(--space-6); flex: 1; }
+    .mega__heading { display: block; font-family: var(--font-heading); font-weight: 700; color: var(--color-secondary); margin-bottom: var(--space-2); text-decoration: none; }
+    .mega__aside { width: 240px; }
+    .nav--multilevel .nav__sub { display: none; position: absolute; top: 100%; left: 0; min-width: 220px; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-md); box-shadow: var(--shadow-card); padding: var(--space-2); z-index: 50; }
+    .nav--multilevel .nav__sub .nav__sub { top: 0; left: 100%; }
+    .nav--multilevel .nav__item:hover > .nav__sub, .nav--multilevel .nav__item:focus-within > .nav__sub { display: block; }
+    .link-list li { margin-block: var(--space-1); }
+    .link-list a { color: inherit; text-decoration: none; }
+    .link-list a:hover { color: var(--color-primary); }
+    .link-list--inline { display: flex; flex-wrap: wrap; gap: var(--space-4); }
+
+    .microsite-bar { background: var(--color-surface); border-bottom: 1px solid var(--color-border); padding-block: var(--space-2); font-size: var(--text-sm); }
+    .microsite-bar .container { display: flex; gap: var(--space-2); align-items: center; }
+
+    .breadcrumb ol { display: flex; flex-wrap: wrap; gap: var(--space-1); list-style: none; margin: 0 auto; padding: var(--space-3) var(--space-4); max-width: var(--container-max); font-size: var(--text-sm); color: var(--color-text-muted); }
+    .breadcrumb a { color: inherit; text-decoration: none; }
+    .breadcrumb a:hover { color: var(--color-primary); text-decoration: underline; }
+    .breadcrumb [aria-current] { color: var(--color-text); }
+
+    .site-footer { background: var(--color-secondary); color: var(--color-secondary-contrast); margin-top: var(--space-12); font-size: var(--text-sm); }
+    .site-footer a { color: inherit; }
+    .site-footer__grid { display: grid; gap: var(--space-8); padding-block: var(--space-12); grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    .site-footer__heading { color: inherit; font-size: var(--text-base); }
+    .site-footer__contact { font-style: normal; display: grid; gap: var(--space-1); }
+    .site-footer__social { list-style: none; padding: 0; display: flex; gap: var(--space-3); }
+    .site-footer__bottom { border-top: 1px solid color-mix(in srgb, currentColor 15%, transparent); padding-block: var(--space-4); }
+    .site-footer__compact { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); padding-block: var(--space-6); }
+}

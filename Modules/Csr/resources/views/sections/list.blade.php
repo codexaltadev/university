@@ -6,5 +6,5 @@
             @include('csr::partials.card', ['activity' => $activity, 'base' => $base, 'layout' => 'cards'])
         @endforeach
     </div>
-    <p style="margin-top:var(--space-4, 16px)"><a class="button" href="{{ url($base.'/'.\Modules\Csr\Models\Activity::PATH) }}">{{ __('csr::csr.all_activities') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px)"><a class="btn" href="{{ url($base.'/'.\Modules\Csr\Models\Activity::PATH) }}">{{ __('csr::csr.all_activities') }}</a></p>
 @endif

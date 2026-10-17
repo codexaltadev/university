@@ -37,10 +37,10 @@
 
         <p style="display:flex;flex-wrap:wrap;gap:var(--space-3, 12px);margin-top:var(--space-6, 24px)">
             @if ($hardCopy)
-                <a href="{{ $hardCopy->url() }}" class="button button-primary" target="_blank" rel="noopener">{{ __('calendar::calendar.download') }}</a>
+                <a href="{{ $hardCopy->url() }}" class="btn btn--primary" target="_blank" rel="noopener">{{ __('calendar::calendar.download') }}</a>
             @endif
             @if ($events->whereNotNull('starts_on')->isNotEmpty())
-                <a href="{{ url($calendar->url().'.ics').($audience ? '?audience='.$audience->slug() : '') }}" class="button">{{ __('calendar::calendar.add_to_calendar') }}</a>
+                <a href="{{ url($calendar->url().'.ics').($audience ? '?audience='.$audience->slug() : '') }}" class="btn">{{ __('calendar::calendar.add_to_calendar') }}</a>
             @endif
         </p>
     </div>

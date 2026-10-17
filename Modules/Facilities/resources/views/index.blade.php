@@ -4,9 +4,9 @@
         <h1>{{ __('facilities::facilities.plural') }}</h1>
         @if ($categories->count() > 1)
             <nav style="display:flex;flex-wrap:wrap;gap:var(--space-2, 8px);margin-top:var(--space-4, 16px)">
-                <a href="{{ url($base.'/'.\Modules\Facilities\Models\Facility::PATH) }}" @class(['button', 'button--outline' => $category !== null])>{{ __('facilities::facilities.all') }}</a>
+                <a href="{{ url($base.'/'.\Modules\Facilities\Models\Facility::PATH) }}" @class(['btn', 'btn--outline' => $category !== null])>{{ __('facilities::facilities.all') }}</a>
                 @foreach ($categories as $c)
-                    <a href="{{ url($base.'/'.\Modules\Facilities\Models\Facility::PATH).'?category='.$c->slug() }}" @class(['button', 'button--outline' => ! $category?->is($c)])>{{ $c->name }}</a>
+                    <a href="{{ url($base.'/'.\Modules\Facilities\Models\Facility::PATH).'?category='.$c->slug() }}" @class(['btn', 'btn--outline' => ! $category?->is($c)])>{{ $c->name }}</a>
                 @endforeach
             </nav>
         @endif

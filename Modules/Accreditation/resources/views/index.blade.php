@@ -13,6 +13,6 @@
                 </div>
             </section>
         @endforeach
-        <p style="margin-top:var(--space-8, 32px)"><a class="button button--outline" href="{{ url($base.'/'.\Modules\Accreditation\Models\Ranking::PATH) }}">{{ __('accreditation::accreditation.rankings') }}</a></p>
+        <p style="margin-top:var(--space-8, 32px)"><a class="btn btn--outline" href="{{ url($base.'/'.\Modules\Accreditation\Models\Ranking::PATH) }}">{{ __('accreditation::accreditation.rankings') }}</a></p>
     </div>
 </x-theme::layout>

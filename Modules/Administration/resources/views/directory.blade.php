@@ -43,7 +43,7 @@
                 </label>
             @endif
             @if (request('view'))<input type="hidden" name="view" value="{{ request('view') }}">@endif
-            <button type="submit" class="button">{{ __('administration::administration.search') }}</button>
+            <button type="submit" class="btn">{{ __('administration::administration.search') }}</button>
         </form>
 
         <p style="margin-top:var(--space-3, 12px);color:var(--color-muted, #6b7280)">{{ trans_choice('administration::administration.count', $total, ['count' => $total]) }}</p>

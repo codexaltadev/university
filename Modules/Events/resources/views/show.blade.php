@@ -15,7 +15,7 @@
                 </ol>
             </nav>
 
-            <h1>{{ $event->title }} <span class="badge {{ $state === 'past' ? 'badge-muted' : 'badge-success' }}">{{ __("events::events.states.{$state}") }}</span></h1>
+            <h1>{{ $event->title }} <span class="badge {{ $state === 'past' ? 'badge--muted' : 'badge--success' }}">{{ __("events::events.states.{$state}") }}</span></h1>
             <ul style="list-style:none;padding:0;display:grid;gap:4px">
                 <li><strong>{{ __('events::events.fields.when') }}:</strong> {{ $event->when() }}</li>
                 @if (filled($event->venue))<li><strong>{{ __('events::events.fields.venue') }}:</strong> {{ $event->venue }}</li>@endif
@@ -25,14 +25,14 @@
 
             <p style="display:flex;flex-wrap:wrap;gap:var(--space-3, 12px)">
                 @if ($event->registrationOpen())
-                    <a href="{{ $event->registration_url }}" class="button button-primary" target="_blank" rel="noopener">{{ __('events::events.register') }}</a>
+                    <a href="{{ $event->registration_url }}" class="btn btn--primary" target="_blank" rel="noopener">{{ __('events::events.register') }}</a>
                     @if ($event->registration_ends_at)<span style="align-self:center">{{ __('events::events.register_until', ['date' => $event->registration_ends_at->translatedFormat('j F Y, H:i')]) }}</span>@endif
                 @elseif (filled($event->registration_url))
-                    <span class="badge badge-muted" style="align-self:center">{{ __('events::events.registration_closed') }}</span>
+                    <span class="badge badge--muted" style="align-self:center">{{ __('events::events.registration_closed') }}</span>
                 @endif
                 @if ($state !== 'past')
-                    <a href="{{ url($base.'/'.\Modules\Events\Models\Event::PATH.'/'.$event->slug().'.ics') }}" class="button">{{ __('events::events.add_to_calendar') }}</a>
-                    <a href="{{ $event->googleCalendarUrl() }}" class="button" target="_blank" rel="noopener">Google Calendar</a>
+                    <a href="{{ url($base.'/'.\Modules\Events\Models\Event::PATH.'/'.$event->slug().'.ics') }}" class="btn">{{ __('events::events.add_to_calendar') }}</a>
+                    <a href="{{ $event->googleCalendarUrl() }}" class="btn" target="_blank" rel="noopener">Google Calendar</a>
                 @endif
             </p>
 

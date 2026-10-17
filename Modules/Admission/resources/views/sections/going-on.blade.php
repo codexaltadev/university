@@ -6,9 +6,9 @@
         @endforeach
         <p style="display:flex;flex-wrap:wrap;gap:var(--space-3, 12px)">
             @if ($apply = settings('admission.apply_url'))
-                <a href="{{ $apply }}" class="button button-primary" target="_blank" rel="noopener">{{ __('admission::admission.apply_now') }}</a>
+                <a href="{{ $apply }}" class="btn btn--primary" target="_blank" rel="noopener">{{ __('admission::admission.apply_now') }}</a>
             @endif
-            <a href="{{ url('/admission') }}" class="button">{{ __('admission::admission.title') }}</a>
+            <a href="{{ url('/admission') }}" class="btn">{{ __('admission::admission.title') }}</a>
         </p>
     </div>
 @endif

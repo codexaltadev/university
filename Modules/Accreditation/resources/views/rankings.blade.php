@@ -38,6 +38,6 @@
                 </section>
             @endforeach
         @endif
-        <p style="margin-top:var(--space-8, 32px)"><a class="button button--outline" href="{{ url($base.'/'.\Modules\Accreditation\Models\Accreditation::PATH) }}">{{ __('accreditation::accreditation.plural') }}</a></p>
+        <p style="margin-top:var(--space-8, 32px)"><a class="btn btn--outline" href="{{ url($base.'/'.\Modules\Accreditation\Models\Accreditation::PATH) }}">{{ __('accreditation::accreditation.plural') }}</a></p>
     </div>
 </x-theme::layout>

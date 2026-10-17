@@ -56,7 +56,7 @@
                         @if ($buttons = $slide->buttonList())
                             <p style="display:flex;flex-wrap:wrap;gap:var(--space-3, 12px);margin-top:var(--space-5, 20px);justify-content:{{ $align }}">
                                 @foreach ($buttons as $n => $button)
-                                    <a href="{{ $button['url'] }}" @class(['button', 'button--outline' => $n > 0])>{{ $button['label'] }}</a>
+                                    <a href="{{ $button['url'] }}" @class(['btn', 'btn--outline' => $n > 0])>{{ $button['label'] }}</a>
                                 @endforeach
                             </p>
                         @endif

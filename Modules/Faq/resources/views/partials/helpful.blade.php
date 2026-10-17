@@ -10,8 +10,8 @@
     <template x-if="! done">
         <span style="display:flex;gap:var(--space-2, 8px);align-items:center">
             {{ __('faq::faq.helpful.question') }}
-            <button type="button" class="button" @click="send('yes')">{{ __('faq::faq.helpful.yes') }}</button>
-            <button type="button" class="button" @click="send('no')">{{ __('faq::faq.helpful.no') }}</button>
+            <button type="button" class="btn" @click="send('yes')">{{ __('faq::faq.helpful.yes') }}</button>
+            <button type="button" class="btn" @click="send('no')">{{ __('faq::faq.helpful.no') }}</button>
         </span>
     </template>
     <span x-cloak x-show="done">{{ __('faq::faq.helpful.thanks') }}</span>

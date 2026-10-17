@@ -5,5 +5,5 @@
             @include('facultymember::partials.card', ['member' => $member, 'layout' => 'grid'])
         @endforeach
     </div>
-    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($items['url']) }}" class="button">{{ __('facultymember::facultymember.all_members') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($items['url']) }}" class="btn">{{ __('facultymember::facultymember.all_members') }}</a></p>
 @endif

@@ -16,7 +16,7 @@
         @if ($scholarship->deadline_at)
             <p class="scholarship-deadline">
                 <strong>{{ __('scholarship::scholarship.fields.deadline_at') }}:</strong> {{ $scholarship->deadline_at->translatedFormat('d F Y') }}
-                <span class="badge {{ $scholarship->isClosed() ? 'badge-muted' : 'badge-success' }}">{{ $scholarship->isClosed() ? __('scholarship::scholarship.closed') : __('scholarship::scholarship.open') }}</span>
+                <span class="badge {{ $scholarship->isClosed() ? 'badge--muted' : 'badge--success' }}">{{ $scholarship->isClosed() ? __('scholarship::scholarship.closed') : __('scholarship::scholarship.open') }}</span>
             </p>
         @endif
         @if ($image = $scholarship->firstMedia('image')?->url('large'))
@@ -38,7 +38,7 @@
         @endforeach
 
         @if ($scholarship->apply_url && ! $scholarship->isClosed())
-            <p style="margin-top:var(--space-6, 24px)"><a href="{{ $scholarship->apply_url }}" class="button button-primary" target="_blank" rel="noopener">{{ __('scholarship::scholarship.apply') }}</a></p>
+            <p style="margin-top:var(--space-6, 24px)"><a href="{{ $scholarship->apply_url }}" class="btn btn--primary" target="_blank" rel="noopener">{{ __('scholarship::scholarship.apply') }}</a></p>
         @endif
 
         @if (($files = $scholarship->mediaIn('attachments'))->isNotEmpty())

@@ -26,5 +26,5 @@
             @endif
         @endforeach
     </div>
-    <p style="margin-top:var(--space-4, 16px);text-align:center"><a class="button" href="{{ url($base.'/'.\Modules\Accreditation\Models\Ranking::PATH) }}">{{ __('accreditation::accreditation.all') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px);text-align:center"><a class="btn" href="{{ url($base.'/'.\Modules\Accreditation\Models\Ranking::PATH) }}">{{ __('accreditation::accreditation.all') }}</a></p>
 @endif

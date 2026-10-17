@@ -25,7 +25,7 @@
             </label>
             <input type="text" wire:model="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
             <p style="color:var(--color-muted, #6b7280);font-size:.9em">{{ __('alumni::alumni.submit.privacy') }}</p>
-            <button type="submit" class="button button-primary" wire:loading.attr="disabled">{{ __('alumni::alumni.submit.button') }}</button>
+            <button type="submit" class="btn btn--primary" wire:loading.attr="disabled">{{ __('alumni::alumni.submit.button') }}</button>
         </form>
     @endif
 </div>

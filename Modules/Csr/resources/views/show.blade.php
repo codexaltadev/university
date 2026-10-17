@@ -14,7 +14,7 @@
         @if ($embed = $activity->videoEmbed())
             <div style="margin-top:var(--space-6, 24px);aspect-ratio:16/9"><iframe src="{{ $embed }}" title="{{ $activity->title }}" style="width:100%;height:100%;border:0" allowfullscreen loading="lazy"></iframe></div>
         @elseif ($activity->video_url)
-            <p style="margin-top:var(--space-6, 24px)"><a class="button button--outline" href="{{ $activity->video_url }}" target="_blank" rel="noopener">{{ __('csr::csr.watch') }}</a></p>
+            <p style="margin-top:var(--space-6, 24px)"><a class="btn btn--outline" href="{{ $activity->video_url }}" target="_blank" rel="noopener">{{ __('csr::csr.watch') }}</a></p>
         @endif
         @if ($gallery->isNotEmpty())
             <section style="margin-top:var(--space-8, 32px)">
@@ -28,7 +28,7 @@
             </section>
         @endif
         @if ($activity->external_url)
-            <p style="margin-top:var(--space-6, 24px)"><a class="button" href="{{ $activity->external_url }}" target="_blank" rel="noopener">{{ __('csr::csr.more') }}</a></p>
+            <p style="margin-top:var(--space-6, 24px)"><a class="btn" href="{{ $activity->external_url }}" target="_blank" rel="noopener">{{ __('csr::csr.more') }}</a></p>
         @endif
     </article>
 </x-theme::layout>

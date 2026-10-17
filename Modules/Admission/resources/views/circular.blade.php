@@ -13,7 +13,7 @@
         <h1>{{ $circular->title }}</h1>
         <p>
             @if ($circular->session_label)<span>{{ $circular->session_label }}</span> · @endif
-            <span class="badge {{ $circular->isClosed() ? 'badge-muted' : 'badge-success' }}">{{ __($circular->isClosed() ? 'admission::admission.closed' : 'admission::admission.open') }}</span>
+            <span class="badge {{ $circular->isClosed() ? 'badge--muted' : 'badge--success' }}">{{ __($circular->isClosed() ? 'admission::admission.closed' : 'admission::admission.open') }}</span>
         </p>
         @include('admission::partials.dates', ['circular' => $circular])
 
@@ -23,10 +23,10 @@
 
         <p style="display:flex;flex-wrap:wrap;gap:var(--space-3, 12px);margin-top:var(--space-6, 24px)">
             @if (! $circular->isClosed() && ($apply = settings('admission.apply_url')))
-                <a href="{{ $apply }}" class="button button-primary" target="_blank" rel="noopener">{{ __('admission::admission.apply_now') }}</a>
+                <a href="{{ $apply }}" class="btn btn--primary" target="_blank" rel="noopener">{{ __('admission::admission.apply_now') }}</a>
             @endif
             @if ($pdf = $circular->firstMedia('pdf'))
-                <a href="{{ $pdf->url() }}" class="button" target="_blank" rel="noopener">{{ __('admission::admission.fields.pdf') }}</a>
+                <a href="{{ $pdf->url() }}" class="btn" target="_blank" rel="noopener">{{ __('admission::admission.fields.pdf') }}</a>
             @endif
         </p>
     </div>

@@ -9,5 +9,5 @@
             </div>
         @endforeach
     </div>
-    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\News\Models\Post::PATH) }}" class="button">{{ __('news::news.all_news') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\News\Models\Post::PATH) }}" class="btn">{{ __('news::news.all_news') }}</a></p>
 @endif

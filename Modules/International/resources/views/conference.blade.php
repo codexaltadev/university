@@ -10,6 +10,6 @@
         @if ($conference->organizer_label)<p>{{ __('international::international.fields.organizer_label') }}: {{ $conference->organizer_label }}</p>@endif
         @if ($image = $conference->firstMedia('image'))<img src="{{ $image->url('large') ?? $image->url() }}" alt="{{ $image->alt_text ?: $conference->title }}" style="width:100%;border-radius:var(--radius, 8px)">@endif
         <div class="prose" style="margin-top:var(--space-4, 16px)">{!! $conference->body !!}</div>
-        @if ($conference->website_url)<p style="margin-top:var(--space-6, 24px)"><a class="button" href="{{ $conference->website_url }}" target="_blank" rel="noopener">{{ __('international::international.visit') }}</a></p>@endif
+        @if ($conference->website_url)<p style="margin-top:var(--space-6, 24px)"><a class="btn" href="{{ $conference->website_url }}" target="_blank" rel="noopener">{{ __('international::international.visit') }}</a></p>@endif
     </article>
 </x-theme::layout>

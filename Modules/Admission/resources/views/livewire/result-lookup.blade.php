@@ -8,7 +8,7 @@
                    style="padding:var(--space-3, 12px);border:1px solid var(--color-border);border-radius:var(--radius-sm, 4px)">
         </label>
         <input type="text" wire:model="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px">
-        <button type="submit" class="button button-primary" wire:loading.attr="disabled">{{ __('admission::admission.result_page.search') }}</button>
+        <button type="submit" class="btn btn--primary" wire:loading.attr="disabled">{{ __('admission::admission.result_page.search') }}</button>
     </form>
     @error('serial') <p class="form-error" role="alert">{{ $message }}</p> @enderror
 

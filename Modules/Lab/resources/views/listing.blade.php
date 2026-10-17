@@ -17,7 +17,7 @@
                 </select>
             @endif
             <input type="hidden" name="view" value="{{ $layout }}">
-            <button class="button" type="submit">{{ __('lab::lab.go') }}</button>
+            <button class="btn" type="submit">{{ __('lab::lab.go') }}</button>
         </form>
         @if ($labs->isEmpty())
             <p style="margin-top:var(--space-8, 32px)">{{ __('lab::lab.none') }}</p>

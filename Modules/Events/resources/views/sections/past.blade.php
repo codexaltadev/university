@@ -6,5 +6,5 @@
             @include('events::partials.card', ['event' => $event, 'layout' => 'cards', 'base' => $base])
         @endforeach
     </div>
-    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Events\Models\Event::PATH).'?tab=past' }}" class="button">{{ __('events::events.tabs.past') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Events\Models\Event::PATH).'?tab=past' }}" class="btn">{{ __('events::events.tabs.past') }}</a></p>
 @endif

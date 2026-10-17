@@ -55,7 +55,7 @@
         @endif
 
         @if ($post)
-            <p style="margin-top:var(--space-8, 32px)"><a href="{{ url($post->url()) }}" class="button button--outline">{{ __('achievements::achievements.read_news') }}: {{ $post->title }}</a></p>
+            <p style="margin-top:var(--space-8, 32px)"><a href="{{ url($post->url()) }}" class="btn btn--outline">{{ __('achievements::achievements.read_news') }}: {{ $post->title }}</a></p>
         @endif
     </article>
 </x-theme::layout>

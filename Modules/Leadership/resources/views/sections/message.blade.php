@@ -9,7 +9,7 @@
             <p class="eyebrow">{{ __('leadership::leadership.section.from', ['position' => $items->position->title]) }}</p>
             <blockquote style="margin:var(--space-3, 12px) 0">{{ \Illuminate\Support\Str::words(trim(strip_tags((string) $items->message)), (int) (($settings['words'] ?? null) ?: 80)) }}</blockquote>
             <p><strong>{{ $person->name() }}</strong><br>{{ $items->position->title }}</p>
-            <p><a href="{{ url($items->url()) }}" class="button">{{ __('leadership::leadership.section.read_more') }}</a></p>
+            <p><a href="{{ url($items->url()) }}" class="btn">{{ __('leadership::leadership.section.read_more') }}</a></p>
         </div>
     </div>
 @endif

@@ -12,5 +12,5 @@
             @include('events::partials.card', ['event' => $event, 'layout' => 'list', 'base' => $base])
         @endforeach
     </div>
-    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Events\Models\Event::PATH) }}" class="button">{{ __('events::events.all_events') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Events\Models\Event::PATH) }}" class="btn">{{ __('events::events.all_events') }}</a></p>
 @endif

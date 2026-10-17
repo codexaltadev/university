@@ -35,7 +35,7 @@
             <label>{{ __('notice::notice.from') }} <input type="date" name="from" value="{{ request('from') }}"></label>
             <label>{{ __('notice::notice.to') }} <input type="date" name="to" value="{{ request('to') }}"></label>
             @if (request('view'))<input type="hidden" name="view" value="{{ request('view') }}">@endif
-            <button type="submit" class="button">{{ __('notice::notice.search') }}</button>
+            <button type="submit" class="btn">{{ __('notice::notice.search') }}</button>
         </form>
 
         @if ($notices->isEmpty())

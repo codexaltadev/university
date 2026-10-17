@@ -19,8 +19,8 @@
             <p>{{ __('office::office.handled_by') }}: <strong>{{ $person->name() }}</strong>@if ($person->phone()) · {{ $person->phone() }}@endif @if ($person->email()) · <a href="mailto:{{ $person->email() }}">{{ $person->email() }}</a>@endif</p>
         @endforeach
         <p style="display:flex;gap:var(--space-3, 12px)">
-            @if ($service->apply_url)<a href="{{ $service->apply_url }}" class="button button-primary" target="_blank" rel="noopener">{{ __('office::office.apply') }}</a>@endif
-            @if ($form = $service->firstMedia('form'))<a href="{{ $form->url() }}" class="button" target="_blank" rel="noopener">{{ __('office::office.fields.form') }}</a>@endif
+            @if ($service->apply_url)<a href="{{ $service->apply_url }}" class="btn btn--primary" target="_blank" rel="noopener">{{ __('office::office.apply') }}</a>@endif
+            @if ($form = $service->firstMedia('form'))<a href="{{ $form->url() }}" class="btn" target="_blank" rel="noopener">{{ __('office::office.fields.form') }}</a>@endif
         </p>
     </div>
 </details>

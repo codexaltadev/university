@@ -6,5 +6,5 @@
             @include('documents::partials.item', ['document' => $document, 'base' => $base, 'layout' => 'list'])
         @endforeach
     </div>
-    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Documents\Models\Document::PATH) }}" class="button">{{ __('documents::documents.all_documents') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Documents\Models\Document::PATH) }}" class="btn">{{ __('documents::documents.all_documents') }}</a></p>
 @endif

@@ -6,5 +6,5 @@
             @include('gallery::partials.video', ['video' => $video])
         @endforeach
     </div>
-    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Gallery\Models\Album::PATH.'?kind=videos') }}" class="button">{{ __('gallery::gallery.all_videos') }}</a></p>
+    <p style="margin-top:var(--space-4, 16px)"><a href="{{ url($base.'/'.\Modules\Gallery\Models\Album::PATH.'?kind=videos') }}" class="btn">{{ __('gallery::gallery.all_videos') }}</a></p>
 @endif

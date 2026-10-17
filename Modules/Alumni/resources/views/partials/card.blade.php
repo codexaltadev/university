@@ -7,7 +7,7 @@
         <span aria-hidden="true" style="display:grid;place-items:center;width:{{ $layout === 'list' ? '72px' : '112px' }};height:{{ $layout === 'list' ? '72px' : '112px' }};border-radius:50%;background:var(--color-surface, #F3F4F9);font-weight:700;font-size:1.6em">{{ mb_substr((string) $alumnus->name, 0, 1) }}</span>
     @endif
     <div>
-        <h3 style="margin:0;font-size:1.05em"><a href="{{ url($alumnus->url()) }}">{{ $alumnus->name }}</a>@if ($alumnus->is_pride) <span class="badge badge-success">{{ __('alumni::alumni.pride_badge') }}</span>@endif</h3>
+        <h3 style="margin:0;font-size:1.05em"><a href="{{ url($alumnus->url()) }}">{{ $alumnus->name }}</a>@if ($alumnus->is_pride) <span class="badge badge--success">{{ __('alumni::alumni.pride_badge') }}</span>@endif</h3>
         @if ($headline = $alumnus->headline())<p style="margin:2px 0">{{ $headline }}</p>@endif
         <p style="margin:2px 0;color:var(--color-muted, #6b7280);font-size:.9em">
             {{ collect([$alumnus->batch ? __('alumni::alumni.batch_n', ['batch' => $alumnus->batch]) : null, $alumnus->passing_year])->filter()->implode(' · ') }}
