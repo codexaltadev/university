@@ -3,24 +3,24 @@
 namespace Modules\Transport\Settings;
 
 use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
+use Modules\Transport\Models\ServiceType;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Settings\ModuleSettings;
 
 /**
- * Website Settings › Transport (DB-06 v1.1 §2). The live transport system's API (address, how long
- * its answer is kept, how long to wait) and the page's own text that is not in the API: the
- * introduction, the "Transport Pass" part and the fees table — defaults are DIU's current page.
- * Read: settings('transport.api_url'), settings('transport.intro') (current language) …
+ * Website Settings › Transport (DB-06 v1.2 §2): which service runs now (FR-TRN-03), the schedule's
+ * title, semester and rules PDF (FR-TRN-08, legacy transport_settings), and the page's own text —
+ * introduction, "Transport Pass", fees table (defaults: DIU's current page).
+ * Read: settings('transport.running_service_id'), settings('transport.intro') (current language) …
  */
 class TransportSettings extends ModuleSettings
 {
-    public const DEFAULT_URL = 'https://webbackend.daffodilvarsity.edu.bd/api/v2/public/transport';
-
     public function group(): string
     {
         return 'transport';
@@ -34,9 +34,10 @@ class TransportSettings extends ModuleSettings
     public function defaults(): array
     {
         return [
-            'api_url' => self::DEFAULT_URL,
-            'cache_minutes' => 30,
-            'timeout' => 8,
+            'running_service_id' => null,
+            'schedule_title' => null,
+            'semester' => null,
+            'policy_file' => null,
             'intro' => ['en' => 'From Daffodil Smart City, Daffodil International University operates a safe, reliable, and affordable transport system with 50+ dedicated buses, smart route management, and emergency support — ensuring smooth, worry-free commutes for students, faculty, and staff.'],
             'pass_title' => ['en' => 'Get Your DIU Transport Pass'],
             'pass_subtitle' => ['en' => 'A secure pass that lets you ride DIU\'s buses easily.'],
@@ -54,19 +55,22 @@ class TransportSettings extends ModuleSettings
 
     public function translatable(): array
     {
-        return ['intro', 'pass_title', 'pass_subtitle', 'pass_how', 'pass_why', 'fees_note'];
+        return ['schedule_title', 'semester', 'intro', 'pass_title', 'pass_subtitle', 'pass_how', 'pass_why', 'fees_note'];
     }
 
     public function schema(): array
     {
         return [
-            Section::make(__('transport::transport.settings.api'))->compact()->schema([
-                TextInput::make('api_url')->label(__('transport::transport.settings.api_url'))->helperText(__('transport::transport.settings.api_url_help'))
-                    ->url()->required()->maxLength(500),
-                Grid::make(2)->schema([
-                    TextInput::make('cache_minutes')->label(__('transport::transport.settings.cache_minutes'))->integer()->minValue(1)->maxValue(1440)->required(),
-                    TextInput::make('timeout')->label(__('transport::transport.settings.timeout'))->integer()->minValue(2)->maxValue(30)->suffix('s')->required(),
+            Section::make(__('transport::transport.settings.schedule'))->compact()->schema([
+                Select::make('running_service_id')->label(__('transport::transport.settings.running_service'))
+                    ->helperText(__('transport::transport.settings.running_service_help'))
+                    ->options(fn (): array => ServiceType::query()->where('is_active', true)->ordered()->get()->mapWithKeys(fn (ServiceType $t): array => [$t->id => (string) $t->name])->all())
+                    ->placeholder(__('transport::transport.settings.default_service')),
+                TranslatableTabs::make()->schema(fn (string $locale): array => [
+                    TextInput::make("schedule_title.{$locale}")->label(__('transport::transport.settings.schedule_title'))->placeholder('Special Transport Schedule for Exam-2026')->maxLength(200),
+                    TextInput::make("semester.{$locale}")->label(__('transport::transport.settings.semester'))->placeholder('Semester : Summer-2026')->maxLength(100),
                 ]),
+                MediaPicker::make('policy_file')->label(__('transport::transport.settings.policy_file'))->storeIds(),
             ]),
             Section::make(__('transport::transport.settings.page'))->compact()->schema([
                 TranslatableTabs::make()->schema(fn (string $locale): array => [

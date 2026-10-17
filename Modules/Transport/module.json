@@ -1,7 +1,7 @@
 {
     "name": "Transport",
     "alias": "transport",
-    "description": "Bus routes, stops and times from DIU's live transport system, with a stop search — M-31",
+    "description": "Bus routes, stops and times kept here, with a stop search and the old public API — M-31",
     "keywords": [
         "services",
         "transport",
@@ -26,7 +26,13 @@
         "table_prefix": "transport_",
         "dependencies": {},
         "optional_dependencies": [],
-        "morph_aliases": {},
+        "morph_aliases": {
+            "transport.route": "Modules\\Transport\\Models\\Route",
+            "transport.stop": "Modules\\Transport\\Models\\Stop",
+            "transport.service_type": "Modules\\Transport\\Models\\ServiceType",
+            "transport.variant": "Modules\\Transport\\Models\\Variant",
+            "transport.departure": "Modules\\Transport\\Models\\Departure"
+        },
         "custom_permissions": [],
         "provides": {
             "settings": true,

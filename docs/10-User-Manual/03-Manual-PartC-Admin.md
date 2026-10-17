@@ -143,7 +143,14 @@ Department / Office-এর content শুধু তাদের microsite-এ �
 | **Maintenance** | Website সাময়িক বন্ধের বার্তা |
 | অন্যান্য module | চালু module-এর নিজস্ব tab (Transport, FAQ …) |
 
-**Transport:** route, stop ও সময় DIU-র চালু transport system-এই রাখা ও বদলানো হয় — website শুধু তার API থেকে দেখায় (`/transport`, stop দিয়ে খোঁজা, homepage-এ "Find your bus")। **Settings › Transport**-এ API-র ঠিকানা, কত মিনিট উত্তর রাখা হবে, কত সেকেন্ড অপেক্ষা। API সাময়িক বন্ধ থাকলে website শেষ পাওয়া সূচিটি দেখায় ও জানিয়ে দেয়।
+**Transport** (বাম menu-র **Transport**):
+
+* **Service types** — Regular, Final Exam, Mid-Term, Semester Break …; একটি **Default**।
+* **Stops** — নাম (বাংলা ও English), চিহ্ন, ম্যাপের অক্ষাংশ / দ্রাঘিমাংশ (Google Maps-এ right-click করে প্রথম সংখ্যা); তালিকায় ম্যাপে খুলে দেখা যায়।
+* **Routes** — নাম, কোন ভাগে দেখাবে (নিয়মিত / শাটল / শুক্রবার), ম্যাপ, বার্তা; তালিকায় টেনে ক্রম। Route খুলে নিচে **Stops and times per service** → **New**: service, কোন দিন bus চলে না, stop-গুলো টেনে ক্রমে সাজান (প্রথমটি শুরু, শেষটি DSC), সময়গুলো একসাথে যোগ করুন (Campus-এ যেতে / Campus থেকে, নিয়মিত / শাটল)। পরীক্ষার সূচি বানাতে **Copy to another service** দিয়ে নিয়মিতটি copy করে সময় বদলান।
+* **Settings › Transport** — **এখন যে service চলছে** (পরীক্ষার সময় Final Exam বেছে দিন — website সঙ্গে সঙ্গে সেই সূচি দেখায়; কোনো route-এ সেটি না থাকলে default-এরটি), সূচির শিরোনাম, সেমিস্টার, নিয়ম ও নীতিমালা PDF, page-এর পরিচিতি, Transport Pass, পরিবহন ফি।
+
+Website: `/transport` (stop দিয়ে খোঁজা সহ); homepage-এ "Find your bus"। পুরোনো frontend-এর জন্য একই data `/api/v2/public/transport`-এ।
 
 ---
 

@@ -2,7 +2,8 @@
 
 namespace Modules\Transport\Providers;
 
-use Modules\Transport\Support\TransportApi;
+use Illuminate\Support\Facades\Route;
+use Modules\Transport\Support\Timetable;
 use Modules\Transport\Support\TransportWebsite;
 use Platform\Context\SiteContext;
 use Platform\Modules\ModuleServiceProvider;
@@ -18,7 +19,7 @@ class TransportServiceProvider extends ModuleServiceProvider
     {
         parent::register();
 
-        $this->app->singleton(TransportApi::class);
+        $this->app->bind(Timetable::class);
         $this->app->singleton(TransportWebsite::class);
     }
 
@@ -26,7 +27,11 @@ class TransportServiceProvider extends ModuleServiceProvider
     {
         parent::boot();
 
-        // Website: /transport, from the live transport system's API (DB-06 v1.1 §2)
+        // Website: /transport (DB-06 v1.2 §2); the public API is in routes/web.php
         $this->app->make(Website::class)->handle(fn (string $rest, SiteContext $context, string $locale) => $this->app->make(TransportWebsite::class)->respond($rest, $context, $locale));
+
+        if (! $this->app->routesAreCached()) {
+            Route::group([], module_path($this->name, 'routes/web.php'));   // the public API: no session, no cookies
+        }
     }
 }

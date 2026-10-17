@@ -7,7 +7,7 @@ use Platform\Context\SiteContext;
 use Platform\Seo\Seo;
 
 /**
- * /transport (FR-TRN-06/07): the live transport system's routes — Regular / Shuttle / Friday,
+ * /transport (FR-TRN-05/06/07): the routes as they run now — Regular / Shuttle / Friday,
  * stops, times to and from campus, days off, notes, map — with a stop search. Main site only
  * (transport belongs to the university, not to a department).
  */
@@ -15,7 +15,7 @@ class TransportWebsite
 {
     public const PATH = 'transport';
 
-    public function __construct(protected TransportApi $api) {}
+    public function __construct(protected Timetable $timetable) {}
 
     public function respond(string $rest, SiteContext $context, string $locale): ?Response
     {
@@ -23,7 +23,7 @@ class TransportWebsite
             return null;
         }
 
-        $timetable = $this->api->timetable();
+        $timetable = $this->timetable->website();
         app(Seo::class)->set(['title' => __('transport::transport.title'), 'path' => '/'.self::PATH,
             'description' => $timetable['semester'] ? __('transport::transport.description', ['semester' => $timetable['semester']]) : null]);
 

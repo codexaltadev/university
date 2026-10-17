@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-06 |
-| Version | 1.1 — 2026-10-17: §2 M-31 Transport চালু transport system-এর public API থেকে দেখায় (নিজের table নয়, owner) |
+| Version | 1.2 — 2026-10-17 (v1.1): §2 Transport চালু system-এর API থেকে; 2026-10-17 (v1.2, owner: পুরোনো system বাদ যাবে): §2 Transport নিজের table-এ — `route_group`, variant / departure-এর `days_off`, চলমান service settings-এ, একই গঠনের public API, S18T |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [DB-05](05-DB-Content.md) (Main site প্রকাশ), [SRS Part 5](../02-SRS/05-SRS-Services.md), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -53,13 +53,13 @@ erDiagram
 
 ## 2. M-31 Transport
 
-> **v1.1 (2026-10-17, owner):** "Transport যেভাবে আছে সেটাই রাখো — live-এ আছে ও কাজ করে; frontend-এর জন্য তার API দেখো।" তাই M-31 **নিজের table রাখে না**: DIU-র চালু transport system (`webbackend.daffodilvarsity.edu.bd`) data-র মালিক থাকে, নতুন website তার public API **`GET /api/v2/public/transport`** পড়ে দেখায়। নিচের table-গুলো (§2.1 থেকে) **এখন তৈরি হবে না** — ভবিষ্যতে transport system-টিই এখানে আনতে চাইলে এই design কাজে লাগবে।
+> **v1.2 (2026-10-17, owner):** "পুরোনো system বাদ দিয়ে দিবো, তাই transport module এখানেই বানাতে হবে।" v1.1-এর "নিজের table নয়, live API পড়া" বাতিল — M-31 নিজেই data রাখে (§2.2 table, নিচের সংশোধন সহ), admin-এ entry, legacy থেকে migration (S18T)। **একই গঠনের public API** `GET /api/v2/public/transport` দেয় (DIU-র এখনকার frontend শুধু ঠিকানা বদলে আমাদের data পড়তে পারে)।
 >
-> * API-র উত্তর: `title`, `semester`, `rules_policy_pdf`, `active_service_name` / `_code`, `data` = `regular_road`, `shuttle_road`, `friday_road` (প্রতিটি route: `name`, `start_stop`, `end_stop`, `order`, `map_url`, `day_off`, `message`, `service_name`, `stops[]` (`name`, `order`), `schedules.from_home[]` / `from_campus[]` (`time`, `schedule_type`, `off_day`))।
-> * Settings › Transport (`core_settings`, group `transport`): API ঠিকানা, cache মিনিট (default 30), timeout; API-তে নেই এমন page-এর লেখা — পরিচিতি, **Transport Pass** (শিরোনাম, উপশিরোনাম, কীভাবে পাবেন, কেন দরকার, ছবি) ও **Transport Fees** table (route, Tri-Semester, Bi-Semester, নোট) — default DIU-র বর্তমান page-এর লেখা (live frontend-এ hardcode করা); উত্তর cache-এ থাকে, আর শেষ ভালো উত্তর আলাদা রাখা হয় — API না পেলে সেটিই দেখায় ("শেষ হালনাগাদ …")। Cache-এ শুধু array (object নয়)।
-> * Website: `/transport` — শিরোনাম, semester, নিয়মনীতি PDF, চলমান service; Regular / Shuttle / Friday tab; route-প্রতি stop-এর তালিকা, বাসা থেকে ও campus থেকে সময়, ছুটির দিন, নোট, map (চাইলে খোলে); **stop দিয়ে খোঁজা** (FR-TRN-06) — কোন route সেই stop দিয়ে যায়। Menu-র module page; homepage section `transport.finder` (stop খোঁজা + `/transport` link)।
-> * Legacy: transport data migrate হয় না (S18-এর transport অংশ বাদ) — live system-এই থাকে।
-
+> * **Service type** (Regular, Final Exam, Mid-Term, Semester Break …; একটি default) — **কোনটি এখন চলছে** Settings › Transport-এ বাছাই (legacy `transport_services.is_active`); `is_active` = তালিকায় আছে কিনা।
+> * **Route** — `route_group` (`regular` / `shuttle` / `friday` — website-এর tab, legacy `tag`), map, বার্তা, ক্রম। **Variant** = route × service type: ক্রমযুক্ত stop, `days_off` (যেদিন চলে না, legacy `day_of_week`), বার্তা। **Departure** = variant-এর একটি সময়: direction (`to_campus` / `from_campus`), `trip_type` (`regular` / `shuttle`), `days_off`। Website ও API-তে একটি route-এর **চলমান service-এর variant**, না থাকলে default service-এর; কোনোটি না থাকলে route দেখায় না।
+> * Settings › Transport: চলমান service, schedule-এর শিরোনাম ("Special Transport Schedule for Exam-2026"), semester, নিয়মনীতি PDF (Media Library), এবং page-এর লেখা — পরিচিতি, Transport Pass, Transport Fees table (v1.1 থেকে)।
+> * Website `/transport` (v1.1-এর মতো, data নিজের table থেকে), route finder (FR-TRN-06), homepage section `transport.finder`। Admin: Transport › Routes (variant: stop drag, সময় একসাথে অনেক), Stops (map-এর latitude / longitude), Service types।
+> * Legacy (S18T): `transport_services` (৪), `stops` (১৭৮, deleted বাদ), `roads` (২০) + `road_stop` + `road_schedule` + `schedules` → default service-এর variant; `road_services` + `road_service_stop` + `road_service_schedule` → সেই service-এর variant; `transport_settings` → settings (+ PDF S03-এর পরে)।
 
 ### 2.1 গঠন
 
@@ -77,14 +77,14 @@ Route "Mirpur" ─┬─ Variant: Regular Service, Sat–Thu ── stops [Mirpu
 |---|---|---|---|---|
 | `transport_service_types` | B | `name` (T), `code` VARCHAR(50), `is_default` TINYINT(1), `sort_order` | UQ `(code, active_key)` | FR-TRN-03 |
 | `transport_stops` | B | `name` (T), `latitude`, `longitude` DECIMAL(10,7) N, `landmark` (T, N), `sort_order` | IX `(is_active)` | FR-TRN-01 |
-| `transport_routes` | B | `name` (T), `code` VARCHAR(30) N, `tag` VARCHAR(50) N, `campus_id` N (index), `map_url` N, `message` (T, N), `sort_order` | UQ `(code, active_key)` | FR-TRN-02 |
-| `transport_route_variants` | B | `route_id` (FK cascade), `service_type_id` (FK transport_service_types restrict), `days` JSON (`["sat","sun",...]`), `message` (T, N) | IX `(service_type_id, route_id)` | FR-TRN-04/09 |
+| `transport_routes` | B | `name` (T), `code` VARCHAR(30) N, `route_group` VARCHAR(10) (`regular` / `shuttle` / `friday`; *v1.2: `tag`-এর বদলে*), `campus_id` N (index), `map_url` N, `message` (T, N), `sort_order` | UQ `(code, active_key)`; IX `(route_group, sort_order)` | FR-TRN-02 |
+| `transport_route_variants` | B | `route_id` (FK cascade), `service_type_id` (FK transport_service_types restrict), `days_off` JSON (`["Friday"]` — *v1.2: চলার দিনের বদলে যেদিন চলে না, legacy-র মতো*), `message` (T, N) | UQ `(route_id, service_type_id, active_key)`; IX `(service_type_id, route_id)` | FR-TRN-04/09 |
 | `transport_variant_stops` | P | `variant_id` (FK cascade), `stop_id` (FK transport_stops restrict), `sort_order` SMALLINT, timestamps | UQ `(variant_id, stop_id)`; IX `(stop_id)` (route finder) | FR-TRN-02/06 |
-| `transport_departures` | B | `variant_id` (FK cascade), `direction` VARCHAR(12) (`to_campus` / `from_campus`), `departs_at` TIME, `trip_type` VARCHAR(10) (`regular` / `shuttle`), `stop_times` JSON N (stop-প্রতি আনুমানিক সময়), `sort_order` | IX `(variant_id, direction, departs_at)` | FR-TRN-04 |
+| `transport_departures` | B | `variant_id` (FK cascade), `direction` VARCHAR(12) (`to_campus` / `from_campus`), `departs_at` TIME, `trip_type` VARCHAR(10) (`regular` / `shuttle`), `days_off` JSON N (*v1.2*), `stop_times` JSON N (stop-প্রতি আনুমানিক সময়), `sort_order` | IX `(variant_id, direction, departs_at)` | FR-TRN-04 |
 
-* **Route finder (FR-TRN-06):** `transport_variant_stops WHERE stop_id = ?` → variant → আজকের দিন (`JSON_CONTAINS(days, ...)`) ও নির্বাচিত service type → departures।
+* **Route finder (FR-TRN-06):** `transport_variant_stops WHERE stop_id = ?` → চলমান service-এর variant → departures (website-এ stop-এর নাম লিখে খোঁজা)।
 * Driver assignment (FR-TRN-10): `transport_routes` Assignable (`role_key = driver`)।
-* Transport policy / rules file ও বর্তমান session: `core_settings` (group `transport`) + Media (`policy_file`)।
+* Transport policy / rules file, schedule-এর শিরোনাম, semester, চলমান service: `core_settings` (group `transport`) + Media (`policy_file`)।
 
 ---
 
@@ -282,12 +282,12 @@ Lab / Department / Program-এর partner → `core_relations` (FR-PRT-03)। Me
 
 | বর্তমান (row) | নতুন | রূপান্তর |
 |---|---|---|
-| `transport_services` (৪: Regular, Final Exam, Mid-Term Exam, Semester Break) | transport_service_types | `code`, `is_default` অপরিবর্তিত |
+| `transport_services` (৪: Regular, Final Exam, Mid-Term Exam, Semester Break) | transport_service_types | `code`, `is_default` অপরিবর্তিত; legacy `is_active` = চলমান service → settings (v1.2) |
 | `stops` (১৭৮) | transport_stops | |
-| `roads` (২০) + `road_stop` (১৬১) + `road_schedule` (৬৭) | transport_routes + Regular-service variant + variant stops + departures | `day_of_week` JSON (`["Saturday","Friday"]`) → `days`; `start_stop_id` / `end_stop_id` → variant stop-এর প্রথম ও শেষ |
+| `roads` (২০) + `road_stop` (১৬১) + `road_schedule` (৬৭) | transport_routes + default-service variant + variant stops + departures | `tag` → `route_group`; `day_of_week` → variant `days_off` (v1.2); stop-এর ক্রম = `road_stop.id`; `road_services` (২০) + `road_service_stop` + `road_service_schedule` → সেই service-এর variant |
 | `road_services` (২০) + `road_service_stop` (১৫৭) + `road_service_schedule` (৯৬) | বিশেষ service-এর variant (বর্তমান data-তে শুধু `final_exam_service`) | |
-| `schedules` (৩৭) | transport_departures | `direction`: `from_home` → `to_campus`, `from_campus` → `from_campus`; `schedule_type` (`regular` / `shuttle`) → trip_type; `time` → departs_at |
-| `transport_settings` (১) | core_settings (`transport`) + Media | `semester`, `rules_policy_file` |
+| `schedules` (৩৭, deleted বাদ ১৮) | transport_departures (variant-প্রতি copy — legacy-তে road-গুলো একই সময় share করত) | `direction`: `from_home` → `to_campus`, `from_campus` → `from_campus`; `schedule_type` → trip_type; `time` → departs_at; `day_of_week` → `days_off` |
+| `transport_settings` (১) | core_settings (`transport`) + Media | `title`, `semester`, `rules_policy_file` (S03-এর পরে) |
 | `lab_facilities` (**১১৩**) | lab_labs | `department_id` → department_id; `instrument` → equipment_summary; `assign_person_*` → manual person বা Administration match + assignment (`in_charge`); `promotional_video` → video_url; `website_link` → website_url; `student_feedback` → body-র একটি section অথবা testimonial (manual review); প্রতিটির জন্য dynamic permission |
 | `lab_tools` (২৯), `lab_scopes` (৬), `lab_projects` (৭), `lab_products` (২) | lab_items (`item_type` অনুযায়ী) | Category table → vocabulary; category-র `lab_ids` (কোন Lab-এ দেখাবে) বাদ — vocabulary shared |
 | `lab_menus` (১৫), `lab_app_menus` (৮) | menu (DB-02) | |

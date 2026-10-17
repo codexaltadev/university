@@ -2,7 +2,7 @@
 
 namespace Modules\Transport\Sections;
 
-use Modules\Transport\Support\TransportApi;
+use Modules\Transport\Support\Timetable;
 use Modules\Transport\Support\TransportWebsite;
 use Platform\Homepage\Section;
 use Platform\Homepage\SectionContext;
@@ -28,7 +28,7 @@ class TransportFinderSection extends Section
     /** @return array{timetable: array, stops: list<string>} */
     public function items(SectionContext $ctx): array
     {
-        $timetable = app(TransportApi::class)->timetable();
+        $timetable = app(Timetable::class)->website();
 
         return ['timetable' => $timetable, 'stops' => TransportWebsite::allStops($timetable)];
     }
