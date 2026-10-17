@@ -3,6 +3,8 @@
 return [
     'title' => 'Homepage',
     'empty' => 'নিজের homepage নেই: website এখানে theme-এর default homepage দেখাবে।',
+    'uses_kind' => 'নিজের homepage নেই: «:kind»-এর homepage দেখাচ্ছে। শুধু এই microsite-এর জন্য বদলাতে চাইলে নিজেরটা বানান।',
+    'empty_kind' => 'এখনো সাধারণ homepage নেই: এই ধরনের প্রতিটি microsite নিজের না থাকলে module-এর default homepage দেখায়।',
     'sections' => [
         'hero' => 'Hero / slider',
         'statistics' => 'পরিসংখ্যান',
@@ -73,6 +75,7 @@ return [
     'actions' => [
         'create' => 'Homepage তৈরি',
         'copy_main' => 'Main homepage থেকে শুরু',
+        'copy_from' => '«:owner» থেকে শুরু',
         'add_section' => 'Section যোগ',
         'save' => 'Homepage সংরক্ষণ',
         'delete' => 'Homepage মুছুন',

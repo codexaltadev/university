@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Modules\Homepage\Models\HomeSection;
 use Modules\Homepage\Models\Layout;
 use Modules\Homepage\Sections;
+use Platform\Context\MicrositeOwners;
 use Platform\Homepage\SectionContext;
 use Platform\Homepage\SectionType;
 use Platform\Homepage\ThemeSections;
@@ -99,9 +100,9 @@ class Homepages
      */
     public function forOwner(string $ownerKey, ?string $locale = null): ?array
     {
-        $layout = $this->own($ownerKey);
+        $layout = $this->layoutFor($ownerKey);
 
-        if ($layout === null || ! $layout->is_active) {
+        if ($layout === null) {
             return null;
         }
 
@@ -115,7 +116,8 @@ class Homepages
                 $version = Cache::get(self::VERSION_KEY, 0);
                 $ctx = new SectionContext($ownerKey, (array) $section->settings, $locale);
                 // Cached as plain values (models as [class, id]) — the cache unserializes no objects
-                $data = UserScopeFilter::withoutScope(fn () => CachedItems::thaw(Cache::remember("homepage:{$version}:{$section->id}:{$locale}", 600,
+                // One kind's layout serves many microsites: the owner is part of the key
+                $data = UserScopeFilter::withoutScope(fn () => CachedItems::thaw(Cache::remember("homepage:{$version}:{$section->id}:{$ownerKey}:{$locale}", 600,
                     fn () => CachedItems::freeze(['items' => $type->items($ctx), 'content' => $type->content($ctx)]))));
 
                 return [
@@ -129,6 +131,26 @@ class Homepages
                 ];
             })
             ->values()->all();
+    }
+
+    /**
+     * The layout a homepage uses (owner decision 2026-10-17): the owner's own when active,
+     * else — for a microsite — the one every microsite of its kind shares ("All Departments",
+     * owner {alias}:0); null → the module's / theme's default. Sections are still filled for
+     * the owner itself (its news, programs …).
+     */
+    public function layoutFor(string $ownerKey): ?Layout
+    {
+        $own = $this->own($ownerKey);
+
+        if ($own?->is_active) {
+            return $own;
+        }
+
+        $kind = MicrositeOwners::kindOf($ownerKey);
+        $shared = $kind ? $this->own($kind) : null;
+
+        return $shared?->is_active ? $shared : null;
     }
 
     public static function flush(): void

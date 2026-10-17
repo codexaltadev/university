@@ -3,6 +3,8 @@
 return [
     'owner' => 'যার',
     'main_site' => 'Main site',
+    'every_kind' => 'সব :kind',
+    'every_kind_group' => 'একই ধরনের সব microsite-এর জন্য',
     'publishing' => 'প্রকাশ',
     'active' => 'চালু',
     'active_at' => 'কখন থেকে দেখাবে',

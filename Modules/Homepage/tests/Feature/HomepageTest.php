@@ -204,6 +204,42 @@ it('creates the main homepage\'s default sections once (FR-HOME-12)', function (
         ->toBe(['core.hero', 'core.statistics', 'program.list', 'news.latest', 'events.upcoming', 'notice.board', 'testimonials.list', 'partners.list']);
 });
 
+it('gives every microsite of a kind one shared homepage, filled for each; its own wins (owner decision 2026-10-17)', function () {
+    $engine = app(RelationEngine::class);
+    foreach (['CSE news' => $this->cse, 'EEE news' => $this->eee] as $q => $entity) {
+        $engine->sync(Faq::factory()->create(['question' => $q]), [($this->k)($entity)], mainSite: false, user: null);
+    }
+    $kind = MicrositeOwners::kindOf(($this->k)($this->cse));
+    expect($kind)->toBe($this->cse->getMorphClass().':0')
+        ->and(MicrositeOwners::kindOf('site:0'))->toBeNull()
+        ->and(MicrositeOwners::label($kind))->toBe('All Fixture Children');
+
+    ($this->layoutWith)($kind, [['section_type' => 'faq.highlights', 'settings' => ['source_mode' => 'latest']]]);
+
+    // Both departments use the shared layout, each with its own content (cached per owner)
+    expect($this->homepages->forOwner(($this->k)($this->cse))[0]['items']->pluck('question')->all())->toBe(['CSE news'])
+        ->and($this->homepages->forOwner(($this->k)($this->eee))[0]['items']->pluck('question')->all())->toBe(['EEE news'])
+        ->and($this->homepages->forOwner(($this->k)($this->engineering)))->toBeNull();   // another kind: its module default
+
+    // CSE customises: its own layout, started from the shared one
+    $own = $this->homepages->create(($this->k)($this->cse), $this->homepages->own($kind));
+    $own->sections()->create(['section_type' => 'core.spacer', 'sort_order' => 2]);
+    Homepages::flush();
+    expect(keysOf($this->homepages->forOwner(($this->k)($this->cse))))->toBe(['faq.highlights', 'core.spacer'])
+        ->and(keysOf($this->homepages->forOwner(($this->k)($this->eee))))->toBe(['faq.highlights']);
+
+    // The screen: a kind's homepage, and a microsite starting from it
+    $this->actingAs(makeUser(['ManageMain:Homepage', 'Manage:Homepage'], [$this->eee]));
+    Livewire::withQueryParams(['owner' => ($this->k)($this->eee)])->test(ManageHomepage::class)
+        ->assertSee('All Fixture Children')
+        ->call('createOwn', $kind);
+    expect($this->homepages->own(($this->k)($this->eee))->sections()->pluck('section_type')->all())->toBe(['faq.highlights']);
+
+    // Only people who manage the main homepage edit a kind's; entity editors see their own only
+    expect(MicrositeOwners::keys(makeUser(['ManageMain:Homepage']), 'Homepage', withKinds: true))->toContain($kind)
+        ->and(MicrositeOwners::keys(makeUser(['Manage:Homepage'], [$this->eee]), 'Homepage', withKinds: true))->toBe([($this->k)($this->eee)]);
+});
+
 it('renders the homepage sections through the active theme; none → the theme\'s default (C-06, FR-HOME-08)', function () {
     $this->get('/')->assertOk()->assertSee(settings('general.site_name'));                     // theme default homepage
 

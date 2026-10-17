@@ -436,6 +436,8 @@
 | FR-HOME-09 | Section-এর source module inactive হলে section frontend-এ লুকাবে এবং admin-এ সতর্কতা দেখাবে | BR-MOD-03 | Must |
 | FR-HOME-10 | একটি homepage layout template হিসেবে save করে অন্য microsite-এ ব্যবহার | — | Could |
 | FR-HOME-11 | Module section-এর source mode: Latest / Highlighted only / Highlighted first, then latest (default) / Manual pick; highlight নেওয়া হবে ওই homepage-এর context থেকে ([Part 4, Section 1.1](04-SRS-Content.md#11-context-ভিত্তিক-highlight-বর্তমান-is_home-এর-উন্নত-রূপ)) | BR-CNT-07 | Must |
+| FR-HOME-13 | *(owner 2026-10-17)* প্রতিটি microsite **ধরনের** (Faculty, Department, Program, Office, Lab) একটি সাধারণ homepage — "All Departments" ইত্যাদি; ওই ধরনের সব microsite এটি দেখায়, data নিজের (news, program …)। কোনো microsite চাইলে নিজের homepage বানাতে পারে (শূন্য থেকে বা সাধারণটি কপি করে), তখন শুধু তার জন্য সেটি। ক্রম: নিজের → ধরনের সাধারণ → module-এর default (FR-HOME-08)। সাধারণটি সাজাতে main homepage-এর অনুমতি লাগে | BR-MS-05 | Must |
+| FR-HOME-14 | *(owner 2026-10-17)* Theme নিজের homepage section দিতে পারে (theme.json "sections": field-এর তালিকা, default, ঐচ্ছিক module source); Homepage Builder সেগুলোর ফর্ম বানায়, লেখা প্রতি ভাষায় (Theme Guide §8.4) | BR-THM-04 | Must |
 | FR-HOME-12 | নতুন installation-এ main homepage-এর default section: Hero Slider, **Statistics** (Main Site Stat Set), Programs, Latest News, Upcoming Events, Notice Board, Testimonials, Partners (Homepage Builder দিয়ে পরিবর্তনযোগ্য) | BR-THM-04, BR-STAT-01 | Must |
 
 ### Permissions

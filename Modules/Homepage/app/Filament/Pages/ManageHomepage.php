@@ -77,7 +77,7 @@ class ManageHomepage extends Page implements MicrositeTool
     /** Microsite tool (UI/UX Part A §4.1): the entity editors' "Microsite" button opens it on one owner. */
     public static function canUseFor(string $ownerKey): bool
     {
-        return in_array($ownerKey, MicrositeOwners::keys(Auth::user(), 'Homepage'), true);
+        return in_array($ownerKey, MicrositeOwners::keys(Auth::user(), 'Homepage', withKinds: true), true);
     }
 
     public static function urlFor(string $ownerKey): string
@@ -92,12 +92,12 @@ class ManageHomepage extends Page implements MicrositeTool
 
     public static function canAccess(): bool
     {
-        return MicrositeOwners::keys(Auth::user(), 'Homepage') !== [];
+        return MicrositeOwners::keys(Auth::user(), 'Homepage', withKinds: true) !== [];
     }
 
     public function mount(): void
     {
-        $owners = MicrositeOwners::keys(Auth::user(), 'Homepage');
+        $owners = MicrositeOwners::keys(Auth::user(), 'Homepage', withKinds: true);
         abort_if($owners === [], 403);
         $this->owner = $this->ownerOnOpen($owners);   // "Working in" unless asked for
 
@@ -109,10 +109,10 @@ class ManageHomepage extends Page implements MicrositeTool
     {
         return $schema->statePath('pick')->components([
             Select::make('owner')->label(__('platform::relations.owner'))
-                ->options(fn (): array => MicrositeOwners::options(Auth::user(), 'Homepage'))
+                ->options(fn (): array => MicrositeOwners::options(Auth::user(), 'Homepage', withKinds: true))
                 ->searchable()->selectablePlaceholder(false)->live()
                 ->afterStateUpdated(function (?string $state): void {
-                    if (in_array($state, MicrositeOwners::keys(Auth::user(), 'Homepage'), true)) {
+                    if (in_array($state, MicrositeOwners::keys(Auth::user(), 'Homepage', withKinds: true), true)) {
                         $this->owner = $state;
                         $this->load();
                     }
@@ -125,14 +125,21 @@ class ManageHomepage extends Page implements MicrositeTool
         return $schema->statePath('data')->components([
             // FR-HOME-08: without its own, a microsite shows the theme's default homepage
             Section::make()->visible(fn (): bool => $this->layout() === null)->schema([
-                Text::make(__('homepage::homepage.empty')),
+                // A microsite without its own: the one its kind shares, if there is one (owner decision 2026-10-17)
+                Text::make(fn (): string => ($kind = $this->kindLayoutKey())
+                    ? __('homepage::homepage.uses_kind', ['kind' => MicrositeOwners::label($kind)])
+                    : (MicrositeOwners::isKindKey((string) $this->owner) ? __('homepage::homepage.empty_kind') : __('homepage::homepage.empty'))),
                 Actions::make([
                     Action::make('createOwn')->label(__('homepage::homepage.actions.create'))
-                        ->icon(Heroicon::OutlinedPlus)->action(fn () => $this->createOwn(false)),
+                        ->icon(Heroicon::OutlinedPlus)->action(fn () => $this->createOwn()),
+                    Action::make('copyKind')->label(fn (): string => __('homepage::homepage.actions.copy_from', ['owner' => MicrositeOwners::label((string) $this->kindLayoutKey())]))
+                        ->icon(Heroicon::OutlinedDocumentDuplicate)->color('gray')
+                        ->visible(fn (): bool => $this->kindLayoutKey() !== null)
+                        ->action(fn () => $this->createOwn($this->kindLayoutKey())),
                     Action::make('copyMain')->label(__('homepage::homepage.actions.copy_main'))
                         ->icon(Heroicon::OutlinedDocumentDuplicate)->color('gray')
                         ->visible(fn (): bool => $this->owner !== RelationEngine::SITE_KEY && app(Homepages::class)->own(RelationEngine::SITE_KEY) !== null)
-                        ->action(fn () => $this->createOwn(true)),
+                        ->action(fn () => $this->createOwn(RelationEngine::SITE_KEY)),
                 ]),
             ]),
             Section::make()->visible(fn (): bool => $this->layout() !== null)
@@ -189,7 +196,8 @@ class ManageHomepage extends Page implements MicrositeTool
             ]),
             Select::make('settings.manual_ids')->label(__('homepage::homepage.fields.manual_ids'))
                 ->multiple()->searchable()
-                ->options(fn (Get $get): array => ($model = $type($get)?->model)
+                // A kind's shared homepage has no fixed records to pick: each microsite shows its own
+                ->options(fn (Get $get): array => ($model = $type($get)?->model) && ! MicrositeOwners::isKindKey((string) $this->owner)
                     ? app(RelationEngine::class)->for($this->owner)->content($model)->includeDescendants()->query()->limit(100)->get()
                         ->mapWithKeys(fn ($record): array => [$record->getKey() => (string) $record->getAttribute($record::$titleAttribute ?? 'name')])->all()
                     : [])
@@ -229,13 +237,14 @@ class ManageHomepage extends Page implements MicrositeTool
         return ($problem ? '⚠ ' : '').$label.($heading ? " “{$heading}”" : '').$summary.($problem ? ' — '.__("homepage::homepage.problems.{$problem}") : '');
     }
 
-    public function createOwn(bool $copyMain = false): void
+    /** Own homepage: empty, or a copy of the main site's or of the one its kind shares. */
+    public function createOwn(?string $copyFrom = null): void
     {
         $this->guardOwner();
         $homepages = app(Homepages::class);
 
         if ($homepages->own($this->owner) === null) {
-            $homepages->create($this->owner, $copyMain ? $homepages->own(RelationEngine::SITE_KEY) : null);
+            $homepages->create($this->owner, $copyFrom ? $homepages->own($copyFrom) : null);
         }
 
         $this->load();
@@ -313,6 +322,14 @@ class ManageHomepage extends Page implements MicrositeTool
         ] : []);
     }
 
+    /** "department.department:0" when this microsite's kind has a shared homepage */
+    protected function kindLayoutKey(): ?string
+    {
+        $kind = $this->owner ? MicrositeOwners::kindOf($this->owner) : null;
+
+        return $kind && app(Homepages::class)->own($kind) !== null ? $kind : null;
+    }
+
     protected function layout(): ?Layout
     {
         return $this->owner ? Layout::query()->withoutGlobalScope(UserScopeFilter::class)->ownedBy($this->owner)->first() : null;
@@ -320,6 +337,6 @@ class ManageHomepage extends Page implements MicrositeTool
 
     protected function guardOwner(): void
     {
-        abort_unless(in_array($this->owner, MicrositeOwners::keys(Auth::user(), 'Homepage'), true), 403);
+        abort_unless(in_array($this->owner, MicrositeOwners::keys(Auth::user(), 'Homepage', withKinds: true), true), 403);
     }
 }

@@ -3,6 +3,8 @@
 return [
     'title' => 'Homepage',
     'empty' => 'No homepage of its own: the website shows the theme\'s default homepage here.',
+    'uses_kind' => 'No homepage of its own: it uses the one of «:kind». Make its own only to change it for this microsite.',
+    'empty_kind' => 'No shared homepage yet: each microsite of this kind shows its module\'s default homepage, unless it has its own.',
     'sections' => [
         'hero' => 'Hero / slider',
         'statistics' => 'Statistics',
@@ -73,6 +75,7 @@ return [
     'actions' => [
         'create' => 'Create homepage',
         'copy_main' => 'Start from the main homepage',
+        'copy_from' => 'Start from «:owner»',
         'add_section' => 'Add section',
         'save' => 'Save homepage',
         'delete' => 'Delete homepage',

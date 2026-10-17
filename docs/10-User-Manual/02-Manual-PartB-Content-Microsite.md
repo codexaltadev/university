@@ -281,6 +281,10 @@ Screen-এ লেখা থাকে, যেমন: *"This microsite uses Engine
 * **Preview** দেখে **Save**।
 * কোনো module বন্ধ থাকলে তার section ⚠ চিহ্নসহ লুকানো থাকে।
 
+**সব Department (Faculty, Program, Office, Lab)-এর একটি সাধারণ homepage:** Owner তালিকায় 🧩 **All Departments** ইত্যাদি (যাঁরা main homepage সাজাতে পারেন তাঁদের জন্য)। এটি একবার সাজালে প্রতিটি department একই section দেখায়, কিন্তু নিজের news, program, faculty member দিয়ে ভরা। কোনো department একেবারে আলাদা চাইলে নিজের microsite বেছে **Create** (শূন্য থেকে) বা **Start from «All Departments»** (সাধারণটি কপি করে বদলানো) — তখন শুধু ওই department-এর জন্য সেটি দেখাবে; মুছে দিলে আবার সাধারণটি।
+
+**Theme-এর section:** default theme কিছু section দেয় (DIU — Hero, Rankings and mission, Find your degree, Scholarships, Research, Recent events …)। খালি field-এ ধূসর লেখা = website-এ যা দেখাচ্ছে (theme-এর default); নিজে লিখলে সেটিই দেখাবে।
+
 ---
 
 ## 14. Header ও Footer

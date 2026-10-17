@@ -3,6 +3,8 @@
 return [
     'owner' => 'Belongs to',
     'main_site' => 'Main site',
+    'every_kind' => 'All :kind',
+    'every_kind_group' => 'Shared by every microsite of a kind',
     'publishing' => 'Publishing',
     'active' => 'Active',
     'active_at' => 'Show from',

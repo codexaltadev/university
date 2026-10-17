@@ -260,6 +260,8 @@ UQ: `(owner_type, owner_id, region)`।
 
 UQ: `(owner_type, owner_id)`।
 
+**ধরনের সাধারণ homepage (2026-10-17, FR-HOME-13):** `owner_id = 0` আর `owner_type` একটি microsite ধরন (যেমন `department.department`) = সেই ধরনের সব microsite-এর সাধারণ homepage ("All Departments")। Microsite-এর নিজের সক্রিয় layout না থাকলে এটি ব্যবহার হয়; section-এর data তবুও সেই microsite-এর (cache key-তে owner আছে)। নতুন column বা table লাগেনি।
+
 ### 7.2 `homepage_sections` — B
 
 | Column | Type | Key / N | বর্ণনা |
@@ -269,7 +271,7 @@ UQ: `(owner_type, owner_id)`।
 | section_type | VARCHAR(100) | IX | Registry key: `core.hero`, `core.statistics`, `news.latest`, `events.upcoming` ... |
 | heading | JSON | N, T | |
 | subheading | JSON | N, T | |
-| settings | JSON | | Source mode (FR-HOME-11), item সংখ্যা, filter, layout variant, background, manual id তালিকা, stat set id |
+| settings | JSON | | Source mode (FR-HOME-11), item সংখ্যা, filter, layout variant, background, manual id তালিকা, stat set id; theme section-এর field-এর মান `content`-এর নিচে (`section_type` = `theme.{name}`, FR-HOME-14) |
 | sort_order | INT UNSIGNED | | |
 | visible_from, visible_until | TIMESTAMP | N | FR-HOME-06 |
 | ⚙ | | | |
