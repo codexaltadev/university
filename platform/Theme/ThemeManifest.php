@@ -3,6 +3,7 @@
 namespace Platform\Theme;
 
 use Composer\Semver\Semver;
+use Platform\Homepage\ThemeSections;
 use RuntimeException;
 use Throwable;
 
@@ -103,6 +104,12 @@ final class ThemeManifest
         return array_values((array) ($this->data['options'] ?? []));
     }
 
+    /** @return array<string, array<string, mixed>> name => {label, source?, fields} — homepage sections of the theme (Theme Guide §8.4) */
+    public function sections(): array
+    {
+        return (array) ($this->data['sections'] ?? []);
+    }
+
     public function screenshot(): ?string
     {
         $file = $this->path.'/'.($this->data['screenshot'] ?? 'screenshot.png');
@@ -162,6 +169,8 @@ final class ThemeManifest
                 $errors[] = 'theme.json: every option needs a "key" and a "type" ('.implode(', ', self::OPTION_TYPES).').';
             }
         }
+
+        $errors = [...$errors, ...ThemeSections::validate($this->sections(), $this->path)];
 
         if (! is_file("{$this->path}/public/build/manifest.json")) {
             $errors[] = 'Missing compiled assets: public/build/manifest.json (T-6).';

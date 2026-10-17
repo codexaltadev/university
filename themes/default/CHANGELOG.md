@@ -11,6 +11,9 @@
   Your Journey", Subscribe Us, social links, link columns), back-to-top; Tailwind palette and
   type scale back for the copy (brand colours still tokens); no top bar / microsite bar;
   `<x-theme::icon>`; footer options; themed instant search and newsletter form.
+- 4.3: DIU homepage as theme sections (theme.json "sections"): hero, mission, degree,
+  scholarships, research, events, testimonials, alumni-news, link-button; components
+  heading / button / link-button / reveal / counter; Alpine carousel and counter.
 
 ## 1.0.0 — 2026-10-09
 

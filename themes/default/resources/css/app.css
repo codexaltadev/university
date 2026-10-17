@@ -7,6 +7,7 @@
  */
 @import "tailwindcss";
 @import "./chrome.css";   /* header, menus, drawer, search, footer */
+@import "./sections.css"; /* homepage sections: rotating border, reveal on scroll */
 
 /* Views whose classes must be in the build: the theme's and every module's */
 @source "../../views";
@@ -88,11 +89,10 @@
     /* Bangla: own font and taller line come from the kernel tokens (:lang(bn)) */
     :lang(bn) { letter-spacing: 0; }
 
-    h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); line-height: 1.25; color: var(--color-secondary); font-weight: 700; }
-    h1 { font-size: var(--text-3xl); }
-    h2 { font-size: var(--text-2xl); }
-    h3 { font-size: var(--text-xl); }
-    h4 { font-size: var(--text-lg); }
+    /* Headings keep Tailwind's preflight (size and colour of their place), as on DIU; the view sets them */
+    h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); }
+    .prose h2, .prose h3, .prose h4 { color: var(--color-secondary); font-weight: 700; line-height: 1.25; }
+    .prose h4 { font-size: 1.125rem; }
 
     /* Links take the colour around them (as on DIU); rich text colours its own below */
     img, video { max-width: 100%; height: auto; }

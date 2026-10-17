@@ -13,6 +13,8 @@
         @case('chevron-down')<path d="m6 9 6 6 6-6"/>@break
         @case('chevron-right')<path d="m9 6 6 6-6 6"/>@break
         @case('chevron-up')<path d="m18 15-6-6-6 6"/>@break
+        @case('chevron-left')<path d="m15 18-6-6 6-6"/>@break
+        @case('play')<path d="M6 3l14 9-14 9V3z"/>@break
         @case('arrow-up-right')<path d="M7 7h10v10M7 17 17 7"/>@break
         @case('grid')<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>@break
         @case('video')<path d="m16 13 5.2 3.5a.5.5 0 0 0 .8-.4V7.9a.5.5 0 0 0-.8-.4L16 11"/><rect x="2" y="6" width="14" height="12" rx="2"/>@break

@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-1Wyt6CW2.css",
+    "file": "assets/app-8iZORLfx.css",
     "name": "app",
     "names": [
       "app.css"
@@ -21,7 +21,7 @@
     "src": "resources/fonts/mina-700-latin.woff2"
   },
   "resources/js/app.js": {
-    "file": "assets/app-CrvRiBc1.js",
+    "file": "assets/app-BN_B0zJA.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true

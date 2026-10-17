@@ -419,6 +419,10 @@ Theme settings (color, typography, radius ...)
 * Entity-ভিত্তিক logo ও banner একই fallback resolver দিয়ে (Section 6)।
 * ভাষা অনুযায়ী font: `:lang(bn)` selector দিয়ে বাংলার font (FR-THEME-05)।
 
+### 8.4a Theme section (2026-10-17)
+
+Homepage section catalogue = core section + সক্রিয় module-এর section + **সক্রিয় theme-এর section** (`theme.json` "sections")। সবই `Platform\Homepage\SectionType`: key, label, view, model (source mode-এর জন্য), settings form, items, আর theme section-এর জন্য `content`। `Platform\Homepage\ThemeSections` manifest-এর field-তালিকা থেকে Filament form বানায় ও website-এর জন্য মান (ভাষা, default, ছবি, repeater) তৈরি করে; `source` থাকলে সেই module section-এর items ও settings নেয়। Data schema বদলায় না — মান `home_sections.settings.content`-এ, আর items + content একসাথে section cache-এ (CachedItems)। Theme Guide §8.4।
+
 ### 8.5 Preview
 
 Admin "Preview" করলে session-এ preview theme রাখা হয়; শুধু সেই admin-এর request-এ preview theme প্রযোজ্য, visitor-এর নয় (FR-THEME-03)।

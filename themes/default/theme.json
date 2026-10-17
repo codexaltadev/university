@@ -29,6 +29,154 @@
     "page_templates": ["default", "full-width", "with-sidebar", "landing"],
     "microsite_templates": ["standard"],
 
+    "sections": {
+        "hero": {
+            "label": "DIU — Hero with video (heading = title, subheading = text)",
+            "heading": "Beyond Classrooms, We Build Futures.",
+            "subheading": "Study, create and connect on Bangladesh's most forward-thinking university grounds.",
+            "fields": [
+                { "key": "video", "type": "url", "label": "Video (MP4 link)", "default": "https://daffodilvarsity.edu.bd/hero.mp4" },
+                { "key": "poster", "type": "image", "label": "Picture shown before / instead of the video" }
+            ]
+        },
+        "mission": {
+            "label": "DIU — Rankings, vision and mission",
+            "source": "accreditation.recognition",
+            "fields": [
+                { "key": "headline", "type": "text", "label": "Headline", "default": "Shaping futures with a global vision - ranked among the world's best," },
+                { "key": "highlight_prefix", "type": "text", "label": "Before the highlight", "default": "proudly" },
+                { "key": "highlight", "type": "text", "label": "Highlight (yellow)", "default": "#1 in Bangladesh" },
+                { "key": "button_label", "type": "text", "label": "Button text", "default": "Learn More" },
+                { "key": "button_url", "type": "url", "label": "Button link", "default": "/rankings" },
+                { "key": "vision_title", "type": "text", "label": "Vision title", "default": "Vision — Where We're Heading" },
+                { "key": "vision_text", "type": "textarea", "label": "Vision", "default": "Becoming a globally recognized center of excellence through innovative, learner-centric, technology-driven education, and impactful research fostering a diverse, international academic community that actively shapes brighter future for all." },
+                { "key": "mission_title", "type": "text", "label": "Mission title", "default": "Mission — What Drives Us" },
+                { "key": "mission_points", "type": "repeater", "label": "Mission points", "fields": [{ "key": "text", "type": "text", "label": "Point" }],
+                  "default": [
+                      { "text": "Equip students for a rapidly changing world" },
+                      { "text": "Foster a culture of innovation & internationalization" },
+                      { "text": "Advance knowledge and sustainable development through research" },
+                      { "text": "Empower graduates to lead positive change in society" },
+                      { "text": "Forge strong industry-academia linkages for successful careers" }
+                  ] },
+                { "key": "quotes", "type": "repeater", "label": "Rotating quotes (**bold** for bold words)", "fields": [{ "key": "text", "type": "textarea", "label": "Quote" }],
+                  "default": [
+                      { "text": "Global **Top-20 in SDG 4, Top-40 in SDG8—**DIU turns vision into measurable impact." },
+                      { "text": "**Pioneering excellence** in education and research for sustainable development goals." },
+                      { "text": "**Leading innovation and transformation** in higher education across Bangladesh." }
+                  ] }
+            ]
+        },
+        "degree": {
+            "label": "DIU — Find your degree (heading, subheading = line under it)",
+            "heading": "Find Your Degree at DIU",
+            "subheading": "38 programs • 6 faculties • Undergraduate & Graduate pathways",
+            "fields": [
+                { "key": "button_label", "type": "text", "label": "Link text", "default": "Browse our All Faculties" },
+                { "key": "button_url", "type": "url", "label": "Link", "default": "/faculties" },
+                { "key": "links", "type": "repeater", "label": "Big links", "max": 4, "fields": [{ "key": "label", "type": "text", "label": "Text" }, { "key": "url", "type": "url", "label": "Link" }],
+                  "default": [
+                      { "label": "Undergraduate Programs", "url": "/programs?level=undergraduate" },
+                      { "label": "Post Graduate Programs", "url": "/programs?level=postgraduate" }
+                  ] },
+                { "key": "actions", "type": "repeater", "label": "Buttons", "max": 3, "fields": [{ "key": "label", "type": "text", "label": "Text" }, { "key": "url", "type": "url", "label": "Link" }],
+                  "default": [
+                      { "label": "Get Admission Info", "url": "/admission" },
+                      { "label": "Experience Student Life", "url": "/campus-life" },
+                      { "label": "Browse Institutes", "url": "/article/institutes" }
+                  ] }
+            ]
+        },
+        "scholarships": {
+            "label": "DIU — Scholarships (heading, subheading = intro)",
+            "heading": "Scholarships That Unlock Potential",
+            "subheading": "Every dream deserves a chance—DIU's scholarship programs turn ambition into achievement.",
+            "fields": [
+                { "key": "link_label", "type": "text", "label": "Link text", "default": "Learn More About Scholarship" },
+                { "key": "link_url", "type": "url", "label": "Link", "default": "/scholarship" },
+                { "key": "youtube_id", "type": "text", "translatable": false, "label": "YouTube video id", "default": "RUoHuYIa2qQ" },
+                { "key": "quote", "type": "text", "label": "Quote under the video", "default": "\"My DIU merit award let me create Bangladesh's first student AI start-up.\"" },
+                { "key": "quote_author", "type": "text", "label": "Quote by", "default": "— Rahim, CSE '25" },
+                { "key": "stat", "type": "text", "label": "Big figure", "default": "Up to 100%" },
+                { "key": "stat_title", "type": "text", "label": "Under the figure", "default": "Tuition Coverage for Top Achievers & Eligible Students" },
+                { "key": "stat_text", "type": "textarea", "label": "Text", "default": "With more than 25 categories, you’re likely to find a scholarship or waiver that fits your journey at DIU." },
+                { "key": "button_label", "type": "text", "label": "Button text", "default": "Estimate your scholarship package" },
+                { "key": "button_url", "type": "url", "label": "Button link", "default": "/tuition-fee-calculator" }
+            ]
+        },
+        "research": {
+            "label": "DIU — Research (heading, subheading = intro)",
+            "heading": "Research & Innovation at DIU",
+            "subheading": "From breakthrough discoveries to real-world impact—see how our scholars are shaping the future.",
+            "fields": [
+                { "key": "link_label", "type": "text", "label": "Link text", "default": "Partner with DIU Research" },
+                { "key": "link_url", "type": "url", "label": "Link", "default": "https://research.daffodilvarsity.edu.bd/" },
+                { "key": "stats", "type": "repeater", "label": "Figures", "max": 4, "fields": [{ "key": "number", "type": "number", "label": "Number" }, { "key": "suffix", "type": "text", "translatable": false, "label": "After the number" }, { "key": "label", "type": "text", "label": "Label" }],
+                  "default": [
+                      { "number": 5600, "suffix": "+", "label": "Peer Reviewed Paper" },
+                      { "number": 120, "suffix": "+", "label": "Patents and IP Filings" },
+                      { "number": 12, "suffix": "+", "label": "Research Centers" },
+                      { "number": 500, "suffix": "+", "label": "PhD Scholars" }
+                  ] },
+                { "key": "stories", "type": "repeater", "label": "Impact stories", "max": 3, "fields": [{ "key": "image", "type": "image", "label": "Picture" }, { "key": "title", "type": "text", "label": "Title" }, { "key": "url", "type": "url", "label": "Link" }] },
+                { "key": "partners_title", "type": "text", "label": "Partners title", "default": "Research & Innovation Partners" },
+                { "key": "partners", "type": "repeater", "label": "Partner logos", "fields": [{ "key": "logo", "type": "image", "label": "Logo" }, { "key": "name", "type": "text", "label": "Name" }],
+                  "default": [
+                      { "logo": "images/partners/logo-2.png", "name": "Microsoft" },
+                      { "logo": "images/partners/logo-3.jpg", "name": "IEEE" },
+                      { "logo": "images/partners/logo-4.jpg", "name": "World Health Organization" },
+                      { "logo": "images/partners/logo-5.png", "name": "Google" },
+                      { "logo": "images/partners/logo-6.png", "name": "AWS" },
+                      { "logo": "images/partners/logo-1.png", "name": "Nestle" }
+                  ] },
+                { "key": "partners_button_label", "type": "text", "label": "Button text", "default": "Explore Researches and Their Work" },
+                { "key": "partners_button_url", "type": "url", "label": "Button link", "default": "https://research.daffodilvarsity.edu.bd/" }
+            ]
+        },
+        "events": {
+            "label": "DIU — Recent events",
+            "source": "events.past",
+            "fields": [
+                { "key": "title_strong", "type": "text", "label": "Title, first word", "default": "Recent" },
+                { "key": "title_light", "type": "text", "label": "Title, light part", "default": "Events" },
+                { "key": "button_label", "type": "text", "label": "Button text", "default": "Explore All Events" },
+                { "key": "button_url", "type": "url", "label": "Button link", "default": "/events" },
+                { "key": "badge", "type": "text", "label": "Badge on the picture", "default": "Featured" }
+            ]
+        },
+        "testimonials": {
+            "label": "DIU — Faculty / visitor testimonials (heading, subheading = intro)",
+            "heading": "Meet our distinguished Faculty Members from Global",
+            "subheading": "Our faculty includes distinguished scholars, industry experts, and researchers from Bangladesh and across the globe—bringing global knowledge and local relevance into every classroom.",
+            "source": "testimonials.list",
+            "fields": [
+                { "key": "button_label", "type": "text", "label": "Button text", "default": "View All" },
+                { "key": "button_url", "type": "url", "label": "Button link", "default": "/testimonials" }
+            ]
+        },
+        "alumni-news": {
+            "label": "DIU — Alumni stories and news (heading, subheading = line under it)",
+            "heading": "Alumni Stories & Achievements",
+            "subheading": "55K+ graduates, 19 countries, one unstoppable network.",
+            "source": "news.latest",
+            "fields": [
+                { "key": "stats", "type": "repeater", "label": "Figures", "max": 2, "fields": [{ "key": "number", "type": "number", "label": "Number" }, { "key": "suffix", "type": "text", "translatable": false, "label": "After the number" }, { "key": "label", "type": "text", "label": "Label" }],
+                  "default": [
+                      { "number": 55000, "suffix": "+", "label": "Proud Alumni" },
+                      { "number": 19, "suffix": "+", "label": "Countries Represented" }
+                  ] }
+            ]
+        },
+        "link-button": {
+            "label": "DIU — Centred button (\"Stay Connected!\")",
+            "fields": [
+                { "key": "strong", "type": "text", "label": "Bold part", "default": "Stay Connected!" },
+                { "key": "text", "type": "text", "label": "Rest", "default": "Join the alumni portal" },
+                { "key": "url", "type": "url", "label": "Link", "default": "https://alumni.daffodilvarsity.edu.bd/" }
+            ]
+        }
+    },
+
     "tokens": {
         "color-primary": "#034EA2",
         "color-secondary": "#002652",

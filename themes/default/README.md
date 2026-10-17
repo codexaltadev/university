@@ -15,7 +15,8 @@ and measurements; other themes get their own designs. It follows the
 | Menu styles | mega (DIU main menu), dropdown / multilevel (DIU department menu) |
 | Menu locations | primary, topbar = utility links above the menu, quick-links-icon = Services grid (item icon = an icon name), footer-1…4 |
 | Options | `sticky_header`, `hero_height`, `header_cta_url` / `header_cta_label` (Apply button), `footer_band_1/2_label/url`, `footer_cta_title` (`\|` = line break) / `_text` / `_image` / `_info_label` / `_info_url` |
-| Components | `<x-theme::icon name="search" />` — outline icons (lucide shapes) and the social platforms |
+| Components | `<x-theme::icon name="search" />` — outline icons (lucide shapes) and the social platforms; `heading`, `button`, `link-button`, `reveal`, `counter` (DIU's Header, Button, LinkButton, SoftSlide, Counter) |
+| Homepage sections | theme.json "sections" (Theme Guide §8.4): `hero`, `mission` (source Accreditation rankings), `degree`, `scholarships`, `research`, `events` (source past events), `testimonials`, `alumni-news` (source latest news), `link-button` — views in `views/sections/` |
 
 Overrides: `views/livewire/instant-search.blade.php` (search window),
 `views/modules/newsletter/livewire/subscribe-form.blade.php` (footer Subscribe Us).

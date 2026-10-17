@@ -33,6 +33,7 @@ use Platform\Context\MicrositeOwners;
 use Platform\Context\MicrositeTool;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Homepage\SectionContext;
+use Platform\Homepage\SectionType;
 use Platform\Relations\RelationEngine;
 use Platform\Scope\UserScopeFilter;
 
@@ -162,8 +163,8 @@ class ManageHomepage extends Page implements MicrositeTool
     protected function sectionFields(): array
     {
         $homepages = app(Homepages::class);
-        $class = fn (Get $get): ?string => $homepages->catalogue()[$get('section_type')] ?? null;
-        $isContent = fn (Get $get): bool => ($c = $class($get)) !== null && $c::model() !== null;
+        $type = fn (Get $get): ?SectionType => $homepages->catalogue()[$get('section_type')] ?? null;
+        $isContent = fn (Get $get): bool => $type($get)?->model !== null;
 
         return [
             Hidden::make('id'),
@@ -188,15 +189,15 @@ class ManageHomepage extends Page implements MicrositeTool
             ]),
             Select::make('settings.manual_ids')->label(__('homepage::homepage.fields.manual_ids'))
                 ->multiple()->searchable()
-                ->options(fn (Get $get): array => ($c = $class($get)) && $c::model()
-                    ? app(RelationEngine::class)->for($this->owner)->content($c::model())->includeDescendants()->query()->limit(100)->get()
+                ->options(fn (Get $get): array => ($model = $type($get)?->model)
+                    ? app(RelationEngine::class)->for($this->owner)->content($model)->includeDescendants()->query()->limit(100)->get()
                         ->mapWithKeys(fn ($record): array => [$record->getKey() => (string) $record->getAttribute($record::$titleAttribute ?? 'name')])->all()
                     : [])
                 ->visible(fn (Get $get): bool => $isContent($get) && $get('settings.source_mode') === 'manual'),
             TextInput::make('settings.view_all_url')->label(__('homepage::homepage.fields.view_all'))
                 ->regex('#^(https?://|/)#')->maxLength(1000)->visible($isContent),
-            // The section's own settings (slides, set, text …)
-            Group::make(fn (Get $get): array => ($c = $class($get)) ? $c::settingsSchema() : [])->statePath('settings'),
+            // The section's own settings (slides, set, text …; a theme section's fields)
+            Group::make(fn (Get $get): array => $type($get)?->schema() ?? [])->statePath('settings'),
             Grid::make(4)->schema([
                 Select::make('settings.background')->label(__('homepage::homepage.fields.background'))
                     ->options(collect(['none', 'light', 'dark', 'primary'])->mapWithKeys(fn (string $b): array => [$b => __("homepage::homepage.backgrounds.{$b}")])->all())
@@ -212,15 +213,15 @@ class ManageHomepage extends Page implements MicrositeTool
     protected function sectionLabel(array $state): string
     {
         $homepages = app(Homepages::class);
-        $class = $homepages->catalogue()[$state['section_type'] ?? ''] ?? null;
-        $label = $class ? $class::label() : (string) ($state['section_type'] ?? '');
+        $type = $homepages->catalogue()[$state['section_type'] ?? ''] ?? null;
+        $label = $type ? $type->label : (string) ($state['section_type'] ?? '');
         $heading = collect((array) ($state['heading'] ?? []))->filter()->first();
-        $summary = $class && $class::model()
+        $summary = $type?->model
             ? ' — '.__('homepage::homepage.modes.'.($state['settings']['source_mode'] ?? 'highlighted_first')).' · '.($state['settings']['count'] ?? 6)
             : '';
 
         $problem = match (true) {
-            $class === null && filled($state['section_type'] ?? null) => 'module_off',
+            $type === null && filled($state['section_type'] ?? null) => 'module_off',
             ! ($state['is_active'] ?? true) => 'inactive',
             default => null,
         };

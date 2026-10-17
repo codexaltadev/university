@@ -432,6 +432,32 @@ Faculty / Department / Program / Office / Lab-এর homepage-এর মোড�
 </section>
 ```
 
+### 8.4 Theme-এর নিজস্ব homepage section (owner সিদ্ধান্ত 2026-10-17)
+
+কিছু homepage block কোনো module-এর data নয়, theme-এর design-এর অংশ (DIU-র "Find Your Degree", Scholarships, Vision/Mission …)। Theme-এ PHP নেই, তাই theme `theme.json`-এ section-এর **field-এর তালিকা** দেয়; kernel সেটা থেকে Homepage Builder-এর ফর্ম বানায় (key `theme.{name}`), আর theme-এর `views/sections/{name}.blade.php` সেটা আঁকে:
+
+```json
+"sections": {
+  "mission": {
+    "label": "Rankings, vision and mission",
+    "heading": "…", "subheading": "…",              ← builder-এর heading খালি থাকলে এগুলো
+    "source": "accreditation.recognition",          ← ঐচ্ছিক: একটি module section-এর item ($items)
+    "fields": [
+      { "key": "headline", "type": "text", "label": "Headline", "default": "Shaping futures …" },
+      { "key": "points", "type": "repeater", "label": "Mission points", "max": 6,
+        "fields": [{ "key": "text", "type": "text", "label": "Point" }],
+        "default": [{ "text": "Equip students …" }] }
+    ]
+  }
+}
+```
+
+* Field-এর ধরন: `text`, `textarea`, `richtext` (এই তিনটি প্রতি ভাষায়, `"translatable": false` না দিলে), `url`, `number`, `toggle`, `select` (`options`), `image` (Media Library; `default` হলে theme-এর `public/`-এর file), `repeater` (`fields`, `max`)।
+* মান section-এর settings-এ `content`-এর নিচে থাকে; view পায় `$section->content` — page-এর ভাষায়, খালি হলে theme-এর `default`, ছবি `['url', 'alt']`; source থাকলে `$items` আর builder-এ সেই section-এর নিজস্ব settings ও source mode।
+* Theme বদলালে সেই theme-এর section-গুলো builder-এ "module off"-এর মতো লুকানো থাকে (মুছে যায় না)।
+* `uwms:theme:check`: নাম (ছোট হাতের অক্ষর, সংখ্যা, `-`), প্রতিটির view, field-এর ধরন যাচাই করে।
+* Section frame (`components/section.blade.php`) theme-এর section ও theme-এ override করা module section-এর চারপাশে container/heading বসায় না — এগুলো নিজের পুরো-চওড়া block।
+
 ---
 
 ## 9. ধাপ ৬ — Module view override

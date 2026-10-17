@@ -1,0 +1,29 @@
+/*
+ * Homepage sections (Phase 4.3, DIU look): what the section views' Tailwind classes need
+ * from outside — the rotating border of DIU's outline button and the reveal-on-scroll motion.
+ */
+
+/* DIU globals.css: the "outline" button's border gradient turns (animate-[rotate_3s_linear_infinite]) */
+@property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+@keyframes rotate {
+    to { --angle: 360deg; }
+}
+
+@layer components {
+    /* SoftSlide: fades and slides in once it scrolls into view (<x-theme::reveal>) */
+    .reveal { opacity: 0; transform: translate3d(var(--reveal-x, 0), var(--reveal-y, 40px), 0); transition: opacity .8s ease, transform .8s ease; transition-delay: var(--reveal-delay, 0s); }
+    .reveal.is-visible { opacity: 1; transform: none; }
+    html:not(.js) .reveal { opacity: 1; transform: none; }
+    @media (prefers-reduced-motion: reduce) {
+        .reveal { opacity: 1; transform: none; transition: none; }
+    }
+
+    /* DIU section-y-space utilities */
+    .section-y-space { margin-block: 2.5rem; }
+    @media (min-width: 768px) { .section-y-space { margin-block: 3.75rem; } }
+}

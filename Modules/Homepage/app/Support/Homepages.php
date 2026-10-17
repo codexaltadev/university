@@ -8,8 +8,9 @@ use Illuminate\Support\Str;
 use Modules\Homepage\Models\HomeSection;
 use Modules\Homepage\Models\Layout;
 use Modules\Homepage\Sections;
-use Platform\Homepage\Section;
 use Platform\Homepage\SectionContext;
+use Platform\Homepage\SectionType;
+use Platform\Homepage\ThemeSections;
 use Platform\Registry\Registry;
 use Platform\Scope\UserScopeFilter;
 
@@ -31,20 +32,29 @@ class Homepages
         Sections\SpacerSection::class,
     ];
 
-    /** @return array<string, class-string<Section>> key => section, of active modules */
+    /**
+     * Core sections, those of active modules, and the active theme's own (theme.json
+     * "sections", which may take a module section's items as their source).
+     *
+     * @return array<string, SectionType> key => section type
+     */
     public function catalogue(): array
     {
         $registered = array_column(app(Registry::class)->all('homepageSection'), 'class');
+        /** @var array<string, SectionType> $classes */
+        $classes = collect([...self::CORE, ...$registered])
+            ->mapWithKeys(fn (string $class): array => [$class::key() => SectionType::fromClass($class)])
+            ->all();
 
-        return collect([...self::CORE, ...$registered])->mapWithKeys(fn (string $class): array => [$class::key() => $class])->all();
+        return [...$classes, ...ThemeSections::types($classes)];
     }
 
-    /** @return array<string, array<string, string>> module => [key => label], for the "add section" list */
+    /** @return array<string, array<string, string>> module (or "Theme") => [key => label], for the "add section" list */
     public function catalogueOptions(): array
     {
         return collect($this->catalogue())
-            ->groupBy(fn (string $class, string $key): string => Str::headline(Str::before($key, '.')), preserveKeys: true)
-            ->map(fn ($group): array => $group->map(fn (string $class): string => $class::label())->all())
+            ->groupBy(fn (SectionType $type, string $key): string => Str::headline(Str::before($key, '.')), preserveKeys: true)
+            ->map(fn ($group): array => $group->map(fn (SectionType $type): string => $type->label)->all())
             ->all();
     }
 
@@ -101,19 +111,21 @@ class Homepages
         return $layout->sections()->get()
             ->filter(fn (HomeSection $section): bool => $this->problem($section) === null)
             ->map(function (HomeSection $section) use ($catalogue, $ownerKey, $locale): array {
-                $class = $catalogue[$section->section_type];
+                $type = $catalogue[$section->section_type];
                 $version = Cache::get(self::VERSION_KEY, 0);
                 $ctx = new SectionContext($ownerKey, (array) $section->settings, $locale);
+                // Cached as plain values (models as [class, id]) — the cache unserializes no objects
+                $data = UserScopeFilter::withoutScope(fn () => CachedItems::thaw(Cache::remember("homepage:{$version}:{$section->id}:{$locale}", 600,
+                    fn () => CachedItems::freeze(['items' => $type->items($ctx), 'content' => $type->content($ctx)]))));
 
                 return [
                     'key' => $section->section_type,
-                    'view' => $class::view(),
+                    'view' => $type->view,
                     'heading' => $section->getTranslation('heading', $locale, true) ?: null,
                     'subheading' => $section->getTranslation('subheading', $locale, true) ?: null,
                     'settings' => (array) $section->settings,
-                    // Cached as plain values (models as [class, id]) — the cache unserializes no objects
-                    'items' => UserScopeFilter::withoutScope(fn () => CachedItems::thaw(Cache::remember("homepage:{$version}:{$section->id}:{$locale}", 600,
-                        fn () => CachedItems::freeze(app($class)->items($ctx))))),
+                    'items' => $data['items'],
+                    'content' => $data['content'],   // a theme section's field values (ThemeSections)
                 ];
             })
             ->values()->all();
