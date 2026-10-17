@@ -3,6 +3,7 @@
 namespace Legacy\Migration;
 
 use Illuminate\Support\ServiceProvider;
+use Legacy\Migration\Console\ExportSeedCommand;
 use Legacy\Migration\Console\MigrateCommand;
 
 /**
@@ -16,7 +17,7 @@ class LegacyMigrationServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../database/migrations');   // migration_id_map
 
         if ($this->app->runningInConsole()) {
-            $this->commands([MigrateCommand::class]);
+            $this->commands([MigrateCommand::class, ExportSeedCommand::class]);
         }
     }
 }

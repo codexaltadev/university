@@ -38,6 +38,7 @@ use Legacy\Migration\Steps\S18Newsletter;
 use Legacy\Migration\Steps\S18Partners;
 use Legacy\Migration\Steps\S18Transport;
 use Legacy\Migration\Steps\Step;
+use Legacy\Migration\Support\Seed;
 use Platform\Modules\ModuleRegistry;
 use Spatie\Activitylog\Support\ActivityLogStatus;
 use Throwable;
@@ -45,11 +46,13 @@ use Throwable;
 /**
  * php artisan legacy:migrate --all | --step=S04 --step=S06 (Data Migration Plan §4, §5).
  * Each step runs in a transaction, can be run again (M-3) and writes its report to
- * tools/legacy-migration/reports/ (M-7). The activity log is off meanwhile (M-5).
+ * tools/legacy-migration/reports/ (M-7). The activity log is off meanwhile (M-5). --from-seed
+ * reads the seed files (Support\Seed) instead of project_diu.
  */
 class MigrateCommand extends Command
 {
-    protected $signature = 'legacy:migrate {--step=* : S02, S04, S06 …} {--all : every step in order} {--no-report : do not write report files}';
+    protected $signature = 'legacy:migrate {--step=* : S02, S04, S06 …} {--all : every step in order} {--no-report : do not write report files}
+        {--from-seed : read the seed files (tools/legacy-migration/seed) instead of the legacy database}';
 
     protected $description = 'Migrate DIU data from the legacy database (project_diu)';
 
@@ -68,9 +71,13 @@ class MigrateCommand extends Command
         }
 
         try {
+            if ($this->option('from-seed')) {
+                $loaded = app(Seed::class)->load(Seed::path());
+                $this->info('Seed loaded into '.Seed::DATABASE.': '.count($loaded).' tables, '.array_sum($loaded).' rows');
+            }
             DB::connection('legacy')->getPdo();
         } catch (Throwable $e) {
-            $this->error('The legacy database is not reachable (LEGACY_DB_* in .env): '.$e->getMessage());
+            $this->error(($this->option('from-seed') ? 'The seed could not be loaded: ' : 'The legacy database is not reachable (LEGACY_DB_* in .env): ').$e->getMessage());
 
             return self::FAILURE;
         }

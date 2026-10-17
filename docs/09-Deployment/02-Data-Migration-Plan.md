@@ -112,7 +112,11 @@ php artisan legacy:migrate --step=S07 --step=S08  # নির্দিষ্ট 
 php artisan legacy:migrate --fresh                # নতুন DB-তে শূন্য থেকে (dry-run)
 php artisan legacy:verify                         # MIG-01 থেকে MIG-11 report
 php artisan legacy:redirects --import=sheets/redirects.csv
+php artisan legacy:export-seed                    # project_diu → seed/ (git-এ)
+php artisan db:seed --class=DiuContentSeeder      # legacy DB ছাড়া: সব ধাপ seed থেকে (= legacy:migrate --all --from-seed)
 ```
+
+**Seed file (owner 2026-10-17):** legacy DB হাতের কাছে না থাকলেও (নতুন developer, CI, staging) DIU-র content আনার জন্য step-গুলো যে ১৩০টা table পড়ে, সেগুলোর structure (`seed/schema.sql`) আর row (`seed/{table}.jsonl.gz`) git-এ রাখা হয়। `--from-seed` এগুলো নিজস্ব MySQL database `diu_legacy_seed`-এ বসায় (`project_diu`-তে কখনো নয়), তারপর `legacy` connection সেখান থেকে পড়ে, ফলে step আর ফল একই থাকে। Personal data git-এ যায় না: `newsletters`, `admission_subscribers`, `admission_results` শুধু structure; alumni-র email, phone, student ID, office address খালি। ছবি ও file এতে নেই (S03)।
 
 ---
 

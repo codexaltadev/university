@@ -10,6 +10,22 @@ php artisan legacy:migrate --step=S04 --step=S06 # some steps
 php artisan legacy:migrate --all --no-report     # without report files
 ```
 
+**Without the legacy database — the seed files (`seed/`, owner 2026-10-17):**
+
+```bash
+php artisan legacy:export-seed                   # where project_diu is at hand: write seed/ (read only)
+php artisan db:seed --class=DiuContentSeeder     # anywhere: every step, reading the seed
+php artisan legacy:migrate --step=S16E --from-seed
+```
+
+`seed/schema.sql` holds each table the steps read as MySQL created it (no foreign keys), `seed/{table}.jsonl.gz`
+its rows (first line the columns, then one JSON list per row, primary key order; an unchanged table gives the same
+file). `--from-seed` loads them into a MySQL database of their own, `diu_legacy_seed` (dropped and made again each
+time, with the application's database user — never `project_diu`), and points the `legacy` connection at it, so the
+steps and their results are the same. Personal data stays out of git (`Support\Seed`): `newsletters`,
+`admission_subscribers`, `admission_results` are structure only, the alumni's email, phone, student ID and office
+address are empty. A new step that reads another table adds it to `Seed::TABLES` and exports again.
+
 Connection `legacy` (`config/database.php`): `LEGACY_DB_HOST`, `LEGACY_DB_PORT`, `LEGACY_DB_DATABASE`
 (default `project_diu`), `LEGACY_DB_USERNAME`, `LEGACY_DB_PASSWORD` — use a `SELECT`-only user (M-1).
 
