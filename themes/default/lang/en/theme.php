@@ -31,4 +31,6 @@ return [
     'email_placeholder' => 'Enter Email Address',
     'social_links' => 'Social Links',
     'back_to_top' => 'Back to top',
+    'duration' => 'Duration',
+    'view_file' => 'View file',
 ];

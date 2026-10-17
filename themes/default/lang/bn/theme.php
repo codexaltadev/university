@@ -31,4 +31,6 @@ return [
     'email_placeholder' => 'ইমেইল ঠিকানা লিখুন',
     'social_links' => 'সোশ্যাল লিংক',
     'back_to_top' => 'উপরে যান',
+    'duration' => 'মেয়াদ',
+    'view_file' => 'ফাইল দেখুন',
 ];

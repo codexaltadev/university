@@ -4,6 +4,8 @@ return [
     'title' => 'Labs',
     'singular' => 'lab',
     'plural' => 'Labs & Research Centres',
+    'section' => 'Labs',
+    'section_count' => 'How many',
     'about' => 'About',
     'team' => 'Our people',
     'in_charge' => 'In-charge',

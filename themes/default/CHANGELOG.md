@@ -14,6 +14,9 @@
 - 4.3: DIU homepage as theme sections (theme.json "sections"): hero, mission, degree,
   scholarships, research, events, testimonials, alumni-news, link-button; components
   heading / button / link-button / reveal / counter; Alpine carousel and counter.
+- 4.4b: DIU department and faculty pages as theme sections: page-hero, programs, notices,
+  labs, partners, ambitions, microsite-news, event-cards, campus-services, faculty-stats,
+  faculty-departments; slider controls hide when every card fits; `eye` icon.
 
 ## 1.0.0 — 2026-10-09
 

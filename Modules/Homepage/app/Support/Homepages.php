@@ -120,11 +120,15 @@ class Homepages
                 $data = UserScopeFilter::withoutScope(fn () => CachedItems::thaw(Cache::remember("homepage:{$version}:{$section->id}:{$ownerKey}:{$locale}", 600,
                     fn () => CachedItems::freeze(['items' => $type->items($ctx), 'content' => $type->content($ctx)]))));
 
+                // A theme section's own heading may use {name} … too (one layout, many microsites)
+                $text = fn (string $field): ?string => ($t = $section->getTranslation($field, $locale, true) ?: null) !== null && $type->isTheme()
+                    ? ThemeSections::fill($t, ThemeSections::placeholders($ctx)) : $t;
+
                 return [
                     'key' => $section->section_type,
                     'view' => $type->view,
-                    'heading' => $section->getTranslation('heading', $locale, true) ?: null,
-                    'subheading' => $section->getTranslation('subheading', $locale, true) ?: null,
+                    'heading' => $text('heading'),
+                    'subheading' => $text('subheading'),
                     'settings' => (array) $section->settings,
                     'items' => $data['items'],
                     'content' => $data['content'],   // a theme section's field values (ThemeSections)

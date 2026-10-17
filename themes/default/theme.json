@@ -167,6 +167,160 @@
                   ] }
             ]
         },
+        "page-hero": {
+            "label": "DIU — Microsite hero (name, about and cover of the department / program / faculty shown)",
+            "fields": [
+                { "key": "show_about", "type": "toggle", "label": "Show the about text", "default": true },
+                { "key": "about_right", "type": "toggle", "label": "About text on the right (faculty pages)", "default": false },
+                { "key": "image", "type": "image", "label": "Picture when the microsite has no cover" }
+            ]
+        },
+        "programs": {
+            "label": "DIU — Program cards and quick links ({name}, {short}, {parent}, {base} are replaced)",
+            "heading": "Explore Our Academic Programs",
+            "source": "program.by-level",
+            "fields": [
+                { "key": "apply_label", "type": "text", "label": "Card link text", "default": "Apply Now" },
+                { "key": "quick_links_title", "type": "text", "label": "Quick links title", "default": "Quick Links" },
+                { "key": "quick_links", "type": "repeater", "label": "Quick links", "fields": [{ "key": "label", "type": "text", "label": "Text" }, { "key": "url", "type": "url", "label": "Link" }],
+                  "default": [
+                      { "label": "Admission Requirements", "url": "/admission" },
+                      { "label": "Tuition Fees", "url": "/tuition-fees" },
+                      { "label": "Transfer Credits", "url": "/article/credit-transfer" },
+                      { "label": "Waiver & Scholarship", "url": "/scholarship" },
+                      { "label": "Student Portal", "url": "https://studentportal.diu.edu.bd/" },
+                      { "label": "e-Learn", "url": "https://elearn.daffodilvarsity.edu.bd/" },
+                      { "label": "Library", "url": "https://library.daffodilvarsity.edu.bd/" }
+                  ] }
+            ]
+        },
+        "notices": {
+            "label": "DIU — Notices on blue",
+            "heading": "Academic Notices & Announcements",
+            "subheading": "Each card links to full program details—including curriculum, admissions requirements, and faculty contacts.",
+            "source": "notice.board",
+            "fields": [
+                { "key": "button_label", "type": "text", "label": "Button text", "default": "View All Notices" },
+                { "key": "button_url", "type": "url", "label": "Button link", "default": "{base}/notices" }
+            ]
+        },
+        "faculty-stats": {
+            "label": "DIU — Faculty headline with four figures (the faculty's own counters; the figures below when it has none)",
+            "heading": "Transforming Bangladesh's Tech Landscape, Empowering Global Innovators",
+            "subheading": "Explore our BSc and MSc programs designed to drive local impact and lead on the world stage.",
+            "source": "core.statistics",
+            "fields": [
+                { "key": "link_label", "type": "text", "label": "Link text", "default": "Browse All Faculty Members" },
+                { "key": "link_url", "type": "url", "label": "Link", "default": "https://faculty.daffodilvarsity.edu.bd/" },
+                { "key": "stats", "type": "repeater", "label": "Figures", "max": 4, "fields": [
+                    { "key": "number", "type": "text", "label": "Figure (e.g. 120+)" },
+                    { "key": "label", "type": "text", "label": "Label" }
+                ], "default": [
+                    { "number": "5600+", "label": "Publications by our faculty & students" },
+                    { "number": "120+", "label": "Active industry partnerships" },
+                    { "number": "12+", "label": "Research labs" },
+                    { "number": "50+", "label": "PhD Scholarly Faculty" }
+                ] }
+            ]
+        },
+        "faculty-departments": {
+            "label": "DIU — Departments of the faculty, quick links and the dean",
+            "heading": "Department and Programs",
+            "subheading": "Each card links to full program details—including curriculum, admissions requirements, and faculty contacts.",
+            "source": "department.list",
+            "fields": [
+                { "key": "list_title", "type": "text", "label": "List title", "default": "Departments Name" },
+                { "key": "dean_title", "type": "text", "label": "Dean title", "default": "Meet Our Dean" },
+                { "key": "quick_links_title", "type": "text", "label": "Quick links title", "default": "Quick Links" },
+                { "key": "quick_links", "type": "repeater", "label": "Quick links", "fields": [
+                    { "key": "label", "type": "text", "label": "Text" },
+                    { "key": "url", "type": "url", "label": "Link" }
+                ], "default": [
+                    { "label": "Admission Eligibility", "url": "/admission/faculty/{short}" },
+                    { "label": "Transfer Credits", "url": "/article/credit-transfer" },
+                    { "label": "Waiver & Scholarship", "url": "/scholarship" }
+                ] }
+            ]
+        },
+        "labs": {
+            "label": "DIU — Labs (the microsite's labs; the cards below when it has none)",
+            "heading": "Cutting-Edge Research & Labs",
+            "subheading": "Research That Advances Technology",
+            "source": "lab.list",
+            "fields": [
+                { "key": "cards", "type": "repeater", "label": "Cards when there are no labs", "fields": [{ "key": "image", "type": "image", "label": "Picture" }, { "key": "title", "type": "text", "label": "Title" }, { "key": "text", "type": "text", "label": "Text" }, { "key": "url", "type": "url", "label": "Link" }],
+                  "default": [
+                      { "image": "images/services/es-3.jpg", "title": "Transport Service", "text": "25 AC buses covering Dhaka & nearby districts.", "url": "/transport" },
+                      { "image": "images/services/es-4.jpg", "title": "Hostel Facility", "text": "Safe, Smart residences five minutes from class.", "url": "https://hall.daffodilvarsity.edu.bd/" },
+                      { "image": "images/services/es-2.jpg", "title": "Scholarships & Waivers", "text": "Merit grants up to 100% + need-based aid calculator.", "url": "/scholarship" },
+                      { "image": "images/services/es-1.jpg", "title": "Student Life", "text": "60+ clubs, festivals, sports & volunteering.", "url": "/campus-life" }
+                  ] }
+            ]
+        },
+        "campus-services": {
+            "label": "DIU — Essential campus services (cards)",
+            "heading": "Essential Campus Services",
+            "subheading": "Quick links to hostels, buses, financial aid, and activities—because study is only part of the story.",
+            "fields": [
+                { "key": "cards", "type": "repeater", "label": "Cards", "fields": [{ "key": "image", "type": "image", "label": "Picture" }, { "key": "title", "type": "text", "label": "Title" }, { "key": "text", "type": "text", "label": "Text" }, { "key": "url", "type": "url", "label": "Link" }],
+                  "default": [
+                      { "image": "images/services/es-3.jpg", "title": "Transport Service", "text": "25 AC buses covering Dhaka & nearby districts.", "url": "/transport" },
+                      { "image": "images/services/es-4.jpg", "title": "Hostel Facility", "text": "Safe, Smart residences five minutes from class.", "url": "https://hall.daffodilvarsity.edu.bd/" },
+                      { "image": "images/services/es-2.jpg", "title": "Scholarships & Waivers", "text": "Merit grants up to 100% + need-based aid calculator.", "url": "/scholarship" },
+                      { "image": "images/services/es-1.jpg", "title": "Student Life", "text": "60+ clubs, festivals, sports & volunteering.", "url": "/campus-life" }
+                  ] }
+            ]
+        },
+        "partners": {
+            "label": "DIU — Partner logos",
+            "fields": [
+                { "key": "grey", "type": "toggle", "label": "Grey band (department pages)", "default": true },
+                { "key": "space_below", "type": "toggle", "label": "Space below (faculty pages)", "default": false },
+                { "key": "partners_title", "type": "text", "label": "Title", "default": "Research & Innovation Partners" },
+                { "key": "partners", "type": "repeater", "label": "Partner logos", "fields": [{ "key": "logo", "type": "image", "label": "Logo" }, { "key": "name", "type": "text", "label": "Name" }],
+                  "default": [
+                      { "logo": "images/partners/logo-1.png", "name": "Nestle" },
+                      { "logo": "images/partners/logo-2.png", "name": "Microsoft" },
+                      { "logo": "images/partners/logo-3.jpg", "name": "IEEE" },
+                      { "logo": "images/partners/logo-4.jpg", "name": "World Health Organization" },
+                      { "logo": "images/partners/logo-5.png", "name": "Google" },
+                      { "logo": "images/partners/logo-6.png", "name": "AWS" }
+                  ] },
+                { "key": "partners_button_label", "type": "text", "label": "Button text", "default": "Explore Researches and Their Work" },
+                { "key": "partners_button_url", "type": "url", "label": "Button link", "default": "https://research.daffodilvarsity.edu.bd/" }
+            ]
+        },
+        "ambitions": {
+            "label": "DIU — Scholarships with alumni stories (the microsite's pride alumni)",
+            "heading": "Big Ambitions?|We'll Cover the Cost.",
+            "source": "alumni.pride",
+            "fields": [
+                { "key": "text", "type": "textarea", "label": "Text (| = line break)", "default": "Cut your costs, not your ambitions.|Over 60% of DIU students qualify for a|scholarship or waiver—some up to 100%. Check|your savings in a minute and join them today." },
+                { "key": "links", "type": "repeater", "label": "Links", "max": 3, "fields": [{ "key": "label", "type": "text", "label": "Text" }, { "key": "url", "type": "url", "label": "Link" }],
+                  "default": [
+                      { "label": "Apply for Aid", "url": "/scholarship" },
+                      { "label": "Estimate My Waiver", "url": "/tuition-fee-calculator" }
+                  ] }
+            ]
+        },
+        "microsite-news": {
+            "label": "DIU — News of the microsite ({name}, {short}, {parent} are replaced)",
+            "heading": "{parent} News",
+            "subheading": "From hands-on workshops to breakthrough announcements—never miss what's shaping tomorrow's innovations .",
+            "source": "news.latest",
+            "fields": []
+        },
+        "event-cards": {
+            "label": "DIU — Upcoming events as cards ({name}, {short}, {parent} are replaced)",
+            "heading": "{parent} Events",
+            "subheading": "From hands-on workshops to breakthrough announcements—never miss what's shaping tomorrow's innovations at {short}.",
+            "source": "events.upcoming",
+            "fields": [
+                { "key": "link_label", "type": "text", "label": "Link text", "default": "View All Events" },
+                { "key": "link_url", "type": "url", "label": "Link", "default": "{base}/events" },
+                { "key": "card_link", "type": "text", "label": "Card link text", "default": "View Details" }
+            ]
+        },
         "link-button": {
             "label": "DIU — Centred button (\"Stay Connected!\")",
             "fields": [

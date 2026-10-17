@@ -9,6 +9,7 @@ use Modules\Lab\Metrics\LabProductCount;
 use Modules\Lab\Metrics\LabProjectCount;
 use Modules\Lab\Models\Lab;
 use Modules\Lab\Models\LabItem;
+use Modules\Lab\Sections\LabsSection;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
 
@@ -38,5 +39,6 @@ final class LabExtension implements ModuleExtension
         $r->metric('lab.products', LabProductCount::class);
         $r->layouts('lab.listing', ['grid', 'list', 'cards']);                                                      // FR-LAB-05
         $r->websitePage('lab.index', label: 'lab::lab.plural', path: '/'.Lab::LISTING);
+        $r->homepageSection(LabsSection::class);                                                    // a place's labs (Phase 4.4b)
     }
 }

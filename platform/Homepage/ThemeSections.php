@@ -66,12 +66,13 @@ class ThemeSections
                 model: $source?->model,
                 schema: fn (): array => [...($source?->schema() ?? []), Group::make(self::form($fields))->statePath('content')],
                 items: fn (SectionContext $ctx): mixed => $source?->items($ctx),
-                // + the theme's default heading / subheading, for when the builder's are left empty
-                content: fn (SectionContext $ctx): array => [
+                // + the theme's default heading / subheading, for when the builder's are left empty;
+                // {name} {short} {parent} {base} filled for the microsite shown (a kind's shared layout)
+                content: fn (SectionContext $ctx): array => self::fill([
                     'heading' => $definition['heading'] ?? null,
                     'subheading' => $definition['subheading'] ?? null,
                     ...self::values($fields, (array) $ctx->setting('content', []), $ctx->locale),
-                ],
+                ], self::placeholders($ctx)),
             );
         }
 
@@ -161,6 +162,38 @@ class ThemeSections
         }
 
         return $out;
+    }
+
+    /**
+     * What {name}, {short}, {parent} and {base} stand for on this homepage: the microsite shown
+     * (its name, short name, parent's name, its address); the site's name and "" on the main site.
+     *
+     * @return array<string, string>
+     */
+    public static function placeholders(SectionContext $ctx): array
+    {
+        $site = $ctx->site();
+        $identity = $site->identity();
+        $siteName = (string) settings('general.site_name');
+
+        return [
+            '{name}' => $identity['name'] ?? $siteName,
+            '{short}' => (string) ($site->entity?->short_name ?: ($identity['name'] ?? $siteName)),
+            '{parent}' => $identity['parent']['name'] ?? $identity['name'] ?? $siteName,
+            '{base}' => rtrim((string) ($identity['url'] ?? ''), '/'),
+        ];
+    }
+
+    /**
+     * @param  array<string, string>  $map
+     */
+    public static function fill(mixed $value, array $map): mixed
+    {
+        return match (true) {
+            is_string($value) => strtr($value, $map),
+            is_array($value) => array_map(fn ($v) => self::fill($v, $map), $value),
+            default => $value,
+        };
     }
 
     /** @param array<string, mixed> $field */
