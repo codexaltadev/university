@@ -99,10 +99,13 @@ it('names the microsite beside the logo, without utility links (UI/UX Part B §4
         ->and(SiteContext::site()->identity())->toBeNull();
 
     mainMenu('topbar', [menuLink('DIU News', 'https://news.example.edu')]);
+    mainMenu('quick-links-icon', [menuLink('Library', 'https://library.example.edu', extra: ['icon' => 'book-open'])]);
 
     expect(renderSlot('header', SiteContext::for($this->cse)))
         ->toContain('microsite-name')->toContain('/engineering/cse')->toContain('font-mina')
-        ->not->toContain('header-utility');
+        ->not->toContain('header-utility')
+        ->toContain('https://library.example.edu')   // the Services grid is site-wide (main site's menu)
+        ->toContain('https://news.example.edu');     // utility links stay in the mobile menu's Quick Links
 
     expect(renderSlot('header'))->not->toContain('microsite-name')->toContain('header-utility')
         ->and(renderSlot('microsite-bar', SiteContext::for($this->cse)))->toBe('');   // DIU has no bar
@@ -135,5 +138,6 @@ it('opens every menu level as an accordion in the mobile menu', function () {
         ['title' => 'Contact', 'url' => '/contact', 'children' => []],
     ], 3)])->render();
 
-    expect($html)->toContain('x-collapse')->toContain('/about/mission')->toContain('href="/about"')->toContain('/contact');
+    // DIU MobileMegaMenu: a parent only opens its accordion, the links are its children
+    expect($html)->toContain('x-collapse')->toContain('/about/mission')->not->toContain('href="/about"')->toContain('/contact');
 });

@@ -32,3 +32,6 @@ Homestead.yaml
 Thumbs.db
 /public/themes
 /public/modules
+
+# Live DIU frontend (Next.js) — reference for the default theme only, its own repository
+/DIUFronend

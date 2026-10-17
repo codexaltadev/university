@@ -4,9 +4,9 @@
         @foreach ($items as $item)
             <li class="relative py-6 mx-1.5 2xl:mx-2" @mouseenter="open = {{ $loop->index }}" @mouseleave="open = null" @focusout="if (! $el.contains($event.relatedTarget)) open = null">
                 @if ($item->children->isNotEmpty())
-                    <button type="button" class="nav__link text-gray-700 hover:text-secondary cursor-pointer font-medium transition-all duration-300 flex items-center gap-2"
+                    <button type="button" class="nav__link text-gray-700 hover:text-secondary cursor-pointer font-medium transition-all duration-300 flex items-center gap-2 text-left"
                             @click="open = open === {{ $loop->index }} ? null : {{ $loop->index }}" :aria-expanded="open === {{ $loop->index }}">
-                        {{ $item->label }}<x-theme::icon name="chevron-down" width="16" height="16" class="transition-transform duration-300" x-bind:class="{ 'rotate-180': open === {{ $loop->index }} }" />
+                        {{ $item->label }}<x-theme::icon name="chevron-down" width="16" height="16" class="w-4 h-4 opacity-60 transition-transform duration-200" x-bind:class="{ 'rotate-180': open === {{ $loop->index }} }" />
                     </button>
                     @include('theme::partials.menus.panel', ['item' => $item, 'index' => $loop->index])
                 @else

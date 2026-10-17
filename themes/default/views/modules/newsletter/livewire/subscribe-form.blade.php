@@ -15,7 +15,7 @@
                 <input type="email" wire:model="email" required maxlength="191" aria-label="{{ __('newsletter::newsletter.fields.email') }}" placeholder="{{ __('theme::theme.email_placeholder') }}"
                        class="w-full !min-h-0 rounded-md px-6 py-2.5 bg-white text-neutral-800 placeholder-neutral-400 text-sm outline-none border-0">
                 <input type="text" wire:model="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="absolute -left-[9999px]">
-                <button type="submit" class="text-white cursor-pointer hover:underline" wire:loading.attr="disabled">{{ __('theme::theme.subscribe') }}</button>
+                <button type="submit" class="shrink-0 rounded-md bg-primary px-6 py-2.5 text-base font-bold text-white cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" wire:loading.attr="disabled">{{ __('theme::theme.subscribe') }}</button>
             </div>
             @if ($publicLists->count() > 1)
                 <fieldset class="flex flex-wrap gap-3 text-sm text-white/80">

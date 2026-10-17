@@ -10,8 +10,15 @@
         body.site:has(.site-header.fixed) { padding-top: var(--header-h, 122px); }
     }
 
+    /* Scrolled (DIU Navbar): utility links fold away, less top padding, denser glass, logo at 85% */
     .header-utility { max-height: 64px; opacity: 1; }
     .site-header.is-scrolled .header-utility { max-height: 0; opacity: 0; }
+    .header-row { transition: padding-top .3s ease; }
+    .site-header.is-scrolled .header-row { padding-top: .5rem; }
+    .header-glass { transition: background-color .3s ease; }
+    .site-header.is-scrolled .header-glass { background-color: color-mix(in srgb, white 95%, transparent); }
+    .site-brand { transform-origin: left center; transition: transform .4s ease; }
+    .site-header.is-scrolled .site-brand { transform: scale(.85); }
 
     .site-header .nav__link[aria-current="page"] { font-weight: 700; }
     .drawer__panel { animation: drawer-in .25s ease-out; }

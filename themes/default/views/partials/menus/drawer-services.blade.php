@@ -8,7 +8,7 @@
                 <span class="w-12 h-12 flex items-center justify-center rounded-lg bg-gray-100 hover:bg-blue-50 transition-colors duration-300">
                     <x-theme::icon :name="$item->icon ?: 'external'" width="24" height="24" class="w-6 h-6" />
                 </span>
-                <span class="text-xs text-center mt-1">{{ $item->label }}</span>
+                <span class="text-xs mt-2">{{ $item->label }}</span>
             </a>
         @endforeach
     </div>
