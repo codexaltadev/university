@@ -134,6 +134,28 @@ class Seo
     }
 
     /**
+     * The language switcher's links (UI/UX Part B §6): this page in every website language;
+     * empty while the website has one language.
+     *
+     * @return list<array{code: string, label: string, url: string, current: bool}>
+     */
+    public function languageLinks(): array
+    {
+        $labels = app(Languages::class)->labels();
+
+        return collect($this->alternates())
+            ->except('x-default')
+            ->map(fn (string $url, string $code): array => [
+                'code' => $code,
+                'label' => (string) ($labels[$code] ?? strtoupper($code)),
+                'url' => $url,
+                'current' => $code === app()->getLocale(),
+            ])
+            ->values()
+            ->all();
+    }
+
+    /**
      * @param  array<string, mixed>  $recordLd
      * @return list<array<string, mixed>>
      */

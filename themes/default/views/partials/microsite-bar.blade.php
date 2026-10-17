@@ -1,10 +1,11 @@
-{{-- Microsite bar (UI/UX Part B §4.2): whose site this is --}}
-@if ($context->isMicrosite())
+{{-- Microsite bar (UI/UX Part B §4.2, §4.3): whose site this is. On desktop the header shows it beside the logo; below desktop this strip does --}}
+@if ($identity = $context->identity())
     <div class="microsite-bar">
-        <div class="container">
-            <a href="{{ url('/') }}">{{ settings('general.site_name') }}</a>
-            <span aria-hidden="true">›</span>
-            <strong>{{ $context->entity->name ?? '' }}</strong>
+        <div class="container microsite-bar__inner">
+            <a href="{{ $identity['url'] ?? url()->current() }}" class="microsite-bar__name">{{ $identity['name'] }}</a>
+            @if ($identity['parent'])
+                <a href="{{ $identity['parent']['url'] ?? url('/') }}" class="microsite-bar__parent">{{ $identity['parent']['name'] }}</a>
+            @endif
         </div>
     </div>
 @endif

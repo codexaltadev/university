@@ -11,9 +11,13 @@ The bundled website theme (BRL-THEME-01: it can never be uninstalled). It follow
 | Header variants | classic, centered, minimal |
 | Footer variants | columns, compact |
 | Menu styles | dropdown, multilevel, mega (`partials/menus/*`) |
-| Options | `sticky_header`, `hero_height` |
+| Options | `sticky_header`, `hero_height`, `header_cta_url`, `header_cta_label` (header button; empty link = none) |
+| Components | `<x-theme::icon name="search" />` — outline icons and the social platforms |
 
-Module view overrides: none yet.
+Overrides: `views/livewire/instant-search.blade.php` (header search). Module view overrides: none yet.
+
+Header parts live in `views/partials/header-parts/` (brand, actions, search panel, off-canvas drawer)
+and are shared by the three header variants; Alpine component `siteHeader` (`resources/js/app.js`).
 
 ## Build
 

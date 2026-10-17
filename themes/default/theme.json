@@ -41,6 +41,8 @@
 
     "options": [
         { "key": "sticky_header", "type": "toggle", "label": "Sticky header", "default": true },
-        { "key": "hero_height", "type": "select", "label": "Hero height", "options": ["medium", "tall"], "default": "tall" }
+        { "key": "hero_height", "type": "select", "label": "Hero height", "options": ["medium", "tall"], "default": "tall" },
+        { "key": "header_cta_url", "type": "text", "label": "Header button link (empty = no button)", "default": "" },
+        { "key": "header_cta_label", "type": "text", "label": "Header button text (empty = Apply Now)", "default": "" }
     ]
 }

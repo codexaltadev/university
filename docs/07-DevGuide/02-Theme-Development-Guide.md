@@ -246,6 +246,8 @@ Kernel প্রতিটি page-কে layout-এর **নির্দিষ�
 |---|---|
 | `<x-platform::menu location="primary" :depth="3" />` | Resolved menu tree; `view` attribute দিয়ে নিজের markup (`view="theme::partials.menus.mega"`) |
 | `<x-platform::logo variant="light" />` | Entity / university logo (fallback সহ, FR-THEME-06) |
+| `<x-platform::languages class="…" />` | Language switcher — এই page প্রতিটি website ভাষায় (`hreflang`, `aria-current`); ভাষা একটি হলে কিছুই নয় |
+| `$context->identity()` | Microsite-এর নাম, home URL ও নিকটতম parent (`name`, `url`, `parent`); main site-এ `null` — header-এ entity নাম দেখাতে |
 | `<x-platform::language-switcher />` | `hreflang` সহ link |
 | `<x-platform::image :media="$item->featured" sizes="(min-width:1024px) 33vw, 100vw" />` | `srcset`, WebP, lazy, width / height, alt (NFR-PERF-05) |
 | `<x-platform::homepage :context="$context" />` | Homepage builder-এর section-গুলো ক্রমে |

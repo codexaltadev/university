@@ -47,6 +47,30 @@ final class SiteContext
         return [$this->key(), ...app(EntityHierarchy::class)->ancestors($this->key()), RelationEngine::SITE_KEY];
     }
 
+    /**
+     * Who this microsite is, for the header (UI/UX Part B §4.2): its name and home, and
+     * the nearest parent microsite (Faculty of a Department …). Null on the main site.
+     *
+     * @return array{name: string, url: ?string, parent: ?array{name: string, url: ?string}}|null
+     */
+    public function identity(): ?array
+    {
+        if (! $this->entity) {
+            return null;
+        }
+
+        $resolver = app(MicrositeResolver::class);
+        $parent = $resolver->ancestors($this->entity)[0] ?? null;
+        $name = fn (Model $entity): string => (string) ($entity->name ?? $entity->title ?? '');
+        $url = fn (Model $entity): ?string => ($path = $resolver->urlFor($entity)) ? Breadcrumbs::localePrefix().$path : null;
+
+        return [
+            'name' => $name($this->entity),
+            'url' => $url($this->entity),
+            'parent' => $parent ? ['name' => $name($parent), 'url' => $url($parent)] : null,
+        ];
+    }
+
     public function settings(): ?MicrositeSetting
     {
         return $this->entity

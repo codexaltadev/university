@@ -37,7 +37,8 @@ class Breadcrumbs
         return ! $last && filled($entity->short_name ?? null) ? (string) $entity->short_name : $name;
     }
 
-    protected static function localePrefix(?string $locale): string
+    /** "" for the default language, else "/bn" … */
+    public static function localePrefix(?string $locale = null): string
     {
         $locale ??= app()->getLocale();
         $default = config('platform.locales')[0] ?? 'en';
