@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'title' => 'CSR',
+    'singular' => 'CSR activity',
+    'plural' => 'Social Responsibility',
+    'section' => 'Social Responsibility',
+    'all_activities' => 'All activities',
+    'none' => 'No activities here yet.',
+    'activities' => ':count activities',
+    'more' => 'Learn more',
+    'watch' => 'Watch the video',
+    'category_pictures' => 'CSR category pictures',
+    'no_categories' => 'Add CSR categories in Site › Taxonomy first.',
+    'saved' => 'Saved',
+    'layouts' => ['cards' => 'Cards', 'grid' => 'Grid', 'timeline' => 'Timeline'],
+    'sections' => ['media' => 'Pictures'],
+    'fields' => [
+        'title' => 'Title',
+        'summary' => 'Summary',
+        'body' => 'Details',
+        'occurred_on' => 'Date',
+        'video_url' => 'Video (YouTube)',
+        'external_url' => 'Link',
+        'image' => 'Picture',
+        'gallery' => 'More pictures',
+        'category' => 'Category',
+    ],
+    'errors' => ['url' => 'Give an address starting with https:// or http://.'],
+];

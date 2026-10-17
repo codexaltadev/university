@@ -26,6 +26,13 @@ use Legacy\Migration\Steps\S17Faqs;
 use Legacy\Migration\Steps\S17Gallery;
 use Legacy\Migration\Steps\S17Slider;
 use Legacy\Migration\Steps\S17Testimonials;
+use Legacy\Migration\Steps\S18Accreditation;
+use Legacy\Migration\Steps\S18Csr;
+use Legacy\Migration\Steps\S18Facilities;
+use Legacy\Migration\Steps\S18International;
+use Legacy\Migration\Steps\S18Labs;
+use Legacy\Migration\Steps\S18Newsletter;
+use Legacy\Migration\Steps\S18Partners;
 use Legacy\Migration\Steps\S18Transport;
 use Legacy\Migration\Steps\Step;
 use Platform\Modules\ModuleRegistry;
@@ -44,7 +51,7 @@ class MigrateCommand extends Command
     protected $description = 'Migrate DIU data from the legacy database (project_diu)';
 
     /** In the order of the plan (§5). */
-    public const STEPS = [S02Vocabularies::class, S04FacultiesDepartments::class, S06Programs::class, S07Fees::class, S07Scholarships::class, S08Admission::class, S09Calendars::class, S10Offices::class, S11Administration::class, S11Alumni::class, S13Committees::class, S15DepartmentSites::class, S16News::class, S16Events::class, S16Notices::class, S17Faqs::class, S17Testimonials::class, S17Gallery::class, S17Slider::class, S17Documents::class, S17Announcements::class, S18Transport::class];
+    public const STEPS = [S02Vocabularies::class, S04FacultiesDepartments::class, S06Programs::class, S07Fees::class, S07Scholarships::class, S08Admission::class, S09Calendars::class, S10Offices::class, S11Administration::class, S11Alumni::class, S13Committees::class, S15DepartmentSites::class, S16News::class, S16Events::class, S16Notices::class, S17Faqs::class, S17Testimonials::class, S17Gallery::class, S17Slider::class, S17Documents::class, S17Announcements::class, S18Transport::class, S18Facilities::class, S18Csr::class, S18Labs::class, S18Partners::class, S18Accreditation::class, S18International::class, S18Newsletter::class];
 
     public function handle(): int
     {

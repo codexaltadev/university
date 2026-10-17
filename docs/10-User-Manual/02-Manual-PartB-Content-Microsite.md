@@ -449,11 +449,21 @@ Closed প্রশ্ন নির্দিষ্ট সময় (default ২�
 
 ---
 
+## 22a. Services: Facilities, CSR, Partners, Accreditation, International, Lab
+
+* **Services › Facilities** — শিরোনাম, সংক্ষেপ, বিস্তারিত (থাকলে নিজের পেজ, না থাকলে card লিংকে যায়), icon / ছবি Media Library থেকে, ক্যাটাগরি; **Show in** দিয়ে কোন department / program-এ দেখাবে; টেনে ক্রম। Homepage section "Campus Facilities"।
+* **Services › CSR** — কার্যক্রম (তারিখ, ভিডিও, ছবি, গ্যালারি, ক্যাটাগরি)। ক্যাটাগরি ও উপ-ক্যাটাগরি Site › Taxonomy-তে (CSR category); প্রতিটির ছবি **Services › CSR category pictures**-এ। Website `/csr`: ক্যাটাগরি card → ভেতরের কার্যক্রম।
+* **Services › Partners** — ধরন (Industry, Sponsor, Membership, Discount, Other), লোগো, ওয়েবসাইট; Discount হলে ছাড়, শর্ত, ক্যাটাগরি (icon সহ) ও **যেদিন পর্যন্ত** — তারপর নিজে থেকে লুকায়। Website `/partners`, `/student-discounts`; homepage-এ লোগো carousel।
+* **Services › Accreditations / Rankings** — accreditation-কে **Show in** দিয়ে program / department / faculty-তে দিন (program পেজে "Accreditation" tab হয়)। Ranking-এ একই র‍্যাংকিংয়ের প্রতি বছরে একই **Short key** (qs, the …) — তাতে `/rankings`-এ বছরওয়ারি তালিকা হয়; পরের বছরের জন্য তালিকায় **Next year**।
+* **International** — **Countries** (ISO কোড, পতাকা), **Partners** (দেশ, চুক্তি, মেয়াদ; বিশেষ partner = Highlight; Excel / CSV **Import** — আগে যাচাই, তারপর সংরক্ষণ), **Conferences**, **Visitors** (অতিথির নাম, পদবি, প্রতিষ্ঠান হাতে লেখা; গ্যালারি অ্যালবাম বাছা যায়)। Website `/international`।
+* **Services › Labs** — ল্যাবের নাম, ধরন, department (দিলে পেজ department-এর নিচে: `/fsit/cse/lab/…`), যোগাযোগ, লোগো, কভার, **People**-এ দায়িত্বপ্রাপ্ত ও টিম। নিচে চারটি তালিকা: Scopes & Services, Equipment & Tools (সংখ্যাসহ), Student Projects ও Products (এ দুটির নিজের পেজ)। ল্যাবের news, event, gallery, slider, partner — সেই module-এ **Show in** দিয়ে ল্যাব বেছে নিন। ল্যাবের নিজের user শুধু নিজের ল্যাব বদলাতে পারে (Manage:Lab permission)।
+
 ## 23. Newsletter
 
 **Communication › Newsletter** (সাধারণত Admin বা PR)
 
 * **Subscribers / Lists:** কারা subscribe করেছেন (যেমন General, Admission Updates); Import / Export।
 * **Campaign › + New:** বিষয়, লেখা, কোন list → **Send test** (নিজের email-এ দেখে নিন) → **Send now** বা নির্দিষ্ট সময়।
-* News বা Notice থেকে সরাসরি: সেই record-এর **⋯ › Create campaign**।
+* News বা Notice থেকে সরাসরি campaign — *পরে আসবে*; এখন campaign-এ **Link** ঘরে খবরের ঠিকানা দিন।
+* Footer-এ subscribe form: **Header & Footer**-এ "Newsletter" block যোগ করুন; `/newsletter` পেজেও form আছে। নতুন subscriber email-এর link-এ click করলে তবেই সক্রিয় হন।
 * প্রতিটি email-এ unsubscribe link নিজে থেকে থাকে; **Report**-এ কতগুলো গেল, কতগুলো ব্যর্থ।

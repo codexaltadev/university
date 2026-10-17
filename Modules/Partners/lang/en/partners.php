@@ -1,0 +1,40 @@
+<?php
+
+return [
+    'title' => 'Partners',
+    'singular' => 'partner',
+    'plural' => 'Partners',
+    'section' => 'Industry Partners',
+    'discounts' => 'Student Discounts',
+    'all' => 'All',
+    'none' => 'No partners here yet.',
+    'no_discounts' => 'No discounts right now.',
+    'see_discounts' => 'See student discounts',
+    'all_partners' => 'All partners',
+    'other_discounts' => 'Other',
+    'valid_until' => 'Valid until :date',
+    'international' => 'International',
+    'visit' => 'Visit website',
+    'types' => ['industry' => 'Industry', 'sponsor' => 'Sponsor', 'membership' => 'Membership', 'discount' => 'Discount', 'other' => 'Other'],
+    'fields' => [
+        'partner_type' => 'Type',
+        'name' => 'Name',
+        'description' => 'Description',
+        'website_url' => 'Website',
+        'discount_value' => 'Discount',
+        'discount_terms' => 'Terms',
+        'valid_from' => 'Valid from',
+        'valid_until' => 'Valid until',
+        'is_international' => 'International partner',
+        'logo' => 'Logo',
+    ],
+    'help' => [
+        'valid_until' => 'After this day the partner is hidden by itself.',
+        'section_types' => 'None ticked: every type except discounts.',
+    ],
+    'errors' => [
+        'type' => 'Choose a partner type.',
+        'url' => 'Give an address starting with https:// or http://.',
+        'dates' => '"Valid until" cannot be before "Valid from".',
+    ],
+];

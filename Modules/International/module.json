@@ -1,0 +1,58 @@
+{
+    "name": "International",
+    "alias": "international",
+    "description": "International partners, conferences and visitors — M-35",
+    "keywords": [],
+    "priority": 70,
+    "providers": [
+        "Modules\\International\\Providers\\InternationalServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "international",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "international_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "gallery"
+        ],
+        "morph_aliases": {
+            "international.country": "Modules\\International\\Models\\Country",
+            "international.partner": "Modules\\International\\Models\\Institution",
+            "international.conference": "Modules\\International\\Models\\Conference",
+            "international.visitor": "Modules\\International\\Models\\Visitor"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true,
+            "searchable": true,
+            "sitemap": true,
+            "website_pages": true,
+            "settings": true,
+            "vocabularies": [
+                "international.conference-category"
+            ],
+            "homepage_sections": [
+                "international.partners"
+            ],
+            "notifications": [
+                "international.agreement-expiring"
+            ],
+            "metrics": [
+                "international.partners",
+                "international.countries"
+            ],
+            "layouts": [
+                "international.partners"
+            ]
+        }
+    }
+}

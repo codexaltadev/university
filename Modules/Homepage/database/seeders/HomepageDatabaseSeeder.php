@@ -28,7 +28,7 @@ class HomepageDatabaseSeeder extends Seeder
             ['events.upcoming', ['en' => 'Upcoming Events', 'bn' => 'আসন্ন অনুষ্ঠান'], ['source_mode' => 'latest', 'count' => 4]],
             ['notice.board', ['en' => 'Notice Board', 'bn' => 'নোটিশ বোর্ড'], ['source_mode' => 'latest', 'count' => 8]],
             ['testimonials.list', ['en' => 'What Our Students Say', 'bn' => 'শিক্ষার্থীদের কথা'], ['source_mode' => 'highlighted_first', 'count' => 6]],
-            ['partner.list', ['en' => 'Our Partners', 'bn' => 'আমাদের অংশীদার'], ['source_mode' => 'highlighted_first', 'count' => 12]],
+            ['partners.list', ['en' => 'Our Partners', 'bn' => 'আমাদের অংশীদার'], ['source_mode' => 'highlighted_first', 'count' => 12]],
         ] as $i => [$type, $heading, $settings]) {
             $layout->sections()->create(['section_type' => $type, 'heading' => $heading, 'settings' => $settings, 'sort_order' => $i + 1]);
         }

@@ -1,0 +1,16 @@
+{
+    "name": "uwms/facilities",
+    "description": "Facilities module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Facilities\\": "app/",
+            "Modules\\Facilities\\Database\\Factories\\": "database/factories/",
+            "Modules\\Facilities\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Facilities\\Tests\\": "tests/" }
+    }
+}

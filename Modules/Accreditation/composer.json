@@ -1,0 +1,16 @@
+{
+    "name": "uwms/accreditation",
+    "description": "Accreditation module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Accreditation\\": "app/",
+            "Modules\\Accreditation\\Database\\Factories\\": "database/factories/",
+            "Modules\\Accreditation\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Accreditation\\Tests\\": "tests/" }
+    }
+}

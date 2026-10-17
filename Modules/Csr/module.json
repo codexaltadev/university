@@ -1,0 +1,45 @@
+{
+    "name": "Csr",
+    "alias": "csr",
+    "description": "Social responsibility activities — M-36",
+    "keywords": [],
+    "priority": 70,
+    "providers": [
+        "Modules\\Csr\\Providers\\CsrServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "csr",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "csr_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "csr.activity": "Modules\\Csr\\Models\\Activity"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true,
+            "searchable": true,
+            "sitemap": true,
+            "website_pages": true,
+            "vocabularies": [
+                "csr.category"
+            ],
+            "homepage_sections": [
+                "csr.list"
+            ],
+            "layouts": [
+                "csr.listing"
+            ]
+        }
+    }
+}

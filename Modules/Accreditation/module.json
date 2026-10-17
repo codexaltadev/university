@@ -1,0 +1,50 @@
+{
+    "name": "Accreditation",
+    "alias": "accreditation",
+    "description": "Accreditations and rankings — M-34",
+    "keywords": [],
+    "priority": 70,
+    "providers": [
+        "Modules\\Accreditation\\Providers\\AccreditationServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "accreditation",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "accreditation_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "program"
+        ],
+        "morph_aliases": {
+            "accreditation.accreditation": "Modules\\Accreditation\\Models\\Accreditation",
+            "accreditation.ranking": "Modules\\Accreditation\\Models\\Ranking"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true,
+            "searchable": true,
+            "sitemap": true,
+            "website_pages": true,
+            "settings": true,
+            "vocabularies": [
+                "accreditation.category"
+            ],
+            "homepage_sections": [
+                "accreditation.recognition"
+            ],
+            "notifications": [
+                "accreditation.expiring"
+            ],
+            "entity_tabs": true
+        }
+    }
+}

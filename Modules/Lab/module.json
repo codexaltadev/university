@@ -1,0 +1,57 @@
+{
+    "name": "Lab",
+    "alias": "lab",
+    "description": "Labs and research centres — microsites with equipment, scopes, projects, products — M-32",
+    "keywords": [],
+    "priority": 70,
+    "providers": [
+        "Modules\\Lab\\Providers\\LabServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "lab",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "lab_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "department"
+        ],
+        "morph_aliases": {
+            "lab.lab": "Modules\\Lab\\Models\\Lab",
+            "lab.item": "Modules\\Lab\\Models\\LabItem"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "relation_target": true,
+            "microsite": true,
+            "assignable": true,
+            "dynamic_permissions": true,
+            "searchable": true,
+            "website_pages": true,
+            "metrics": [
+                "lab.count",
+                "lab.equipment",
+                "lab.projects",
+                "lab.products"
+            ],
+            "vocabularies": [
+                "lab.type",
+                "lab.equipment-category",
+                "lab.scope-category",
+                "lab.project-category",
+                "lab.product-category"
+            ],
+            "layouts": [
+                "lab.listing"
+            ]
+        }
+    }
+}

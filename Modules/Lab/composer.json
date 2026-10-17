@@ -1,0 +1,16 @@
+{
+    "name": "uwms/lab",
+    "description": "Lab module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Lab\\": "app/",
+            "Modules\\Lab\\Database\\Factories\\": "database/factories/",
+            "Modules\\Lab\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Lab\\Tests\\": "tests/" }
+    }
+}

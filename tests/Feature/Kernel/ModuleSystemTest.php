@@ -7,6 +7,7 @@
 use App\Models\User;
 use App\Providers\Filament\AdminPanelProvider;
 use Modules\Faq\Filament\FaqPlugin;
+use Modules\Lab\Models\Lab;
 use Modules\Office\Filament\OfficePlugin;
 use Modules\Office\Models\Office;
 use Nwidart\Modules\Facades\Module;
@@ -91,7 +92,7 @@ it('active modules register through their Extension', function () {
     expect(collect($registry->all('filamentPlugin'))->pluck('class')->all())
         ->toContain(FaqPlugin::class, OfficePlugin::class)
         ->and(collect($registry->all('dynamicPermissions'))->pluck('model')->all())
-        ->toBe([Office::class]);
+        ->toBe([Lab::class, Office::class]);
 });
 
 it('inactive modules register nothing, and their panel plugin disappears', function () {

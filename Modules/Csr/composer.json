@@ -1,0 +1,16 @@
+{
+    "name": "uwms/csr",
+    "description": "Csr module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Csr\\": "app/",
+            "Modules\\Csr\\Database\\Factories\\": "database/factories/",
+            "Modules\\Csr\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Csr\\Tests\\": "tests/" }
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "name": "uwms/newsletter",
+    "description": "Newsletter module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Newsletter\\": "app/",
+            "Modules\\Newsletter\\Database\\Factories\\": "database/factories/",
+            "Modules\\Newsletter\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Newsletter\\Tests\\": "tests/" }
+    }
+}

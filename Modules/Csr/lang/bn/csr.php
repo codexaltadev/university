@@ -1,0 +1,30 @@
+<?php
+
+return [
+    'title' => 'সিএসআর',
+    'singular' => 'সিএসআর কার্যক্রম',
+    'plural' => 'সামাজিক দায়বদ্ধতা',
+    'section' => 'সামাজিক দায়বদ্ধতা',
+    'all_activities' => 'সব কার্যক্রম',
+    'none' => 'এখানে এখনো কোনো কার্যক্রম নেই।',
+    'activities' => ':count টি কার্যক্রম',
+    'more' => 'আরও জানুন',
+    'watch' => 'ভিডিও দেখুন',
+    'category_pictures' => 'সিএসআর ক্যাটাগরির ছবি',
+    'no_categories' => 'আগে Site › Taxonomy-তে সিএসআর ক্যাটাগরি যোগ করুন।',
+    'saved' => 'সংরক্ষিত হয়েছে',
+    'layouts' => ['cards' => 'কার্ড', 'grid' => 'গ্রিড', 'timeline' => 'টাইমলাইন'],
+    'sections' => ['media' => 'ছবি'],
+    'fields' => [
+        'title' => 'শিরোনাম',
+        'summary' => 'সারসংক্ষেপ',
+        'body' => 'বিস্তারিত',
+        'occurred_on' => 'তারিখ',
+        'video_url' => 'ভিডিও (YouTube)',
+        'external_url' => 'লিংক',
+        'image' => 'ছবি',
+        'gallery' => 'আরও ছবি',
+        'category' => 'ক্যাটাগরি',
+    ],
+    'errors' => ['url' => 'https:// বা http:// দিয়ে শুরু হওয়া ঠিকানা দিন।'],
+];

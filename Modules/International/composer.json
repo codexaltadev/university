@@ -1,0 +1,16 @@
+{
+    "name": "uwms/international",
+    "description": "International module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\International\\": "app/",
+            "Modules\\International\\Database\\Factories\\": "database/factories/",
+            "Modules\\International\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\International\\Tests\\": "tests/" }
+    }
+}

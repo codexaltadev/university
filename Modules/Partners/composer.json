@@ -1,0 +1,16 @@
+{
+    "name": "uwms/partners",
+    "description": "Partners module",
+    "authors": [{ "name": "DIU Web Team", "email": "web@example.edu" }],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "Modules\\Partners\\": "app/",
+            "Modules\\Partners\\Database\\Factories\\": "database/factories/",
+            "Modules\\Partners\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { "Modules\\Partners\\Tests\\": "tests/" }
+    }
+}

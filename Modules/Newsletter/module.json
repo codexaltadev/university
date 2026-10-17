@@ -1,0 +1,41 @@
+{
+    "name": "Newsletter",
+    "alias": "newsletter",
+    "description": "Newsletter — subscribers, lists, campaigns — M-39",
+    "keywords": [],
+    "priority": 70,
+    "providers": [
+        "Modules\\Newsletter\\Providers\\NewsletterServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "newsletter",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "newsletter_",
+        "dependencies": {},
+        "optional_dependencies": [
+            "admission"
+        ],
+        "morph_aliases": {
+            "newsletter.list": "Modules\\Newsletter\\Models\\MailingList",
+            "newsletter.subscriber": "Modules\\Newsletter\\Models\\Subscriber",
+            "newsletter.campaign": "Modules\\Newsletter\\Models\\Campaign"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "website_pages": true,
+            "settings": true,
+            "footer_blocks": [
+                "newsletter.subscribe"
+            ]
+        }
+    }
+}

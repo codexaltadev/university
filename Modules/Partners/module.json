@@ -1,0 +1,40 @@
+{
+    "name": "Partners",
+    "alias": "partners",
+    "description": "Industry partners, sponsors, memberships and student discounts — M-37",
+    "keywords": [],
+    "priority": 70,
+    "providers": [
+        "Modules\\Partners\\Providers\\PartnersServiceProvider"
+    ],
+    "files": [],
+    "uwms": {
+        "slug": "partners",
+        "version": "1.0.0",
+        "type": "installable",
+        "requires_core": "^1.0",
+        "default_active": true,
+        "author": {
+            "name": "DIU Web Team",
+            "email": "web@example.edu"
+        },
+        "license": "proprietary",
+        "table_prefix": "partners_",
+        "dependencies": {},
+        "optional_dependencies": [],
+        "morph_aliases": {
+            "partners.partner": "Modules\\Partners\\Models\\Partner"
+        },
+        "custom_permissions": [],
+        "provides": {
+            "attachable": true,
+            "website_pages": true,
+            "vocabularies": [
+                "partners.discount-category"
+            ],
+            "homepage_sections": [
+                "partners.list"
+            ]
+        }
+    }
+}

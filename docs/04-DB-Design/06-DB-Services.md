@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-06 |
-| Version | 1.2 — 2026-10-17 (v1.1): §2 Transport চালু system-এর API থেকে; 2026-10-17 (v1.2, owner: পুরোনো system বাদ যাবে): §2 Transport নিজের table-এ — `route_group`, variant / departure-এর `days_off`, চলমান service settings-এ, একই গঠনের public API, S18T |
+| Version | 1.4 — 2026-10-17 (v1.1): §2 Transport চালু system-এর API থেকে; 2026-10-17 (v1.2, owner: পুরোনো system বাদ যাবে): §2 Transport নিজের table-এ — `route_group`, variant / departure-এর `days_off`, চলমান service settings-এ, একই গঠনের public API, S18T; 2026-10-17 (v1.3): §3–§8, §10 build-এর আগের সংশোধন (application standard — `published_at` নয়, Media Library, Person Picker, "Show in"; website, section, legacy step); 2026-10-17 (v1.4, build): §3 `lab_labs` + `email`, `phone`; §5 `subject_key` NOT NULL default '' (unique-এ NULL কখনো মেলে না, IX-8), settings `expired` / `notify_days`; §6 partner model = `Institution` (M-37 Partners-এর permission থেকে আলাদা নাম), settings ও notification একই; §10 `newsletter_deliveries.status` + `skipped`; সব step S18F/S18C/S18L/S18P/S18R/S18I/S18N |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [DB-05](05-DB-Content.md) (Main site প্রকাশ), [SRS Part 5](../02-SRS/05-SRS-Services.md), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -90,6 +90,8 @@ Route "Mirpur" ─┬─ Variant: Regular Service, Sat–Thu ── stops [Mirpu
 
 ## 3. M-32 Lab / Research Center
 
+> **v1.3 (2026-10-17, build-এর আগে — application standard):** Lab = microsite entity (Office-এর মতো): `/lab/{slug}` (Department থাকলে তার নিচে — kernel microsite parent), relation target (News, Events, Gallery, Slider, Partners … "Show in" দিয়ে), dynamic permission `Manage:Lab#{id}`, Homepage / Menu / Header & Footer / Statistics kernel থেকে। `type_term_id` → `HasTaxonomy` (`lab.type`); `category_term_id` → `HasTaxonomy` (item type অনুযায়ী vocabulary)। দায়িত্বপ্রাপ্ত = Person Picker (`in_charge`; legacy `assign_person_*` → manual person)। Logo, cover, item-এর ছবি Media Library-তে। Project ও Product-এর details page `/lab/{slug}/projects/{item}`। Website: `/labs` (ধরন, Department; grid / list / cards)। Legacy S18L: `lab_facilities` (১১৩) → lab, `lab_tools` / `lab_scopes` / `lab_projects` / `lab_products` + category → item, `lab_articles` (৯) → lab-এর Page, `lab_mid_sections` (৪) → homepage feature; lab-এর gallery / slider / news / partner / committee — সেই module-এর step-এ lab relation (S03-এর পরে ছবি)।
+
 ### 3.1 `lab_labs` — B (Relation Target, Microsite, Assignable)
 
 | Column | Type | Key / N | বর্ণনা |
@@ -138,6 +140,8 @@ Lab-এর news, event, gallery, slider, committee, research, partner, page, men
 
 ## 4. M-33 Facilities — `facilities_facilities` — B (Attachable)
 
+> **v1.3 (build-এর আগে):** `published_at` নয় — `is_active`; `icon` VARCHAR-এর বদলে Media `icon` (ছবি / SVG; legacy CSS class বাদ)। কোথায় = "Show in" + main site। Website `/facilities`, `/{entity}/facilities` (category; icon grid / cards / list), `/facilities/{slug}` (`body` থাকলে, নইলে `external_url`-এ)। Homepage section `facilities.list` "Campus Facilities" (source mode)। Legacy S18F: `facilities` (৭৬; `facilityable` / `department_id` → relation, `is_home` → main site)।
+
 | Column | Type | Key / N | বর্ণনা |
 |---|---|---|---|
 | id | BIGINT UNSIGNED | PK | |
@@ -156,6 +160,8 @@ Entity সংযোগ (Program, Department, Lab ...) → `core_relations`। Vo
 
 ## 5. M-34 Accreditation & Ranking
 
+> **v1.3 (build-এর আগে):** দুটি table-ই attachable; `published_at` নয় — `is_active`। Accreditation: `expires_on` পার হলে setting অনুযায়ী লুকানো অথবা "Expired" (FR-ACR-02)। Ranking: একই `agency_key`-এর বছরভিত্তিক তালিকা = trend (FR-ACR-04)। Website `/accreditations` (category), `/rankings` (সর্বশেষ বছর আগে, সংস্থা অনুযায়ী trend table)। Program page-এ সংশ্লিষ্ট accreditation tab। Homepage section `accreditation.recognition` "Rankings & Recognition" (logo strip)। Legacy S18R: `accreditations` (১৫) + categories (২), `rankings` (৬১; `agency_key` title থেকে — review)।
+
 | Table | শ্রেণী | Column (⚙ ও common ছাড়া) | Key | Ref |
 |---|---|---|---|---|
 | `accreditation_accreditations` | B (Attachable) | `title` (T), `agency` (T), `body` (T, N), `website_url` N, `category_term_id` (N, vocabulary `accreditation.category`), `awarded_on` DATE N, `expires_on` DATE N IX; Media `logo`, `certificate` | IX `(expires_on)` (মেয়াদ notification) | FR-ACR-01/02 |
@@ -169,6 +175,8 @@ Program / Department / Faculty-তে accreditation (বর্তমান `depa
 
 ## 6. M-35 International Linkage & Conference
 
+> **v1.3 (build-এর আগে):** `published_at` নয় — `is_active`। Visitor-এর `name` / `designation` / `organization` free text থাকে (বিদেশি অতিথি, directory-তে নেই)। `category_term_id` → `HasTaxonomy`। Website `/international/partners` (দেশ, চুক্তি, খোঁজা; logo grid / table / country list), `/international/conferences`, `/international/visitors`। Partner CSV import (FR-INTL-07)। Metric `international.partners`, `international.countries`। Homepage section `international.partners` "Global Partners" (Highlight আগে — featured)। Legacy S18I: `countries` (৭৯ → ISO code), `international_linkages` (৭১৭, চুক্তির ধরন `other`), `featured_partners` (২৭) → main site Highlight, `international_conferences` (৯) + categories (৩), `visitors` (১৭৮)।
+
 | Table | শ্রেণী | Column (⚙ ও common ছাড়া) | Key | Ref |
 |---|---|---|---|---|
 | `international_countries` | C | `name` (T), `iso2` CHAR(2), `is_active`, timestamps; Media `flag` | UQ `(iso2)` | FR-INTL-01 |
@@ -181,6 +189,8 @@ Featured partner (বর্তমান `featured_partners`) → Highlight (`cor
 ---
 
 ## 7. M-36 CSR — `csr_activities` — B (Attachable)
+
+> **v1.3 (build-এর আগে):** `published_at` নয় — `is_active` + `active_at`। Category-র ছবি = term-এর Media use (`image`), বিবরণ `core_terms.description`। Website `/csr` (category card) → `/csr/category/{slug}` → `/csr/{slug}`; layout card / grid / timeline। Homepage section `csr.list` "Social Responsibility"। Legacy S18C: `csr_categories` (৭, parent) → `csr.category`, `csrs` (১১৯; `is_home` → main site, `is_featured` → Highlight)।
 
 | Column | Type | Key / N | বর্ণনা |
 |---|---|---|---|
@@ -197,6 +207,8 @@ Vocabulary: `csr.category` (hierarchical; category-র ছবি Media, সং�
 ---
 
 ## 8. M-37 Partners — `partners_partners` — B (Attachable)
+
+> **v1.3 (build-এর আগে):** `published_at` নয় — `is_active`; `valid_until` পার হলে লুকায় (FR-PRT-04); `category_term_id` → `HasTaxonomy`। Website `/partners` (ধরন tab), `/student-discounts` (category ও icon)। Homepage section `partners.list` "Industry Partners" (logo carousel)। Legacy S18P: `discount_partners` (৬৩) + categories (১২) → `discount`; `mps` (১২০) + `mps_categories` (৪) → ধরন category থেকে, `lab_facility_id` → Lab relation, `is_international`। Homepage seeder-এর `partner.list` → `partners.list`।
 
 | Column | Type | Key / N | বর্ণনা |
 |---|---|---|---|
@@ -231,6 +243,8 @@ Lab / Department / Program-এর partner → `core_relations` (FR-PRT-03)। Me
 ---
 
 ## 10. M-39 Newsletter
+
+> **v1.3 (build-এর আগে):** Subscribe form = Livewire (footer block `newsletter.subscribe` — kernel footer block hook; page block); double opt-in mail (queue); one-click unsubscribe (signed link, কারণ ঐচ্ছিক); List / Subscriber CRUD, CSV import / export; Campaign → queue-তে throttled (প্রতি মিনিটে setting অনুযায়ী), test email, report। Admission subscriber sync (FR-NLT-08) — Admission module থাকলে `admission-updates` list। Legacy S18N: `newsletters` (৬,৬২৪; `subscription_status` → subscribed / unsubscribed, source `legacy`, `general` list)।
 
 | Table | শ্রেণী | Column (⚙ ছাড়া) | Key | Ref |
 |---|---|---|---|---|

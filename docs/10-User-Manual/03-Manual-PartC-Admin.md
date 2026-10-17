@@ -152,6 +152,10 @@ Department / Office-এর content শুধু তাদের microsite-এ �
 
 Website: `/transport` (stop দিয়ে খোঁজা সহ); homepage-এ "Find your bus"। পুরোনো frontend-এর জন্য একই data `/api/v2/public/transport`-এ।
 
+**Settings › Accreditation & Ranking / International:** মেয়াদোত্তীর্ণ accreditation বা চুক্তি **লুকাবে** না **"মেয়াদোত্তীর্ণ" চিহ্নসহ দেখাবে**, আর মেয়াদ শেষের কত দিন আগে (default ৬০) admin-কে bell ও email-এ জানানো হবে।
+
+**Settings › Newsletter:** প্রতি মিনিটে কত email যাবে (mail server-এর সীমার কম রাখুন), `/newsletter` পেজের লাইন, প্রতিটি email-এর নিচের নোট (ঠিকানা ইত্যাদি)।
+
 ---
 
 ## 7. Admin Panel Branding
