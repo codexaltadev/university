@@ -33,6 +33,7 @@
         "custom_permissions": [],
         "provides": {
             "attachable": true,
+            "settings": true,
             "assignable": true,
             "website_pages": true,
             "homepage_sections": [

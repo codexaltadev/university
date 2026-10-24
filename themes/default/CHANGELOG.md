@@ -57,6 +57,9 @@
   newest, overlay cards, All News / Search / Filter by Category / archive) and
   `modules/news/show` (picture with category, date and hits, text, "Explore the Inspiring
   Stories" + three more); `partials/news/overlay`, `partials/news/explore`.
+- 4.5e: DIU testimonials — `modules/testimonials/index`: two columns of cards (words, photo,
+  name, title, type, Read more) opening the whole testimonial in a window (#testimonial-{id});
+  `images/testimonials-banner.jpg`.
 
 ## 1.0.0 — 2026-10-09
 

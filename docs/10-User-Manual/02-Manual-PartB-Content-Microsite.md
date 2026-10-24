@@ -218,6 +218,7 @@ Page তৈরি করে **Menu**-তে যোগ না করলে visito
   * ক্রম: তালিকায় **Reorder** চেপে টেনে সাজান — website ও homepage সেই ক্রমেই দেখায়।
   * Website: `/testimonials` (microsite-এ `/{department}/testimonials`) — ধরন অনুযায়ী filter; Appearance › Layouts-এ Slider / Grid / Masonry / Video (Video = শুধু ভিডিও-ওয়ালাগুলো)।
   * Homepage: **What People Say** section — চাইলে শুধু কিছু ধরন (যেমন শুধু Parents), Slider বা Grid।
+  * Default theme-এ (DIU-র মতো) `/testimonials`: দুই কলামে card — কথার শুরু, ছবি, নাম, পদবি, ধরন, **Read more**; চাপলে পুরো কথা একটি window-এ খোলে (`/testimonials#testimonial-12` link-এও খোলে)। উপরের শিরোনাম, লেখা ও ছবি **Settings › Testimonials**-এ।
 
 ---
 

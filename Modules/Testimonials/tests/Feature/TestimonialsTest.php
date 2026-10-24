@@ -15,6 +15,7 @@ use Modules\Testimonials\Filament\Resources\Testimonials\Pages\CreateTestimonial
 use Modules\Testimonials\Filament\Resources\Testimonials\Pages\EditTestimonial;
 use Modules\Testimonials\Models\Testimonial;
 use Modules\Testimonials\Sections\TestimonialsSection;
+use Modules\Testimonials\Settings\TestimonialsSettings;
 use Modules\Testimonials\Support\Authors;
 use Platform\Assignments\ManualPerson;
 use Platform\Assignments\RoleCatalog;
@@ -123,4 +124,20 @@ it('shows a program\'s testimonials on its page and microsite', function () {
 
     $this->get($program->url())->assertOk()->assertSee('The program is great.');
     $this->get('/testimonials')->assertOk()->assertDontSee('The program is great.');
+});
+
+it('shows DIU\'s testimonials: two columns of cards that open to the whole testimonial, texts from Settings › Testimonials (Phase 4.5e)', function () {
+    $long = str_repeat('DIU gave me the tools I needed. ', 12);
+    $a = ($this->make)($long, 'alumni', 'Rahim Uddin', title: ['en' => 'Batch 45, Engineer at X']);
+
+    $this->get('/testimonials')->assertOk()
+        ->assertSeeInOrder(['Testimonials', 'Hear from students, faculty, and visitors', 'DIU gave me the tools', '...', 'Rahim Uddin', 'Batch 45, Engineer at X', 'Alumni', 'Read more'])
+        ->assertSee('id="testimonial-'.$a->id.'"', false)                       // /testimonials#testimonial-{id} opens it
+        ->assertSee(trim($long));                                                 // the whole testimonial, in its window
+
+    // The module's own page (any theme without its version)
+    expect(moduleView('Testimonials', 'index', ['items' => collect([$a]), 'type' => null, 'types' => ['alumni'], 'layout' => 'grid', 'base' => '']))->toContain('Rahim Uddin');
+
+    settings()->saveFor(new TestimonialsSettings, ['title' => ['en' => 'Voices of DIU'], 'text' => ['en' => 'In their words.']]);
+    $this->get('/testimonials')->assertSee('Voices of DIU')->assertSee('In their words.');
 });

@@ -11,7 +11,7 @@ use Platform\Relations\RelationEngine;
 
 /**
  * S17M Testimonials (DB-05 v1.5 §6, §18): DIU's `testimonials` (all on a program) → shown in that
- * program (S06); the person → a manual person (name, designation, organization), their title
+ * program (S06) and, as DIU lists them all on /testimonials, on the main site; the person → a manual person (name, designation, organization), their title
  * "designation, organization". They are graduates now working, so type "alumni". The older
  * `mba_testimonials` repeat the MBA ones: a row with a name already migrated is skipped, any
  * other goes to the same program. Photos wait for the files (S03). Run after S06.
@@ -87,9 +87,9 @@ class S17Testimonials extends Step
             'testimonial_type' => 'alumni',
             'sort_order' => $order,
             'is_active' => $active,
-        ], after: function (Testimonial $testimonial) use ($person, $title, $program): void {
+        ], after: function (Testimonial $testimonial) use ($person, $title, $program, $active): void {
             app(Authors::class)->set($testimonial, $person, $title !== '' ? ['en' => $title] : null);
-            app(RelationEngine::class)->sync($testimonial, $program ? [$program->getMorphClass().':'.$program->getKey()] : [], mainSite: false, user: null);
+            app(RelationEngine::class)->sync($testimonial, $program ? [$program->getMorphClass().':'.$program->getKey()] : [], mainSite: $active, user: null);   // DIU lists every testimonial on /testimonials
         });
     }
 }

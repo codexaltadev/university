@@ -5,6 +5,7 @@ namespace Modules\Testimonials;
 use Modules\Testimonials\Filament\TestimonialsPlugin;
 use Modules\Testimonials\Models\Testimonial;
 use Modules\Testimonials\Sections\TestimonialsSection;
+use Modules\Testimonials\Settings\TestimonialsSettings;
 use Modules\Testimonials\Tabs\ProgramTestimonialsTab;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
@@ -23,6 +24,7 @@ final class TestimonialsExtension implements ModuleExtension
         $r->homepageSection(TestimonialsSection::class);                                                // FR-TEST-03
         $r->websitePage('testimonials.index', label: 'testimonials::testimonials.plural', path: '/'.Testimonial::PATH);
         $r->layouts('testimonials.listing', ['slider', 'grid', 'masonry', 'video']);                    // FR-TEST-02; first = default
+        $r->settings(TestimonialsSettings::class);                                                         // the page's own text
 
         $program = 'Modules\\Program\\Models\\Program';
         if (class_exists($program)) {

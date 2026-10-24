@@ -54,6 +54,15 @@ return [
         'video_url' => 'YouTube or Google Drive link.',
         'photo' => 'Used only when the person has no photo.',
     ],
+    'settings' => [
+        'page' => 'The testimonials page',
+        'page_help' => 'Title, text and picture on top of /testimonials. Empty: the theme\'s own.',
+        'title' => 'Title', 'text' => 'Text', 'image' => 'Picture',
+    ],
+    'page' => [
+        'read_more' => 'Read more', 'close' => 'Close', 'none' => 'No testimonials here yet.',
+        'more' => 'Read More Testimonials', 'more_text' => 'Discover more experiences from our community members',
+    ],
     'errors' => [
         'type' => 'Choose a type.',
         'rating' => 'The rating is from 1 to 5.',
