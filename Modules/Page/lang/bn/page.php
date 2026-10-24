@@ -44,6 +44,7 @@ return [
         'tabs' => 'Tab',
         'files' => 'File',
         'embed' => 'ভিডিও / ম্যাপ',
+        'html' => 'HTML (যেমন লেখা)',
         'button' => 'Button',
     ],
     'styles' => [
@@ -55,6 +56,7 @@ return [
         'web_address' => 'শিরোনাম থেকে তৈরি; এখানে বদলানো যায়। পুরনো ঠিকানাও কাজ করবে।',
         'attachments' => 'Page-এর শেষে download তালিকায় দেখাবে।',
         'embed' => 'YouTube, Vimeo, Google Maps বা Facebook ভিডিওর link।',
+        'html' => 'Class সহ HTML (table, card, accordion — default theme-এ Bootstrap 5)। Script, event handler ও frame বাদ যায়।',
         'button_url' => 'পূর্ণ link (https://…) অথবা এই website-এর ঠিকানা (/admission)।',
     ],
     'actions' => [

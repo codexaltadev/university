@@ -34,14 +34,29 @@ beforeEach(function () {
 
 it('shows a page and its child at their addresses through the theme (FR-PAGE-03/04)', function () {
     $this->get('/about-us')->assertOk()
-        ->assertSee('<h1 class="page__title">About Us</h1>', false)
+        ->assertSee('page-hero', false)->assertSeeInOrder(['Home', 'About Us', '</h1>'], false)   // DIU's hero with the title
+        ->assertSee('<diu-rich-html', false)
         ->assertSee('<strong>2002</strong>', false)
         ->assertDontSee('<script>alert(1)</script>', false)                    // rich text is sanitised
         ->assertSee('<summary class="accordion__title">Mission</summary>', false)
         ->assertSee('https://www.youtube-nocookie.com/embed/dQw4w9WgXcQ', false);
 
-    $this->get('/about-us/history')->assertOk()->assertSee('History')->assertSee('page-grid', false);   // with-sidebar template
+    $this->get('/about-us/history')->assertOk()->assertSeeInOrder(['Home', 'About Us', 'History'])->assertSee('page--with-sidebar', false);   // breadcrumb down the parents; with-sidebar template
     $this->get('/history')->assertNotFound();                                   // only under its parent
+});
+
+it('keeps the classes and collapse attributes of an HTML block, without scripts or handlers', function () {
+    $this->about->update(['content' => ['en' => [['type' => 'html', 'data' => ['html' => '<table class="table table-bordered" border="1"><tr><td>Name</td></tr></table>'
+        .'<div class="accordion" id="a1"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#c1">Spring</button>'
+        .'<div id="c1" class="accordion-collapse collapse" data-bs-parent="#a1"><img src="https://webbackend.example.edu/x.jpg" onerror="alert(1)"></div></div>'
+        .'<script>alert(2)</script><a href="javascript:alert(3)">x</a><iframe src="https://evil.example.com"></iframe>']]]]]);
+
+    $this->get('/about-us')->assertOk()
+        ->assertSee('class="table table-bordered" border="1"', false)
+        ->assertSee('data-bs-toggle="collapse" data-bs-target="#c1"', false)
+        ->assertSee('data-bs-parent="#a1"', false)
+        ->assertSee('src="https://webbackend.example.edu/x.jpg"', false)
+        ->assertDontSee('onerror', false)->assertDontSee('alert(2)', false)->assertDontSee('javascript:', false)->assertDontSee('evil.example.com', false);
 });
 
 it('hides pages that are off, scheduled, expired, or under a hidden parent (FR-GEN-12)', function () {

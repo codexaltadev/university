@@ -18,7 +18,7 @@ class PageBlocks
 {
     public const CORE = [
         TextBlock::class, ImageBlock::class, GalleryBlock::class, AccordionBlock::class,
-        TabsBlock::class, FilesBlock::class, EmbedBlock::class, ButtonBlock::class,
+        TabsBlock::class, FilesBlock::class, EmbedBlock::class, ButtonBlock::class, HtmlBlock::class,
     ];
 
     /** @return array<string, class-string<PageBlock>> name => block */

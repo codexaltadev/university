@@ -44,6 +44,7 @@ return [
         'tabs' => 'Tabs',
         'files' => 'Files',
         'embed' => 'Video / map',
+        'html' => 'HTML (as written)',
         'button' => 'Button',
     ],
     'styles' => [
@@ -55,6 +56,7 @@ return [
         'web_address' => 'Made from the title; change it here. The old address keeps working.',
         'attachments' => 'Listed for download at the end of the page.',
         'embed' => 'YouTube, Vimeo, Google Maps or Facebook video link.',
+        'html' => 'HTML with classes (tables, cards, accordions — Bootstrap 5 in the default theme). Scripts, event handlers and frames are removed.',
         'button_url' => 'A full link (https://…) or an address on this website (/admission).',
     ],
     'actions' => [

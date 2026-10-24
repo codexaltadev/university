@@ -93,6 +93,17 @@ class Page extends BaseModel implements Scopeable
         return null;
     }
 
+    /** @return list<Page> the parents, top first (breadcrumb) */
+    public function ancestors(): array
+    {
+        $ancestors = [];
+        for ($page = $this->parent; $page !== null; $page = $page->parent) {
+            array_unshift($ancestors, $page);
+        }
+
+        return $ancestors;
+    }
+
     public function url(?string $locale = null): string
     {
         $slugs = [];

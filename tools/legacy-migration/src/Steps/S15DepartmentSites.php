@@ -89,7 +89,7 @@ class S15DepartmentSites extends Step
             }
 
             $title = Normalizer::text($row->article_title) ?: Normalizer::text($row->menu_title);
-            $body = (string) Normalizer::html($row->article_content);
+            $body = (string) Normalizer::legacyHtml($row->article_content);
             if ($link = Normalizer::url($row->article_link)) {
                 $body .= '<p><a href="'.e($link).'">'.e($link).'</a></p>';
             }
@@ -102,7 +102,7 @@ class S15DepartmentSites extends Step
                 'owner_id' => $department->getKey(),
                 'parent_id' => null,
                 'title' => Normalizer::en($title),
-                'content' => ['en' => [['type' => 'text', 'data' => ['body' => $body !== '' ? $body : '<p></p>']]]],
+                'content' => ['en' => [['type' => 'html', 'data' => ['html' => $body !== '' ? $body : '<p></p>']]]],   // as written: the old Bootstrap markup
                 'template' => 'default',
                 'sort_order' => max(0, (int) $row->serial),   // some legacy serials are negative
                 'is_active' => (bool) $row->publication_status,

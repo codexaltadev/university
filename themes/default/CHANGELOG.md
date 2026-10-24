@@ -31,6 +31,10 @@
   `images/faculty-banner.jpg`.
 - 4.4e: DIU `/programs` — `modules/program/listing/{card,list,table,detailed}` (Browse by Faculty tabs, UG / PG
   with counts, program table, phone drawer); option `programs_faculty`; `images/programs-banner.jpg`; icon `sliders`.
+- 4.4f: page texts and links from Admin (Settings › Faculties / Programs, entities' Quick Links).
+- 4.4g: page templates as DIU's article page — `partials/page/hero`, `partials/page/body` with the
+  `<diu-rich-html>` element (Bootstrap 5.0.2 in a shadow root, `public/css`); option
+  `page_hero_image`; `images/page-hero.jpg`.
 
 ## 1.0.0 — 2026-10-09
 

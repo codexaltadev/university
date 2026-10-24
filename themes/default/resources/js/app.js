@@ -2,6 +2,45 @@
 // its instance and never load a second copy.
 document.documentElement.classList.add('js');
 
+// DIU RichHtmlContent: page text written for the old site (Bootstrap tables, cards, accordions) shown as
+// DIU shows it — in a shadow root with Bootstrap 5.0.2, out of reach of the site's own CSS; collapse
+// toggles wired by hand. <diu-rich-html data-css="…/bootstrap-5.0.2.min.css">…</diu-rich-html>
+if (!customElements.get('diu-rich-html')) {
+    customElements.define('diu-rich-html', class extends HTMLElement {
+        connectedCallback() {
+            if (this.shadowRoot) return;
+            const root = this.attachShadow({ mode: 'open' });
+            const link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = this.dataset.css;
+            const style = document.createElement('style');
+            style.textContent = '.accordion-item, .card { margin-bottom: .5rem; border-radius: .25rem; } img { max-width: 100%; height: auto; }';
+            const wrapper = document.createElement('div');
+            wrapper.className = 'rich-html-wrapper';
+            while (this.firstChild) wrapper.appendChild(this.firstChild);
+            root.append(link, style, wrapper);
+
+            wrapper.addEventListener('click', (e) => {
+                const trigger = e.target.closest('[data-bs-toggle="collapse"], [data-toggle="collapse"]');
+                if (!trigger) return;
+                const selector = trigger.getAttribute('data-bs-target') || trigger.getAttribute('data-target')
+                    || (trigger.tagName === 'A' && (trigger.getAttribute('href') || '').startsWith('#') ? trigger.getAttribute('href') : null);
+                const target = selector ? root.querySelector(selector) : null;
+                if (!target) return;
+                e.preventDefault();
+                const open = !target.classList.contains('show');
+                const parent = target.getAttribute('data-bs-parent') || target.getAttribute('data-parent');
+                if (open && parent) {
+                    root.querySelectorAll(`${parent} .collapse.show`).forEach((other) => other.classList.remove('show'));
+                }
+                target.classList.toggle('show', open);
+                trigger.classList.toggle('collapsed', !open);
+                trigger.setAttribute('aria-expanded', String(open));
+            });
+        }
+    });
+}
+
 document.addEventListener('alpine:init', () => {
     const Alpine = window.Alpine;
 

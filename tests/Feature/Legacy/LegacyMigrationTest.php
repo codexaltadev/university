@@ -18,6 +18,7 @@ use Legacy\Migration\Support\IdMap;
 use Legacy\Migration\Support\Normalizer;
 use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
+use Modules\Page\Models\Page;
 use Modules\Program\Database\Seeders\ProgramDatabaseSeeder;
 use Modules\Program\Models\Program;
 use Modules\Program\Models\ProgramFacilitator;
@@ -51,6 +52,7 @@ function legacySchema(): void
     $tables = [
         'faculties' => fn (Blueprint $t) => [$t->string('faculty_name'), $t->string('faculty_short_name'), $t->string('faculty_photo')->nullable(), $t->integer('faculty_serial')->nullable(), $t->text('faculty_content')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->tinyInteger('is_optional')->default(0), $t->tinyInteger('show_list')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'departments' => fn (Blueprint $t) => [$t->unsignedBigInteger('faculty_id'), $t->string('department_name'), $t->string('short_name'), $t->string('department_photo')->nullable(), $t->string('department_cover')->nullable(), $t->string('department_link')->nullable(), $t->integer('department_serial')->nullable(), $t->string('about_title')->nullable(), $t->text('department_content')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->timestamp('deleted_at')->nullable()],
+        'articles' => fn (Blueprint $t) => [$t->string('article_title')->nullable(), $t->string('article_slug')->nullable(), $t->longText('article_content')->nullable(), $t->tinyInteger('publication_status')->default(1)],
         'program_major_categories' => fn (Blueprint $t) => [$t->string('title'), $t->text('description')->nullable()],
         'program_types' => fn (Blueprint $t) => [$t->integer('parent_id'), $t->string('program_name'), $t->tinyInteger('publication_status')->default(1), $t->timestamp('deleted_at')->nullable()],
         'department_program_type' => fn (Blueprint $t) => [$t->string('full_program_name'), $t->string('subtitle')->nullable(), $t->string('program_image')->nullable(), $t->string('video_url')->nullable(), $t->string('short_name')->nullable(), $t->string('slug'), $t->unsignedBigInteger('department_id'), $t->unsignedBigInteger('program_type_id'), $t->integer('program_type_parent_id'), $t->longText('summary')->nullable(), $t->longText('program_objective')->nullable(), $t->integer('approved_alumni_number')->nullable(), $t->integer('teachers_count')->nullable(), $t->date('next_semester_date')->nullable(), $t->json('section_intros')->nullable(), $t->longText('program_credit_duration')->nullable(), $t->longText('ai_summary')->nullable(), $t->text('ai_short_summary')->nullable(), $t->tinyInteger('is_home')->default(0), $t->integer('serial')->nullable(), $t->tinyInteger('show_program')->default(1), $t->tinyInteger('publication_status')->default(1), $t->timestamp('created_at')->nullable()],
@@ -319,6 +321,26 @@ it('puts each legacy file into the Media Library once and into its records, from
     expect(MediaItem::query()->count())->toBe(2)->and($swe->fresh()->firstMedia('image')->id)->toBe($own->id);
 
     File::deleteDirectory($cache);
+});
+
+it('migrates main-site articles under /article, keeping their address and Bootstrap markup (S15A)', function () {
+    DB::connection('legacy')->table('articles')->insert([
+        ['id' => 1, 'article_title' => 'International Adviser of DIU', 'article_slug' => 'international-adviser', 'publication_status' => 1,
+            'article_content' => '<table class="table" border="1"><tr><td><img src="/storage/photos/walter.jpg"></td><td><a href="/photos/cv.pdf">CV</a> <a href="/article/visiting-professors">More</a></td></tr></table>'],
+        ['id' => 2, 'article_title' => 'Old Draft', 'article_slug' => 'old-draft', 'publication_status' => 0, 'article_content' => '<p>x</p>'],
+    ]);
+
+    $this->artisan('legacy:migrate', ['--step' => ['S15A'], '--no-report' => true])->assertSuccessful();
+    $this->artisan('legacy:migrate', ['--step' => ['S15A'], '--no-report' => true])->assertSuccessful();   // again: no copies
+
+    expect(Page::query()->withoutGlobalScopes()->count())->toBe(3);   // "article" + 2
+    $this->get('/article/international-adviser')->assertOk()
+        ->assertSee('International Adviser of DIU')
+        ->assertSee('class="table" border="1"', false)
+        ->assertSee('src="https://webbackend.daffodilvarsity.edu.bd/storage/photos/walter.jpg"', false)   // the old site's files from webbackend
+        ->assertSee('href="https://webbackend.daffodilvarsity.edu.bd/photos/cv.pdf"', false)
+        ->assertSee('href="/article/visiting-professors"', false);                                       // page links stay
+    $this->get('/article/old-draft')->assertNotFound();
 });
 
 it('refuses to run without a step and when the legacy database is missing', function () {

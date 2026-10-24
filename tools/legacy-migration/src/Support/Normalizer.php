@@ -49,6 +49,29 @@ class Normalizer
     }
 
     /** A stored file path as a public link on the old file server. */
+    /** Paths of the old site's own files inside its texts (DIU RichHtmlContent: these go to webbackend) */
+    public const FILE_PATHS = ['/photos', '/images', '/storage', '/brochure', '/labGallery', '/admin'];
+
+    /**
+     * Rich text of the old site with its relative pictures (and links to its files) pointing at
+     * webbackend, as DIU's frontend shows them; page links (/article/…) stay. S03 later swaps them
+     * for Media Library addresses.
+     */
+    public static function legacyHtml(?string $value): ?string
+    {
+        $html = static::html($value);
+        if ($html === null) {
+            return null;
+        }
+
+        $html = preg_replace_callback('~(<img\b[^>]*?\ssrc\s*=\s*)(["\'])(?!https?:|//|data:)([^"\']+)\2~i',
+            fn (array $m): string => $m[1].$m[2].self::FILE_BASE.ltrim($m[3], '/').$m[2], $html);
+
+        return preg_replace_callback('~(<a\b[^>]*?\shref\s*=\s*)(["\'])(/[^"\']*)\2~i',
+            fn (array $m): string => collect(self::FILE_PATHS)->contains(fn (string $p): bool => str_starts_with($m[3], $p.'/'))
+                ? $m[1].$m[2].self::FILE_BASE.ltrim($m[3], '/').$m[2] : $m[0], $html);
+    }
+
     /**
      * A legacy file's path as stored on webbackend ("uploads/a.jpg"), from a column value that may be
      * the path with or without "/" or the full address; null for empty values and other sites' links.

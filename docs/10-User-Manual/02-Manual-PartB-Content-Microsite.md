@@ -112,7 +112,7 @@ About, Message from Head, Lab Facilities-এর মতো স্থায়ী 
 |---|---|
 | Title * | — |
 | **Template** | Default, Full width, With sidebar, Landing |
-| Content blocks | **+ Add block** → Text, Image, Gallery, Video, File list, Accordion, Contact form, People list, Call-to-action … টেনে ক্রম বদলানো যায় |
+| Content blocks | **+ Add block** → Text, Image, Gallery, Video, File list, Accordion, Contact form, People list, Call-to-action, **HTML (যেমন লেখা)** … টেনে ক্রম বদলানো যায়। HTML block-এ class সহ HTML (table, card, accordion) রাখা যায় — পুরনো site থেকে আসা page-গুলো এতেই আছে; default theme এগুলো DIU-র মতো Bootstrap 5 দিয়ে দেখায়, script ও frame বাদ যায় |
 | Parent page | Page-এর ভেতরে page (যেমন About › History) |
 
 Page তৈরি করে **Menu**-তে যোগ না করলে visitor সহজে খুঁজে পাবেন না (Section 12)।

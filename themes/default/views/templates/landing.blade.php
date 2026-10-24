@@ -1,9 +1,6 @@
-{{-- Page template "landing" (FR-PAGE-04). Contract: $page (title), $body (rendered blocks, sanitised by the kernel) --}}
+{{-- Page template "landing" (FR-PAGE-04): the blocks only, no hero or title (they bring their own). Contract: $page (title), $body (rendered blocks, sanitised by the kernel) --}}
 <x-theme::layout :title="$page->title">
-    <article @class(['page', 'container' => 'landing' !== 'full-width', 'page--landing'])>
-        @if ('landing' !== 'landing')
-            <h1 class="page__title">{{ $page->title }}</h1>
-        @endif
-        <div class="prose">{!! $body !!}</div>
+    <article class="page page--landing">
+        <div class="prose max-w-none">{!! $body !!}</div>
     </article>
 </x-theme::layout>
