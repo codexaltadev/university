@@ -7,6 +7,7 @@ use Illuminate\Support\Collection;
 use Modules\Office\Models\Office;
 use Modules\Office\Models\OfficeService;
 use Modules\Office\Models\OfficeSupportContact;
+use Platform\Context\MicrositeResolver;
 use Platform\Context\SiteContext;
 use Platform\Seo\Seo;
 use Platform\Statistics\StatItem;
@@ -27,11 +28,14 @@ class OfficeWebsite
 
     public const SUPPORT = 'support-contacts';
 
+    /** /office/{slug}/team */
+    public const TEAM = 'team';
+
     public function respond(string $rest, SiteContext $context, string $locale): ?Response
     {
         $rest = trim($rest, '/');
         if ($context->isMicrosite()) {
-            return null;
+            return $rest === self::TEAM && $context->entity instanceof Office ? $this->team($context->entity) : null;
         }
 
         return match ($rest) {
@@ -40,6 +44,18 @@ class OfficeWebsite
             self::SUPPORT => $this->support(),
             default => null,
         };
+    }
+
+    /** /office/{slug}/team: the whole team, head first (FR-OFF-05); none, no page */
+    protected function team(Office $office): ?Response
+    {
+        if ($office->people(['head', 'team'])->isEmpty()) {
+            return null;
+        }
+        $base = rtrim((string) app(MicrositeResolver::class)->urlFor($office), '/');
+        app(Seo::class)->set(['title' => __('office::office.page.team_members').' — '.$office->name, 'path' => $base.'/'.self::TEAM]);
+
+        return response()->view('office::team', ['entity' => $office]);
     }
 
     protected function listing(): Response

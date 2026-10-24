@@ -2,7 +2,9 @@
 
 namespace Modules\Office\Providers;
 
+use Illuminate\Support\Facades\View;
 use Modules\Office\Models\Office;
+use Modules\Office\Support\OfficePage;
 use Modules\Office\Support\OfficeWebsite;
 use Platform\Context\SiteContext;
 use Platform\Modules\ModuleServiceProvider;
@@ -36,5 +38,8 @@ class OfficeServiceProvider extends ModuleServiceProvider
 
         // FR-OFF-14: a new office gets its own counters
         Office::created(fn (Office $office) => OfficeWebsite::createStatSet($office));
+
+        // An office page's parts for any theme's version of it (themes hold no PHP logic, T-1)
+        View::composer(['office::microsite.home', 'office::team'], fn ($view) => $view->with('page', new OfficePage($view->getData()['entity'])));
     }
 }

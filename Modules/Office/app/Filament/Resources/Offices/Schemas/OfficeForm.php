@@ -11,6 +11,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Modules\Office\Models\Office;
+use Platform\Filament\Components\LinkListField;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\PeopleManager;
 use Platform\Filament\Components\SeoPanel;
@@ -39,6 +40,8 @@ class OfficeForm
                         Textarea::make("office_hours.{$locale}")->label(__('office::office.fields.office_hours'))->rows(2)->maxLength(500),
                     ]),
                 ]),
+                Section::make(__('office::office.fields.quick_links'))->description(__('office::office.help.quick_links'))
+                    ->columnSpan(2)->compact()->collapsible()->schema([LinkListField::make('quick_links')->hiddenLabel()]),
                 Grid::make(1)->columnSpan(1)->schema([
                     Section::make(__('office::office.sections.office'))->compact()->schema([
                         Select::make('type_term_id')->label(__('office::office.fields.type'))

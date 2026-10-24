@@ -1,9 +1,10 @@
 {{--
     DIU Academics Sidebar: "Browse by Section (NN)" — tabs of the page (an Alpine "current" on the page
     switches them) and links (↗, external ones in a new tab), then Quick Links; on phones a box with the
-    current one and See More. Contract: $items (list of [id, label, url = null for a tab]), $quickLinks (list of [label, url])
+    current one and See More. Contract: $items (list of [id, label, url = null for a tab]), $quickLinks (list of [label, url]),
+    $width (optional width classes; DIU Academics' 420px by default)
 --}}
-<aside class="hidden lg:block w-full lg:w-[420px] shrink-0" aria-labelledby="browse-title">
+<aside class="hidden lg:block w-full {{ $width ?? 'lg:w-[420px]' }} shrink-0" aria-labelledby="browse-title">
     <div class="sticky top-32 space-y-6">
         <div class="rounded-xl">
             <h2 id="browse-title" class="text-xl font-bold border-b p-2 pb-2 border-gray-100 text-neutral-600">{{ __('theme::theme.program.browse') }} ({{ str_pad((string) count($items), 2, '0', STR_PAD_LEFT) }})</h2>

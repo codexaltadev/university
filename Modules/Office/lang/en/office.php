@@ -30,6 +30,7 @@ return [
     ],
 
     'fields' => [
+        'quick_links' => 'Quick Links',
         'name' => 'Name',
         'short_name' => 'Short name',
         'type' => 'Type',
@@ -58,6 +59,21 @@ return [
     ],
 
     'help' => [
+        'quick_links' => 'Shown on the office page under "Quick Links" (text and link, in order). Empty: Settings › Offices\' links.',
         'has_microsite' => 'Off: no website of its own — shown on /offices as a contact card.',
+    ],
+    'settings' => [
+        'page_quick_links' => 'Quick Links of an office page',
+        'page_quick_links_help' => 'For offices without Quick Links of their own.',
+    ],
+    'page' => [
+        'overview' => 'Overview',
+        'site_suffix' => ':name - :site',
+        'location' => 'Location', 'phone' => 'Phone', 'email' => 'Email', 'extension' => 'Extension', 'hours' => 'Office Hours',
+        'services_text' => 'What this office can do for you, and how.', 'all_services' => 'All Services',
+        'team' => 'Office Team', 'team_text' => 'Meet the officers and key personnel.', 'view_team' => 'View Full Team',
+        'team_members' => 'Office Team Members', 'team_members_text' => 'Meet the dedicated officers and staff members of this office.',
+        'no_team' => 'No team members found for this office.',
+        'faqs' => 'Frequently Asked Questions', 'faqs_text' => 'Quick answers to common questions.', 'all_faqs' => 'All FAQs',
     ],
 ];

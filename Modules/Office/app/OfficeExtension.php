@@ -10,6 +10,7 @@ use Modules\Office\Models\Office;
 use Modules\Office\Models\OfficeSection;
 use Modules\Office\Models\OfficeService;
 use Modules\Office\Models\OfficeSupportContact;
+use Modules\Office\Settings\OfficeSettings;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
 
@@ -35,5 +36,6 @@ final class OfficeExtension implements ModuleExtension
         $r->websitePage('office.index', label: 'office::office.plural', path: '/'.Office::LISTING);   // Menus › Module page
         $r->websitePage('office.services', label: 'office::office.services.plural', path: '/services');
         $r->websitePage('office.support', label: 'office::office.support.plural', path: '/support-contacts');
+        $r->settings(OfficeSettings::class);                      // default Quick Links of office pages
     }
 }

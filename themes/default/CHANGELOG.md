@@ -35,6 +35,9 @@
 - 4.4g: page templates as DIU's article page — `partials/page/hero`, `partials/page/body` with the
   `<diu-rich-html>` element (Bootstrap 5.0.2 in a shadow root, `public/css`); option
   `page_hero_image`; `images/page-hero.jpg`.
+- 4.4h: DIU office page — `modules/office/microsite/home` and `modules/office/team` on the Office
+  module's `$page` (Overview + contact cards, Head's message, Services, Office Team, Sections,
+  FAQs), `partials/office/member`; `diu/browse-sidebar` takes an optional `$width`.
 
 ## 1.0.0 — 2026-10-09
 

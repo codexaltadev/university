@@ -30,6 +30,7 @@ return [
     ],
 
     'fields' => [
+        'quick_links' => 'Quick Links',
         'name' => 'নাম',
         'short_name' => 'সংক্ষিপ্ত নাম',
         'type' => 'ধরন',
@@ -58,6 +59,21 @@ return [
     ],
 
     'help' => [
+        'quick_links' => 'Office page-এ "Quick Links"-এ দেখায় (লেখা ও link, এই ক্রমে)। খালি থাকলে Settings › Offices-এর link।',
         'has_microsite' => 'বন্ধ থাকলে নিজস্ব website নেই — /offices-এ যোগাযোগ card হিসেবে দেখাবে।',
+    ],
+    'settings' => [
+        'page_quick_links' => 'প্রতিটি Office page-এর Quick Links',
+        'page_quick_links_help' => 'যে office-এর নিজের Quick Links নেই তার জন্য।',
+    ],
+    'page' => [
+        'overview' => 'পরিচিতি',
+        'site_suffix' => ':name - :site',
+        'location' => 'অবস্থান', 'phone' => 'ফোন', 'email' => 'ইমেইল', 'extension' => 'এক্সটেনশন', 'hours' => 'অফিস সময়',
+        'services_text' => 'এই অফিস আপনার জন্য কী করে এবং কীভাবে।', 'all_services' => 'সব সেবা',
+        'team' => 'অফিসের সদস্য', 'team_text' => 'কর্মকর্তা ও গুরুত্বপূর্ণ সদস্যদের সাথে পরিচিত হোন।', 'view_team' => 'সবাইকে দেখুন',
+        'team_members' => 'অফিসের সকল সদস্য', 'team_members_text' => 'এই অফিসের কর্মকর্তা ও কর্মচারীদের সাথে পরিচিত হোন।',
+        'no_team' => 'এই অফিসের কোনো সদস্যের তথ্য নেই।',
+        'faqs' => 'সাধারণ প্রশ্নোত্তর', 'faqs_text' => 'প্রচলিত প্রশ্নের দ্রুত উত্তর।', 'all_faqs' => 'সব প্রশ্নোত্তর',
     ],
 ];

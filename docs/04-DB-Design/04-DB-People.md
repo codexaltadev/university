@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-04 |
-| Version | 1.5 — 2026-10-11 (v1.1): §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত); 2026-10-16 (v1.2): §4 Administration সরলীকরণ — contact visibility তিনটি column, campus ও user link পরে, Office scope, website গঠন; 2026-10-16 (v1.3): §6 Leadership — role holder / member, term-এর address, former, migration নেই; 2026-10-16 (v1.4): §7 Committee — is_active, Show in, PeopleManager note, website, term copy; 2026-10-16 (v1.5): §8 Alumni — is_active, contact switches, faculty member link পরে, Pride section, website |
+| Version | 1.6 — 2026-10-11 (v1.1): §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত); 2026-10-16 (v1.2): §4 Administration সরলীকরণ — contact visibility তিনটি column, campus ও user link পরে, Office scope, website গঠন; 2026-10-16 (v1.3): §6 Leadership — role holder / member, term-এর address, former, migration নেই; 2026-10-16 (v1.4): §7 Committee — is_active, Show in, PeopleManager note, website, term copy; 2026-10-16 (v1.5): §8 Alumni — is_active, contact switches, faculty member link পরে, Pride section, website; 2026-10-24 (v1.6, Phase 4.4h): §3.1 Office-এ `quick_links`, office page-এর default Quick Links Settings-এ (group `office`) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 3](../02-SRS/03-SRS-People.md), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -91,6 +91,7 @@ erDiagram
 | location | JSON | N, T | | |
 | campus_id | BIGINT UNSIGNED | N, IX | | Campus optional |
 | office_hours | JSON | N, T | | |
+| quick_links | JSON | N | | *(v1.6)* Office page-এর "Quick Links": `[{label: {en, bn}, url}]`, ক্রমে; form-এই দেওয়া হয় (LinkListField); খালি = Settings › Offices-এর |
 | has_microsite | TINYINT(1) | | 1 | বর্তমান `show_page` (FR-OFF-11) |
 | sort_order | INT UNSIGNED | | 0 | |
 | ⚙ | | | | |

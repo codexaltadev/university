@@ -2,13 +2,13 @@
     <x-platform::homepage :context="$context" /> — the homepage builder's sections in order
     (C-10). Each section uses its own view (theme override first), else the theme's
     sections/{key}, else a plain list; <x-theme::section> draws the frame around it.
-    No homepage of its own → the theme's partials/home-default (FR-HOME-08).
+    No homepage of its own (or one with no sections yet) → the module's default, else the theme's partials/home-default (FR-HOME-08).
 --}}
 @props(['context'])
 @php
     $sections = app(\Platform\Theme\SiteData::class)->get('homepage', $context);
 @endphp
-@if ($sections === null)
+@if (empty($sections))
     @php
         // A microsite without its own homepage: its module's default (FR-FAC-06), else the theme's
         $entityHome = $context->isMicrosite()

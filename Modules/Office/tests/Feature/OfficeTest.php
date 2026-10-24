@@ -8,6 +8,8 @@
 
 use Filament\Facades\Filament;
 use Livewire\Livewire;
+use Modules\Faq\Models\Faq;
+use Modules\Homepage\Support\Homepages;
 use Modules\Office\Database\Seeders\OfficeDatabaseSeeder;
 use Modules\Office\Filament\Resources\Offices\OfficeResource;
 use Modules\Office\Filament\Resources\Offices\Pages\EditOffice;
@@ -16,11 +18,13 @@ use Modules\Office\Filament\Resources\Offices\RelationManagers\SupportContactsRe
 use Modules\Office\Models\Office;
 use Modules\Office\Models\OfficeService;
 use Modules\Office\Models\OfficeSupportContact;
+use Modules\Office\Settings\OfficeSettings;
 use Platform\Assignments\AssignmentEngine;
 use Platform\Assignments\ManualPerson;
 use Platform\Assignments\RoleCatalog;
 use Platform\Modules\ModulePermissions;
 use Platform\Permissions\EntityPermissions;
+use Platform\Relations\RelationEngine;
 use Platform\Statistics\Statistics;
 use Platform\Taxonomy\Vocabularies;
 
@@ -56,8 +60,61 @@ it('lists offices by type, a contact card for one without its own page (FR-OFF-0
 });
 
 it('opens an office microsite with overview, services, team and contact (FR-OFF-10)', function () {
+    // The module's own page (any theme without its version)
+    $html = moduleView('Office', 'microsite.home', ['entity' => $this->registrar]);
+    expect($html)->toContain('Records and certificates.')->toContain('Building 1, Level 3')
+        ->and(strpos($html, 'Transcript issue'))->toBeLessThan(strpos($html, 'Ms. Akter'));
+
+    // Through the default theme (DIU's office page, plus the Head's message, services and sections)
+    $this->registrar->update(['head_message' => ['en' => '<p>Welcome to the Registrar Office.</p>'], 'office_hours' => ['en' => 'Sun–Thu 9am–5pm']]);
     $this->get($this->registrar->url())->assertOk()
-        ->assertSeeInOrder(['Registrar Office', 'Records and certificates.', 'Services', 'Transcript issue', 'Student ID card', '7 working days', 'Our team', 'Ms. Akter', 'Building 1, Level 3', 'registrar@example.edu']);
+        ->assertSeeInOrder(['Registrar Office', 'Browse by Section (01)', 'Overview', 'Quick Links', 'Records and certificates.', 'Building 1, Level 3',
+            'registrar@example.edu', 'Sun–Thu 9am–5pm', 'Welcome to the Registrar Office.', 'Services', 'Transcript issue', 'Student ID card', '7 working days', 'Office Team', 'Ms. Akter'])
+        ->assertSee('Registrar Office - ', false);
+});
+
+it('shows the whole team on /office/{slug}/team, the first few on the office page; none, no page (FR-OFF-05)', function () {
+    foreach (range(1, 5) as $i) {
+        app(AssignmentEngine::class)->assign(ManualPerson::create(['name' => ['en' => "Officer {$i}"], 'designation' => ['en' => 'Officer']]), $this->registrar, 'team');
+    }
+
+    $this->get($this->registrar->url())->assertOk()->assertSee('View Full Team')->assertSee($this->registrar->url().'/team', false)
+        ->assertSee('Officer 3')->assertDontSee('Officer 4');           // 4 on the page: Ms. Akter + 3
+    $this->get($this->registrar->url().'/team')->assertOk()
+        ->assertSeeInOrder(['Office Team Members', 'Ms. Akter', 'Officer 1', 'Officer 5']);
+
+    $empty = Office::create(['name' => ['en' => 'Library Office']]);
+    $this->get($empty->url().'/team')->assertNotFound();
+    $this->get($empty->url())->assertOk()->assertDontSee('View Full Team');
+});
+
+it('shows the office\'s FAQs, the first five, with a link to all (FR-OFF-10)', function () {
+    foreach (range(1, 6) as $i) {
+        $faq = Faq::factory()->create(['question' => ['en' => "Question {$i}?"], 'answer' => ['en' => "<p>Answer {$i}<script>x()</script></p>"]]);
+        app(RelationEngine::class)->sync($faq, [$this->registrar->getMorphClass().':'.$this->registrar->id], mainSite: false, user: null);
+    }
+
+    $this->get($this->registrar->url())->assertOk()
+        ->assertSeeInOrder(['Frequently Asked Questions', 'All FAQs', 'Question 1?', 'Answer 1', 'Question 5?'])
+        ->assertDontSee('Question 6?')->assertDontSee('<script>x()', false)
+        ->assertSee($this->registrar->url().'/faq', false);
+});
+
+it('takes Quick Links from the office, else Settings › Offices; an empty homepage still shows the office page', function () {
+    $this->get($this->registrar->url())->assertSeeInOrder(['Quick Links', 'Notice', 'Tuition Fees', 'Waiver Calculator'], false);   // DIU's defaults
+
+    settings()->saveFor(new OfficeSettings, ['page_quick_links' => [['label' => ['en' => 'Exam Schedule'], 'url' => '/exams']]]);
+    $this->get($this->registrar->url())->assertSee('Exam Schedule')->assertDontSee('Waiver Calculator');
+
+    $this->actingAs(superAdmin());
+    Livewire::test(EditOffice::class, ['record' => $this->registrar->getRouteKey()])
+        ->fillForm(['quick_links' => [['label' => ['en' => 'Certificate Verification'], 'url' => 'https://verify.example.edu']]])
+        ->call('save')->assertHasNoFormErrors();
+    $this->get($this->registrar->url())->assertSee('Certificate Verification')->assertSee('https://verify.example.edu', false)->assertDontSee('Exam Schedule');
+
+    // A homepage made in the builder but with no sections yet: the office page, not a blank one
+    app(Homepages::class)->create($this->registrar->getMorphClass().':'.$this->registrar->id);
+    $this->get($this->registrar->url())->assertOk()->assertSee('Records and certificates.');
 });
 
 it('shows every office\'s services and who to contact (FR-OFF-06/07)', function () {
