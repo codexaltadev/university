@@ -62,5 +62,13 @@ return [
     'settings' => [
         'per_page' => 'Posts per page',
         'show_author' => 'Show the author',
+        'page' => 'The news pages',
+        'page_help' => 'Texts of /news and of a post\'s page, as DIU News shows them. Empty: the theme\'s own.',
+        'latest_title' => '"Latest" heading', 'latest_text' => 'Text under "Latest"', 'all_title' => 'Title beside the list',
+        'explore_title' => 'Call under a post', 'explore_button' => 'Its button',
+    ],
+    'page' => [
+        'search' => 'Search', 'type_here' => 'Type Here', 'filter' => 'Filter by Category', 'all' => 'All News',
+        'hits' => 'Hit: :count', 'none' => 'No news found.', 'archive' => 'Archive',
     ],
 ];

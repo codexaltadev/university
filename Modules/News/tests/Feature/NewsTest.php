@@ -19,6 +19,7 @@ use Modules\News\Models\Post;
 use Modules\News\Sections\FeaturedNewsSection;
 use Modules\News\Sections\LatestNewsSection;
 use Modules\News\Sections\NewsByCategorySection;
+use Modules\News\Settings\NewsSettings;
 use Platform\Homepage\SectionContext;
 use Platform\Modules\ModulePermissions;
 use Platform\Relations\RelationEngine;
@@ -129,11 +130,11 @@ it('shows a post with its video, in the chosen detail layout, and counts the vie
     $this->get($base.'/news/'.$this->robot->slug(), ['User-Agent' => 'Mozilla/5.0'])->assertOk()
         ->assertSee('youtube-nocookie.com/embed/dQw4w9WgXcQ', false)
         ->assertSee('"@type":"NewsArticle"', false)
-        ->assertSee('max-width:860px', false)
+        ->assertSee('news-post--standard', false)
         ->assertSee('New CSE lab opens');                                                            // more news of this place
 
     settings()->save('layouts', ['news.detail' => ['layout' => 'full_width']]);
-    $this->get($base.'/news/'.$this->robot->slug())->assertOk()->assertDontSee('max-width:860px', false);
+    $this->get($base.'/news/'.$this->robot->slug())->assertOk()->assertDontSee('news-post--standard', false);
 
     expect(app(ViewCounter::class)->flush())->toBe(1);
 });
@@ -146,4 +147,19 @@ it('lists main-site news in the page block and in search, sitemap with their own
     expect(DB::table('core_search_index')->where('searchable_type', 'news.post')->where('searchable_id', $this->convocation->id)->value('published_at'))
         ->toStartWith('2026-04-15');                                                                 // the kernel reads active_at
     expect(collect(app(Sitemap::class)->entries())->pluck('loc')->implode(' '))->toContain('/news/'.$this->convocation->slug());
+});
+
+it('shows DIU News: "Latest" with the two newest, cards, "All News" with a search and the categories, a post with its hits and three more (Phase 4.5d)', function () {
+    $this->get('/news')->assertOk()
+        ->assertSeeInOrder(['Latest', 'Stay updated with DIU', 'Convocation 2026 held', 'Campus News', 'Apr 15, 2026', 'New CSE lab opens', 'All News', 'Search', 'Filter by Category', 'Campus News']);
+    $this->get('/news?category=campus-news')->assertOk()->assertDontSee('Stay updated with DIU')->assertSeeInOrder(['Convocation 2026 held', 'Campus News'])->assertDontSee('New CSE lab opens');
+
+    $this->get($this->convocation->url())->assertOk()
+        ->assertSeeInOrder(['News', 'Convocation 2026 held', 'Campus News', 'Apr 15, 2026', 'Hit:', 'Explore the Inspiring Stories and Events of DIU Campus', 'More News', 'New CSE lab opens']);
+
+    // The module's own pages (any theme without its version) keep their layouts
+    expect(moduleView('News', 'show', ['post' => $this->convocation, 'related' => collect(), 'layout' => 'standard', 'base' => '']))->toContain('max-width:860px');
+
+    settings()->saveFor(new NewsSettings, ['per_page' => 12, 'show_author' => true, 'latest_title' => ['en' => 'Newsroom'], 'all_title' => ['en' => 'Every Story']]);
+    $this->get('/news')->assertSee('Newsroom')->assertSee('Every Story')->assertDontSee('All News');
 });

@@ -62,5 +62,13 @@ return [
     'settings' => [
         'per_page' => 'প্রতি পাতায় কয়টি',
         'show_author' => 'লেখক দেখাবে',
+        'page' => 'সংবাদের পেজ',
+        'page_help' => '/news ও সংবাদের পেজের লেখা, DIU News-এর মতো। খালি: theme-এর নিজের।',
+        'latest_title' => '"সর্বশেষ" শিরোনাম', 'latest_text' => 'তার নিচের লেখা', 'all_title' => 'তালিকার পাশের শিরোনাম',
+        'explore_title' => 'সংবাদের নিচের আহ্বান', 'explore_button' => 'তার বোতাম',
+    ],
+    'page' => [
+        'search' => 'খুঁজুন', 'type_here' => 'এখানে লিখুন', 'filter' => 'ধরন অনুযায়ী', 'all' => 'সব সংবাদ',
+        'hits' => 'দেখা: :count', 'none' => 'কোনো সংবাদ নেই।', 'archive' => 'আর্কাইভ',
     ],
 ];

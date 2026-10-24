@@ -3,8 +3,10 @@
 namespace Modules\News\Providers;
 
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View;
 use Modules\News\Models\Post;
 use Modules\News\Policies\PostPolicy;
+use Modules\News\Support\NewsPage;
 use Modules\News\Support\NewsWebsite;
 use Platform\Context\SiteContext;
 use Platform\Modules\ModuleServiceProvider;
@@ -32,5 +34,8 @@ class NewsServiceProvider extends ModuleServiceProvider
         $this->app->make(Website::class)->handle(
             fn (string $rest, SiteContext $context, string $locale) => $this->app->make(NewsWebsite::class)->respond($rest, $context, $locale)
         );
+
+        // The news pages' parts for any theme's version of them (themes hold no PHP logic, T-1)
+        View::composer(['news::index', 'news::show'], fn ($view) => $view->with('page', new NewsPage($view->getData())));
     }
 }

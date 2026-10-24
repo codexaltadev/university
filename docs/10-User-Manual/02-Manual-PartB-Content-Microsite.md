@@ -83,6 +83,7 @@
 
 * Homepage-এ সামনে আনতে: **Highlight** (Part A §9)।
 * মূল website-এ চাইলে: **Request main site**।
+* Website-এ (DIU News-এর মতো) `/news`: প্রথম পাতায় **Latest** — বড় শিরোনাম, লেখা, নতুনতম দুটি সংবাদ; তারপর ছবির উপর category ও শিরোনামসহ card; পাশে **All News**, খোঁজা, **Filter by Category** ও মাস অনুযায়ী archive। সংবাদের পেজে ছবির উপর category, তারিখ ও **Hit** (কতবার পড়া), লেখা, তারপর হলুদ "Explore the Inspiring Stories…" ও আরও তিনটি সংবাদ। লেখাগুলো **Settings › News**-এ। Appearance › Layouts-এ news detail **Full width** দিলে DIU News-এর মতো চওড়া, **Standard** দিলে লেখা একটু সরু।
 
 ---
 
