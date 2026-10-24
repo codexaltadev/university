@@ -14,6 +14,7 @@ use Platform\Concerns\IsAssignable;
 use Platform\Concerns\IsAttachable;
 use Platform\Contracts\Scopeable;
 use Platform\Models\BaseModel;
+use Platform\Support\Countries;
 use Spatie\Translatable\HasTranslations;
 
 /**
@@ -75,6 +76,12 @@ class Testimonial extends BaseModel implements Scopeable
     public function person(): ?PersonView
     {
         return $this->people(self::ROLE)->first();
+    }
+
+    /** The writer's country when from abroad (an international voice); null for Bangladesh / not given */
+    public function countryAbroad(?string $locale = null): ?string
+    {
+        return Countries::isAbroad($this->country) ? Countries::name($this->country, $locale) : null;
     }
 
     public function photoUrl(): ?string

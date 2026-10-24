@@ -10,9 +10,12 @@ use Modules\Testimonials\Support\Authors;
 use Platform\Relations\RelationEngine;
 
 /**
- * S17M Testimonials (DB-05 v1.5 §6, §18): DIU's `testimonials` (all on a program) → shown in that
- * program (S06) and, as DIU lists them all on /testimonials, on the main site; the person → a manual person (name, designation, organization), their title
- * "designation, organization". They are graduates now working, so type "alumni". The older
+ * S17M Testimonials (DB-05 v1.12 §6, §18): DIU's `testimonials` (all on a program) → shown in that
+ * program (S06) and, as DIU lists them all on /testimonials, on the main site; the person → a
+ * manual person (name, designation, organization), their title "designation, organization". They
+ * are graduates now working, so type "alumni". DIU never chose testimonials for its homepage (no
+ * is_home — its homepage slider is its visitors), so the first of each program is highlighted on
+ * the main site as a first choice for "What People Say" (owner 2026-10-25). The older
  * `mba_testimonials` repeat the MBA ones: a row with a name already migrated is skipped, any
  * other goes to the same program. Photos wait for the files (S03). Run after S06.
  */
@@ -42,10 +45,13 @@ class S17Testimonials extends Step
         }
 
         $byName = [];   // name => program, for the MBA copies
+        $picked = [];   // program => homepage order: the first testimonial of each program is a first homepage choice (owner 2026-10-25)
         foreach ($this->rows('testimonials') as $row) {
             $program = $this->ids->record('department_program_type', $row->testimonialable_id, Program::class);
             $byName[mb_strtolower((string) Normalizer::text($row->name))] = $program;
-            $this->migrate('testimonials', $row, $row->quote, $row->designation, $row->organization, $program, (int) $row->sort_order, true);
+            $key = $program ? $program->getKey() : 0;
+            $home = $program && ! isset($picked[$key]) ? ($picked[$key] = count($picked) + 1) : null;
+            $this->migrate('testimonials', $row, $row->quote, $row->designation, $row->organization, $program, (int) $row->sort_order, true, $home);
         }
 
         if (Schema::connection('legacy')->hasTable('mba_testimonials')) {
@@ -64,7 +70,7 @@ class S17Testimonials extends Step
         $this->report->review('Testimonial photos wait for the files (S03); until then the website shows them without a photo.');
     }
 
-    protected function migrate(string $table, object $row, ?string $quote, ?string $designation, ?string $organization, mixed $program, int $order, bool $active): void
+    protected function migrate(string $table, object $row, ?string $quote, ?string $designation, ?string $organization, mixed $program, int $order, bool $active, ?int $home = null): void
     {
         $text = Normalizer::text(trim(strip_tags(html_entity_decode((string) $quote, ENT_QUOTES | ENT_HTML5)), " \u{201C}\u{201D}\"\n\r\t"));
         if (blank($text) || blank($row->name)) {
@@ -87,9 +93,10 @@ class S17Testimonials extends Step
             'testimonial_type' => 'alumni',
             'sort_order' => $order,
             'is_active' => $active,
-        ], after: function (Testimonial $testimonial) use ($person, $title, $program, $active): void {
+        ], after: function (Testimonial $testimonial) use ($person, $title, $program, $active, $home): void {
             app(Authors::class)->set($testimonial, $person, $title !== '' ? ['en' => $title] : null);
-            app(RelationEngine::class)->sync($testimonial, $program ? [$program->getMorphClass().':'.$program->getKey()] : [], mainSite: $active, user: null);   // DIU lists every testimonial on /testimonials
+            app(RelationEngine::class)->sync($testimonial, $program ? [$program->getMorphClass().':'.$program->getKey()] : [], mainSite: $active,
+                highlights: $active && $home !== null ? [RelationEngine::SITE_KEY => ['order' => $home]] : [], user: null);   // DIU lists every testimonial on /testimonials; a first set on the homepage
         });
     }
 }

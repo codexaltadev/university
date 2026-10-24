@@ -63,7 +63,8 @@
 - 4.5e+: testimonials ≠ visitors (owner) — section `visitors` (DIU's "Meet our distinguished …"
   slider, from the chosen visitors) beside `testimonials` ("What People Say", the chosen
   testimonials); `modules/international/visitors` (/visitors in DIU's testimonial look); a
-  testimonial's country shown when from abroad.
+  testimonial's country shown when from abroad. Section `testimonials` becomes DIU testimonial
+  cards (three columns, country when abroad), each opening its testimonial on /testimonials.
 
 ## 1.0.0 — 2026-10-09
 

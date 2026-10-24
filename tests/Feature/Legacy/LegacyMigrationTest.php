@@ -29,11 +29,14 @@ use Modules\Program\Models\ProgramMajor;
 use Modules\Program\Models\ProgramMaterial;
 use Modules\Program\Models\ProgramVariant;
 use Modules\Seo\Models\Redirect;
+use Modules\Testimonials\Models\Testimonial;
 use Modules\Tuition\Models\FeeCategory;
 use Modules\Tuition\Models\Tuition;
 use Modules\Tuition\Models\TuitionLine;
+use Platform\Assignments\RoleCatalog;
 use Platform\Media\MediaItem;
 use Platform\Media\MediaLibrary;
+use Platform\Relations\RelationEngine;
 use Platform\Statistics\Statistics;
 use Platform\Taxonomy\Term;
 use Platform\Taxonomy\Vocabularies;
@@ -56,6 +59,8 @@ function legacySchema(): void
         'faculties' => fn (Blueprint $t) => [$t->string('faculty_name'), $t->string('faculty_short_name'), $t->string('faculty_photo')->nullable(), $t->integer('faculty_serial')->nullable(), $t->text('faculty_content')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->tinyInteger('is_optional')->default(0), $t->tinyInteger('show_list')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'departments' => fn (Blueprint $t) => [$t->unsignedBigInteger('faculty_id'), $t->string('department_name'), $t->string('short_name'), $t->string('department_photo')->nullable(), $t->string('department_cover')->nullable(), $t->string('department_link')->nullable(), $t->integer('department_serial')->nullable(), $t->string('about_title')->nullable(), $t->text('department_content')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->timestamp('deleted_at')->nullable()],
         'events' => fn (Blueprint $t) => [$t->string('title')->nullable(), $t->longText('content')->nullable(), $t->date('event_date')->nullable(), $t->string('event_time')->nullable(), $t->string('location')->nullable(), $t->string('url')->nullable(), $t->string('photo')->nullable(), $t->unsignedBigInteger('department_id')->nullable(), $t->unsignedBigInteger('lab_facility_id')->nullable(), $t->unsignedBigInteger('event_category_id')->nullable(), $t->string('is_home')->default('0'), $t->tinyInteger('publication_status')->default(1), $t->timestamp('created_at')->nullable(), $t->timestamp('deleted_at')->nullable()],
+        'testimonials' => fn (Blueprint $t) => [$t->string('name'), $t->string('designation')->nullable(), $t->string('organization')->nullable(), $t->text('quote')->nullable(), $t->string('photo')->nullable(), $t->integer('sort_order')->default(0), $t->string('testimonialable_type')->nullable(), $t->unsignedBigInteger('testimonialable_id')->nullable()],
+        'mba_testimonials' => fn (Blueprint $t) => [$t->unsignedBigInteger('department_program_type_id')->nullable(), $t->string('name'), $t->string('batch')->nullable(), $t->string('photo')->nullable(), $t->text('description')->nullable(), $t->tinyInteger('publication_status')->default(1)],
         'notice_categories' => fn (Blueprint $t) => [$t->string('name'), $t->timestamp('deleted_at')->nullable()],
         'notices' => fn (Blueprint $t) => [$t->string('title')->nullable(), $t->string('slug')->nullable(), $t->longText('content')->nullable(), $t->unsignedBigInteger('department_id')->nullable(), $t->unsignedBigInteger('notice_category_id')->nullable(), $t->string('is_home')->default('0'), $t->integer('view_counter')->default(0), $t->tinyInteger('publication_status')->default(1), $t->timestamp('created_at')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'notice_files' => fn (Blueprint $t) => [$t->unsignedBigInteger('notice_id'), $t->string('file_title')->nullable(), $t->string('file_name')->nullable(), $t->timestamp('deleted_at')->nullable()],
@@ -388,6 +393,26 @@ it('migrates notices, keeps DIU\'s /noticeboard addresses and puts each notice\'
     $this->get('/noticeboard')->assertRedirect('/notices')->assertStatus(301);
     $this->get('/noticeboard/seat-plan-22-august')->assertRedirect($notice->url());
     $this->get($notice->url())->assertOk()->assertSeeInOrder(['View/Download', 'Seat plan, 22 August', 'Slot A', 'Slot C']);
+});
+
+it('migrates testimonials onto their program and the main site, the first of each program chosen for the homepage, MBA copies skipped (S17M)', function () {
+    $l = DB::connection('legacy');
+    $type = 'App\\Models\\DepartmentProgramType';
+    $l->table('testimonials')->insert([
+        ['id' => 1, 'name' => 'Abrar Fahim', 'designation' => 'Managing Director', 'organization' => 'Damson', 'quote' => '<p>DIU shaped me.</p>', 'testimonialable_type' => $type, 'testimonialable_id' => 44],
+        ['id' => 2, 'name' => 'Nisat Jebin', 'designation' => 'Engineer', 'organization' => null, 'quote' => '<p>Great teachers.</p>', 'testimonialable_type' => $type, 'testimonialable_id' => 44],
+    ]);
+    $l->table('mba_testimonials')->insert([['name' => 'Abrar Fahim', 'batch' => 'Managing Director', 'description' => '<p>Same person again.</p>']]);
+
+    app(RoleCatalog::class)->sync();   // the "author" role
+    $this->artisan('legacy:migrate', ['--step' => ['S04', 'S06', 'S17M'], '--no-report' => true])->assertSuccessful();
+
+    $engine = app(RelationEngine::class);
+    $all = Testimonial::query()->withoutGlobalScopes()->get();
+    $first = $all->first(fn ($t) => $t->quote === 'DIU shaped me.');
+    expect($all)->toHaveCount(2)                                                                   // the MBA copy skipped
+        ->and($all->every(fn ($t) => $engine->isOnMainSite($t)))->toBeTrue()
+        ->and($engine->for('site:0')->content(Testimonial::class)->highlighted(10)->pluck('id')->all())->toBe([$first->id]);
 });
 
 it('refuses to run without a step and when the legacy database is missing', function () {
