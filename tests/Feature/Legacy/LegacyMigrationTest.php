@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Legacy\Migration\Support\IdMap;
 use Legacy\Migration\Support\Normalizer;
 use Modules\Department\Models\Department;
+use Modules\Events\Models\Event;
 use Modules\Faculty\Models\Faculty;
 use Modules\Page\Models\Page;
 use Modules\Program\Database\Seeders\ProgramDatabaseSeeder;
@@ -26,6 +27,7 @@ use Modules\Program\Models\ProgramListItem;
 use Modules\Program\Models\ProgramMajor;
 use Modules\Program\Models\ProgramMaterial;
 use Modules\Program\Models\ProgramVariant;
+use Modules\Seo\Models\Redirect;
 use Modules\Tuition\Models\FeeCategory;
 use Modules\Tuition\Models\Tuition;
 use Modules\Tuition\Models\TuitionLine;
@@ -52,6 +54,7 @@ function legacySchema(): void
     $tables = [
         'faculties' => fn (Blueprint $t) => [$t->string('faculty_name'), $t->string('faculty_short_name'), $t->string('faculty_photo')->nullable(), $t->integer('faculty_serial')->nullable(), $t->text('faculty_content')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->tinyInteger('is_optional')->default(0), $t->tinyInteger('show_list')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'departments' => fn (Blueprint $t) => [$t->unsignedBigInteger('faculty_id'), $t->string('department_name'), $t->string('short_name'), $t->string('department_photo')->nullable(), $t->string('department_cover')->nullable(), $t->string('department_link')->nullable(), $t->integer('department_serial')->nullable(), $t->string('about_title')->nullable(), $t->text('department_content')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->timestamp('deleted_at')->nullable()],
+        'events' => fn (Blueprint $t) => [$t->string('title')->nullable(), $t->longText('content')->nullable(), $t->date('event_date')->nullable(), $t->string('event_time')->nullable(), $t->string('location')->nullable(), $t->string('url')->nullable(), $t->string('photo')->nullable(), $t->unsignedBigInteger('department_id')->nullable(), $t->unsignedBigInteger('lab_facility_id')->nullable(), $t->unsignedBigInteger('event_category_id')->nullable(), $t->string('is_home')->default('0'), $t->tinyInteger('publication_status')->default(1), $t->timestamp('created_at')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'articles' => fn (Blueprint $t) => [$t->string('article_title')->nullable(), $t->string('article_slug')->nullable(), $t->longText('article_content')->nullable(), $t->tinyInteger('publication_status')->default(1)],
         'program_major_categories' => fn (Blueprint $t) => [$t->string('title'), $t->text('description')->nullable()],
         'program_types' => fn (Blueprint $t) => [$t->integer('parent_id'), $t->string('program_name'), $t->tinyInteger('publication_status')->default(1), $t->timestamp('deleted_at')->nullable()],
@@ -341,6 +344,20 @@ it('migrates main-site articles under /article, keeping their address and Bootst
         ->assertSee('href="https://webbackend.daffodilvarsity.edu.bd/photos/cv.pdf"', false)
         ->assertSee('href="/article/visiting-professors"', false);                                       // page links stay
     $this->get('/article/old-draft')->assertNotFound();
+});
+
+it('migrates events and sends DIU\'s /events-detail/{id} to the event\'s page (S16E)', function () {
+    DB::connection('legacy')->table('events')->insert([
+        ['id' => 583, 'title' => 'Industry visit', 'content' => '<p>To the factory.</p>', 'event_date' => '2025-07-13', 'event_time' => '09:00:00', 'location' => 'Gazipur', 'is_home' => '1'],
+    ]);
+
+    $this->artisan('legacy:migrate', ['--step' => ['S16E'], '--no-report' => true])->assertSuccessful();
+    $this->artisan('legacy:migrate', ['--step' => ['S16E'], '--no-report' => true])->assertSuccessful();   // again: one redirect
+
+    $event = Event::query()->withoutGlobalScopes()->firstOrFail();
+    expect(Redirect::query()->where('source_path', '/events-detail/583')->count())->toBe(1);
+    $this->get('/events-detail/583')->assertRedirect($event->url())->assertStatus(301);
+    $this->get($event->url())->assertOk()->assertSee('To the factory.')->assertSee('Gazipur');
 });
 
 it('refuses to run without a step and when the legacy database is missing', function () {

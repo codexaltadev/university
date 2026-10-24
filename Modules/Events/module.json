@@ -32,6 +32,7 @@
         "provides": {
             "attachable": true,
             "assignable": true,
+            "settings": true,
             "searchable": true,
             "sitemap": true,
             "menu_item_types": true,

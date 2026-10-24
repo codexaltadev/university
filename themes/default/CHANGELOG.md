@@ -41,6 +41,10 @@
 - 4.4i: DIU lab pages — `modules/lab/listing` (/labs = Laboratory Facilities by faculty, a
   department's labs = its labs + the first one) and `modules/lab/microsite/home` on the Lab
   module's `$page`; `partials/lab/sidebar`, `partials/lab/details`; `wrench` icon.
+- 4.5a: DIU events — `modules/events/index` (search, Upcoming / Archive / Calendar, Select
+  Faculty, category chips, cards with dates) and `modules/events/show` (Event Details beside the
+  event) on the Events module's `$page`; `partials/diu/pagination`; `images/event-hero.jpg`;
+  icons `tag`, `calendar`, `archive`, `filter`.
 
 ## 1.0.0 — 2026-10-09
 

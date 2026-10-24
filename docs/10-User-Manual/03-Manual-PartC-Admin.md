@@ -154,7 +154,7 @@ Website: `/transport` (stop দিয়ে খোঁজা সহ); homepage-�
 
 **Settings › Accreditation & Ranking / International:** মেয়াদোত্তীর্ণ accreditation বা চুক্তি **লুকাবে** না **"মেয়াদোত্তীর্ণ" চিহ্নসহ দেখাবে**, আর মেয়াদ শেষের কত দিন আগে (default ৬০) admin-কে bell ও email-এ জানানো হবে।
 
-**Settings › Faculties / Programs / Offices / Labs:** `/faculties` ও `/programs` page-এর উপরের শিরোনাম, লেখা ও ছবি (খালি থাকলে theme-এর নিজের), বাম পাশের বাড়তি link (Faculty Members, International Advisor … / Institutional Programs …) আর Quick Links; Programs-এ প্রতিটি Program page-এর default Quick Links (যে Program-এর নিজের নেই); Offices-এ প্রতিটি Office page-এর default Quick Links (যে Office-এর নিজের নেই)। শুরুতে DIU-র এখনকার লেখা ও link দেওয়া থাকে। Labs-এ `/labs`-এর শিরোনাম, লেখা ও ছবি, আর department-এর ল্যাব পেজের দুটি লাইন (উপরেরটিতে `:department` = department-এর নাম)।
+**Settings › Faculties / Programs / Offices / Labs / Events:** `/faculties` ও `/programs` page-এর উপরের শিরোনাম, লেখা ও ছবি (খালি থাকলে theme-এর নিজের), বাম পাশের বাড়তি link (Faculty Members, International Advisor … / Institutional Programs …) আর Quick Links; Programs-এ প্রতিটি Program page-এর default Quick Links (যে Program-এর নিজের নেই); Offices-এ প্রতিটি Office page-এর default Quick Links (যে Office-এর নিজের নেই)। শুরুতে DIU-র এখনকার লেখা ও link দেওয়া থাকে। Labs-এ `/labs`-এর শিরোনাম, লেখা ও ছবি, আর department-এর ল্যাব পেজের দুটি লাইন (উপরেরটিতে `:department` = department-এর নাম)। Events-এ `/events`-এর শিরোনাম, লেখা, ছবি, শিরোনামের নিচের লাইন আর event-এর পেজের উপরের ছবি।
 
 **Settings › Newsletter:** প্রতি মিনিটে কত email যাবে (mail server-এর সীমার কম রাখুন), `/newsletter` পেজের লাইন, প্রতিটি email-এর নিচের নোট (ঠিকানা ইত্যাদি)।
 

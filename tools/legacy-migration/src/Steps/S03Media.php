@@ -49,6 +49,7 @@ class S03Media extends Step
             ['accreditation', 'rankings', 'logo', 'Modules\\Accreditation\\Models\\Ranking', 'logo'],
         ],
         'testimonials' => [['testimonials', 'testimonials', 'photo', 'Modules\\Testimonials\\Models\\Testimonial', 'photo']],
+        'events' => [['events', 'events', 'photo', 'Modules\\Events\\Models\\Event', 'featured_image']],
     ];
 
     /** Plan §3: at most 4 downloads at once, 3 tries */

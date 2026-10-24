@@ -96,7 +96,9 @@
 | Venue | স্থান; ঐচ্ছিক map link |
 | Speakers | **+ Add person** → directory থেকে খুঁজুন (Faculty Member, Administration …), না পেলে **Add new person** (নাম, পদবি, প্রতিষ্ঠান, ছবি) |
 | Registration link, Registration ends | শেষ তারিখ পেরোলে "Registration closed" নিজে থেকে |
-| Featured image | — |
+| Featured image | — (তালিকার card ও event-এর পেজের উপরের ছবি) |
+
+Website-এ (DIU-র মতো) `/events`: খোঁজা, **Upcoming Events / Archive Events / Calendar**, **Select Faculty** (সেই faculty বা তার department-এ দেখানো event, যা main site-এও আছে), ধরন থাকলে তার chip, তারপর তারিখসহ card। Event-এর পেজে ছবি, বিবরণ আর পাশে **Event Details** (department, তারিখ, সময়, স্থান, ধরন, faculty), registration / online / calendar-এর বোতাম, speaker ও ছবি। উপরের শিরোনাম, লেখা, ছবি ও শিরোনামের নিচের লাইন **Settings › Events**-এ। DIU-র পুরনো `/events-detail/{id}` ঠিকানা নিজে নতুনটিতে যায় (Site › Redirects)।
 
 **Event শেষে ছবি:** Event-টি edit করে **Gallery** tab-এ ছবি যোগ করুন — website-এ event page-এর নিচে gallery দেখাবে।
 

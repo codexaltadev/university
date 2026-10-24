@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Legacy\Migration\Support\IdMap;
 use Legacy\Migration\Support\Normalizer;
 use Legacy\Migration\Support\Report;
+use Modules\Seo\Support\Redirects;
 use Platform\Assignments\ManualPerson;
 use Platform\Localization\Languages;
 
@@ -178,5 +179,20 @@ abstract class Step
         if ($created) {
             $record->slugs()->where('is_current', false)->delete();
         }
+    }
+
+    /**
+     * DIU's old address of a record (/events-detail/669) → its page here, 301, as a Site › Redirects
+     * row that follows the record (P-15) — only when the SEO module is installed.
+     */
+    protected function oldAddress(string $path, Model $record): void
+    {
+        $class = 'Modules\\Seo\\Models\\Redirect';
+        if (! class_exists($class)) {
+            return;
+        }
+        $redirect = $class::query()->firstOrNew(['source_hash' => Redirects::hash(Redirects::normalize($path))]);
+        $redirect->fill(['source_path' => $path, 'destination_url' => null, 'target_type' => $record->getMorphClass(), 'target_id' => $record->getKey(),
+            'status_code' => 301, 'source' => 'import', 'is_active' => true])->save();
     }
 }

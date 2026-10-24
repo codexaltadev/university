@@ -3,6 +3,7 @@
 namespace Modules\Events\Support;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Carbon;
@@ -20,8 +21,9 @@ use Platform\Theme\LayoutResolver;
 /**
  * /events and /{entity}/events (FR-EVT-03): the place's events — tab Upcoming (with ongoing, by
  * start) or Past (newest first, AC-EVT-01) — as a list, cards, timeline or month calendar
- * (?month=2026-12); ?category=. /events/{slug} (and under a microsite): only where the event is
- * shown; .ics download (FR-EVT-07).
+ * (?month=2026-12); ?category=, ?q= (title, summary), ?faculty=fsit (main site: shown in that
+ * faculty or below it). /events/{slug} (and under a microsite): only where the event is shown;
+ * .ics download (FR-EVT-07).
  */
 class EventsWebsite
 {
@@ -88,15 +90,22 @@ class EventsWebsite
         $categories = $this->terms();
         $wanted = $request->query('category');
         $category = is_string($wanted) && $wanted !== '' ? $categories->first(fn (Term $t): bool => $t->slug($locale) === $wanted) : null;
+        $q = trim((string) $request->query('q'));
+        $faculty = $context->isMicrosite() ? null : static::faculty($request->query('faculty'));
         $filtered = fn (): Builder => $this->shown($context)
-            ->when($category, fn (Builder $query) => $query->whereHas('terms', fn (Builder $t) => $t->whereIn('core_terms.id', [$category->id, ...$category->descendantIds()])));
+            ->when($category, fn (Builder $query) => $query->whereHas('terms', fn (Builder $t) => $t->whereIn('core_terms.id', [$category->id, ...$category->descendantIds()])))
+            ->when($q !== '', fn (Builder $query) => $query->where(fn (Builder $w) => $w   // JSON text compares case-sensitively: lower both
+                ->whereRaw('LOWER(JSON_UNQUOTE(JSON_EXTRACT(title, ?))) LIKE ?', ['$."'.$locale.'"', '%'.mb_strtolower($q).'%'])
+                ->orWhereRaw('LOWER(JSON_UNQUOTE(JSON_EXTRACT(summary, ?))) LIKE ?', ['$."'.$locale.'"', '%'.mb_strtolower($q).'%'])))
+            ->when($faculty, fn (Builder $query) => $query->whereIn('events_events.id', app(RelationEngine::class)->for($faculty->getMorphClass().':'.$faculty->getKey())
+                ->content(Event::class)->includeDescendants(true)->query()->reorder()->select('events_events.id')));
 
         $view = $request->query('view');
         $layout = is_string($view) && in_array($view, self::VIEWS, true) ? $view : (app(LayoutResolver::class)->for('events.listing') ?? 'list');
         $layout = in_array($layout, self::VIEWS, true) ? $layout : 'list';
         $tab = $request->query('tab') === 'past' ? 'past' : 'upcoming';
 
-        $data = ['categories' => $categories->whereNull('parent_id')->values(), 'category' => $category, 'layout' => $layout, 'tab' => $tab, 'base' => $base];
+        $data = ['categories' => $categories->whereNull('parent_id')->values(), 'category' => $category, 'q' => $q, 'faculty' => $faculty, 'layout' => $layout, 'tab' => $tab, 'base' => $base];
 
         if ($layout === 'calendar') {
             $month = preg_match('/^\d{4}-\d{2}$/', (string) $request->query('month')) ? Carbon::createFromFormat('!Y-m', (string) $request->query('month')) : now()->startOfMonth();
@@ -133,6 +142,17 @@ class EventsWebsite
         }
 
         return array_values($weeks);
+    }
+
+    /** ?faculty=fsit: the Faculty by its short name (Faculty module optional) */
+    public static function faculty(mixed $wanted): ?Model
+    {
+        $class = 'Modules\\Faculty\\Models\\Faculty';
+        if (! is_string($wanted) || $wanted === '' || ! class_exists($class)) {
+            return null;
+        }
+
+        return $class::query()->frontendVisible()->whereRaw('LOWER(short_name) = ?', [mb_strtolower($wanted)])->first();
     }
 
     /** @return Collection<int, Term> in the vocabulary's order */

@@ -67,4 +67,20 @@ return [
         'no_start' => 'An event needs a start.',
         'end_before_start' => 'The end is before the start.',
     ],
+    'settings' => [
+        'listing' => 'The Events pages',
+        'listing_help' => 'Title, text and picture on top of /events, the line under its heading, and the picture on top of an event\'s page.',
+        'title' => 'Title', 'text' => 'Text', 'intro' => 'Line under the heading', 'image' => 'Picture',
+        'event_image' => 'Picture on top of an event\'s page', 'event_image_help' => 'Empty: the theme\'s own.',
+    ],
+    'page' => [
+        'upcoming' => 'Upcoming Events', 'archive' => 'Archive Events', 'calendar' => 'Calendar',
+        'upcoming_short' => 'Upcoming', 'archive_short' => 'Archive',
+        'search' => 'Search For Event...', 'select_faculty' => 'Select Faculty', 'all_faculties' => 'All Faculties',
+        'active' => 'Active filters:', 'search_for' => 'Search: ":q"', 'faculty_is' => 'Faculty: :name',
+        'details' => 'Event Details', 'department' => 'Department', 'date' => 'Date', 'time' => 'Time',
+        'location' => 'Location', 'category' => 'Category', 'faculty' => 'Faculty', 'shown_in' => 'Organised by',
+        'no_content' => 'No content available for this event.', 'none' => 'No events found.',
+        'previous' => 'Previous', 'next' => 'Next',
+    ],
 ];

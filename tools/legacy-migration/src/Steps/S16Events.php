@@ -15,7 +15,8 @@ use Platform\Taxonomy\Vocabularies;
  * S16E Events (DB-05 v1.3 §4, §18): DIU's `events` — `event_date` + `event_time` → starts_at (no
  * time = all day), shown in their department (S04), on the main site when `is_home` (Q-26),
  * `location` → venue, `url` → registration link (checked by hand), category from
- * `event_categories` when there. Events without a title are left out; lab events wait for the
+ * `event_categories` when there; DIU's address /events-detail/{id} → a 301 redirect (Site ›
+ * Redirects). Events without a title are left out; lab events wait for the
  * Lab module; `event_images` and photos for the files (S03). Run after S04.
  */
 class S16Events extends Step
@@ -75,6 +76,7 @@ class S16Events extends Step
             ], after: function (Event $event) use ($row, $department, $categories, $engine): void {
                 $event->syncTerms(Event::CATEGORY, array_filter([$categories[$row->event_category_id] ?? null]));
                 $engine->sync($event, $department ? [$department->getMorphClass().':'.$department->getKey()] : [], mainSite: (string) $row->is_home === '1', user: null);
+                $this->oldAddress('/events-detail/'.$row->id, $event);   // DIU's event address
             });
         }
 

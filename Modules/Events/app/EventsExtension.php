@@ -8,6 +8,7 @@ use Modules\Events\Metrics\EventsCount;
 use Modules\Events\Models\Event;
 use Modules\Events\Sections\PastEventsSection;
 use Modules\Events\Sections\UpcomingEventsSection;
+use Modules\Events\Settings\EventsSettings;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
 
@@ -32,5 +33,6 @@ final class EventsExtension implements ModuleExtension
         $r->sitemap(Event::class);
         $r->menuItemType(Event::class);
         $r->layouts('events.listing', ['list', 'cards', 'timeline', 'calendar']);                 // FR-EVT-03; first = default
+        $r->settings(EventsSettings::class);                                                      // the events pages' own text
     }
 }

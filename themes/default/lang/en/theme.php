@@ -27,6 +27,7 @@ return [
     'services' => 'Services',
     'quick_links' => 'Quick Links',
     'home' => 'Home',
+    'pagination' => 'Pages',
     'programs' => [
         'title' => 'Explore Our Offerings',
         'subtitle' => 'Browse 51 undergraduate and graduate programs across six DIU faculties—complete with admissions requirements, scholarship and financial-aid details, plus executive certificates and online courses for lifelong learners.',

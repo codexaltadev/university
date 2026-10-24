@@ -16,6 +16,7 @@ use Modules\Department\Models\Department;
 use Modules\Events\Models\Event;
 use Modules\Events\Sections\PastEventsSection;
 use Modules\Events\Sections\UpcomingEventsSection;
+use Modules\Events\Settings\EventsSettings;
 use Modules\Faculty\Models\Faculty;
 use Platform\Assignments\AssignmentEngine;
 use Platform\Assignments\RoleCatalog;
@@ -117,4 +118,30 @@ it('lists speakers from any directory (FR-EVT-04)', function () {
 it('puts events in search and the sitemap', function () {
     expect(collect(app(Sitemap::class)->entries())->pluck('loc')->implode(' '))->toContain($this->hackathon->url())->not->toContain($this->seminar->slug().'"')
         ->and($this->hackathon->toSearchDocument('en'))->toMatchArray(['title' => 'Spring Hackathon']);
+});
+
+it('shows DIU\'s events page: search, Upcoming / Archive, a faculty, cards with dates (Phase 4.5a)', function () {
+    $faculty = Faculty::query()->find($this->cse->faculty_id);
+    $faculty->update(['short_name' => 'FSIT', 'show_in_listing' => true]);
+    $this->engine->sync($this->hackathon, ['department.department:'.$this->cse->id], mainSite: true, user: null);
+
+    $this->get('/events')->assertOk()
+        ->assertSeeInOrder(['Explore Our Events', 'Search For Event...', 'Upcoming Events', 'Archive Events', 'Select Faculty', $faculty->name, 'Upcoming Events', 'Career Fair', '2026-11-10', 'Spring Hackathon', '2026-11-20']);
+    $this->get('/events?q=hack')->assertOk()->assertSee('Spring Hackathon')->assertDontSee('Career Fair')->assertSee('Search: &quot;hack&quot;', false);
+    $this->get('/events?faculty=fsit')->assertOk()->assertSee('Spring Hackathon')->assertDontSee('Career Fair')->assertDontSee('CSE AI Seminar');   // only what the main site shows
+    $this->get('/events?tab=past&q=nothing-like-this')->assertOk()->assertSee('No events found.');
+
+    // The module's own listing (any theme without its version) keeps its layouts
+    expect(moduleView('Events', 'index', ['events' => Event::query()->paginate(), 'categories' => collect(), 'category' => null, 'q' => '', 'faculty' => null, 'layout' => 'list', 'tab' => 'upcoming', 'month' => null, 'weeks' => [], 'base' => '']))
+        ->toContain('Spring Hackathon');
+});
+
+it('shows an event\'s details beside it as DIU does, and takes the page texts from Settings › Events', function () {
+    $this->engine->sync($this->hackathon, ['department.department:'.$this->cse->id], mainSite: true, user: null);
+
+    $this->get($this->hackathon->url())->assertOk()
+        ->assertSeeInOrder(['Spring Hackathon', 'Event Details', 'Department', $this->cse->name, 'Date', 'November 20, 2026 – November 21, 2026', 'Time', '10:00 AM', 'Location', 'Auditorium', 'Faculty']);
+
+    settings()->saveFor(new EventsSettings, ['listing_title' => ['en' => 'What\'s On'], 'intro' => ['en' => 'Come along.']]);
+    $this->get('/events')->assertSee('What&#039;s On', false)->assertSee('Come along.')->assertDontSee('Explore Our Events');
 });
