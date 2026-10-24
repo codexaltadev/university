@@ -25,11 +25,17 @@ class LabWebsite
 {
     public const VIEWS = ['grid', 'list', 'cards'];
 
+    /** DIU's old addresses: /lab-facilities, /lab-facilities/{department}, /lab-facilities/{department}/{lab} */
+    public const DIU = 'lab-facilities';
+
     public function respond(string $rest, SiteContext $context, string $locale): Response|RedirectResponse|null
     {
         $rest = trim($rest, '/');
         if ($context->isMicrosite() && $context->entity instanceof Lab) {
             return $this->inLab($context->entity, $rest, $locale);
+        }
+        if (! $context->isMicrosite() && ($rest === self::DIU || str_starts_with($rest, self::DIU.'/'))) {
+            return $this->fromDiu(substr($rest, strlen(self::DIU) + 1), $locale);
         }
         if ($rest !== Lab::LISTING) {
             return null;
@@ -63,8 +69,23 @@ class LabWebsite
 
         return response()->view('lab::listing', [
             'labs' => $shown, 'types' => $types, 'type' => $type, 'departments' => $departments, 'department' => $dept, 'q' => $q,
-            'layout' => in_array($layout, self::VIEWS, true) ? $layout : 'grid',
+            'place' => $department, 'layout' => in_array($layout, self::VIEWS, true) ? $layout : 'grid',
         ]);
+    }
+
+    /** DIU's old /lab-facilities addresses → ours, 301 (links and bookmarks keep working) */
+    protected function fromDiu(string $rest, string $locale): ?RedirectResponse
+    {
+        [$dept, $slug] = array_pad(explode('/', trim($rest, '/'), 2), 2, null);
+        if (blank($dept)) {
+            return redirect(url('/'.Lab::LISTING), 301);
+        }
+        if (filled($slug) && ($found = Lab::findBySlug((string) $slug, $locale)) && ($url = $found[0]->url())) {
+            return redirect(url($url), 301);
+        }
+        $department = class_exists(Lab::DEPARTMENT) ? (Lab::DEPARTMENT)::query()->whereRaw('LOWER(short_name) = ?', [mb_strtolower((string) $dept)])->first() : null;
+
+        return $department ? redirect(LabsPage::departmentUrl($department), 301) : null;
     }
 
     protected function inLab(Lab $lab, string $rest, string $locale): Response|RedirectResponse|null

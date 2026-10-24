@@ -48,4 +48,16 @@ return [
         'url' => 'Give an address starting with https:// or http://.',
         'item_type' => 'Choose equipment, scope, project or product.',
     ],
+    'settings' => [
+        'listing' => 'The Labs pages (/labs and a department\'s labs)',
+        'listing_help' => 'Title, text and picture on top of /labs, and the lines of a department\'s labs page.',
+        'title' => 'Title', 'text' => 'Text', 'image' => 'Picture',
+        'department_hero' => 'Hero line of a department\'s labs', 'department_hero_help' => ':department = the department\'s name.',
+        'department_text' => 'Line under the department\'s name',
+    ],
+    'page' => [
+        'laboratory' => 'Laboratory', 'laboratories' => 'Laboratories', 'view_labs' => 'View Labs', 'current' => 'Current selection',
+        'location' => 'Location', 'instruments' => 'Instruments', 'assigned' => 'Assigned Person', 'gallery' => 'Gallery',
+        'explore' => 'Explore the lab', 'contact' => 'Contact', 'website' => 'Website', 'video' => 'Video', 'other_labs' => 'Other labs', 'scroll' => 'Scroll for more facilities',
+    ],
 ];

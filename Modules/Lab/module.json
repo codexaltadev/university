@@ -36,6 +36,7 @@
             "dynamic_permissions": true,
             "searchable": true,
             "website_pages": true,
+            "settings": true,
             "metrics": [
                 "lab.count",
                 "lab.equipment",

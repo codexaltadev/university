@@ -38,6 +38,9 @@
 - 4.4h: DIU office page — `modules/office/microsite/home` and `modules/office/team` on the Office
   module's `$page` (Overview + contact cards, Head's message, Services, Office Team, Sections,
   FAQs), `partials/office/member`; `diu/browse-sidebar` takes an optional `$width`.
+- 4.4i: DIU lab pages — `modules/lab/listing` (/labs = Laboratory Facilities by faculty, a
+  department's labs = its labs + the first one) and `modules/lab/microsite/home` on the Lab
+  module's `$page`; `partials/lab/sidebar`, `partials/lab/details`; `wrench` icon.
 
 ## 1.0.0 — 2026-10-09
 
