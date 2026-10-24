@@ -21,7 +21,9 @@
         "license": "proprietary",
         "table_prefix": "facilities_",
         "dependencies": {},
-        "optional_dependencies": [],
+        "optional_dependencies": [
+            "program"
+        ],
         "morph_aliases": {
             "facilities.facility": "Modules\\Facilities\\Models\\Facility"
         },
@@ -39,7 +41,8 @@
             ],
             "layouts": [
                 "facilities.listing"
-            ]
+            ],
+            "entity_tabs": true
         }
     }
 }

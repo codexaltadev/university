@@ -46,6 +46,10 @@ return [
         'materials' => 'Learning Material',
         'memberships' => 'Professional Membership',
         'variants' => 'Program-এর অন্যান্য রূপ',
+        'eligibility' => 'ভর্তির যোগ্যতা',
+        'accreditation' => 'Accreditation',
+        'facilities' => 'সুযোগ-সুবিধা',
+        'testimonials' => 'Testimonial',
     ],
     'facilitator_types' => [
         'industry_expert' => 'Industry expert',
@@ -56,6 +60,7 @@ return [
     'view_all' => 'সব Program',
     'overview' => 'পরিচিতি',
     'objective' => 'Program-এর উদ্দেশ্য',
+    'credit_duration' => 'Credit ও সময়কাল',
     'eligibility' => 'ভর্তির যোগ্যতা',
     'eligibility_english_medium' => 'English medium (O / A Level)',
     'apply' => 'আবেদন করুন',
@@ -94,10 +99,12 @@ return [
         'admission' => 'ভর্তি ও যোগ্যতা',
         'media' => 'ছবি ও file',
         'intros' => 'Section-এর ভূমিকা',
+        'other_intros' => 'অন্য module-এর অংশের ভূমিকা',
         'featured' => 'নির্বাচিত Program',
         'by_level' => 'Level অনুযায়ী Program',
     ],
     'fields' => [
+        'quick_links' => 'Quick Links',
         'faculty' => 'Faculty',
         'department' => 'Department',
         'level' => 'Level',
@@ -108,6 +115,7 @@ return [
         'duration_label' => 'সময়কাল (যেভাবে দেখাবে)',
         'summary' => 'সারসংক্ষেপ',
         'objective' => 'Program-এর উদ্দেশ্য',
+        'credit_duration' => 'Credit ও সময়কাল (লেখা)',
         'eligibility_general' => 'ভর্তির যোগ্যতা',
         'eligibility_english_medium' => 'ভর্তির যোগ্যতা — English medium (O / A Level)',
         'eligibility_rules' => 'যোগ্যতার নিয়ম',
@@ -152,6 +160,7 @@ return [
         'intro' => 'ভূমিকা',
     ],
     'help' => [
+        'quick_links' => 'এর page-এ "Quick Links"-এ দেখায় (লেখা ও link, এই ক্রমে)। খালি থাকলে কিছু দেখায় না।',
         'department_move' => 'অন্য Department-এ সরালে কে edit করতে পারবে এবং কোন menu পাবে তা বদলে যাবে।',
         'eligibility_rules' => 'Structured ন্যূনতম মান, যেমন "min_gpa_ssc" = 2.5।',
         'show_in_listing' => 'বন্ধ: /programs ও Program section-এ থাকবে না, তবে নিজের address কাজ করবে।',
@@ -163,5 +172,14 @@ return [
     ],
     'actions' => [
         'view_site' => 'Microsite দেখুন',
+    ],
+    'settings' => [
+        'listing' => 'Program page (/programs)',
+        'listing_help' => 'উপরের শিরোনাম, লেখা ও ছবি। খালি থাকলে theme-এর নিজের লেখা।',
+        'title' => 'শিরোনাম', 'text' => 'লেখা', 'image' => 'ছবি',
+        'side_links' => 'Faculty-তালিকার নিচের link',
+        'side_links_help' => '"Browse by Faculty"-এ faculty-গুলোর পরে (Institutional Programs …)।',
+        'page_quick_links' => 'প্রতিটি Program page-এর Quick Links',
+        'page_quick_links_help' => 'যে Program-এর নিজের Quick Links নেই তার জন্য।',
     ],
 ];

@@ -18,6 +18,7 @@ return [
         'pictures' => 'ছবি',
     ],
     'fields' => [
+        'quick_links' => 'Quick Links',
         'faculty' => 'Faculty',
         'name' => 'নাম',
         'short_name' => 'সংক্ষিপ্ত নাম',
@@ -37,6 +38,7 @@ return [
         'section_limit' => 'কয়টি',
     ],
     'help' => [
+        'quick_links' => 'এর page-এ "Quick Links"-এ দেখায় (লেখা ও link, এই ক্রমে)। খালি থাকলে কিছু দেখায় না।',
         'faculty_move' => 'অন্য Faculty-তে সরালে কে edit করতে পারবে এবং কোন menu পাবে তা বদলে যাবে।',
         'external_url' => 'থাকলে Department তালিকা microsite-এর বদলে এখানে নিয়ে যাবে।',
         'show_in_listing' => 'বন্ধ: /departments ও "Department সমূহ"-তে থাকবে না, তবে নিজের address কাজ করবে।',

@@ -350,7 +350,7 @@ Program খুললে বাম দিকে একই অংশগুলো �
 | অংশ | কী আছে |
 |---|---|
 | **Basic info** | নাম, subtitle, degree, Department, **Level** (Undergraduate / Graduate / Diploma / Post Graduate Diploma), short name, web address, Tags, ছবি, video, brochure, প্রকাশ |
-| **Program details** | Summary, objective, মেয়াদ, মোট credit, semester, medium, shift, class mode, পরবর্তী ভর্তির তারিখ, Apply link |
+| **Program details** | Summary, objective, **Credit ও সময়কাল (লেখা)**, মেয়াদ, মোট credit, semester, medium, shift, class mode, পরবর্তী ভর্তির তারিখ, Apply link; নিচে "অন্য module-এর অংশের ভূমিকা" (Accreditation, সুযোগ-সুবিধা, Testimonial) |
 | **Eligibility** | ভর্তির যোগ্যতা — General ও English-medium আলাদা |
 | **Majors** | Major / specialization তালিকা (**Add major**) |
 | **Program options** | Dual degree, Evening ইত্যাদি — না থাকলে খালি রাখুন |
@@ -359,8 +359,10 @@ Program খুললে বাম দিকে একই অংশগুলো �
 | **Materials & memberships** | Learning material, professional membership / accreditation |
 | **Summary & SEO** | ছোট সারসংক্ষেপ, search engine-এর জন্য তথ্য |
 
-* প্রতিটি list-এর উপরে ঐচ্ছিক **intro text** — website-এ সেই অংশের শুরুতে দেখায়।
+* প্রতিটি list-এর উপরে (এবং Eligibility-তে) ঐচ্ছিক **intro text** — website-এ সেই অংশের শুরুতে দেখায়।
+* Website-এ Program page-এর "Program Overview"-তে দেখায় **objective** ও **Credit ও সময়কাল**; দুটোই খালি থাকলে Summary। বাম পাশের "Browse by Section"-এ শুধু যে অংশে কিছু আছে সেগুলোই থাকে; Brochure ও Learning material থাকে "Downloadable Materials"-এ, আর উপরের **Apply Now** যায় Program-এর Apply link-এ (না থাকলে সাধারণ ভর্তির link)।
 * list-এর item ⠿ দিয়ে টেনে ক্রম বদলান; item-এ click করলে খোলে।
+* **Quick Links** — Faculty, Department ও Program form-এ (Program-এ "Materials & memberships" অংশে): লেখা (প্রতি ভাষায়) ও link, ⠿ দিয়ে ক্রম। এগুলো সেই page-এর "Quick Links"-এ দেখায়। Program-এ খালি রাখলে **Settings › Programs**-এর "প্রতিটি Program page-এর Quick Links" দেখায়; Faculty / Department-এ খালি রাখলে Homepage builder-এর section-এর link।
 * Department user নাম, short name, web address, Department ও Active বদলাতে পারেন না — Admin পারেন।
 * যাঁদের শুধু দেখার অনুমতি (যেমন Admission Office), তাঁরা একই page read-only দেখেন।
 * **Tuition Fees** বাম দিকের অংশগুলোর একদম নিচে — শুধু দেখা যায়। যোগ বা বদল **Academic › Tuition Fees**-এ (Admission Office); অনুমতি থাকলে এখানে "Add tuition fee" ও প্রতিটির link থাকে। Waiver rule **Academic › Waiver Calculator**-এ।

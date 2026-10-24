@@ -48,6 +48,39 @@ if (! function_exists('theme_image')) {
     }
 }
 
+if (! function_exists('media_url')) {
+    /** media_url($id, 'large') — address of a Media Library item (a MediaPicker value: id or list of ids), or null. */
+    function media_url(int|string|array|null $id, ?string $conversion = null): ?string
+    {
+        $id = is_array($id) ? reset($id) : $id;
+        $media = $id ? MediaItem::query()->where('is_active', true)->find($id) : null;
+
+        return $media?->url($conversion);
+    }
+}
+
+if (! function_exists('link_list')) {
+    /**
+     * link_list($faculty->quick_links) — a LinkListField value ([{label: {en, bn}, url}]) as
+     * [['label' => in the current language, 'url' => full address]]; rows without a label or address are left out.
+     *
+     * @return list<array{label: string, url: string}>
+     */
+    function link_list(?array $items): array
+    {
+        $out = [];
+        foreach ($items ?? [] as $item) {
+            $label = app(Settings::class)->translate($item['label'] ?? null);
+            $url = trim((string) ($item['url'] ?? ''));
+            if (filled($label) && $url !== '') {
+                $out[] = ['label' => (string) $label, 'url' => preg_match('#^(https?:|mailto:|tel:|\#)#i', $url) ? $url : url($url)];
+            }
+        }
+
+        return $out;
+    }
+}
+
 if (! function_exists('module_asset')) {
     /** module_asset('documents', 'pdfjs/pdf.min.mjs') — a module's own public file (SAD Part A §9), versioned. */
     function module_asset(string $slug, string $path): string

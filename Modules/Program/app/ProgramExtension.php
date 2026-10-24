@@ -13,6 +13,7 @@ use Modules\Program\Metrics\ProgramCount;
 use Modules\Program\Models\Program;
 use Modules\Program\Sections\FeaturedProgramsSection;
 use Modules\Program\Sections\ProgramsByLevelSection;
+use Modules\Program\Settings\ProgramSettings;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
 
@@ -41,6 +42,7 @@ final class ProgramExtension implements ModuleExtension
         $r->homepageSection(ProgramsByLevelSection::class);
         $r->searchable(Program::class, label: 'program::program.plural', weight: 9);
         $r->sitemap(Program::class);
+        $r->settings(ProgramSettings::class);                                       // /programs page text and links, program pages' Quick Links
         $r->entityFormPart(Department::class, DepartmentProgramsPart::class);   // editors' "Programs" (read only)
         $r->entityFormPart(Faculty::class, FacultyProgramsPart::class);
     }

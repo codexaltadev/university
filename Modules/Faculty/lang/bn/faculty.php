@@ -16,6 +16,7 @@ return [
         'pictures' => 'ছবি',
     ],
     'fields' => [
+        'quick_links' => 'Quick Links',
         'name' => 'নাম',
         'short_name' => 'সংক্ষিপ্ত নাম',
         'overview' => 'পরিচিতি',
@@ -31,9 +32,17 @@ return [
         'section_limit' => 'কয়টি',
     ],
     'help' => [
+        'quick_links' => 'এর page-এ "Quick Links"-এ দেখায় (লেখা ও link, এই ক্রমে)। খালি থাকলে কিছু দেখায় না।',
         'show_in_listing' => 'বন্ধ: /faculties ও "আমাদের Faculty সমূহ"-তে থাকবে না, তবে নিজের address কাজ করবে।',
     ],
     'actions' => [
         'view_site' => 'Microsite দেখুন',
+    ],
+    'settings' => [
+        'listing' => 'Faculty page (/faculties)',
+        'listing_help' => 'উপরের শিরোনাম, লেখা ও ছবি। খালি থাকলে theme-এর নিজের লেখা।',
+        'title' => 'শিরোনাম', 'text' => 'লেখা', 'image' => 'ছবি',
+        'side_links' => 'Faculty-তালিকার পাশের link',
+        'side_links_help' => 'Faculties / Deans / Department Heads-এর নিচে (Faculty Members, International Advisor …)।',
     ],
 ];

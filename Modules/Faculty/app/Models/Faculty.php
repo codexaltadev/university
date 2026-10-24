@@ -46,7 +46,7 @@ class Faculty extends BaseModel implements Scopeable
 
     protected $table = 'faculty_faculties';
 
-    protected $fillable = ['name', 'short_name', 'overview', 'dean_message', 'email', 'phone', 'location', 'campus_id', 'show_in_listing', 'sort_order', 'is_active'];
+    protected $fillable = ['name', 'short_name', 'overview', 'dean_message', 'email', 'phone', 'location', 'quick_links', 'campus_id', 'show_in_listing', 'sort_order', 'is_active'];
 
     public array $translatable = ['name', 'overview', 'dean_message', 'location'];
 
@@ -54,7 +54,7 @@ class Faculty extends BaseModel implements Scopeable
 
     protected function casts(): array
     {
-        return ['show_in_listing' => 'boolean', 'campus_id' => 'integer'];
+        return ['show_in_listing' => 'boolean', 'campus_id' => 'integer', 'quick_links' => 'array'];
     }
 
     /** FR-FAC-09: listed on /faculties and in "Our Faculties"; hidden ones keep their own address. */

@@ -61,13 +61,13 @@ class Program extends BaseModel implements Scopeable
     protected $fillable = [
         'department_id', 'level_term_id', 'name', 'short_name', 'subtitle', 'degree_name',
         'total_credits', 'duration_years', 'total_terms', 'duration_label', 'medium', 'shift', 'class_mode',
-        'summary', 'objective', 'section_intros', 'ai_summary', 'ai_short_summary',
+        'summary', 'objective', 'credit_duration', 'section_intros', 'ai_summary', 'ai_short_summary',
         'eligibility_general', 'eligibility_english_medium', 'eligibility_rules',
-        'next_intake_on', 'application_url', 'video_url', 'show_in_listing', 'sort_order', 'published_at', 'is_active',
+        'next_intake_on', 'application_url', 'video_url', 'quick_links', 'show_in_listing', 'sort_order', 'published_at', 'is_active',
     ];
 
     public array $translatable = [
-        'name', 'subtitle', 'degree_name', 'duration_label', 'summary', 'objective', 'section_intros',
+        'name', 'subtitle', 'degree_name', 'duration_label', 'summary', 'objective', 'credit_duration', 'section_intros',
         'ai_summary', 'ai_short_summary', 'eligibility_general', 'eligibility_english_medium',
     ];
 
@@ -82,6 +82,7 @@ class Program extends BaseModel implements Scopeable
             'duration_years' => 'decimal:1',
             'total_terms' => 'integer',
             'eligibility_rules' => 'array',
+            'quick_links' => 'array',
             'next_intake_on' => 'date',
             'show_in_listing' => 'boolean',
         ];

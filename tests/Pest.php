@@ -60,6 +60,17 @@ function superAdmin(): User
     return makeUser(role: config('filament-shield.super_admin.name'));
 }
 
+/**
+ * A module's own view, rendered past the active theme's override of it (FR-THEME-10) —
+ * what themes without their own version show. Render a page first so the theme is applied.
+ *
+ * @param  array<string, mixed>  $data
+ */
+function moduleView(string $module, string $view, array $data = []): string
+{
+    return view()->file(module_path($module, 'resources/views/'.str_replace('.', '/', $view).'.blade.php'), $data)->render();
+}
+
 /** Faculty-like test entity ("test.parent"). */
 function faculty(string $name = 'Engineering'): FixtureParent
 {

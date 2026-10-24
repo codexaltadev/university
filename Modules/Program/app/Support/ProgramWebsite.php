@@ -45,7 +45,9 @@ class ProgramWebsite
             'q' => is_string($query['q'] ?? null) ? mb_substr(trim($query['q']), 0, 100) : null,
         ];
 
-        $programs = Program::query()->listed()->with(['department.faculty', 'level'])
+        $listed = fn () => Program::query()->listed()->with(['department.faculty', 'level']);
+        $filtered = array_filter([$selected['faculty'], $selected['department'], $selected['level'], $selected['shift'], $selected['mode'], $selected['q']]) !== [];
+        $programs = $listed()
             ->filter([
                 'faculty' => $selected['faculty']?->id,
                 'department' => $selected['department']?->id,
@@ -60,6 +62,7 @@ class ProgramWebsite
 
         return response()->view("program::listing.{$layout}", [
             'programs' => $programs,
+            'listed' => $filtered ? $listed()->get() : $programs,   // every listed program, for a theme that switches on the page
             'choices' => $choices,
             'selected' => $selected,
             'options' => $layouts->options('program.listing'),

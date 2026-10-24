@@ -2,9 +2,11 @@
 
 namespace Modules\Program\Providers;
 
+use Illuminate\Support\Facades\View;
 use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
 use Modules\Program\Models\Program;
+use Modules\Program\Support\ProgramPage;
 use Modules\Program\Support\ProgramWebsite;
 use Platform\Context\SiteContext;
 use Platform\Modules\ModuleServiceProvider;
@@ -36,5 +38,8 @@ class ProgramServiceProvider extends ModuleServiceProvider
 
         // FR-PROG-11: every new Program starts with its own counters
         Program::created(fn (Program $program) => ProgramWebsite::createStatSet($program));
+
+        // The program page's parts for any theme's version of the page (themes hold no PHP logic, T-1)
+        View::composer('program::microsite.home', fn ($view) => $view->with('page', new ProgramPage($view->getData()['entity'])));
     }
 }

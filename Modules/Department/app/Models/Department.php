@@ -48,7 +48,7 @@ class Department extends BaseModel implements Scopeable
 
     protected $table = 'department_departments';
 
-    protected $fillable = ['faculty_id', 'name', 'short_name', 'about_title', 'about', 'head_message', 'external_url', 'email', 'phone', 'location', 'campus_id', 'show_in_listing', 'sort_order', 'is_active'];
+    protected $fillable = ['faculty_id', 'name', 'short_name', 'about_title', 'about', 'head_message', 'external_url', 'email', 'phone', 'location', 'quick_links', 'campus_id', 'show_in_listing', 'sort_order', 'is_active'];
 
     public array $translatable = ['name', 'about_title', 'about', 'head_message', 'location'];
 
@@ -56,7 +56,7 @@ class Department extends BaseModel implements Scopeable
 
     protected function casts(): array
     {
-        return ['faculty_id' => 'integer', 'show_in_listing' => 'boolean', 'campus_id' => 'integer'];
+        return ['faculty_id' => 'integer', 'show_in_listing' => 'boolean', 'campus_id' => 'integer', 'quick_links' => 'array'];
     }
 
     public function faculty(): BelongsTo

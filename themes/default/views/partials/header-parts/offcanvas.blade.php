@@ -12,8 +12,8 @@
         <div class="flex-1 overflow-y-auto px-4 py-6 space-y-8">
             <div class="flex flex-col">
                 <x-platform::menu location="primary" :depth="3" view="theme::partials.menus.offcanvas" />
-                @if (filled(theme_option('header_cta_url')))
-                    <a href="{{ theme_option('header_cta_url') }}" target="_blank" rel="noopener" class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 hover:no-underline transition-all duration-300 shadow-lg hover:shadow-xl mt-6">{{ filled(theme_option('header_cta_label')) ? theme_option('header_cta_label') : __('theme::theme.apply_now') }}</a>
+                @if (filled($applyUrl = $context->entity?->application_url ?: theme_option('header_cta_url')))   {{-- a program's own application link on its pages --}}
+                    <a href="{{ $applyUrl }}" target="_blank" rel="noopener" class="w-full bg-gradient-to-r from-primary to-secondary text-white px-6 py-3 rounded-lg font-medium hover:opacity-90 hover:no-underline transition-all duration-300 shadow-lg hover:shadow-xl mt-6">{{ filled(theme_option('header_cta_label')) ? theme_option('header_cta_label') : __('theme::theme.apply_now') }}</a>
                 @endif
             </div>
             <x-platform::menu location="topbar" :depth="1" :main-site="true" view="theme::partials.menus.drawer-links" />

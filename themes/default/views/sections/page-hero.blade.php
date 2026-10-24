@@ -5,7 +5,7 @@
 --}}
 <header class="page-hero relative isolate overflow-hidden pt-20 lg:pt-24 2xl:pt-60 pb-10 md:pb-10" aria-label="{{ $context->identity()['name'] ?? $section->title }}" style="margin-top: calc(-1 * var(--header-h, 0px))">
     <div class="absolute inset-0 -z-10 bg-secondary">
-        @if ($cover = $context->entity?->firstMedia('cover'))
+        @if ($cover = $context->entity?->firstMedia('cover') ?? $context->entity?->firstMedia('photo'))
             <img src="{{ $cover->url('large') ?? $cover->url() }}" alt="" class="h-full w-full object-cover object-top">
         @elseif ($section->content['image'])
             <img src="{{ $section->content['image']['url'] }}" alt="" class="h-full w-full object-cover object-top">

@@ -87,6 +87,12 @@
     </x-theme::section>
 @endif
 
+@if (filled($entity->credit_duration))
+    <x-theme::section :section="new \Illuminate\Support\Fluent(['anchor' => 'credit-duration', 'title' => __('program::program.credit_duration'), 'subheading' => null, 'style' => null])">
+        <div class="prose">{!! \Illuminate\Support\Str::sanitizeHtml((string) $entity->credit_duration) !!}</div>
+    </x-theme::section>
+@endif
+
 @include('program::microsite.items', ['part' => 'majors'])
 @include('program::microsite.items', ['part' => 'variants'])
 

@@ -2,7 +2,7 @@
     DIU Faculty Department: title and line; the faculty's departments as a ruled list and the quick
     links on the left; "Meet Our Dean" (the faculty's dean) on the right.
     Contract: $section (title, subheading, content: heading, subheading, list_title, quick_links_title,
-    quick_links[label, url], dean_title), $items (Department), $context
+    quick_links[label, url], dean_title), $items (Department), $context (the Faculty's own Quick Links come first)
 --}}
 <div class="bg-white py-16">
     <div class="container mx-auto px-4">
@@ -22,14 +22,14 @@
                     </div>
                 @endif
 
-                @if (count($section->content['quick_links']))
+                @if (count($links = link_list($context->entity?->quick_links) ?: $section->content['quick_links']))   {{-- the Faculty's / Department's own Quick Links, else the section's --}}
                     <div class="rounded-xl">
                         <div class="pb-2 border-b border-gray-300 flex items-center gap-2">
                             <x-theme::icon name="link" class="w-4 h-4" />
                             <h3 class="text-xl font-bold text-neutral-600">{{ $section->content['quick_links_title'] }}</h3>
                         </div>
                         <div class="flex w-full flex-wrap mt-4 gap-2">
-                            @foreach ($section->content['quick_links'] as $link)
+                            @foreach ($links as $link)
                                 <x-theme::button :href="$link['url'] ?: '#'" :target="str_starts_with((string) $link['url'], 'http') ? '_blank' : null" variant="outlineSecondary" rounded="full" padding="px-4 py-[10px]" size="text-base md:text-lg" class="min-w-max">{{ $link['label'] }}</x-theme::button>
                             @endforeach
                         </div>

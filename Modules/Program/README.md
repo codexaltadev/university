@@ -10,8 +10,8 @@ Installable module M-03 (SRS Part 2). Academic › Programs and the program page
 | Permissions | resource `…:Program`; scoped users edit the profile but not Department, name, short name, address, active. |
 | Depends on | `department` (hard: `department_id` FK, restrict) and `faculty` (listing filter; the Faculty comes from the Department) |
 
-* **Admin:** texts per language (name, subtitle, degree, duration label, summary, objective, eligibility general /
-  English medium, AI summaries); Department, level, tags, short name, web address (unique site-wide — a taken
+* **Admin:** texts per language (name, subtitle, degree, duration label, summary, objective, "Credit & duration" text,
+  eligibility general / English medium, AI summaries); Department, level, tags, short name, web address (unique site-wide — a taken
   one gets a suffix, BRL-PROG-01); credits, years, semesters, medium, shift, class mode; admission (next intake,
   application link, structured eligibility rules); active, publish date, "show in the program list"; image,
   brochure, video; SEO; people (Coordinator, Officer, Contact, Industry Expert); drag order; filters by Faculty,
@@ -23,16 +23,21 @@ Installable module M-03 (SRS Part 2). Academic › Programs and the program page
 * **Sub-items** (BRL-PROG-04) are lists inside their part: Majors & Specializations (category), Career Paths,
   Industries, Facilitators & Industry Experts, Learning Materials (link or file), Professional Memberships,
   Program Options (variants: related program, button). They have no policy of their own — whoever may update the
-  Program edits them, whoever may view it sees them (AC-PROG-03). Each part has an optional intro on top.
+  Program edits them, whoever may view it sees them (AC-PROG-03). Each part has an optional intro on top; so do
+  Eligibility and the parts other modules add (Accreditation, Facilities, Testimonials — Details › "Intros of other
+  modules' parts"), read with `$program->intro('facilities')`.
+* **Default theme** (Phase 4.4c) replaces `microsite.home` with DIU's program page, built only on `$page`, and
+  reads the other modules' tabs by key: `accreditation.program`, `facilities.program`, `testimonials.program`, `tuition.fee`; any other tab
+  follows them under its own label.
 
 ### Views (theme-overridable: `themes/{theme}/views/modules/program/…`)
 
 | View | Variables |
 |---|---|
-| `listing.card` / `listing.list` / `listing.table` / `listing.detailed` | `$programs`, `$choices` (faculties, departments, levels), `$selected`, `$options` |
+| `listing.card` / `listing.list` / `listing.table` / `listing.detailed` | `$programs` (filtered), `$listed` (every listed program, for a theme that filters on the page), `$choices` (faculties, departments, levels), `$selected`, `$options` |
 | `partials.card` | `$program`, `$style` |
 | `partials.filters` | `$choices`, `$selected` |
 | `sections.featured` | `$items`, `$section`, `$settings` |
 | `sections.by-level` | `$items` (list of `level`, `programs`), `$section`, `$settings` |
-| `microsite.home` | `$entity` (Program), `$context` |
+| `microsite.home` | `$entity` (Program), `$context`, `$page` (`Support\ProgramPage`, added by a view composer: the parts that have something in order — `sections()`, `overview()`, `eligibility()`, `majorGroups()`, `careers()`, `tab(key)` / `otherTabs()`, `stats()`, `facts()`, `quickLinks()`, `image()`, `youtubeId()`, `aiSummary()` … — so a theme's version needs no PHP, T-1) |
 | `microsite.items` | `$entity`, `$part` = majors / variants / careers / people |

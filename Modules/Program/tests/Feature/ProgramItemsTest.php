@@ -127,18 +127,25 @@ it('shows the sub-items on the program page with their intros, active ones only 
     ProgramMembership::query()->create(['program_id' => $this->bsc->id, 'title' => ['en' => 'IEB Accredited']]);
     ProgramVariant::query()->create(['program_id' => $this->bsc->id, 'title' => ['en' => 'Dual Degree (DIU-BCU)'], 'short_description' => ['en' => 'Two years here, two in the UK.'], 'related_program_id' => $this->msc->id, 'button_text' => ['en' => 'See the dual degree']]);
 
+    // Through the default theme (DIU's program page: a block per major category, majors' text on hover)
     $this->get($this->bsc->url())->assertOk()
-        ->assertSeeInOrder(['Majors &amp; Specializations', 'Pick your focus in year three.', 'Track', 'Robotics', 'Embedded systems.'], false)
+        ->assertSeeInOrder(['href="#majors-1"', 'Explore Your Track', 'Pick your focus in year three.', 'Robotics', 'Embedded systems.'], false)
         ->assertDontSee('Retired Major')
-        ->assertSee('Dual Degree (DIU-BCU)')->assertSee('See the dual degree')->assertSee($this->msc->url(), false)
+        ->assertSee('Dual Degree (DIU-BCU)')->assertSee($this->msc->url(), false)
         ->assertSee('Data Analyst')->assertSee('Telecom')
         ->assertSee('Learn from people who build things.')
-        ->assertSee('Ayesha Rahman')->assertSee('CTO')->assertSee('Example Ltd')->assertSee('https://linkedin.com/in/ayesha', false)
+        ->assertSee('Ayesha Rahman')->assertSee('CTO')
         ->assertSee('https://example.edu/handbook.pdf', false)->assertDontSee('Nothing to open')
         ->assertSee('IEB Accredited');
 
+    // The module's own page, for themes without their own
+    $html = moduleView('Program', 'microsite.home', ['entity' => $this->bsc->fresh()]);
+    expect($html)->toContain('Majors &amp; Specializations', 'Track', 'Robotics', 'See the dual degree', 'Example Ltd', 'https://linkedin.com/in/ayesha', 'Learning Materials')
+        ->not->toContain('Retired Major', 'Nothing to open');
+
     // A program without sub-items shows none of these parts
-    $this->get($this->msc->url())->assertOk()->assertDontSee('Majors &amp; Specializations', false)->assertDontSee('Learning Materials');
+    $this->get($this->msc->url())->assertOk()->assertDontSee('Explore Your')->assertDontSee('Downloadable Materials');
+    expect(moduleView('Program', 'microsite.home', ['entity' => $this->msc]))->not->toContain('Majors &amp; Specializations', 'Learning Materials');
 });
 
 it('saves section intros from the program form', function () {

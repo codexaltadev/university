@@ -11,6 +11,7 @@ use Filament\Schemas\Schema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Unique;
 use Modules\Faculty\Models\Faculty;
+use Platform\Filament\Components\LinkListField;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\PeopleManager;
 use Platform\Filament\Components\SeoPanel;
@@ -40,6 +41,8 @@ class FacultyForm
                         TextInput::make("location.{$locale}")->label(__('faculty::faculty.fields.location'))->maxLength(255),
                     ]),
                 ]),
+                Section::make(__('faculty::faculty.fields.quick_links'))->description(__('faculty::faculty.help.quick_links'))
+                    ->columnSpan(2)->compact()->collapsible()->schema([LinkListField::make('quick_links')->hiddenLabel()]),
                 Grid::make(1)->columnSpan(1)->schema([
                     Section::make(__('faculty::faculty.sections.faculty'))->compact()->schema([
                         TextInput::make('short_name')->label(__('faculty::faculty.fields.short_name'))

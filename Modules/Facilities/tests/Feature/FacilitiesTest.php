@@ -14,6 +14,7 @@ use Modules\Facilities\Filament\Resources\Facilities\Pages\CreateFacility;
 use Modules\Facilities\Models\Facility;
 use Modules\Facilities\Sections\FacilitiesSection;
 use Modules\Faculty\Models\Faculty;
+use Modules\Program\Models\Program;
 use Platform\Homepage\SectionContext;
 use Platform\Modules\ModulePermissions;
 use Platform\Relations\RelationEngine;
@@ -61,4 +62,14 @@ it('fills "Campus Facilities" with highlights first (FR-FCL-04) and keeps links 
     $this->actingAs(superAdmin());
     Livewire::test(CreateFacility::class)->fillForm(['title' => ['en' => 'Hostel'], 'show_in' => [], 'main_site' => true])->call('create')->assertHasNoFormErrors();
     expect(Facility::query()->where('title->en', 'Hostel')->exists())->toBeTrue();
+});
+
+it('shows a program\'s facilities on its page as a tab; none, no tab (FR-FCL-05)', function () {
+    $program = Program::factory()->create();
+    $other = Program::factory()->create();
+    ($this->make)('MBA Lounge', ['summary' => ['en' => 'Quiet study for MBA students.']], [$program->getMorphClass().':'.$program->id], main: false);
+
+    $this->get($program->url())->assertOk()->assertSee('href="#facilities-program"', false)->assertSee('MBA Lounge')->assertSee('Quiet study for MBA students.');
+    $this->get($other->url())->assertOk()->assertDontSee('href="#facilities-program"', false)->assertDontSee('MBA Lounge');
+    $this->get('/facilities')->assertDontSee('MBA Lounge');
 });

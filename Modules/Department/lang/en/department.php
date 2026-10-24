@@ -18,6 +18,7 @@ return [
         'pictures' => 'Pictures',
     ],
     'fields' => [
+        'quick_links' => 'Quick Links',
         'faculty' => 'Faculty',
         'name' => 'Name',
         'short_name' => 'Short name',
@@ -37,6 +38,7 @@ return [
         'section_limit' => 'How many',
     ],
     'help' => [
+        'quick_links' => 'Shown on its page under "Quick Links" (text and link, in this order). Empty: the page shows none.',
         'faculty_move' => 'Moving to another Faculty changes who may edit it and which menu it inherits.',
         'external_url' => 'If set, the department list links here instead of the microsite.',
         'show_in_listing' => 'Off: not on /departments or in "Departments", but its own address still works.',

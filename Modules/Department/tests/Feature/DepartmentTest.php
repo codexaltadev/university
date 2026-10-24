@@ -76,6 +76,24 @@ it('creates a department under a Faculty with its address and its own counters (
     expect($set->items()->pluck('metric_key')->filter()->values()->all())->toBe(['program.count', 'faculty-member.count']);
 });
 
+it('keeps its Quick Links, entered with the department, in their order', function () {
+    $this->actingAs(superAdmin());
+    Livewire::test(EditDepartment::class, ['record' => $this->cse->getRouteKey()])
+        ->fillForm(['quick_links' => [
+            ['label' => ['en' => 'Admission Requirements'], 'url' => '/admission'],
+            ['label' => ['en' => 'Student Portal', 'bn' => 'স্টুডেন্ট পোর্টাল'], 'url' => 'https://studentportal.example.edu'],
+        ]])
+        ->call('save')->assertHasNoFormErrors();
+
+    expect(link_list($this->cse->fresh()->quick_links))->toBe([
+        ['label' => 'Admission Requirements', 'url' => url('/admission')],
+        ['label' => 'Student Portal', 'url' => 'https://studentportal.example.edu'],
+    ]);
+    app()->setLocale('bn');
+    expect(link_list($this->cse->fresh()->quick_links)[1]['label'])->toBe('স্টুডেন্ট পোর্টাল')
+        ->and(link_list($this->cse->fresh()->quick_links)[0]['label'])->toBe('Admission Requirements');   // no Bangla: English
+});
+
 it('keeps the short name unique inside a Faculty only (BRL-DEPT-01)', function () {
     $this->actingAs(superAdmin());
 

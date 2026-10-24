@@ -30,6 +30,7 @@
         },
         "custom_permissions": [],
         "provides": {
+            "settings": true,
             "relation_target": true,
             "scopeable": true,
             "microsite": true,

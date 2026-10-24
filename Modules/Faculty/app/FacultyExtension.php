@@ -6,6 +6,7 @@ use Modules\Faculty\Filament\FacultyPlugin;
 use Modules\Faculty\Metrics\FacultyCount;
 use Modules\Faculty\Models\Faculty;
 use Modules\Faculty\Sections\OurFacultiesSection;
+use Modules\Faculty\Settings\FacultySettings;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
 
@@ -28,5 +29,6 @@ final class FacultyExtension implements ModuleExtension
         $r->homepageSection(OurFacultiesSection::class);           // FR-FAC-08
         $r->searchable(Faculty::class, label: 'faculty::faculty.plural', weight: 8);
         $r->sitemap(Faculty::class);
+        $r->settings(FacultySettings::class);                     // /faculties page text and links
     }
 }

@@ -49,6 +49,27 @@ class Normalizer
     }
 
     /** A stored file path as a public link on the old file server. */
+    /**
+     * A legacy file's path as stored on webbackend ("uploads/a.jpg"), from a column value that may be
+     * the path with or without "/" or the full address; null for empty values and other sites' links.
+     */
+    public static function filePath(?string $value): ?string
+    {
+        $value = static::text($value);
+        if ($value === null) {
+            return null;
+        }
+        if (str_starts_with($value, 'http')) {
+            if (! str_starts_with($value, self::FILE_BASE) && ! str_starts_with($value, str_replace('https:', 'http:', self::FILE_BASE))) {
+                return null;
+            }
+            $value = (string) parse_url($value, PHP_URL_PATH);
+        }
+        $value = ltrim(rawurldecode($value), '/');
+
+        return $value === '' ? null : $value;
+    }
+
     public static function fileUrl(?string $path): ?string
     {
         $path = static::text($path);

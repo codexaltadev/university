@@ -22,6 +22,7 @@ use Modules\Program\Filament\Resources\Programs\ProgramResource;
 use Modules\Program\Models\Program;
 use Modules\Program\Sections\FeaturedProgramsSection;
 use Modules\Program\Sections\ProgramsByLevelSection;
+use Modules\Program\Settings\ProgramSettings;
 use Platform\Events\EntityHierarchyChanged;
 use Platform\Exceptions\ParentHasActiveChildren;
 use Platform\Homepage\SectionContext;
@@ -32,7 +33,6 @@ use Platform\Statistics\Statistics;
 use Platform\Statistics\StatSet;
 use Platform\Taxonomy\Term;
 use Platform\Taxonomy\Vocabularies;
-use Platform\Theme\LayoutResolver;
 use Platform\Website\EntityTab;
 
 class ProgramTestTuitionTab extends EntityTab
@@ -221,46 +221,85 @@ it('filters /programs by faculty, department, level, shift, mode and search (FR-
     Program::factory()->create(['department_id' => $this->cse->id, 'name' => ['en' => 'BSc Hidden'], 'show_in_listing' => false]);
     Program::factory()->create(['department_id' => $this->cse->id, 'name' => ['en' => 'BSc Next Year'], 'published_at' => now()->addMonth()]);
 
-    $this->get('/programs')->assertOk()
-        ->assertSee('BSc in Computer Science and Engineering')->assertSee('Regular MBA')
-        ->assertDontSee('BSc Hidden')->assertDontSee('BSc Next Year')
-        ->assertSee('program-card--card', false);
+    $names = fn (string $url): array => $this->get($url)->assertOk()->viewData('programs')->pluck('name')->all();
+
+    expect($names('/programs'))->toContain('BSc in Computer Science and Engineering', 'Regular MBA')->not->toContain('BSc Hidden', 'BSc Next Year');
 
     // AC-PROG-01: Graduate + Evening
-    $this->get('/programs?level=graduate&shift=evening')->assertOk()
-        ->assertSee('MSc in CSE Evening')->assertSee('Executive MBA')
-        ->assertDontSee('Regular MBA')->assertDontSee('BSc in Computer Science and Engineering');
+    expect($names('/programs?level=graduate&shift=evening'))->toContain('MSc in CSE Evening', 'Executive MBA')->not->toContain('Regular MBA', 'BSc in Computer Science and Engineering')
+        ->and($names('/programs?faculty=fbe'))->toContain('Executive MBA')->not->toContain('MSc in CSE Evening')
+        ->and($names('/programs?department=cse&mode=hybrid'))->toContain('MSc in CSE Evening')->not->toContain('Executive MBA')
+        ->and($names('/programs?q=executive'))->toContain('Executive MBA')->not->toContain('Regular MBA')
+        ->and($names('/programs?level=nonsense&shift=<script>'))->toContain('Regular MBA')   // unknown values are ignored
+        ->and($names('/programs?q=zzz-nothing'))->toBe([]);
 
-    $this->get('/programs?faculty=fbe')->assertSee('Executive MBA')->assertDontSee('MSc in CSE Evening');
-    $this->get('/programs?department=cse&mode=hybrid')->assertSee('MSc in CSE Evening')->assertDontSee('Executive MBA');
-    $this->get('/programs?q=executive')->assertSee('Executive MBA')->assertDontSee('Regular MBA');
-    $this->get('/programs?level=nonsense&shift=<script>')->assertOk()->assertSee('Regular MBA');   // unknown values are ignored
-    $this->get('/programs?q=zzz-nothing')->assertSee('No program matches these filters.');
-
-    foreach (['list' => 'program-card--list', 'table' => 'program-row', 'detailed' => 'program-card--detailed'] as $layout => $marker) {
-        app(LayoutResolver::class)->choose('program.listing', $layout);
-        $this->get('/programs')->assertOk()->assertSee($marker, false);
+    // The module's own layouts, for themes without their own
+    $data = $this->get('/programs?q=zzz-nothing')->viewData('choices');
+    expect(moduleView('Program', 'listing.card', ['programs' => collect(), 'choices' => $data, 'selected' => ['faculty' => null, 'department' => null, 'level' => null, 'shift' => null, 'mode' => null, 'q' => 'zzz-nothing'], 'options' => []]))->toContain('No program matches these filters.');
+    $all = $this->get('/programs')->viewData('programs');
+    foreach (['card' => 'program-card--card', 'list' => 'program-card--list', 'table' => 'program-row', 'detailed' => 'program-card--detailed'] as $layout => $marker) {
+        expect(moduleView('Program', "listing.{$layout}", ['programs' => $all, 'choices' => $data, 'selected' => ['faculty' => null, 'department' => null, 'level' => null, 'shift' => null, 'mode' => null, 'q' => null], 'options' => []]))->toContain($marker);
     }
 
     // A program of an inactive Department leaves the list
     $this->bba->update(['is_active' => false]);
-    $this->get('/programs')->assertDontSee('Regular MBA');
+    expect($names('/programs'))->not->toContain('Regular MBA');
+});
+
+it('takes Quick Links from the program, else Settings › Programs, and the /programs text and links from Settings', function () {
+    // Defaults: DIU's
+    $this->get($this->bsc->url())->assertOk()->assertSeeInOrder(['Quick Links', 'Notice', 'Waiver &amp; Scholarship', 'Tuition Fees', 'Tuition Fee Calculator'], false);
+    $this->get('/programs')->assertOk()->assertSee('Institutional Programs')->assertSee('Rules and Regulation');
+
+    $this->actingAs(superAdmin());
+    Livewire::test(EditProgram::class, ['record' => $this->bsc->getRouteKey()])
+        ->fillForm(['quick_links' => [['label' => ['en' => 'CSE Lab Booking'], 'url' => 'https://labs.example.edu']]])
+        ->call('save')->assertHasNoFormErrors();
+    $this->get($this->bsc->url())->assertSee('CSE Lab Booking')->assertSee('https://labs.example.edu', false)->assertDontSee('Tuition Fee Calculator');
+
+    settings()->saveFor(new ProgramSettings, [
+        'listing_title' => ['en' => 'All Our Programs'],
+        'side_links' => [['label' => ['en' => 'Short Courses'], 'url' => '/short-courses']],
+        'quick_links' => [['label' => ['en' => 'Credit Transfer'], 'url' => '/credit-transfer']],
+        'page_quick_links' => [['label' => ['en' => 'Program Calendar'], 'url' => '/calendar']],
+    ]);
+    $this->get('/programs')->assertOk()->assertSee('All Our Programs')->assertSee('Short Courses')->assertSee('Credit Transfer')
+        ->assertDontSee('Institutional Programs')->assertDontSee('Rules and Regulation');
+    $other = Program::factory()->create(['department_id' => $this->cse->id]);
+    $this->get($other->url())->assertSee('Program Calendar')->assertDontSee('Tuition Fee Calculator');   // no own links: Settings'
+});
+
+it('shows DIU\'s /programs in the default theme: faculties as tabs, UG / PG with counts, every program (Phase 4.4d)', function () {
+    Program::factory()->create(['department_id' => $this->bba->id, 'level_term_id' => $this->grad, 'name' => ['en' => 'Regular MBA'], 'short_name' => 'MBA']);
+
+    $this->get('/programs')->assertOk()
+        ->assertSee('Explore Our Offerings')
+        ->assertSeeInOrder(['Browse by Faculty (03)', 'Faculty of Science and Information Technology', 'Faculty of Business and Entrepreneurship', 'Institutional Programs'])
+        ->assertSee('Full Program Name')
+        ->assertSeeInOrder(['BSc in Computer Science and Engineering', 'BSc CSE'])
+        ->assertSee('Regular MBA')
+        ->assertSee("faculty === 'FBE' && level === 'PG'", false);   // a graduate program is "Post Graduate"
+
+    // ?faculty= only picks the first faculty: the others stay on the page
+    $this->get('/programs?faculty=fbe&isPostgraduate=1')->assertOk()->assertSee('Regular MBA')->assertSee('BSc in Computer Science and Engineering');
 });
 
 it('shows the program page with facts, apply button, eligibility and counters (FR-PROG-10/13)', function () {
+    // Through the default theme (DIU's program page)
     $this->get($this->bsc->url())->assertOk()
         ->assertSee('BSc in Computer Science and Engineering')
-        ->assertSee('Bachelor of Science')
-        ->assertSee('4 Years (12 Semesters)')
-        ->assertSee('148')
-        ->assertSee('Build software and systems.')
+        ->assertSeeInOrder(['Credit Requirement', '148 credits', 'Total Semester', '12 Semester'])
         ->assertSee('Graduates who solve real problems.')
         ->assertSee('SSC and HSC GPA 2.5 each.')
         ->assertSee('Five O Level and two A Level subjects.')
-        ->assertSee('https://admission.example.edu/apply', false)
-        ->assertSee('15 January 2027')
+        ->assertSee('https://admission.example.edu/apply', false)   // the header's Apply button
+        ->assertSee('2027-01-15')
         ->assertSee($this->cse->url(), false)
         ->assertSee('microsite-name', false);
+
+    // The module's own page, for themes without their own
+    expect(moduleView('Program', 'microsite.home', ['entity' => $this->bsc]))->toContain('Bachelor of Science', '4 Years (12 Semesters)', 'Build software and systems.',
+        'Graduates who solve real problems.', 'https://admission.example.edu/apply', '15 January 2027', $this->cse->url());
 
     $this->get('/bn'.$this->bsc->url('bn'))->assertOk()->assertSee('কম্পিউটার বিজ্ঞান ও প্রকৌশলে বিএসসি');
 
@@ -269,8 +308,25 @@ it('shows the program page with facts, apply button, eligibility and counters (F
     $this->get($later->url())->assertNotFound();
 });
 
+it('shows DIU\'s program page in the default theme: hero, sections menu, AI summary, overview (Phase 4.4c)', function () {
+    $this->bsc->update([
+        'subtitle' => ['en' => 'Build the future.'], 'video_url' => 'https://www.youtube.com/watch?v=wSNsd4LuhAI',
+        'credit_duration' => ['en' => '<p>148 credits in four years.</p>'], 'ai_summary' => ['en' => 'An AI written summary.'],
+    ]);
+
+    $this->get($this->bsc->url())->assertOk()
+        ->assertSee('page-hero', false)->assertSee('Build the future.')
+        ->assertSee('youtube.com/embed/wSNsd4LuhAI', false)
+        ->assertSeeInOrder(['Browse by Section (02)', 'href="#overview"', 'href="#eligibilities"'], false)
+        ->assertSeeInOrder(['AI Summary', 'An AI written summary.', 'Program Overview', 'Program Objective', 'Graduates who solve real problems.', 'Credit &amp; Duration', '148 credits in four years.'], false)
+        ->assertDontSee('<p>Build software and systems.</p>', false);   // the summary stands in only when neither text is there
+
+    $this->bsc->update(['objective' => null, 'credit_duration' => null]);
+    $this->get($this->bsc->url())->assertOk()->assertSee('<p>Build software and systems.</p>', false);
+});
+
 it('adds other modules\' tabs to the program page; a missing or broken one never breaks it (FR-PROG-18, AC-PROG-02)', function () {
-    $this->get($this->bsc->url())->assertOk()->assertDontSee('Tuition Fees');   // the module is not active: no tab
+    $this->get($this->bsc->url())->assertOk()->assertDontSee('href="#tuition-fee"', false);   // the module is not active: no tab
 
     app(Registry::class)->add('entityTab', 'fee', ['target' => Program::class, 'class' => ProgramTestTuitionTab::class]);
     app(Registry::class)->add('entityTab', 'broken', ['target' => Program::class, 'class' => ProgramTestBrokenTab::class]);
@@ -281,7 +337,7 @@ it('adds other modules\' tabs to the program page; a missing or broken one never
         ->assertSee('program-card--list', false);
 
     $nofee = Program::factory()->create(['department_id' => $this->cse->id, 'short_name' => 'NOFEE']);
-    $this->get($nofee->url())->assertOk()->assertDontSee('Tuition Fees');                 // the tab chose to hide
+    $this->get($nofee->url())->assertOk()->assertDontSee('href="#tuition-fee"', false);   // the tab chose to hide
 });
 
 it('counts programs for the main site, a Faculty and a Department (FR-FAC-04, FR-DEPT-05)', function () {

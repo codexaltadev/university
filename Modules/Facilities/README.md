@@ -9,6 +9,7 @@ Campus facilities — library, hostel, medical centre … (M-33, DB-06 v1.4 §4,
 | Media | `icon`, `image`, `gallery` (Media Library uses) |
 | Taxonomy | `facilities.category` |
 | Admin | Services › Facilities |
+| Program tab | "Facilities" on a program's page (`Tabs\ProgramFacilitiesTab`, key `facilities.program`, view `facilities::tabs.program` with `$entity`, `$items`): the facilities shown in that program; none → no tab. Program is optional. |
 | Legacy | `php artisan legacy:migrate --step=S18F` — main-site rows → main site, a program's → shown there, a program's use of a main facility (`reference_id`) → that facility shown in the program too; `is_home` → highlight |
 
 Website: `/facilities` and `/{entity}/facilities` (`?category=`; icons / cards / list — Appearance › Layouts

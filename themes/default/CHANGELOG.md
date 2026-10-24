@@ -17,6 +17,20 @@
 - 4.4b: DIU department and faculty pages as theme sections: page-hero, programs, notices,
   labs, partners, ambitions, microsite-news, event-cards, campus-services, faculty-stats,
   faculty-departments; slider controls hide when every card fits; `eye` icon.
+- 4.4c: DIU program page — `modules/program/microsite/home`, on the Program module's `$page` (no PHP in
+  the theme, T-1) (full-screen hero with figures, key facts and
+  the video window; "Browse by Section" with Quick Links and Downloadable Materials, a mobile version with
+  See More; AI Summary; Overview, Variations, Explore Your {category} with the text on hover, Eligibilities,
+  Memberships, Facilitators slider, Future Career) and DIU looks for the tabs `tuition/tab`,
+  `accreditation/tabs/program`, `testimonials/tabs/program`, `facilities/tabs/program`; the header's Apply
+  button opens a program's own application link; `.program-content` tables; icons sparkles, download,
+  file-text, clock, quote; `images/program/facility.jpg`.
+- 4.4d: DIU `/faculties` — `modules/faculty/listing/{grid,list,card}` (hero, Browse by Section with
+  Faculties / Deans / Department Heads tabs and links, faculty cards, deans and heads by faculty, Essential
+  Campus Services); partials `diu/hero`, `diu/browse-sidebar`, `diu/quick-links`, `faculty/person-card`;
+  `images/faculty-banner.jpg`.
+- 4.4e: DIU `/programs` — `modules/program/listing/{card,list,table,detailed}` (Browse by Faculty tabs, UG / PG
+  with counts, program table, phone drawer); option `programs_faculty`; `images/programs-banner.jpg`; icon `sliders`.
 
 ## 1.0.0 — 2026-10-09
 

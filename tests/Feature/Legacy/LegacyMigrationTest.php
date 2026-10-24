@@ -9,8 +9,11 @@
 */
 
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Legacy\Migration\Support\IdMap;
 use Legacy\Migration\Support\Normalizer;
 use Modules\Department\Models\Department;
@@ -25,6 +28,8 @@ use Modules\Program\Models\ProgramVariant;
 use Modules\Tuition\Models\FeeCategory;
 use Modules\Tuition\Models\Tuition;
 use Modules\Tuition\Models\TuitionLine;
+use Platform\Media\MediaItem;
+use Platform\Media\MediaLibrary;
 use Platform\Statistics\Statistics;
 use Platform\Taxonomy\Term;
 use Platform\Taxonomy\Vocabularies;
@@ -175,6 +180,7 @@ it('migrates programs with level, tag, eligibility, counters and their parts (S0
         ->and((float) $swe->total_credits)->toBe(147.0)
         ->and((float) $swe->duration_years)->toBe(4.0)
         ->and($swe->total_terms)->toBe(12)
+        ->and($swe->getTranslation('credit_duration', 'en'))->toContain('Credit-147')                             // the text as well
         ->and($swe->next_intake_on->toDateString())->toBe('2026-05-09')
         ->and($swe->intro('majors', 'en'))->toBe('Pick a track.')
         ->and($swe->getTranslation('eligibility_general', 'en'))->toStartWith('<p>GPA 2.5 in SSC and HSC.</p>')     // serial 1 first
@@ -282,6 +288,37 @@ it('does not duplicate when the id map is lost, and keeps two rows with an equal
         ->and(ProgramListItem::query()->where('list_type', 'career_path')->count())->toBe(2)
         ->and(ProgramMajor::query()->count())->toBe(1)
         ->and(Term::query()->where('vocabulary_id', app(Vocabularies::class)->find('program.tag')->id)->count())->toBe(1);
+});
+
+it('puts each legacy file into the Media Library once and into its records, from the cache (S03)', function () {
+    Storage::fake('public');
+    $cache = storage_path('framework/testing/legacy-files');
+    config(['database.connections.legacy.files_path' => $cache]);
+    File::ensureDirectoryExists("{$cache}/images");
+    $picture = imagecreatetruecolor(40, 30);
+    imagejpeg($picture, "{$cache}/images/a.jpg");
+    File::ensureDirectoryExists("{$cache}/program_images");
+    File::copy("{$cache}/images/a.jpg", "{$cache}/program_images/swe.jpg");   // the same picture under another name
+    DB::connection('legacy')->table('department_program_type')->where('id', 44)->update(['program_image' => '/program_images/swe.jpg']);
+
+    $this->artisan('legacy:migrate', ['--step' => ['S04', 'S06'], '--no-report' => true])->assertSuccessful();
+    $this->artisan('legacy:migrate', ['--step' => ['S03'], '--only' => ['program'], '--no-report' => true])->assertSuccessful();
+
+    $swe = Program::findBySlug('bsc-in-swe', 'en')[0];
+    $ayesha = ProgramFacilitator::query()->where('name', 'Ayesha Rahman')->first();
+    expect($swe->firstMedia('image'))->not->toBeNull()
+        ->and($ayesha->firstMedia('photo')?->id)->toBe($swe->firstMedia('image')->id)          // same content = one item
+        ->and(MediaItem::query()->count())->toBe(1)
+        ->and(MediaItem::query()->first()->folder->name)->toBe('department_program_type')
+        ->and(app(IdMap::class)->record('files', 'https://webbackend.daffodilvarsity.edu.bd/images/a.jpg', MediaItem::class)?->id)->toBe($ayesha->firstMedia('photo')->id);   // other steps find it by path
+
+    // Again: nothing new; a picture chosen by hand stays
+    $own = app(MediaLibrary::class)->store(UploadedFile::fake()->image('own.jpg', 30, 20), ['scope_type' => 'site', 'scope_id' => 0]);
+    $swe->syncMedia('image', [$own->id]);
+    $this->artisan('legacy:migrate', ['--step' => ['S03'], '--only' => ['program'], '--no-report' => true])->assertSuccessful();
+    expect(MediaItem::query()->count())->toBe(2)->and($swe->fresh()->firstMedia('image')->id)->toBe($own->id);
+
+    File::deleteDirectory($cache);
 });
 
 it('refuses to run without a step and when the legacy database is missing', function () {

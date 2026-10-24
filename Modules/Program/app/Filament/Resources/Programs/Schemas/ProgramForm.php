@@ -25,6 +25,7 @@ use Modules\Program\Models\Program;
 use Modules\Program\Models\ProgramFacilitator;
 use Modules\Program\Models\ProgramListItem;
 use Modules\Program\Support\ProgramChecklist;
+use Platform\Filament\Components\LinkListField;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\PeopleManager;
 use Platform\Filament\Components\SeoPanel;
@@ -50,7 +51,7 @@ use Platform\Taxonomy\Vocabularies;
 class ProgramForm
 {
     /** Page sections with an optional intro text (section_intros). */
-    public const INTRO_SECTIONS = ['majors', 'career_path', 'industry', 'facilitators', 'materials', 'memberships', 'variants'];
+    public const INTRO_SECTIONS = ['majors', 'career_path', 'industry', 'facilitators', 'materials', 'memberships', 'variants', 'eligibility', 'accreditation', 'facilities', 'testimonials'];
 
     public const PARTS = ['basic', 'details', 'eligibility', 'majors', 'variants', 'careers', 'people', 'resources', 'seo'];
 
@@ -101,7 +102,9 @@ class ProgramForm
             'variants' => [self::intro('variants'), self::variants()],
             'careers' => [self::intro('career_path'), self::listItems('career_paths', ProgramListItem::CAREER_PATH), self::intro('industry'), self::listItems('industries', ProgramListItem::INDUSTRY)],
             'people' => [self::intro('facilitators'), self::facilitators(), PeopleManager::make()->collapsible(false)],   // Coordinator, Officer, Contact, Industry Expert
-            'resources' => [self::intro('materials'), self::materials(), self::intro('memberships'), self::memberships()],
+            'resources' => [self::intro('materials'), self::materials(), self::intro('memberships'), self::memberships(),
+                Section::make(__('program::program.fields.quick_links'))->description(__('program::program.help.quick_links'))->compact()
+                    ->schema([LinkListField::make('quick_links')->hiddenLabel()])],
             'seo' => self::seo(),
         };
     }
@@ -157,6 +160,7 @@ class ProgramForm
             TranslatableTabs::make()->schema(fn (string $locale): array => [
                 RichEditor::make("summary.{$locale}")->label(__('program::program.fields.summary'))->fileAttachments(false),
                 RichEditor::make("objective.{$locale}")->label(__('program::program.fields.objective'))->fileAttachments(false),
+                RichEditor::make("credit_duration.{$locale}")->label(__('program::program.fields.credit_duration'))->fileAttachments(false),
                 TextInput::make("duration_label.{$locale}")->label(__('program::program.fields.duration_label'))
                     ->placeholder('4 Years (12 Semesters)')->maxLength(100),
             ]),
@@ -174,6 +178,8 @@ class ProgramForm
                 DatePicker::make('next_intake_on')->label(__('program::program.fields.next_intake_on')),
                 TextInput::make('application_url')->label(__('program::program.fields.application_url'))->url()->maxLength(2048),
             ]),
+            Section::make(__('program::program.sections.other_intros'))->compact()->collapsed()   // parts other modules add to the page
+                ->schema([self::intro('accreditation'), self::intro('facilities'), self::intro('testimonials')]),
         ];
     }
 
@@ -181,6 +187,7 @@ class ProgramForm
     protected static function eligibility(): array
     {
         return [
+            self::intro('eligibility'),
             TranslatableTabs::make()->schema(fn (string $locale): array => [
                 RichEditor::make("eligibility_general.{$locale}")->label(__('program::program.fields.eligibility_general'))->fileAttachments(false),
                 RichEditor::make("eligibility_english_medium.{$locale}")->label(__('program::program.fields.eligibility_english_medium'))->fileAttachments(false),

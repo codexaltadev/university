@@ -4,8 +4,8 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-03 |
-| Version | 1.5 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়); v1.4: Scholarship নিজের module `scholarship`, parent / child ও category vocabulary (§11.3); v1.5: Admission (§10) — `published_at` নয় `is_active`, session লেখা, result label, subscriber topic, website গঠন; v1.6: Academic Calendar (§12) — `is_active`, session লেখা, Faculty সম্পর্ক, audience event-এ, `starts_on` ঐচ্ছিক, website গঠন; v1.7 (2026-10-17): Faculty Member (§8) — আলাদা faculty site-এর data-র read-only copy, source JSON / API, `profile_items` JSON, `photo_url`, sync (§8.3) |
-| Date | 2026-10-16 (v1.0 confirmed 2026-10-08) |
+| Version | 1.5 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়); v1.4: Scholarship নিজের module `scholarship`, parent / child ও category vocabulary (§11.3); v1.5: Admission (§10) — `published_at` নয় `is_active`, session লেখা, result label, subscriber topic, website গঠন; v1.6: Academic Calendar (§12) — `is_active`, session লেখা, Faculty সম্পর্ক, audience event-এ, `starts_on` ঐচ্ছিক, website গঠন; v1.7 (2026-10-17): Faculty Member (§8) — আলাদা faculty site-এর data-র read-only copy, source JSON / API, `profile_items` JSON, `photo_url`, sync (§8.3); v1.8 (2026-10-21, Phase 4.4c): Program-এ `credit_duration` লেখা ও আরও section intro (§4.1); v1.9 (2026-10-24): Faculty, Department, Program-এ `quick_links` (owner: page-এর লেখা ও link Admin থেকে); `/faculties` ও `/programs`-এর লেখা Settings-এ (group `faculty`, `program`) |
+| Date | 2026-10-24 (v1.0 confirmed 2026-10-08) |
 | Status | ✔ Confirmed — v1.3 approved 2026-10-10 (Tuition, Waiver আলাদা module); v1.1 approved 2026-10-10: entry করা rule ও data অক্ষত থাকবে; logic বদলানো যাবে যদি ফলাফল হুবহু একই থাকে (golden master দিয়ে প্রমাণ) |
 | Based on | [DB-01](01-DB-Core-Kernel.md) (conventions), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 2](../02-SRS/02-SRS-Academic.md), `project_diu` |
 
@@ -97,6 +97,7 @@ erDiagram
 | email | VARCHAR(191) | N | | |
 | phone | VARCHAR(50) | N | | |
 | location | JSON | N, T | | Building / room |
+| quick_links | JSON | N | | *(v1.9)* Page-এর "Quick Links": `[{label: {en, bn}, url}]`, ক্রমে; form-এই দেওয়া হয় (LinkListField) |
 | campus_id | BIGINT UNSIGNED | N, IX | | Campus optional → FK নয় |
 | show_in_listing | TINYINT(1) | | 1 | FR-FAC-09 (বর্তমান `show_list`) |
 | sort_order | INT UNSIGNED | | 0 | |
@@ -120,6 +121,7 @@ UQ: `(short_name, active_key)`। Media field: `photo`, `cover`, `logo`।
 | external_url | VARCHAR(2048) | N | | FR-DEPT-04 |
 | email, phone | VARCHAR(191), VARCHAR(50) | N | | |
 | location | JSON | N, T | | |
+| quick_links | JSON | N | | *(v1.9)* Page-এর "Quick Links": `[{label: {en, bn}, url}]`, ক্রমে; form-এই দেওয়া হয় (LinkListField) |
 | campus_id | BIGINT UNSIGNED | N, IX | | |
 | show_in_listing | TINYINT(1) | | 1 | |
 | sort_order | INT UNSIGNED | | 0 | |
@@ -152,7 +154,8 @@ Faculty পরিবর্তন (FR-DEPT-08) → `EntityHierarchyChanged`।
 | class_mode | VARCHAR(20) | N, IX | | `on_campus` / `online` / `hybrid` |
 | summary | JSON | N, T | | |
 | objective | JSON | N, T | | |
-| section_intros | JSON | N, T | | Page section-এর intro text |
+| credit_duration | JSON | N, T | | *(v1.8)* Program page-এর "Credit & Duration" লেখা (legacy `program_credit_duration`); সংখ্যাগুলো আলাদা column-এ |
+| section_intros | JSON | N, T | | Page section-এর intro text — majors, variants, career_path, industry, facilitators, materials, memberships, eligibility; অন্য module-এর অংশ accreditation, facilities, testimonials *(v1.8)* |
 | ai_summary, ai_short_summary | JSON | N, T | | ঐচ্ছিক |
 | eligibility_general | JSON | N, T | | FR-PROG-10 |
 | eligibility_english_medium | JSON | N, T | | O / A Level |
@@ -160,6 +163,7 @@ Faculty পরিবর্তন (FR-DEPT-08) → `EntityHierarchyChanged`।
 | next_intake_on | DATE | N | | "Next semester starts" |
 | application_url | VARCHAR(2048) | N | | Apply button |
 | video_url | VARCHAR(2048) | N | | |
+| quick_links | JSON | N | | *(v1.9)* Page-এর "Quick Links": `[{label: {en, bn}, url}]`, ক্রমে; form-এই দেওয়া হয় (LinkListField) |
 | show_in_listing | TINYINT(1) | | 1 | বর্তমান `show_program` |
 | sort_order | INT UNSIGNED | | 0 | |
 | published_at | TIMESTAMP | N, IX | | FR-GEN-10/11 (BRD Q-27: status নেই) |
@@ -488,7 +492,7 @@ Program-এর সাথে সম্পর্ক audience term ও Faculty দ�
 | `departments` (৪৯) | department_departments | `department_link` → external_url, `about_title`, `department_content` → about; `department_photo`, `department_cover` → Media; `lab_facility` flag বাদ (Lab module relation) |
 | `department_user` | core_user_scopes | DB-01 |
 | `program_types` (২৫) | `program.level` (৪টি term) + `program.tag` | Section 15.1-এর নির্দিষ্ট mapping (DIU confirmed: level Undergraduate, Graduate, Diploma, Post Graduate Diploma) |
-| `department_program_type` (৬৪) | program_programs | `full_program_name` → name, `program_type_parent_id` + `program_type_id` → level_term_id ও tag (Section 15.1), `program_credit_duration` → total_credits / duration_label (parse + manual যাচাই), `next_semester_date` → next_intake_on, `show_program` → show_in_listing; `approved_alumni_number`, `total_major_count`, `teachers_count`, `industry_expert_count` → Program-এর Stat Set (manual item); `faculty_id` বাদ (Department থেকে) |
+| `department_program_type` (৬৪) | program_programs | `full_program_name` → name, `program_type_parent_id` + `program_type_id` → level_term_id ও tag (Section 15.1), `program_credit_duration` → total_credits / duration_label (parse + manual যাচাই) ও পুরো লেখা credit_duration-এ *(v1.8)*, `next_semester_date` → next_intake_on, `show_program` → show_in_listing; `approved_alumni_number`, `total_major_count`, `teachers_count`, `industry_expert_count` → Program-এর Stat Set (manual item); `faculty_id` বাদ (Department থেকে) |
 | `institutional_programs` (৩), `mba_programs` (৩) | program_programs | Manual review; উপযুক্ত level (Undergraduate / Graduate / Diploma / Post Graduate Diploma) অথবা বিদ্যমান Program-এর সাথে একত্র |
 | `program_majors` (৬৯) + `program_major_categories` | program_majors + term | |
 | `program_career_paths` (১৬৩), `program_industries` (১০৫) | program_list_items | `list_type` অনুযায়ী |

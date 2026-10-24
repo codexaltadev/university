@@ -1,7 +1,8 @@
 {{--
     DIU Department Programs: "Explore Our Academic Programs" — a card per program of this place
     (short name, degree, title, summary, duration, apply link), then the quick links.
-    Contract: $section (title, content: heading, apply_label, quick_links_title, quick_links[label, url]), $items (by level: [level, programs])
+    Contract: $section (title, content: heading, apply_label, quick_links_title, quick_links[label, url]), $items (by level: [level, programs]),
+    $context (the Department's own Quick Links come first)
 --}}
 <div class="bg-white py-8 md:py-16">
     <div class="container mx-auto px-4">
@@ -38,14 +39,14 @@
             </div>
         @endif
 
-        @if (count($section->content['quick_links']))
+        @if (count($links = link_list($context->entity?->quick_links) ?: $section->content['quick_links']))   {{-- the Faculty's / Department's own Quick Links, else the section's --}}
             <div class="rounded-xl">
                 <div class="pb-2 border-b border-gray-300 flex items-center gap-2">
                     <x-theme::icon name="link" class="w-4 h-4" />
                     <h3 class="text-xl font-bold text-neutral-600">{{ $section->content['quick_links_title'] }}</h3>
                 </div>
                 <div class="flex w-full flex-wrap mt-4 gap-2">
-                    @foreach ($section->content['quick_links'] as $link)
+                    @foreach ($links as $link)
                         <x-theme::button :href="$link['url'] ?: '#'" :target="str_starts_with((string) $link['url'], 'http') ? '_blank' : null" variant="outlineSecondary" rounded="full" padding="px-4 py-[10px]" size="text-base md:text-lg" class="min-w-max">{{ $link['label'] }}</x-theme::button>
                     @endforeach
                 </div>

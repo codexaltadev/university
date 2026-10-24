@@ -66,7 +66,7 @@
 
 > Local development copy-তে (`/home/Project/diu`) upload করা file নেই। File সব `webbackend.daffodilvarsity.edu.bd`-এ public-ভাবে পাওয়া যায় (যাচাই: notice PDF, faculty ও admin ছবি — HTTP 200, 2026-10-08), তাই server access ছাড়াই HTTPS-এ নামানো যায়।
 
-**কখন নামানো হবে (DIU সিদ্ধান্ত, 2026-10-08):** এখন (development ও DR-1) file নামানো **হবে না** — script শুধু path ও metadata নিয়ে Media record তৈরি করে, file-এর জায়গায় placeholder। আসল download পরে, `webbackend.daffodilvarsity.edu.bd` (মূল উৎস) থেকে — DR-2-এর আগে একবার পূর্ণ, তারপর cutover-এ শুধু নতুনগুলো। Command: `legacy:migrate --step=S03 --download-files`।
+**কখন নামানো হবে (owner, 2026-10-21 — আগের 2026-10-08-এর সিদ্ধান্ত বদলে):** development-এ শুধু যেসব page তৈরি হয়েছে সেগুলোর file এখনই নামানো হয় (`legacy:migrate --step=S03 --download-files --only=faculty --only=department --only=program --only=facilities --only=accreditation --only=testimonials` — ১৩৪টি file, ~২০০ MB cache); বাকি group (alumni, event, gallery, notice PDF …) সেই page তৈরি হলে বা DR-2-এর আগে। *আগের সিদ্ধান্ত (2026-10-08):* এখন (development ও DR-1) file নামানো **হবে না** — script শুধু path ও metadata নিয়ে Media record তৈরি করে, file-এর জায়গায় placeholder। আসল download পরে, `webbackend.daffodilvarsity.edu.bd` (মূল উৎস) থেকে — DR-2-এর আগে একবার পূর্ণ, তারপর cutover-এ শুধু নতুনগুলো। Command: `legacy:migrate --step=S03 --download-files`।
 
 **File download-এর নিয়ম:**
 
@@ -129,7 +129,7 @@ Dependency অনুযায়ী — আগের ধাপের id পর�
 | S00 | প্রস্তুতি: নতুন DB `uwms:install`, সব bundled module install ও activate (Publications, Research সহ — data আসবে, পরে default অনুযায়ী inactive), Legacy Import user | — | — | — |
 | S01 | User, role, scope | `users`, `roles`, `model_has_roles`, `department_user` | DB-01 §13 | Role mapping sheet (৭.১) |
 | S02 | Vocabulary ও term | সব `*_categories` | DB-02 §18 + module অনুযায়ী | — |
-| S03 | **Media import** | `webbackend` থেকে HTTPS download (Section 3) | DB-02 §18 | প্রতিটি file Media Library-তে **একবার** (একই hash = একই item); id map `files`-এ legacy path (যেমন `gallery/…/x.webp`) → media item মনে রাখবে — পরের step-গুলো (S17G gallery, S16E event, S16T notice …) সেখান থেকে reference নেয়, copy নয় |
+| S03 | **Media import** | `webbackend` থেকে HTTPS download (Section 3) | DB-02 §18 | প্রতিটি file Media Library-তে **একবার** (একই hash = একই item); id map `files`-এ legacy path (যেমন `gallery/…/x.webp`) → media item মনে রাখবে — পরের step-গুলো (S17G gallery, S16E event, S16T notice …) সেখান থেকে reference নেয়, copy নয় — *(2026-10-21, dev)* তৈরি: group ধরে (`--only`), cache `LEGACY_FILES_PATH` (default `storage/app/legacy-files`), একসাথে ৪টি, ৩ বার চেষ্টা, path-এ না পেলে `storage/{path}` (পুরনো app-এর upload disk); id map-এ path ও cache file-এর hash দুটোই; Media Library-র ১০ MB সীমার বড় ছবি ২৪০০px JPEG করে (মূলটা cache-এ); folder "Legacy import / {table}", scope main site, shared; হাতে বাছা ছবি বদলায় না। Dev: ১৩৪ file, ২টি webbackend-এ নেই (404) |
 | S04 | Faculty, Department | `faculties`, `departments` | DB-03 §15 | — |
 | S05 | Campus, Session | — (নতুন), `semesters` | DB-03 §15 | Campus তালিকা |
 | S06 | **Program** ও তার অংশ | `department_program_type`, `program_types`, majors, career paths, facilitators, eligibilities, variants … | DB-03 §15, §15.1 | Program review sheet (৭.৩) |

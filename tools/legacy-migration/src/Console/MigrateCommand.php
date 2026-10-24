@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Legacy\Migration\Steps\S02Vocabularies;
+use Legacy\Migration\Steps\S03Media;
 use Legacy\Migration\Steps\S04FacultiesDepartments;
 use Legacy\Migration\Steps\S06Programs;
 use Legacy\Migration\Steps\S07Fees;
@@ -52,12 +53,14 @@ use Throwable;
 class MigrateCommand extends Command
 {
     protected $signature = 'legacy:migrate {--step=* : S02, S04, S06 …} {--all : every step in order} {--no-report : do not write report files}
-        {--from-seed : read the seed files (tools/legacy-migration/seed) instead of the legacy database}';
+        {--from-seed : read the seed files (tools/legacy-migration/seed) instead of the legacy database}
+        {--download-files : S03: fetch the files missing from the cache from webbackend}
+        {--only=* : S03: only these groups (faculty, department, program, facilities, accreditation, testimonials)}';
 
     protected $description = 'Migrate DIU data from the legacy database (project_diu)';
 
     /** In the order of the plan (§5). */
-    public const STEPS = [S02Vocabularies::class, S04FacultiesDepartments::class, S06Programs::class, S07Fees::class, S07Scholarships::class, S08Admission::class, S09Calendars::class, S10Offices::class, S11Administration::class, S11Alumni::class, S13Committees::class, S15DepartmentSites::class, S15MainSiteMenus::class, S16News::class, S16Events::class, S16Notices::class, S17Faqs::class, S17Testimonials::class, S17Gallery::class, S17Slider::class, S17Documents::class, S17Announcements::class, S18Transport::class, S18Facilities::class, S18Csr::class, S18Labs::class, S18Partners::class, S18Accreditation::class, S18International::class, S18Newsletter::class, S15MainHomepage::class, S15MicrositeHomepages::class];
+    public const STEPS = [S02Vocabularies::class, S04FacultiesDepartments::class, S06Programs::class, S07Fees::class, S07Scholarships::class, S08Admission::class, S09Calendars::class, S10Offices::class, S11Administration::class, S11Alumni::class, S13Committees::class, S15DepartmentSites::class, S15MainSiteMenus::class, S16News::class, S16Events::class, S16Notices::class, S17Faqs::class, S17Testimonials::class, S17Gallery::class, S17Slider::class, S17Documents::class, S17Announcements::class, S18Transport::class, S18Facilities::class, S18Csr::class, S18Labs::class, S18Partners::class, S18Accreditation::class, S18International::class, S18Newsletter::class, S03Media::class, S15MainHomepage::class, S15MicrositeHomepages::class];
 
     public function handle(): int
     {
@@ -81,6 +84,9 @@ class MigrateCommand extends Command
 
             return self::FAILURE;
         }
+
+        // S03 (files): its options
+        config(['legacy.download_files' => (bool) $this->option('download-files'), 'legacy.only' => array_map('strtolower', (array) $this->option('only'))]);
 
         $modules = app(ModuleRegistry::class);
         $log = app(ActivityLogStatus::class);

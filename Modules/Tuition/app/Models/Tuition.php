@@ -137,6 +137,14 @@ class Tuition extends BaseModel implements Scopeable
         return $lines->isEmpty() ? null : (float) $lines->sum('amount');
     }
 
+    /** Per-semester fee: the "term" lines (DIU's "Per Semester") */
+    public function termFee(): ?float
+    {
+        $lines = $this->linesOf(TuitionLine::TERM);
+
+        return $lines->isEmpty() ? null : (float) $lines->sum('amount');
+    }
+
     /** Other fees: the "other" lines, else whatever the total has beyond tuition (as DIU shows them). */
     public function otherFees(bool $max = false): ?float
     {

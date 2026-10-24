@@ -26,7 +26,10 @@ use Platform\Taxonomy\Vocabularies;
 class S06Programs extends Step
 {
     /** Legacy section_intros keys → the new page sections. */
-    public const INTROS = ['majors' => 'majors', 'variants' => 'variants', 'materials' => 'materials', 'future-career' => 'career_path', 'professional-memberships' => 'memberships'];
+    public const INTROS = [
+        'majors' => 'majors', 'variants' => 'variants', 'materials' => 'materials', 'future-career' => 'career_path', 'professional-memberships' => 'memberships',
+        'eligibilities' => 'eligibility', 'accreditation' => 'accreditation', 'facilities' => 'facilities', 'testimonials' => 'testimonials',
+    ];
 
     public static function key(): string
     {
@@ -81,6 +84,7 @@ class S06Programs extends Step
                 'subtitle' => Normalizer::en(Normalizer::text($row->subtitle)),
                 'summary' => Normalizer::en(Normalizer::html($row->summary)),
                 'objective' => Normalizer::en(Normalizer::html($row->program_objective)),
+                'credit_duration' => Normalizer::en(Normalizer::html($row->program_credit_duration)),
                 'ai_summary' => Normalizer::en(Normalizer::text($row->ai_summary)),
                 'ai_short_summary' => Normalizer::en(Normalizer::text($row->ai_short_summary)),
                 'section_intros' => $this->intros($row->section_intros),
@@ -104,9 +108,6 @@ class S06Programs extends Step
 
             if (filled($row->program_credit_duration) && ($parsed['credits'] === null || $parsed['years'] === null)) {
                 $this->report->review("Program {$row->id} \"{$row->full_program_name}\": credits / years not found in the text — check by hand.");
-            }
-            if (filled($row->program_credit_duration)) {
-                $this->report->archive("program_credit_duration of program {$row->id} ({$row->slug})", (string) $row->program_credit_duration);
             }
 
             $homeFlags += (int) $row->is_home;

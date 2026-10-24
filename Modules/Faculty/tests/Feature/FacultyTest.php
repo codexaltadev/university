@@ -13,6 +13,7 @@ use Modules\Faculty\Filament\Resources\Faculties\Pages\CreateFaculty;
 use Modules\Faculty\Filament\Resources\Faculties\Pages\EditFaculty;
 use Modules\Faculty\Models\Faculty;
 use Modules\Faculty\Sections\OurFacultiesSection;
+use Modules\Faculty\Settings\FacultySettings;
 use Platform\Assignments\ManualPerson;
 use Platform\Assignments\RoleCatalog;
 use Platform\Exceptions\ParentHasActiveChildren;
@@ -102,18 +103,62 @@ it('lists faculties on /faculties in the chosen layout, without hidden ones (FR-
     $hidden = Faculty::factory()->create(['name' => ['en' => 'Faculty of Hidden Studies'], 'show_in_listing' => false]);
     $off = Faculty::factory()->create(['name' => ['en' => 'Faculty of Closed Things'], 'is_active' => false]);
 
+    // Through the default theme: DIU's page (cards with the overview), whatever the layout
     $this->get('/faculties')->assertOk()
-        ->assertSee('Faculty of Science and Information Technology')
-        ->assertSee('faculty-card--grid', false)
+        ->assertSee('Browse by Faculties')
+        ->assertSeeInOrder(['Faculty of Science and Information Technology', 'Computing and science together.', 'Learn More'])
+        ->assertSee('href="'.url($this->fsit->url()).'"', false)
         ->assertDontSee('Faculty of Hidden Studies')
         ->assertDontSee('Faculty of Closed Things');
 
+    // The module's own layouts, for themes without their own
+    $faculties = Faculty::query()->listed()->get();
+    expect(moduleView('Faculty', 'listing.grid', ['faculties' => $faculties, 'options' => []]))->toContain('faculty-card--grid')->not->toContain('Faculty of Hidden Studies');
     app(LayoutResolver::class)->choose('faculty.listing', 'list');
-    $this->get('/faculties')->assertSee('faculty-card--list', false)->assertSee('Computing and science together.');
+    expect(moduleView('Faculty', 'listing.list', ['faculties' => $faculties, 'options' => []]))->toContain('faculty-card--list', 'Computing and science together.');
 
     // A hidden one keeps its own address; an inactive one does not
     $this->get($hidden->url())->assertOk();
     $this->get($off->url())->assertNotFound();
+});
+
+it('takes the /faculties text and links from Settings › Faculties, and a faculty\'s Quick Links from its form', function () {
+    // DIU's links are the defaults
+    $this->get('/faculties')->assertOk()->assertSeeInOrder(['Department Heads', 'Faculty Members', 'International Advisor', 'Visiting Professors', 'Quick Links', 'Admission Requirements', 'Transfer Credits']);
+
+    settings()->saveFor(new FacultySettings, [
+        'listing_title' => ['en' => 'Our Schools'], 'listing_text' => ['en' => 'Seven schools, one campus.'],
+        'side_links' => [['label' => ['en' => 'Visiting Scholars'], 'url' => '/visiting']],
+        'quick_links' => [['label' => ['en' => 'Credit Transfer Rules'], 'url' => 'https://example.edu/credits.pdf'], ['label' => ['en' => ''], 'url' => '/no-label']],
+    ]);
+    $this->get('/faculties')->assertOk()
+        ->assertSee('Our Schools')->assertSee('Seven schools, one campus.')
+        ->assertSee('Browse by Section (04)')->assertSee('Visiting Scholars')->assertSee('href="'.url('/visiting').'"', false)
+        ->assertSee('Credit Transfer Rules')->assertSee('https://example.edu/credits.pdf', false)
+        ->assertDontSee('International Advisor')->assertDontSee('/no-label', false);   // a row without text is left out
+
+    // A faculty's own Quick Links, entered with the faculty
+    $this->actingAs(superAdmin());
+    Livewire::test(EditFaculty::class, ['record' => $this->fsit->getRouteKey()])
+        ->fillForm(['quick_links' => [['label' => ['en' => 'FSIT Notices', 'bn' => 'নোটিশ'], 'url' => '/fsit/notices']]])
+        ->call('save')->assertHasNoFormErrors();
+    expect(link_list($this->fsit->fresh()->quick_links))->toBe([['label' => 'FSIT Notices', 'url' => url('/fsit/notices')]]);
+
+    Livewire::test(EditFaculty::class, ['record' => $this->fsit->getRouteKey()])
+        ->fillForm(['quick_links' => [['label' => ['en' => 'Bad'], 'url' => 'javascript:alert(1)']]])
+        ->call('save')->assertHasFormErrors();
+});
+
+it('shows the deans on DIU\'s /faculties under their faculty, as the Deans tab (Phase 4.4d)', function () {
+    app(RoleCatalog::class)->sync();
+    $dean = ManualPerson::create(['name' => ['en' => 'Prof. Dr. Touhid Bhuiyan'], 'designation' => ['en' => 'Dean, FSIT']]);
+    $this->fsit->assignments()->create(['person_type' => $dean->getMorphClass(), 'person_id' => $dean->id, 'role_key' => 'dean', 'sort_order' => 1, 'is_public' => true]);
+
+    $this->get('/faculties')->assertOk()
+        ->assertSeeInOrder(['Browse by Section (06)', 'Faculties', 'Deans', 'Department Heads', 'Faculty Members'])
+        ->assertSeeInOrder(['Browse by Deans', 'Faculty of Science and Information Technology', 'Prof. Dr. Touhid Bhuiyan', 'Faculty of Science and Information Technology (Dean)', 'View Profile'])
+        ->assertDontSee('No deans available.')
+        ->assertSee('No department heads available.');
 });
 
 it('shows a default microsite home with overview, Dean and counters (AC-FAC-01, FR-FAC-03/06)', function () {

@@ -46,6 +46,10 @@ return [
         'materials' => 'Learning Materials',
         'memberships' => 'Professional Memberships',
         'variants' => 'Program Options',
+        'eligibility' => 'Eligibility',
+        'accreditation' => 'Accreditation',
+        'facilities' => 'Facilities',
+        'testimonials' => 'Testimonials',
     ],
     'facilitator_types' => [
         'industry_expert' => 'Industry expert',
@@ -56,6 +60,7 @@ return [
     'view_all' => 'All programs',
     'overview' => 'Overview',
     'objective' => 'Program objective',
+    'credit_duration' => 'Credit & Duration',
     'eligibility' => 'Eligibility',
     'eligibility_english_medium' => 'English medium (O / A Level)',
     'apply' => 'Apply now',
@@ -94,10 +99,12 @@ return [
         'admission' => 'Admission & eligibility',
         'media' => 'Pictures & files',
         'intros' => 'Section intros',
+        'other_intros' => 'Intros of other modules\' parts',
         'featured' => 'Featured Programs',
         'by_level' => 'Programs by Level',
     ],
     'fields' => [
+        'quick_links' => 'Quick Links',
         'faculty' => 'Faculty',
         'department' => 'Department',
         'level' => 'Level',
@@ -108,6 +115,7 @@ return [
         'duration_label' => 'Duration (as shown)',
         'summary' => 'Summary',
         'objective' => 'Program objective',
+        'credit_duration' => 'Credit & duration (text)',
         'eligibility_general' => 'Eligibility',
         'eligibility_english_medium' => 'Eligibility — English medium (O / A Level)',
         'eligibility_rules' => 'Eligibility rules',
@@ -152,6 +160,7 @@ return [
         'intro' => 'Intro text',
     ],
     'help' => [
+        'quick_links' => 'Shown on its page under "Quick Links" (text and link, in this order). Empty: the page shows none.',
         'department_move' => 'Moving to another Department changes who may edit it and which menu it inherits.',
         'eligibility_rules' => 'Structured minimums, e.g. "min_gpa_ssc" = 2.5.',
         'show_in_listing' => 'Off: not on /programs or in the program sections, but its own address still works.',
@@ -163,5 +172,14 @@ return [
     ],
     'actions' => [
         'view_site' => 'View microsite',
+    ],
+    'settings' => [
+        'listing' => 'The Programs page (/programs)',
+        'listing_help' => 'Title, text and picture on top. Empty: the theme\'s own.',
+        'title' => 'Title', 'text' => 'Text', 'image' => 'Picture',
+        'side_links' => 'Links under the faculties',
+        'side_links_help' => 'After the faculties in "Browse by Faculty" (Institutional Programs …).',
+        'page_quick_links' => 'Quick Links of a program page',
+        'page_quick_links_help' => 'For programs without Quick Links of their own.',
     ],
 ];

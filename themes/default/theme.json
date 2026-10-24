@@ -346,6 +346,7 @@
         { "key": "hero_height", "type": "select", "label": "Hero height", "options": ["medium", "tall"], "default": "tall" },
         { "key": "header_cta_url", "type": "text", "label": "Apply button link (empty = no button)", "default": "https://admission.daffodilvarsity.edu.bd/" },
         { "key": "header_cta_label", "type": "text", "label": "Apply button text (empty = Apply Now)", "default": "" },
+        { "key": "programs_faculty", "type": "text", "label": "Programs page: faculty shown first (short name; empty = the first)", "default": "fbe" },
         { "key": "footer_band_1_label", "type": "text", "label": "Footer band, left link text (empty = no band)", "default": "Campus Life in 60 Seconds" },
         { "key": "footer_band_1_url", "type": "text", "label": "Footer band, left link", "default": "https://annisulhuq.daffodil.university/vt/" },
         { "key": "footer_band_2_label", "type": "text", "label": "Footer band, right link text", "default": "Get a Virtual Tour" },

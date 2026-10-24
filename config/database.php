@@ -56,6 +56,8 @@ return [
             'collation' => 'utf8mb4_unicode_ci',
             'prefix' => '',
             'strict' => false,
+            // S03: cache of the files downloaded from webbackend (Data Migration Plan §3)
+            'files_path' => env('LEGACY_FILES_PATH', storage_path('app/legacy-files')),
         ],
 
         'mysql' => [
