@@ -9,7 +9,7 @@ use Platform\Relations\RelationEngine;
  * S15H Main homepage (Data Migration Plan S15, owner 2026-10-17: the default theme is a copy of
  * daffodilvarsity.edu.bd). The live homepage is put together in code, so its order is set here
  * with the default theme's sections (theme.json "sections"): hero, rankings / vision / mission,
- * find your degree, scholarships, research, recent events, testimonials, alumni stories, the
+ * find your degree, scholarships, research, recent events, distinguished visitors, alumni stories, the
  * alumni portal button. Their texts are the theme's defaults until an editor changes them.
  * Running it again puts the main homepage back to this list.
  */
@@ -23,7 +23,7 @@ class S15MainHomepage extends Step
         ['theme.scholarships', []],
         ['theme.research', []],
         ['theme.events', ['source_mode' => 'latest', 'count' => 3]],
-        ['theme.testimonials', ['source_mode' => 'highlighted_first', 'count' => 8]],
+        ['theme.visitors', ['source_mode' => 'highlighted', 'count' => 10]],   // DIU's "distinguished" slider = its chosen visitors (is_home, S18I)
         ['theme.alumni-news', ['source_mode' => 'highlighted_first', 'count' => 5]],
         ['theme.link-button', []],
     ];

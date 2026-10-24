@@ -23,6 +23,7 @@ use Platform\Filament\Components\PersonPicker;
 use Platform\Homepage\SectionContext;
 use Platform\Modules\ModulePermissions;
 use Platform\Relations\RelationEngine;
+use Platform\Support\Countries;
 
 beforeEach(function () {
     Filament::setCurrentPanel(Filament::getPanel('admin'));
@@ -103,14 +104,18 @@ it('saves the person and their title from the form, and moves it to another pers
     $this->get('/testimonials')->assertSee('Ms. Tania')->assertSee('CEO')->assertDontSee('MBA alumnus');   // no own title: the designation
 });
 
-it('shows "What People Say" with only the chosen types, highlighted first (FR-TEST-03)', function () {
+it('shows "What People Say" with only the highlighted ones of the chosen types; more only when the builder asks (FR-TEST-03, owner 2026-10-24)', function () {
     $student = ($this->make)('Student one.', 'student', 'S One');
     ($this->make)('Alumni one.', 'alumni', 'A One');
     $star = ($this->make)('Student star.', 'student', 'S Star');
     $star->update(['sort_order' => 99]);
     $this->engine->sync($star, [], mainSite: true, highlights: ['site:0' => ['order' => 1]], user: null);
 
+    expect(TestimonialsSection::defaultSourceMode())->toBe('highlighted');
     $items = (new TestimonialsSection)->items(new SectionContext('site:0', ['types' => ['student'], 'count' => 5], 'en'));
+    expect($items->pluck('quote')->all())->toBe(['Student star.']);                                     // only the chosen one
+
+    $items = (new TestimonialsSection)->items(new SectionContext('site:0', ['source_mode' => 'highlighted_first', 'types' => ['student'], 'count' => 5], 'en'));
     expect($items->pluck('quote')->all())->toBe(['Student star.', 'Student one.']);
 
     $latest = (new TestimonialsSection)->items(new SectionContext('site:0', ['source_mode' => 'latest', 'count' => 2], 'en'));
@@ -140,4 +145,17 @@ it('shows DIU\'s testimonials: two columns of cards that open to the whole testi
 
     settings()->saveFor(new TestimonialsSettings, ['title' => ['en' => 'Voices of DIU'], 'text' => ['en' => 'In their words.']]);
     $this->get('/testimonials')->assertSee('Voices of DIU')->assertSee('In their words.');
+});
+
+it('records where a testimonial\'s writer is from and marks an international voice on the website', function () {
+    $local = ($this->make)('Great campus.', 'student', 'Karim', attributes: ['country' => null]);
+    $abroad = ($this->make)('A welcoming place.', 'partner', 'Ms. Tanaka', attributes: ['country' => 'JP']);
+
+    expect(Countries::options('en'))->toHaveKey('JP')->and(Countries::name('JP', 'en'))->toBe('Japan')
+        ->and(Countries::isAbroad('BD'))->toBeFalse()->and(Countries::isAbroad('JP'))->toBeTrue();
+    $this->get('/testimonials')->assertOk()->assertSeeInOrder(['Ms. Tanaka', 'Japan'])->assertDontSee('Bangladesh');
+
+    $this->actingAs(superAdmin());
+    Livewire::test(EditTestimonial::class, ['record' => $local->getRouteKey()])->fillForm(['country' => 'IN'])->call('save')->assertHasNoFormErrors();
+    expect($local->fresh()->country)->toBe('IN');
 });

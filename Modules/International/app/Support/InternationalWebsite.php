@@ -19,7 +19,8 @@ use Platform\Theme\LayoutResolver;
 /**
  * /international: the three lists with their counts; /international/partners (FR-INTL-02): by
  * country, agreement, search; logo grid / table / countries; the expired hidden or marked (setting);
- * /international/conferences (+ /{slug}, FR-INTL-05); /international/visitors (FR-INTL-06).
+ * /international/conferences (+ /{slug}, FR-INTL-05); /visitors (FR-INTL-06; it was /international/visitors:
+ * visitors come from home and abroad, owner 2026-10-24).
  * Also under a microsite.
  */
 class InternationalWebsite
@@ -31,16 +32,19 @@ class InternationalWebsite
     public function respond(string $rest, SiteContext $context, string $locale): Response|RedirectResponse|null
     {
         $rest = trim($rest, '/');
+        $base = $context->isMicrosite() ? rtrim((string) app(MicrositeResolver::class)->urlFor($context->entity, $locale), '/') : '';
+        if ($rest === Visitor::PATH) {
+            return $this->visitorsPage($context, $base);   // visitors come from home and abroad: their own page (owner 2026-10-24)
+        }
         if ($rest !== self::ROOT && ! Str::startsWith($rest, self::ROOT.'/')) {
             return null;
         }
-        $base = $context->isMicrosite() ? rtrim((string) app(MicrositeResolver::class)->urlFor($context->entity, $locale), '/') : '';
         $tail = trim(Str::after($rest, self::ROOT), '/');
 
         return match (true) {
             $tail === '' => $this->home($context, $base),
             $tail === 'partners' => $this->partnersPage($context, $base),
-            $tail === 'visitors' => $this->visitorsPage($context, $base),
+            $tail === 'visitors' => redirect(url($base.'/'.Visitor::PATH), 301),   // its earlier address
             $tail === 'conferences' => $this->conferencesPage($context, $base),
             Str::startsWith($tail, 'conferences/') => $this->conference(Str::after($tail, 'conferences/'), $context, $base, $locale),
             default => null,

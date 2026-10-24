@@ -144,10 +144,20 @@
                 { "key": "badge", "type": "text", "label": "Badge on the picture", "default": "Featured" }
             ]
         },
-        "testimonials": {
-            "label": "DIU — Faculty / visitor testimonials (heading, subheading = intro)",
+        "visitors": {
+            "label": "DIU — Distinguished visitors, the chosen ones (heading, subheading = intro)",
             "heading": "Meet our distinguished Faculty Members from Global",
             "subheading": "Our faculty includes distinguished scholars, industry experts, and researchers from Bangladesh and across the globe—bringing global knowledge and local relevance into every classroom.",
+            "source": "international.visitors",
+            "fields": [
+                { "key": "button_label", "type": "text", "label": "Button text", "default": "View All" },
+                { "key": "button_url", "type": "url", "label": "Button link", "default": "/visitors" }
+            ]
+        },
+        "testimonials": {
+            "label": "DIU — Testimonials, the chosen ones (heading, subheading = intro)",
+            "heading": "What People Say",
+            "subheading": "Students, alumni, parents and partners — from Bangladesh and abroad — on their experience at Daffodil International University.",
             "source": "testimonials.list",
             "fields": [
                 { "key": "button_label", "type": "text", "label": "Button text", "default": "View All" },

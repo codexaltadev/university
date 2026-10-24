@@ -73,6 +73,7 @@ class ThemeSections
                     'subheading' => $definition['subheading'] ?? null,
                     ...self::values($fields, (array) $ctx->setting('content', []), $ctx->locale),
                 ], self::placeholders($ctx)),
+                defaultMode: $source?->defaultMode ?? 'highlighted_first',
             );
         }
 

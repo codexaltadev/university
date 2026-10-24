@@ -40,13 +40,13 @@ final class SectionContext
      *
      * @param  class-string  $model
      */
-    public function applySourceMode(string $model, int $defaultCount = 6): Collection
+    public function applySourceMode(string $model, int $defaultCount = 6, string $defaultMode = 'highlighted_first'): Collection
     {
         return app(RelationEngine::class)->for($this->ownerKey)
             ->content($model)
             ->includeDescendants((bool) $this->setting('include_descendants', false))
             ->mode(
-                in_array($this->setting('source_mode'), self::MODES, true) ? $this->setting('source_mode') : 'highlighted_first',
+                in_array($this->setting('source_mode'), self::MODES, true) ? $this->setting('source_mode') : $defaultMode,
                 max(1, (int) $this->setting('count', $defaultCount)),
                 array_map('intval', (array) $this->setting('manual_ids', [])),
             );

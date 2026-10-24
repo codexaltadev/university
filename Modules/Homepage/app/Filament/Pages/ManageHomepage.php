@@ -19,6 +19,7 @@ use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Text;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
@@ -179,7 +180,9 @@ class ManageHomepage extends Page implements MicrositeTool
                 ->options(fn (): array => $homepages->catalogueOptions())
                 // Custom HTML: Super Admins only
                 ->disableOptionWhen(fn (string $value): bool => $value === CustomHtmlSection::key() && ! Auth::user()?->isSuperAdmin())
-                ->required()->live()->searchable(),
+                ->required()->live()->searchable()
+                // a content section starts with its own source mode (testimonials: only the highlighted ones)
+                ->afterStateUpdated(fn (Get $get, Set $set) => $set('settings.source_mode', $type($get)?->defaultMode ?? 'highlighted_first')),
             Grid::make(2)->schema(TranslatableTabs::inline(fn (string $locale, bool $isDefault, string $language): array => [
                 TextInput::make("heading.{$locale}")->label(__('homepage::homepage.fields.heading')." ({$language})")->maxLength(150),
                 TextInput::make("subheading.{$locale}")->label(__('homepage::homepage.fields.subheading')." ({$language})")->maxLength(255),

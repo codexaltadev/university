@@ -13,9 +13,9 @@ use Platform\Homepage\SectionContext;
 use Platform\Relations\RelationEngine;
 
 /**
- * Homepage section "What People Say" (FR-TEST-03): the place's testimonials, only the chosen
- * types when set; the builder's source mode, where "latest" means the dragged order
- * (FR-TEST-04) — testimonials have no date. Slider or grid.
+ * Homepage section "What People Say" (FR-TEST-03): the place's highlighted testimonials — only those
+ * unless the builder asks for more (owner 2026-10-24) — of the chosen types when set; "latest" means
+ * the dragged order (FR-TEST-04), testimonials have no date. Slider or grid.
  */
 class TestimonialsSection extends Section
 {
@@ -39,6 +39,12 @@ class TestimonialsSection extends Section
         return Testimonial::class;
     }
 
+    /** Owner 2026-10-24: a homepage shows only the testimonials chosen for it (Highlight), not the rest */
+    public static function defaultSourceMode(): string
+    {
+        return 'highlighted';
+    }
+
     public static function settingsSchema(): array
     {
         return [
@@ -52,9 +58,9 @@ class TestimonialsSection extends Section
     /** @return Collection<int, Testimonial> */
     public function items(SectionContext $ctx): Collection
     {
-        $mode = $ctx->setting('source_mode', 'highlighted_first');
+        $mode = $ctx->setting('source_mode', static::defaultSourceMode());
         if ($mode === 'manual') {
-            return $ctx->applySourceMode(Testimonial::class);
+            return $ctx->applySourceMode(Testimonial::class, 6, static::defaultSourceMode());
         }
 
         $count = max(1, (int) $ctx->setting('count', 6));

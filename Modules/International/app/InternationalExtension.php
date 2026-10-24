@@ -10,6 +10,7 @@ use Modules\International\Models\Institution;
 use Modules\International\Models\Visitor;
 use Modules\International\Notifications\AgreementExpiring;
 use Modules\International\Sections\GlobalPartnersSection;
+use Modules\International\Sections\VisitorsSection;
 use Modules\International\Settings\InternationalSettings;
 use Modules\International\Support\InternationalWebsite;
 use Platform\Contracts\ModuleExtension;
@@ -29,6 +30,7 @@ final class InternationalExtension implements ModuleExtension
         $r->attachable(Visitor::class);                                                                  // FR-INTL-06
         $r->vocabulary(Conference::CATEGORY, label: 'Conference category', multiple: false);
         $r->homepageSection(GlobalPartnersSection::class);                                               // FR-INTL-09
+        $r->homepageSection(VisitorsSection::class);                                                     // FR-INTL-06: the chosen guests
         $r->websitePage('international.index', label: 'international::international.title', path: '/'.InternationalWebsite::ROOT);
         $r->websitePage('international.partners', label: 'international::international.partners', path: '/'.InternationalWebsite::ROOT.'/partners');
         $r->websitePage('international.conferences', label: 'international::international.conferences', path: '/'.Conference::PATH);

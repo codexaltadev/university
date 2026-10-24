@@ -35,7 +35,7 @@ class Testimonial extends BaseModel implements Scopeable
     use IsAssignable;       // the author
     use IsAttachable;
 
-    public const TYPES = ['student', 'alumni', 'parent', 'employer', 'partner'];
+    public const TYPES = ['student', 'alumni', 'parent', 'faculty', 'employer', 'partner', 'visitor'];
 
     public const ROLE = 'author';
 
@@ -45,7 +45,7 @@ class Testimonial extends BaseModel implements Scopeable
 
     protected $table = 'testimonials_testimonials';
 
-    protected $fillable = ['quote', 'testimonial_type', 'rating', 'video_url', 'sort_order', 'is_active'];
+    protected $fillable = ['quote', 'testimonial_type', 'country', 'rating', 'video_url', 'source_key', 'sort_order', 'is_active'];
 
     public array $translatable = ['quote'];
 

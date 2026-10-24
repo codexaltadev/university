@@ -1,4 +1,4 @@
-{{-- /international/visitors (FR-INTL-06). Contract: $visitors (paginator, newest first), $base --}}
+{{-- /visitors (FR-INTL-06). Contract: $visitors (paginator, newest first), $base --}}
 <x-theme::layout :title="__('international::international.visitors')">
     <div class="container" style="padding-block:var(--space-10, 40px)">
         <h1>{{ __('international::international.visitors') }}</h1>

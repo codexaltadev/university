@@ -25,6 +25,7 @@ final class SectionType
         private readonly Closure $schema,
         private readonly Closure $items,
         private readonly ?Closure $content = null,
+        public readonly string $defaultMode = 'highlighted_first',
     ) {}
 
     /** @param class-string<Section> $class */
@@ -37,6 +38,7 @@ final class SectionType
             model: $class::model(),
             schema: fn (): array => $class::settingsSchema(),
             items: fn (SectionContext $ctx): mixed => app($class)->items($ctx),
+            defaultMode: $class::defaultSourceMode(),
         );
     }
 

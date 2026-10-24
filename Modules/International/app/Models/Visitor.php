@@ -30,7 +30,7 @@ class Visitor extends BaseModel implements Scopeable
     use HasTranslations;
     use IsAttachable;
 
-    public const PATH = 'international/visitors';
+    public const PATH = 'visitors';
 
     public const ALBUM = 'Modules\\Gallery\\Models\\Album';
 

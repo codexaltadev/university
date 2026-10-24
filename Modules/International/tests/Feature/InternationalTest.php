@@ -10,7 +10,9 @@ use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Validation\ValidationException;
 use Livewire\Livewire;
+use Modules\Homepage\Support\Homepages;
 use Modules\International\Filament\Resources\Institutions\Pages\CreateInstitution;
+use Modules\International\Filament\Resources\Visitors\Pages\EditVisitor;
 use Modules\International\Metrics\CountriesCount;
 use Modules\International\Metrics\PartnersCount;
 use Modules\International\Models\Conference;
@@ -18,7 +20,10 @@ use Modules\International\Models\Country;
 use Modules\International\Models\Institution;
 use Modules\International\Models\Visitor;
 use Modules\International\Sections\GlobalPartnersSection;
+use Modules\International\Sections\VisitorsSection;
 use Modules\International\Support\InstitutionImporter;
+use Modules\International\Support\VisitorTestimonial;
+use Platform\Assignments\RoleCatalog;
 use Platform\Homepage\SectionContext;
 use Platform\Modules\ModulePermissions;
 use Platform\Relations\RelationEngine;
@@ -94,7 +99,32 @@ it('shows conferences, visitors and "Global Partners" with the featured first (F
 
     $this->get('/international/conferences')->assertOk()->assertSeeInOrder([__('international::international.upcoming'), 'ICCIT 2026', __('international::international.past'), 'ICCIT 2020']);
     $this->get(Conference::query()->where('title->en', 'ICCIT 2026')->first()->url())->assertOk()->assertSee('Call for papers.');
-    $this->get('/international/visitors')->assertOk()->assertSee('Prof. Tanaka')->assertSee('Kyoto University')->assertSee('Japan');
+    $this->get('/international/visitors')->assertRedirect('/visitors');
+    $this->get('/visitors')->assertOk()->assertSee('Prof. Tanaka')->assertSee('Kyoto University')->assertSee('Japan');
     $this->get('/international')->assertOk()->assertSee(__('international::international.featured'))->assertSee('Beta Uni');
     expect((new GlobalPartnersSection)->items(new SectionContext('site:0', ['count' => 5], 'en'))->pluck('name')->all())->toBe(['Beta Uni', 'Alpha Uni']);
+});
+
+it('gives visitors their own page and the homepage only the chosen ones, and shows a visitor\'s words as a testimonial too (owner 2026-10-24)', function () {
+    $chosen = ($this->make)(Visitor::class, ['name' => ['en' => 'Dr. Hala Hattab'], 'body' => ['en' => '<p>A pioneer in IT-enabled education.</p>'], 'country_id' => $this->my->id, 'visited_on' => '2025-01-10']);
+    ($this->make)(Visitor::class, ['name' => ['en' => 'Mr. Rahman'], 'body' => ['en' => '<p>Lovely campus.</p>'], 'visited_on' => '2025-02-10']);   // from Bangladesh, not chosen
+    $this->engine->sync($chosen, [], mainSite: true, highlights: ['site:0' => ['order' => 1]], user: null);
+
+    expect(app(Homepages::class)->catalogue()['international.visitors']->defaultMode)->toBe('highlighted')   // the builder starts there
+        ->and(VisitorsSection::defaultSourceMode())->toBe('highlighted')
+        ->and((new VisitorsSection)->items(new SectionContext('site:0', ['count' => 10], 'en'))->pluck('name')->all())->toBe(['Dr. Hala Hattab']);
+    $this->get('/visitors')->assertOk()->assertSeeInOrder(['Mr. Rahman', 'Dr. Hala Hattab', 'Malaysia'])->assertSee('id="visitor-'.$chosen->id.'"', false);
+
+    // Their words among the testimonials too: once, linked, from the same place and country
+    app(RoleCatalog::class)->sync();
+    $this->actingAs(superAdmin());
+    Livewire::test(EditVisitor::class, ['record' => $chosen->getRouteKey()])->callAction('asTestimonial');
+    Livewire::test(EditVisitor::class, ['record' => $chosen->getRouteKey()])->callAction('asTestimonial');
+    $testimonial = VisitorTestimonial::of($chosen);
+    expect($testimonial)->not->toBeNull()
+        ->and($testimonial->testimonial_type)->toBe('visitor')->and($testimonial->country)->toBe('MY')
+        ->and($testimonial->quote)->toBe('A pioneer in IT-enabled education.')
+        ->and($testimonial->person()->name())->toBe('Dr. Hala Hattab')
+        ->and($testimonial::query()->where('source_key', VisitorTestimonial::sourceKey($chosen))->count())->toBe(1)
+        ->and(app(RelationEngine::class)->isOnMainSite($testimonial))->toBeTrue();
 });

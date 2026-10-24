@@ -43,7 +43,7 @@
                                     <h2 class="font-semibold text-gray-900 truncate">{{ $card['name'] }}</h2>
                                     @if ($card['title'])<p class="text-sm text-gray-600 truncate">{{ $card['title'] }}</p>@endif
                                 </div>
-                                <span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded shrink-0">{{ $card['type'] }}</span>
+                                <span class="flex flex-col items-end gap-1 shrink-0"><span class="px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">{{ $card['type'] }}</span>@if ($card['country'])<span class="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded"><x-theme::icon name="globe" class="w-3 h-3" />{{ $card['country'] }}</span>@endif</span>
                             </div>
                             <button type="button" class="mt-4 text-gray-900 font-medium text-sm flex items-center gap-1 group-hover:gap-2 transition-all cursor-pointer self-start">
                                 {{ __('testimonials::testimonials.page.read_more') }} <x-theme::icon name="chevron-right" class="w-4 h-4" />
@@ -64,7 +64,7 @@
                                             @if ($card['profile'])<a href="{{ $card['profile'] }}" class="text-inherit">{{ $card['name'] }}</a>@else{{ $card['name'] }}@endif
                                         </h2>
                                         @if ($card['title'])<p class="text-base text-gray-600 mb-1">{{ $card['title'] }}</p>@endif
-                                        <span class="inline-block mt-2 px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">{{ $card['type'] }}</span>
+                                        <span class="inline-block mt-2 px-3 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">{{ $card['type'] }}</span>@if ($card['country'])<span class="inline-flex items-center gap-1 mt-2 ml-1 px-3 py-1 text-xs font-medium bg-blue-50 text-blue-700 rounded"><x-theme::icon name="globe" class="w-3 h-3" />{{ $card['country'] }}</span>@endif
                                     </div>
                                 </div>
                                 <div class="px-6 py-8 sm:px-8 sm:py-10 text-gray-700 leading-relaxed text-justify whitespace-pre-line">{{ $card['quote'] }}</div>

@@ -4,6 +4,7 @@ namespace Modules\Testimonials\Support;
 
 use Illuminate\Support\Str;
 use Modules\Testimonials\Models\Testimonial;
+use Platform\Support\Countries;
 
 /**
  * What the testimonials page shows, ready for a theme (`$page` in testimonials::index), as DIU does:
@@ -37,7 +38,7 @@ class TestimonialsPage
     }
 
     /**
-     * @return list<array{id: string, excerpt: string, quote: string, name: ?string, title: ?string, profile: ?string, photo: ?string, type: string, rating: ?int, video: ?string}>
+     * @return list<array{id: string, excerpt: string, quote: string, name: ?string, title: ?string, profile: ?string, photo: ?string, type: string, country: ?string, rating: ?int, video: ?string}>
      */
     public function cards(): array
     {
@@ -54,6 +55,7 @@ class TestimonialsPage
                 'profile' => $person?->profileUrl(),
                 'photo' => $t->photoUrl(),
                 'type' => __('testimonials::testimonials.types.'.$t->testimonial_type),
+                'country' => Countries::isAbroad($t->country) ? Countries::name($t->country) : null,   // an international voice
                 'rating' => $t->rating ? (int) $t->rating : null,
                 'video' => $t->videoEmbed(),
             ];

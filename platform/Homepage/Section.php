@@ -49,6 +49,16 @@ abstract class Section
     }
 
     /**
+     * The source mode a content section starts with in the builder (one of SectionContext::MODES):
+     * "highlighted_first" fills up with the rest; a section that should show only what was chosen
+     * (testimonials) says "highlighted".
+     */
+    public static function defaultSourceMode(): string
+    {
+        return 'highlighted_first';
+    }
+
+    /**
      * Extra settings fields of this section, stored under "settings".
      *
      * @return array<Component|Field>

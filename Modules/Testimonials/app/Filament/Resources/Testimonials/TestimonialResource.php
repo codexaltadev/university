@@ -35,6 +35,7 @@ use Platform\Filament\Components\RelatedToField;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Filament\RelationManagers\ActivityRelationManager;
 use Platform\Filament\Tables\ContentFilters;
+use Platform\Support\Countries;
 use UnitEnum;
 
 /**
@@ -89,6 +90,8 @@ class TestimonialResource extends Resource
                     ]),
                     Section::make()->columns(2)->schema([
                         Select::make('testimonial_type')->label(__('testimonials::testimonials.fields.type'))->options(self::typeOptions())->default('student')->required(),
+                        Select::make('country')->label(__('testimonials::testimonials.fields.country'))->helperText(__('testimonials::testimonials.help.country'))
+                            ->options(fn (): array => Countries::options())->searchable(),
                         Select::make('rating')->label(__('testimonials::testimonials.fields.rating'))->options(array_combine(range(1, 5), array_map(fn (int $n): string => str_repeat('★', $n), range(1, 5)))),
                         TextInput::make('video_url')->label(__('testimonials::testimonials.fields.video_url'))->helperText(__('testimonials::testimonials.help.video_url'))
                             ->url()->maxLength(2048)->columnSpanFull(),

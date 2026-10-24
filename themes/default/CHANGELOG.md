@@ -60,6 +60,10 @@
 - 4.5e: DIU testimonials — `modules/testimonials/index`: two columns of cards (words, photo,
   name, title, type, Read more) opening the whole testimonial in a window (#testimonial-{id});
   `images/testimonials-banner.jpg`.
+- 4.5e+: testimonials ≠ visitors (owner) — section `visitors` (DIU's "Meet our distinguished …"
+  slider, from the chosen visitors) beside `testimonials` ("What People Say", the chosen
+  testimonials); `modules/international/visitors` (/visitors in DIU's testimonial look); a
+  testimonial's country shown when from abroad.
 
 ## 1.0.0 — 2026-10-09
 

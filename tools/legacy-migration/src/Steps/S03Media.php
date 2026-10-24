@@ -55,6 +55,7 @@ class S03Media extends Step
         'events' => [['events', 'events', 'photo', 'Modules\\Events\\Models\\Event', 'featured_image']],
         'notices' => [['notice', 'notice_files', 'file_name', 'Modules\\Notice\\Models\\Notice', 'attachments', 'notice_id', 'notices', 'file_title']],
         'gallery' => [['gallery', 'gallery_photos', 'photo_name', null, null]],   // only into the library: S17G puts them in albums
+        'visitors' => [['international', 'visitors', 'photo', 'Modules\\International\\Models\\Visitor', 'photo']],
     ];
 
     /** Plan §3: at most 4 downloads at once, 3 tries */
