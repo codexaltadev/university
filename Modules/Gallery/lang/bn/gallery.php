@@ -63,6 +63,17 @@ return [
         'video_url' => 'YouTube, Vimeo বা Facebook। ভিডিও file হলে উপরে ছবির মতো যোগ করুন।',
         'speaker' => 'লেকচার সিরিজের জন্য: ব্যক্তিকে খুঁজুন বা নতুন যোগ করুন।',
     ],
+    'settings' => [
+        'page' => 'গ্যালারির পেজ',
+        'page_help' => '/gallery-এর উপরের শিরোনাম, লেখা ও ছবি। খালি: theme-এর নিজের।',
+        'title' => 'শিরোনাম', 'text' => 'লেখা', 'image' => 'ছবি',
+    ],
+    'page' => [
+        'browse' => 'ধরন অনুযায়ী', 'other' => 'অন্যান্য অ্যালবাম',
+        'select' => 'একটি ধরন বাছুন', 'select_text' => 'ছবি দেখতে পাশ থেকে একটি ধরন বাছুন',
+        'showing' => ':total-টির মধ্যে :from - :to', 'none' => 'এই ধরনে কোনো ছবি নেই',
+        'photos' => ':countটি ছবি', 'albums' => 'অ্যালবাম', 'videos' => 'ভিডিও', 'all_albums' => 'সব অ্যালবাম',
+    ],
     'errors' => [
         'series' => 'তালিকা থেকে একটি সিরিজ বেছে নিন।',
         'video_url' => 'YouTube, Vimeo বা Facebook লিংক দিন।',

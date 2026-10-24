@@ -34,6 +34,7 @@
         "custom_permissions": [],
         "provides": {
             "attachable": true,
+            "settings": true,
             "assignable": true,
             "searchable": true,
             "sitemap": true,

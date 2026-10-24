@@ -7,6 +7,7 @@ use Modules\Gallery\Models\Album;
 use Modules\Gallery\Models\Video;
 use Modules\Gallery\Sections\PhotoGallerySection;
 use Modules\Gallery\Sections\VideoGallerySection;
+use Modules\Gallery\Settings\GallerySettings;
 use Modules\Gallery\Tabs\EventAlbumsTab;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
@@ -31,6 +32,7 @@ final class GalleryExtension implements ModuleExtension
         $r->menuItemType(Album::class);
         $r->layouts('gallery.album', ['masonry', 'grid', 'carousel']);                              // FR-GAL-05; first = default
         $r->layouts('gallery.listing', ['cards', 'grid']);
+        $r->settings(GallerySettings::class);                                                         // the gallery's own text
 
         $event = 'Modules\\Events\\Models\\Event';
         if (class_exists($event)) {

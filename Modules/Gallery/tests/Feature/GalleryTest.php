@@ -10,6 +10,7 @@
 use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Validation\ValidationException;
 use Livewire\Livewire;
 use Modules\Department\Models\Department;
@@ -111,11 +112,15 @@ it('lists the main site\'s albums newest first, by category and kind, and an ent
     $cse = Department::factory()->create(['faculty_id' => Faculty::factory()->create()->id, 'short_name' => 'CSE']);
     ($this->album)('CSE Study Tour', [($this->photo)('t.jpg')], main: false, places: ['department.department:'.$cse->id]);
 
-    $this->get('/gallery')->assertOk()->assertSeeInOrder(['6th Convocation', 'MoU 2019'])
+    // DIU's gallery: "Browse by Category" — the category with its albums, the rest after — and the album cards
+    $this->get('/gallery')->assertOk()->assertSeeInOrder(['Browse by Category (02)', 'Convocation', '6th Convocation', 'Other albums', 'MoU 2019', 'Albums', '6th Convocation', 'MoU 2019'])
         ->assertDontSee('Hidden')->assertDontSee('CSE Study Tour');
-    $this->get('/gallery?category=convocation')->assertOk()->assertSee('6th Convocation')->assertDontSee('MoU 2019');
-    $this->get('/gallery?kind=videos')->assertOk()->assertSee('Documentaries')->assertDontSee('MoU 2019');
-    $this->get('/gallery?kind=photos')->assertOk()->assertSee('MoU 2019')->assertDontSee('Documentaries');
+    // A category: its albums' pictures (Media Library items), 20 a page
+    $this->get('/gallery?category=convocation')->assertOk()->assertSeeInOrder(['Convocation', 'Showing 1 - 1 of 1 photos', $new->entries('image')->first()['item']->url('medium') ?? $new->entries('image')->first()['item']->url()], false);
+    // The module's own listing (any theme without its version) keeps its filters
+    $listing = fn (array $albums) => moduleView('Gallery', 'index', ['albums' => new LengthAwarePaginator(collect($albums), count($albums), 12), 'categories' => collect(), 'category' => null, 'kind' => null, 'layout' => 'cards', 'base' => '']);
+    expect($listing([$new, $old]))->toContain('6th Convocation')->toContain('MoU 2019');
+    $this->get('/gallery?kind=videos')->assertOk()->assertSeeInOrder(['Albums', 'Documentaries'])->assertDontSee('1 photos · 1 May 2019', false);
 
     $base = rtrim($cse->url(), '/');
     $this->get($base.'/gallery')->assertOk()->assertSee('CSE Study Tour')->assertDontSee('MoU 2019');

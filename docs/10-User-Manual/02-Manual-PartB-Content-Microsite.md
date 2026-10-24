@@ -132,6 +132,7 @@ Page তৈরি করে **Menu**-তে যোগ না করলে visito
 * নাম, বিবরণ, তারিখ, **Cover** (খালি = প্রথম ছবি), **Series** (Documentary / Lecture series), **Event** (দিলে Event-এর page-এ album দেখাবে), **Category**, **Show in**।
 * YouTube / Vimeo / Facebook video: album save করার পর নিচে **Videos** tab → **New** — link, শিরোনাম, পর্ব, দৈর্ঘ্য, বক্তা (Person Picker)। Video file হলে ছবির মতোই Media Library থেকে যোগ করুন।
 * Website: `/gallery` (Photos / Videos, category), album page-এ ছবি বড় করে দেখা (← → Esc, phone-এ swipe); layout Appearance › Layouts-এ (masonry / grid / carousel)। Homepage: **Photo Gallery** ও **Video Gallery** section।
+* Default theme-এ (DIU-র মতো): বাম পাশে **Browse by Category** — প্রতিটি category খুললে তার album-গুলো (category ছাড়া album **Other albums**-এ); category বাছলে তার সব album-এর ছবি, album বাছলে শুধু সেটির — প্রতি পাতায় ২০টি, "Showing 1 - 20 of 159 photos", চাপলে বড় করে দেখা। কিছু না বাছলে album-এর card। ছবিগুলো Media Library-র item-ই (copy নয়)। উপরের শিরোনাম, লেখা ও ছবি **Settings › Gallery**-এ।
 
 ---
 

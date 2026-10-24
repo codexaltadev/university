@@ -91,7 +91,7 @@ class S17Gallery extends Step
 
                 $rows = [];
                 foreach ($a['photos'] as $photo) {
-                    $item = $this->ids->record('files', (string) $photo->photo_name, MediaItem::class);
+                    $item = $this->ids->record('files', (string) Normalizer::filePath($photo->photo_name), MediaItem::class);
                     $item ? $linked++ : $waiting++;
                     if ($item) {
                         $rows[] = ['media' => $item->id, 'caption' => array_filter(['en' => Normalizer::text($photo->photo_title)])];

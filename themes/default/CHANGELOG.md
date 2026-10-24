@@ -49,6 +49,10 @@
   departments, phone list, search and archive, date-box cards, "Page x of y") and
   `modules/notice/show` (Notice Details: date, views, category, View/Download, files with
   titles and PDF preview) on the Notice module's `$page`.
+- 4.5c: DIU gallery — `modules/gallery/index` and `modules/gallery/show` through
+  `partials/gallery/page`: "Browse by Category" with each category's albums, the chosen
+  category's or album's pictures (Media Library items, 20 a page) with a lightbox, album cards,
+  videos, on the Gallery module's `$page`.
 
 ## 1.0.0 — 2026-10-09
 

@@ -31,7 +31,8 @@ class S03Media extends Step
      * group => list of [module slug, legacy table, column, model, media field] — the table is also
      * the id map key of the step that migrated the rows — or, for a table of files that belong to
      * another row (a notice's files), [… , parent column, parent table, title column]: every file
-     * of that row goes into the field, in order, with its title.
+     * of that row goes into the field, in order, with its title. No model: the files only go into
+     * the library, for a step that takes them from the id map (S17G albums).
      */
     public const SOURCES = [
         'faculty' => [['faculty', 'faculties', 'faculty_photo', 'Modules\\Faculty\\Models\\Faculty', 'photo']],
@@ -53,6 +54,7 @@ class S03Media extends Step
         'testimonials' => [['testimonials', 'testimonials', 'photo', 'Modules\\Testimonials\\Models\\Testimonial', 'photo']],
         'events' => [['events', 'events', 'photo', 'Modules\\Events\\Models\\Event', 'featured_image']],
         'notices' => [['notice', 'notice_files', 'file_name', 'Modules\\Notice\\Models\\Notice', 'attachments', 'notice_id', 'notices', 'file_title']],
+        'gallery' => [['gallery', 'gallery_photos', 'photo_name', null, null]],   // only into the library: S17G puts them in albums
     ];
 
     /** Plan §3: at most 4 downloads at once, 3 tries */
@@ -101,7 +103,7 @@ class S03Media extends Step
                 [$slug, $table, $column, $model, $field] = $source;
                 [$parent, $parentTable, $title] = [$source[5] ?? null, $source[6] ?? null, $source[7] ?? null];
                 $legacy = Schema::connection('legacy');
-                if (! class_exists($model) || ! $modules->isActive($slug) || ! $legacy->hasColumn($table, $column)) {
+                if (($model !== null && ! class_exists($model)) || ! $modules->isActive($slug) || ! $legacy->hasColumn($table, $column)) {
                     $this->report->review("{$table}.{$column}: module {$slug} is not active here — skipped.");
 
                     continue;
@@ -138,6 +140,11 @@ class S03Media extends Step
         // 3. Each file once into the Media Library, then into the record's field
         $many = [];   // record key => [record, field, table, media id => meta]
         foreach ($wanted as [$table, $id, $path, $model, $field, $title]) {
+            if ($model === null) {   // only into the library: its step picks the item up by path
+                $this->item($path, $table) ? $this->report->saved("{$table} → library", false) : $this->report->skipped("{$table} → library", 'file missing or refused');
+
+                continue;
+            }
             $record = $this->ids->record($table, $id, $model);
             if ($record === null) {
                 $this->report->skipped("{$table} → media", 'row not migrated');

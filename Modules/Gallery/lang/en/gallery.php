@@ -63,6 +63,17 @@ return [
         'video_url' => 'YouTube, Vimeo or Facebook. Upload a video file as a picture above.',
         'speaker' => 'For a lecture series: find the person or add a new one.',
     ],
+    'settings' => [
+        'page' => 'The gallery page',
+        'page_help' => 'Title, text and picture on top of /gallery. Empty: the theme\'s own.',
+        'title' => 'Title', 'text' => 'Text', 'image' => 'Picture',
+    ],
+    'page' => [
+        'browse' => 'Browse by Category', 'other' => 'Other albums',
+        'select' => 'Select a Category', 'select_text' => 'Choose a category from the sidebar to view photos',
+        'showing' => 'Showing :from - :to of :total photos', 'none' => 'No photos found in this category',
+        'photos' => ':count photos', 'albums' => 'Albums', 'videos' => 'Videos', 'all_albums' => 'All albums',
+    ],
     'errors' => [
         'series' => 'Choose a series from the list.',
         'video_url' => 'Give a YouTube, Vimeo or Facebook link.',
