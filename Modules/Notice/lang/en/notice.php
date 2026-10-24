@@ -32,6 +32,17 @@ return [
         'new_days' => '"New" badge for (days)',
         'new_days_help' => '0: no badge.',
         'per_page' => 'Notices per page',
+        'page' => 'The Notice Board pages',
+        'page_help' => 'Titles and picture on top of the board and of a notice. Empty: the theme\'s own.',
+        'board_title' => 'Title of the board', 'notice_title' => 'Title on top of a notice', 'board_image' => 'Picture on top',
+    ],
+    'page' => [
+        'all_departments' => 'All Departments', 'browse' => 'Browse Faculties', 'select_from' => 'Select from :count',
+        'selected' => 'Currently Selected', 'others' => 'Others',
+        'details' => 'Details', 'none' => 'No notices found', 'none_text' => 'No notices are currently available', 'none_in' => 'No notices available for :name',
+        'views' => ':count views', 'download' => 'View/Download', 'no_content' => 'No additional content for this notice.',
+        'files' => 'Files', 'page_of' => 'Page :page of :last', 'total' => ':count total notices',
+        'archive' => 'Archive', 'board' => 'Notice Board',
     ],
     'fields' => [
         'title' => 'Title',

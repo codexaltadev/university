@@ -65,6 +65,7 @@
 
 * প্রকাশের পর ৭ দিন "New" চিহ্ন দেখায়।
 * প্রতি semester-এর একই ধরনের notice: আগেরটি তালিকা থেকে **⋯ › Duplicate** করে বদলান।
+* Website-এ (DIU-র মতো) `/notices`: **All Departments** ও প্রতিটি faculty-র tab — তার উপর রাখলে / চাপলে faculty-র department-গুলো (যাদের notice main site-এ আছে), অন্য জায়গা (office …) **Others**-এ; খোঁজা ও **Archive**; প্রতিটি notice-এ তারিখের বাক্স, কোথাকার, ধরন, তারিখ-সময়, কতবার দেখা। Notice-এর পেজে উপরে **View/Download** (প্রথম file), নিচে সব file তাদের title-সহ, PDF হলে Preview। উপরের শিরোনাম ও ছবি **Settings › Notices**-এ। DIU-র পুরনো `/noticeboard` ও `/noticeboard/{slug}` ঠিকানা নিজে নতুনটিতে যায়।
 
 ---
 

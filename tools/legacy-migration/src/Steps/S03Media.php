@@ -28,8 +28,10 @@ use Platform\Modules\ModuleRegistry;
 class S03Media extends Step
 {
     /**
-     * group => list of [module slug, legacy table, column, model, media field].
-     * The table is also the id map key of the step that migrated the rows.
+     * group => list of [module slug, legacy table, column, model, media field] — the table is also
+     * the id map key of the step that migrated the rows — or, for a table of files that belong to
+     * another row (a notice's files), [… , parent column, parent table, title column]: every file
+     * of that row goes into the field, in order, with its title.
      */
     public const SOURCES = [
         'faculty' => [['faculty', 'faculties', 'faculty_photo', 'Modules\\Faculty\\Models\\Faculty', 'photo']],
@@ -50,6 +52,7 @@ class S03Media extends Step
         ],
         'testimonials' => [['testimonials', 'testimonials', 'photo', 'Modules\\Testimonials\\Models\\Testimonial', 'photo']],
         'events' => [['events', 'events', 'photo', 'Modules\\Events\\Models\\Event', 'featured_image']],
+        'notices' => [['notice', 'notice_files', 'file_name', 'Modules\\Notice\\Models\\Notice', 'attachments', 'notice_id', 'notices', 'file_title']],
     ];
 
     /** Plan §3: at most 4 downloads at once, 3 tries */
@@ -88,26 +91,34 @@ class S03Media extends Step
         $only = array_filter((array) config('legacy.only', []));
         $modules = app(ModuleRegistry::class);
 
-        // 1. What is wanted: [table, legacy id, path, model, field]
+        // 1. What is wanted: [table, legacy id, path, model, field, title (files of a row) or false (one file)]
         $wanted = [];
         foreach (self::SOURCES as $group => $sources) {
             if ($only !== [] && ! in_array($group, $only, true)) {
                 continue;
             }
-            foreach ($sources as [$slug, $table, $column, $model, $field]) {
-                if (! class_exists($model) || ! $modules->isActive($slug) || ! Schema::connection('legacy')->hasColumn($table, $column)) {
+            foreach ($sources as $source) {
+                [$slug, $table, $column, $model, $field] = $source;
+                [$parent, $parentTable, $title] = [$source[5] ?? null, $source[6] ?? null, $source[7] ?? null];
+                $legacy = Schema::connection('legacy');
+                if (! class_exists($model) || ! $modules->isActive($slug) || ! $legacy->hasColumn($table, $column)) {
                     $this->report->review("{$table}.{$column}: module {$slug} is not active here — skipped.");
 
                     continue;
                 }
-                foreach ($this->rows($table, fn ($q) => $q->select(['id', $column])->whereNotNull($column)->where($column, '<>', '')) as $row) {
+                $columns = array_values(array_filter(['id', $column, $parent, $title]));
+                $rows = $this->rows($table, fn ($q) => $q->select($columns)->whereNotNull($column)->where($column, '<>', '')
+                    ->when($legacy->hasColumn($table, 'deleted_at'), fn ($q) => $q->whereNull('deleted_at')));
+                foreach ($rows as $row) {
                     $path = Normalizer::filePath($row->{$column});
                     if ($path === null || ! preg_match('/\.[a-z0-9]{2,5}$/i', $path)) {
                         $this->report->skipped($table, "{$column}: not a file (font icon, other site …)");
 
                         continue;
                     }
-                    $wanted[] = [$table, $row->id, $path, $model, $field];
+                    $wanted[] = $parent
+                        ? [$parentTable, $row->{$parent}, $path, $model, $field, (string) Normalizer::text($title ? $row->{$title} : null)]
+                        : [$table, $row->id, $path, $model, $field, false];
                 }
             }
         }
@@ -125,7 +136,8 @@ class S03Media extends Step
         }
 
         // 3. Each file once into the Media Library, then into the record's field
-        foreach ($wanted as [$table, $id, $path, $model, $field]) {
+        $many = [];   // record key => [record, field, table, media id => meta]
+        foreach ($wanted as [$table, $id, $path, $model, $field, $title]) {
             $record = $this->ids->record($table, $id, $model);
             if ($record === null) {
                 $this->report->skipped("{$table} → media", 'row not migrated');
@@ -138,8 +150,23 @@ class S03Media extends Step
 
                 continue;
             }
+            if ($title !== false) {   // one of the row's files: all together below
+                $key = $record::class.':'.$record->getKey().':'.$field;
+                $many[$key] ??= [$record, $field, $table, []];
+                $many[$key][3][$item->id] = $title !== '' ? ['title' => ['en' => $title]] : [];
+
+                continue;
+            }
             if ($record->mediaIdsIn($field) === []) {   // a picture chosen by hand stays
                 $record->syncMedia($field, [$item->id]);
+                $this->report->saved("{$table} → media", true);
+            } else {
+                $this->report->saved("{$table} → media", false);
+            }
+        }
+        foreach ($many as [$record, $field, $table, $files]) {
+            if ($record->mediaIdsIn($field) === []) {   // files added by hand stay
+                $record->syncMedia($field, array_keys($files), array_filter($files));
                 $this->report->saved("{$table} → media", true);
             } else {
                 $this->report->saved("{$table} → media", false);

@@ -45,6 +45,10 @@
   Faculty, category chips, cards with dates) and `modules/events/show` (Event Details beside the
   event) on the Events module's `$page`; `partials/diu/pagination`; `images/event-hero.jpg`;
   icons `tag`, `calendar`, `archive`, `filter`.
+- 4.5b: DIU Notice Board — `modules/notice/index` (All Departments, faculty tabs with their
+  departments, phone list, search and archive, date-box cards, "Page x of y") and
+  `modules/notice/show` (Notice Details: date, views, category, View/Download, files with
+  titles and PDF preview) on the Notice module's `$page`.
 
 ## 1.0.0 — 2026-10-09
 

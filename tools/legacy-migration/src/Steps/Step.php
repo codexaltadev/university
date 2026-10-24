@@ -182,17 +182,18 @@ abstract class Step
     }
 
     /**
-     * DIU's old address of a record (/events-detail/669) → its page here, 301, as a Site › Redirects
-     * row that follows the record (P-15) — only when the SEO module is installed.
+     * DIU's old address (/events-detail/669, /noticeboard) → a record's page here (following the
+     * record, P-15) or a path, 301, as a Site › Redirects row — only when the SEO module is installed.
      */
-    protected function oldAddress(string $path, Model $record): void
+    protected function oldAddress(string $path, Model|string $to): void
     {
         $class = 'Modules\\Seo\\Models\\Redirect';
         if (! class_exists($class)) {
             return;
         }
         $redirect = $class::query()->firstOrNew(['source_hash' => Redirects::hash(Redirects::normalize($path))]);
-        $redirect->fill(['source_path' => $path, 'destination_url' => null, 'target_type' => $record->getMorphClass(), 'target_id' => $record->getKey(),
-            'status_code' => 301, 'source' => 'import', 'is_active' => true])->save();
+        $redirect->fill(['source_path' => $path, 'status_code' => 301, 'source' => 'import', 'is_active' => true, ...($to instanceof Model
+            ? ['destination_url' => null, 'target_type' => $to->getMorphClass(), 'target_id' => $to->getKey()]
+            : ['destination_url' => $to, 'target_type' => null, 'target_id' => null])])->save();
     }
 }

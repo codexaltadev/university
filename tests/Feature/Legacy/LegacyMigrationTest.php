@@ -19,6 +19,7 @@ use Legacy\Migration\Support\Normalizer;
 use Modules\Department\Models\Department;
 use Modules\Events\Models\Event;
 use Modules\Faculty\Models\Faculty;
+use Modules\Notice\Models\Notice;
 use Modules\Page\Models\Page;
 use Modules\Program\Database\Seeders\ProgramDatabaseSeeder;
 use Modules\Program\Models\Program;
@@ -55,6 +56,9 @@ function legacySchema(): void
         'faculties' => fn (Blueprint $t) => [$t->string('faculty_name'), $t->string('faculty_short_name'), $t->string('faculty_photo')->nullable(), $t->integer('faculty_serial')->nullable(), $t->text('faculty_content')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->tinyInteger('is_optional')->default(0), $t->tinyInteger('show_list')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'departments' => fn (Blueprint $t) => [$t->unsignedBigInteger('faculty_id'), $t->string('department_name'), $t->string('short_name'), $t->string('department_photo')->nullable(), $t->string('department_cover')->nullable(), $t->string('department_link')->nullable(), $t->integer('department_serial')->nullable(), $t->string('about_title')->nullable(), $t->text('department_content')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->timestamp('deleted_at')->nullable()],
         'events' => fn (Blueprint $t) => [$t->string('title')->nullable(), $t->longText('content')->nullable(), $t->date('event_date')->nullable(), $t->string('event_time')->nullable(), $t->string('location')->nullable(), $t->string('url')->nullable(), $t->string('photo')->nullable(), $t->unsignedBigInteger('department_id')->nullable(), $t->unsignedBigInteger('lab_facility_id')->nullable(), $t->unsignedBigInteger('event_category_id')->nullable(), $t->string('is_home')->default('0'), $t->tinyInteger('publication_status')->default(1), $t->timestamp('created_at')->nullable(), $t->timestamp('deleted_at')->nullable()],
+        'notice_categories' => fn (Blueprint $t) => [$t->string('name'), $t->timestamp('deleted_at')->nullable()],
+        'notices' => fn (Blueprint $t) => [$t->string('title')->nullable(), $t->string('slug')->nullable(), $t->longText('content')->nullable(), $t->unsignedBigInteger('department_id')->nullable(), $t->unsignedBigInteger('notice_category_id')->nullable(), $t->string('is_home')->default('0'), $t->integer('view_counter')->default(0), $t->tinyInteger('publication_status')->default(1), $t->timestamp('created_at')->nullable(), $t->timestamp('deleted_at')->nullable()],
+        'notice_files' => fn (Blueprint $t) => [$t->unsignedBigInteger('notice_id'), $t->string('file_title')->nullable(), $t->string('file_name')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'articles' => fn (Blueprint $t) => [$t->string('article_title')->nullable(), $t->string('article_slug')->nullable(), $t->longText('article_content')->nullable(), $t->tinyInteger('publication_status')->default(1)],
         'program_major_categories' => fn (Blueprint $t) => [$t->string('title'), $t->text('description')->nullable()],
         'program_types' => fn (Blueprint $t) => [$t->integer('parent_id'), $t->string('program_name'), $t->tinyInteger('publication_status')->default(1), $t->timestamp('deleted_at')->nullable()],
@@ -358,6 +362,32 @@ it('migrates events and sends DIU\'s /events-detail/{id} to the event\'s page (S
     expect(Redirect::query()->where('source_path', '/events-detail/583')->count())->toBe(1);
     $this->get('/events-detail/583')->assertRedirect($event->url())->assertStatus(301);
     $this->get($event->url())->assertOk()->assertSee('To the factory.')->assertSee('Gazipur');
+});
+
+it('migrates notices, keeps DIU\'s /noticeboard addresses and puts each notice\'s files on it with their titles (S16T, S03)', function () {
+    $l = DB::connection('legacy');
+    $l->table('notices')->insert([['id' => 3804, 'title' => 'Seat plan, 22 August', 'slug' => 'seat-plan-22-august', 'content' => null, 'is_home' => '1', 'view_counter' => 12, 'created_at' => '2026-08-22 20:37:14']]);
+    $l->table('notice_files')->insert([
+        ['notice_id' => 3804, 'file_title' => 'Slot A', 'file_name' => 'noticeFile/slot-a.pdf', 'deleted_at' => null],
+        ['notice_id' => 3804, 'file_title' => 'Slot C', 'file_name' => 'noticeFile/slot-c.pdf', 'deleted_at' => null],
+        ['notice_id' => 3804, 'file_title' => 'Old', 'file_name' => 'noticeFile/old.pdf', 'deleted_at' => '2026-08-23 00:00:00'],
+    ]);
+    Storage::fake('public');
+    $cache = storage_path('framework/testing/legacy-files');
+    config(['database.connections.legacy.files_path' => $cache]);
+    File::ensureDirectoryExists("{$cache}/noticeFile");
+    foreach (['slot-a', 'slot-c'] as $name) {
+        File::put("{$cache}/noticeFile/{$name}.pdf", "%PDF-1.4 {$name}");
+    }
+
+    $this->artisan('legacy:migrate', ['--step' => ['S16T'], '--no-report' => true])->assertSuccessful();
+    $this->artisan('legacy:migrate', ['--step' => ['S03'], '--only' => ['notices'], '--no-report' => true])->assertSuccessful();
+
+    $notice = Notice::query()->withoutGlobalScopes()->firstOrFail();
+    expect($notice->mediaUsagesIn('attachments')->map(fn ($u) => $u->meta['title']['en'] ?? null)->all())->toBe(['Slot A', 'Slot C']);
+    $this->get('/noticeboard')->assertRedirect('/notices')->assertStatus(301);
+    $this->get('/noticeboard/seat-plan-22-august')->assertRedirect($notice->url());
+    $this->get($notice->url())->assertOk()->assertSeeInOrder(['View/Download', 'Seat plan, 22 August', 'Slot A', 'Slot C']);
 });
 
 it('refuses to run without a step and when the legacy database is missing', function () {

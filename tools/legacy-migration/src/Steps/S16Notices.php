@@ -15,7 +15,8 @@ use Platform\Views\ViewCounter;
 /**
  * S16T Notices (DB-05 v1.4 §5, §18): DIU's `notices` — shown in their department (S04, or the
  * office an office-"department" became in S10), on the main site when `is_home` (Q-26), dated
- * when written (active_at), view counts kept, `notice_categories` → notice.category. The 3,532
+ * when written (active_at), view counts kept, `notice_categories` → notice.category; DIU's
+ * /noticeboard and /noticeboard/{slug} → 301 redirects (Site › Redirects). The 3,532
  * `notice_files` wait for the files (S03): their titles go on the attachments then. Run after S04, S10.
  */
 class S16Notices extends Step
@@ -79,8 +80,12 @@ class S16Notices extends Step
                 $notice->syncTerms(Notice::CATEGORY, array_filter([$categories[$row->notice_category_id] ?? null]));
                 $engine->sync($notice, $place ? [$place->getMorphClass().':'.$place->getKey()] : [], mainSite: $main, user: null);
                 $views->seed($notice, (int) $row->view_counter);
+                if (filled($row->slug)) {
+                    $this->oldAddress('/noticeboard/'.$row->slug, $notice);   // DIU's notice address
+                }
             });
         }
+        $this->oldAddress('/noticeboard', '/'.Notice::PATH);   // DIU's Notice Board
 
         if (Schema::connection('legacy')->hasTable('notice_files')) {
             $this->report->review($this->legacy()->table('notice_files')->whereNull('deleted_at')->count().' notice files (with their titles) wait for the files (S03).');

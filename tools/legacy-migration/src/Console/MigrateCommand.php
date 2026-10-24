@@ -56,7 +56,7 @@ class MigrateCommand extends Command
     protected $signature = 'legacy:migrate {--step=* : S02, S04, S06 …} {--all : every step in order} {--no-report : do not write report files}
         {--from-seed : read the seed files (tools/legacy-migration/seed) instead of the legacy database}
         {--download-files : S03: fetch the files missing from the cache from webbackend}
-        {--only=* : S03: only these groups (faculty, department, program, facilities, accreditation, testimonials, events)}';
+        {--only=* : S03: only these groups (faculty, department, program, facilities, accreditation, testimonials, events, notices)}';
 
     protected $description = 'Migrate DIU data from the legacy database (project_diu)';
 

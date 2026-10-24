@@ -20,6 +20,7 @@ use Modules\Notice\Filament\Resources\Notices\Pages\EditNotice;
 use Modules\Notice\Models\Notice;
 use Modules\Notice\Sections\NoticeBoardSection;
 use Modules\Notice\Sections\NoticeTickerSection;
+use Modules\Notice\Settings\NoticeSettings;
 use Platform\Homepage\SectionContext;
 use Platform\Media\MediaLibrary;
 use Platform\Modules\ModulePermissions;
@@ -114,4 +115,34 @@ it('saves three files with their own titles and lists them on the notice (FR-NOT
 it('marks urgent notices and keeps expiry after the start', function () {
     $this->get('/notices')->assertOk()->assertSee('Urgent');
     expect(fn () => Notice::factory()->create(['active_at' => '2026-09-10', 'expires_at' => '2026-09-09']))->toThrow(ValidationException::class);
+});
+
+it('shows DIU\'s Notice Board: a faculty tab with its departments, a date box and details per notice (Phase 4.5b)', function () {
+    $faculty = Faculty::query()->find($this->cse->faculty_id);
+    $faculty->update(['short_name' => 'FSIT']);
+    $this->engine->sync($this->routine, ['department.department:'.$this->cse->id], mainSite: true, user: null);
+    $key = 'department.department:'.$this->cse->id;
+
+    $this->get('/notices')->assertOk()
+        ->assertSeeInOrder(['Notice Board', 'All Departments', 'FSIT', $faculty->name, $this->cse->name, 'CSE', 'Holiday on 1 May', '08', 'Sep,26', 'Final exam routine Fall 2026', $this->cse->name, 'Examination', '08 Sep, 2026, 09:00 AM'])
+        ->assertDontSee('Department: '.$this->cse->name);
+    $this->get('/notices?entity='.urlencode($key))->assertOk()
+        ->assertSee('Final exam routine Fall 2026')->assertDontSee('Holiday on 1 May')->assertSee('Currently Selected');
+
+    // The module's own board (any theme without its version) keeps its layouts
+    expect(moduleView('Notice', 'index', ['notices' => Notice::query()->paginate(), 'categories' => collect(), 'category' => null, 'entities' => collect(), 'entity' => null, 'archive' => false, 'layout' => 'table', 'base' => '']))
+        ->toContain('Holiday on 1 May');
+});
+
+it('shows a notice as DIU does — date, views, category, View/Download — and takes the titles from Settings › Notices', function () {
+    $file = app(MediaLibrary::class)->store(UploadedFile::fake()->createWithContent('routine.pdf', '%PDF-1.4 test'));
+    $this->routine->syncMedia('attachments', [$file->id], [$file->id => ['title' => ['en' => 'Exam routine']]]);
+
+    $this->get($this->routine->url())->assertOk()
+        ->assertSeeInOrder(['Notice Details', 'September 8, 2026', 'views', 'Examination', 'DIU/Exam/2026/115', 'View/Download', 'Final exam routine Fall 2026', 'Files', 'Exam routine'])
+        ->assertSee($file->url(), false);
+
+    settings()->saveFor(new NoticeSettings, ['new_days' => 7, 'per_page' => 20, 'board_title' => ['en' => 'Notices & Circulars'], 'notice_title' => ['en' => 'Circular']]);
+    $this->get('/notices')->assertSee('Notices &amp; Circulars', false);
+    $this->get($this->routine->url())->assertSee('Circular')->assertDontSee('Notice Details');
 });

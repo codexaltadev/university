@@ -32,6 +32,17 @@ return [
         'new_days' => '"নতুন" badge কত দিন',
         'new_days_help' => '০: badge নেই।',
         'per_page' => 'প্রতি পাতায় কয়টি',
+        'page' => 'নোটিশ বোর্ডের পেজ',
+        'page_help' => 'বোর্ড ও নোটিশের উপরের শিরোনাম আর ছবি। খালি: theme-এর নিজের।',
+        'board_title' => 'বোর্ডের শিরোনাম', 'notice_title' => 'নোটিশের উপরের শিরোনাম', 'board_image' => 'উপরের ছবি',
+    ],
+    'page' => [
+        'all_departments' => 'সব ডিপার্টমেন্ট', 'browse' => 'ফ্যাকাল্টি অনুযায়ী', 'select_from' => ':countটি থেকে বাছুন',
+        'selected' => 'এখন বাছা', 'others' => 'অন্যান্য',
+        'details' => 'বিস্তারিত', 'none' => 'কোনো নোটিশ নেই', 'none_text' => 'এখন কোনো নোটিশ নেই', 'none_in' => ':name-এর কোনো নোটিশ নেই',
+        'views' => ':count বার দেখা', 'download' => 'দেখুন / ডাউনলোড', 'no_content' => 'এই নোটিশে আর কোনো লেখা নেই।',
+        'files' => 'ফাইল', 'page_of' => 'পাতা :page / :last', 'total' => 'মোট :countটি নোটিশ',
+        'archive' => 'আর্কাইভ', 'board' => 'নোটিশ বোর্ড',
     ],
     'fields' => [
         'title' => 'শিরোনাম',
