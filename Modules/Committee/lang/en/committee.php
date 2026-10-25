@@ -42,4 +42,13 @@ return [
     'errors' => [
         'term' => 'The term ends before it starts.',
     ],
+    'page' => [
+        'select' => 'Select Committee',
+        'categories' => 'Committee Categories',
+        'categories_help' => 'Select a committee to view members',
+        'member_count' => '{0} no members|{1} 1 member|[2,*] :count members',
+        'available' => '{1} 1 Committee Available|[0,*] :count Committees Available',
+        'position' => 'Committee Position',
+        'designation' => 'Designation',
+    ],
 ];

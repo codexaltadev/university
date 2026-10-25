@@ -64,8 +64,12 @@ class S13Committees extends Step
             ], after: function (Committee $committee, bool $created) use ($slug, $engine): void {
                 $this->keepSlug($committee, $slug, $created);
                 $engine->sync($committee, [], mainSite: true, user: null);   // DIU's committees were the main site's
+                if ($slug !== '') {
+                    $this->oldAddress('/committee/'.$slug, $committee);   // DIU's /committee/board-of-trustees
+                }
             });
         }
+        $this->oldAddress('/committee', '/'.Committee::PATH);
 
         $matched = $manual = 0;
         foreach ($this->rows('committees')->sortBy('serial') as $row) {

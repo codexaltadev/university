@@ -1,6 +1,7 @@
 {{--
     /committees/{slug} (FR-COM-02/05/07). Contract: $committee, $members (PersonView list in role order), $previous (earlier terms,
-    newest first), $next (?Committee: the term after this one), $orderPdf (?MediaItem), $base (microsite path or '')
+    newest first), $next (?Committee: the term after this one), $orderPdf (?MediaItem), $base (microsite path or ''),
+    $committees (the running committees of this place)
 --}}
 <x-theme::layout :title="$committee->name">
     <div class="container" style="padding-block:var(--space-8, 32px)">

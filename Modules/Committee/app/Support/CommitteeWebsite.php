@@ -66,6 +66,8 @@ class CommitteeWebsite
             'next' => $committee->nextTerm()->first()?->isFrontendVisible() ? $committee->nextTerm()->first() : null,
             'orderPdf' => $committee->firstMedia('order_pdf'),
             'base' => $base,
+            // the running committees of this place, for a theme's list beside it (DIU's "Committee Categories")
+            'committees' => $shown()->running()->with('category')->ordered()->get(),
         ]);
     }
 

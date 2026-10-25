@@ -83,6 +83,9 @@
   teachers, search with department and designation, DeanCard-style cards) and
   `modules/facultymember/sections/list`; `partials/faculty-member/card` (photo or initials,
   "View Profile" to the faculty website in a new tab — no profile page here).
+- 4.6c: DIU committees — `modules/committee/index` and `show` through `partials/committee/page`
+  ("Committee Categories" sidebar with member counts, blue-headed members table, phone cards
+  and select; /committees opens the first committee).
 
 ## 1.0.0 — 2026-10-09
 

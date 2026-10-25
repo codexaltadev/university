@@ -42,4 +42,13 @@ return [
     'errors' => [
         'term' => 'মেয়াদ শুরুর আগেই শেষ হচ্ছে।',
     ],
+    'page' => [
+        'select' => 'Committee বাছুন',
+        'categories' => 'Committee-সমূহ',
+        'categories_help' => 'সদস্যদের দেখতে একটি committee বাছুন',
+        'member_count' => '{0} কোনো সদস্য নেই|[1,*] :count জন সদস্য',
+        'available' => ':count টি committee',
+        'position' => 'Committee-তে পদ',
+        'designation' => 'পদবি',
+    ],
 ];

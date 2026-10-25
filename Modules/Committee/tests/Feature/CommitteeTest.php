@@ -17,10 +17,12 @@ use Modules\Committee\Filament\Resources\Committees\Pages\CreateCommittee;
 use Modules\Committee\Filament\Resources\Committees\Pages\EditCommittee;
 use Modules\Committee\Filament\Resources\Committees\Pages\ListCommittees;
 use Modules\Committee\Models\Committee;
+use Modules\Committee\Support\CommitteeWebsite;
 use Modules\Office\Models\Office;
 use Platform\Assignments\AssignmentEngine;
 use Platform\Assignments\ManualPerson;
 use Platform\Assignments\RoleCatalog;
+use Platform\Context\SiteContext;
 use Platform\Filament\Components\PersonPicker;
 use Platform\Modules\ModulePermissions;
 use Platform\Relations\RelationEngine;
@@ -59,7 +61,8 @@ afterEach(fn () => Carbon::setTestNow());
 
 it('lists main-site committees by category with their head, members in role order with notes (FR-COM-02/03/06)', function () {
     $this->get('/committees')->assertOk()
-        ->assertSeeInOrder(['Statutory Bodies', 'Syndicate', 'Prof. Kabir'])
+        ->assertSeeInOrder(['Committee Categories', 'Statutory Bodies', 'Syndicate', '1 Committee Available', 'Prof. Kabir'])   // DIU: the first committee opens
+        ->assertSee('committee-members', false)
         ->assertDontSee('Robotics Lab Committee');                                                 // only in the lab (AC-COM-02)
 
     $this->get('/committees/syndicate')->assertOk()
@@ -109,7 +112,8 @@ it('starts a new term with today\'s members and keeps the old one as a previous 
         ->and($next->people()->first()->roleLabel)->toBe('President of the Syndicate');
 
     Carbon::setTestNow('2026-05-01');
-    $this->get('/committees')->assertOk()->assertSee($next->slug())->assertDontSee('/committees/syndicate"', false);   // only the running term listed
+    expect(moduleView('Committee', 'index', app(CommitteeWebsite::class)->respond('committees', SiteContext::site(), 'en')->getOriginalContent()->getData()))
+        ->toContain($next->slug())->not->toContain('/committees/syndicate"');                   // only the running term listed
     $this->get('/committees/'.$next->slug())->assertOk()->assertSee('Previous terms')->assertSee('/committees/syndicate', false);
     $this->get('/committees/syndicate')->assertOk()->assertSee('Previous term')->assertSee('See the current committee');
 
