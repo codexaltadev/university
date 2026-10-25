@@ -1,7 +1,7 @@
 {{--
     /faculty-members and {faculty|department}/faculty-members (FR-FM-03/05). Contract: $members (paginator, designation order),
     $faculties (main site only), $departments (choices; empty on a Department microsite), $designations (in use, ladder order),
-    $layout (grid / list / cards), $intro (HTML or null)
+    $layout (grid / list / cards), $intro (HTML or null), $listing (this place's address), $place (Faculty / Department or null)
 --}}
 <x-theme::layout :title="__('facultymember::facultymember.plural')">
     <div class="container" style="padding-block:var(--space-10, 40px)">

@@ -351,6 +351,8 @@ Screen-এ লেখা থাকে, যেমন: *"This microsite uses Engine
 
 **Website-এ Administration directory (`/administration`, DIU-র মতো):** উপরে বড় ছবি ও শিরোনাম; বাঁয়ে **Browse by Section** — প্রতিটি public category ও তার মানুষের সংখ্যা ("Management (5)"), একটি বাছা (শুরুতে প্রথমটি), নিচে **Quick Links**; ডানে খোঁজার ঘর (নাম বা পদবি, সব section জুড়ে) ও table — ছবি, নাম, পদবি, email, phone, Ext. (phone-এ card)। Profile পাতা চালু থাকলে নামে চাপলে নীল card-এ ছবি, নাম, পদবি, office, যোগাযোগ, জীবনী ও **Roles**। শিরোনাম, উপরের ছবি, উপরের লেখা ও Quick Links: **Settings › Administration**। Category-র ক্রম ও কোনটি public: **People › Staff categories**।
 
+**Faculty Members (শিক্ষক):** শিক্ষকের তথ্য আসে DIU-র **Faculty Management System (FMS)** থেকে — এখানে কেউ যোগ বা মুছতে পারেন না, শুধু email / phone / extension দেখানো বন্ধ করা যায়। **Settings › Faculty Members:** **Source** — FMS-এ শিক্ষকদের data এলে **DIU Faculty Management System (FMS)** বাছুন (ততদিন একই format-এর নমুনা JSON file চলে), তারপর তালিকার **Sync now** (প্রতিদিন 05:30-এ নিজে থেকেও হয়); **Faculty website** — প্রতিটি শিক্ষকের **View Profile** এই ঠিকানার faculty / department / শিক্ষক পাতায় খোলে (এই website-এ নিজের কোনো profile পাতা নেই); পাতার শিরোনাম, উপরের ছবি ও লেখা। Website `/faculty-members` (DIU-র মতো): বাঁয়ে faculty অনুযায়ী শিক্ষকের সংখ্যা, খোঁজা (নাম, পদবি, গবেষণা), department ও পদবি বাছা, প্রতিটি শিক্ষকের card — ছবি (না থাকলে নামের আদ্যক্ষর), নাম, পদবি, department, email, phone, room, **View Profile ↗**; Faculty ও Department site-এ `/…/faculty-members` সেখানকার শিক্ষক।
+
 ---
 
 ## 17. Program

@@ -4,8 +4,8 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-03 |
-| Version | 1.5 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়); v1.4: Scholarship নিজের module `scholarship`, parent / child ও category vocabulary (§11.3); v1.5: Admission (§10) — `published_at` নয় `is_active`, session লেখা, result label, subscriber topic, website গঠন; v1.6: Academic Calendar (§12) — `is_active`, session লেখা, Faculty সম্পর্ক, audience event-এ, `starts_on` ঐচ্ছিক, website গঠন; v1.7 (2026-10-17): Faculty Member (§8) — আলাদা faculty site-এর data-র read-only copy, source JSON / API, `profile_items` JSON, `photo_url`, sync (§8.3); v1.8 (2026-10-21, Phase 4.4c): Program-এ `credit_duration` লেখা ও আরও section intro (§4.1); v1.9 (2026-10-24): Faculty, Department, Program-এ `quick_links` (owner: page-এর লেখা ও link Admin থেকে); `/faculties` ও `/programs`-এর লেখা Settings-এ (group `faculty`, `program`) |
-| Date | 2026-10-24 (v1.0 confirmed 2026-10-08) |
+| Version | 1.5 — v1.1: §11 legacy calculator-এর সাথে মিল; v1.2: Waiver Calculator নিজের module `waiver`; v1.3: tuition নিজের module `tuition` (আলাদা team data দেয়); v1.4: Scholarship নিজের module `scholarship`, parent / child ও category vocabulary (§11.3); v1.5: Admission (§10) — `published_at` নয় `is_active`, session লেখা, result label, subscriber topic, website গঠন; v1.6: Academic Calendar (§12) — `is_active`, session লেখা, Faculty সম্পর্ক, audience event-এ, `starts_on` ঐচ্ছিক, website গঠন; v1.7 (2026-10-17): Faculty Member (§8) — আলাদা faculty site-এর data-র read-only copy, source JSON / API, `profile_items` JSON, `photo_url`, sync (§8.3); v1.8 (2026-10-21, Phase 4.4c): Program-এ `credit_duration` লেখা ও আরও section intro (§4.1); v1.9 (2026-10-24): Faculty, Department, Program-এ `quick_links` (owner: page-এর লেখা ও link Admin থেকে); `/faculties` ও `/programs`-এর লেখা Settings-এ (group `faculty`, `program`); v1.10 (2026-10-25): Faculty Member-এর source DIU-র **Faculty Management System (FMS) API** (data এলে চালু হবে; ততদিন একই format-এ dummy JSON) — `source_path` column, department নাম দিয়েও মেলানো; **profile পাতা এই site-এ নেই** — "View Profile" faculty website-এ যায় (§8) |
+| Date | 2026-10-25 (v1.0 confirmed 2026-10-08) |
 | Status | ✔ Confirmed — v1.3 approved 2026-10-10 (Tuition, Waiver আলাদা module); v1.1 approved 2026-10-10: entry করা rule ও data অক্ষত থাকবে; logic বদলানো যাবে যদি ফলাফল হুবহু একই থাকে (golden master দিয়ে প্রমাণ) |
 | Based on | [DB-01](01-DB-Core-Kernel.md) (conventions), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 2](../02-SRS/02-SRS-Academic.md), `project_diu` |
 
@@ -260,6 +260,7 @@ UQ: `(year, term_type, active_key)`।
 |---|---|---|---|---|
 | id | BIGINT UNSIGNED | PK | | |
 | external_ref | VARCHAR(100) | | | Source-এর ID (FR-FM-08) — sync এটা দিয়েই মেলায় |
+| source_path | VARCHAR(191) | ✔ | | v1.10: FMS-এ teacher-এর ঠিকানা `{faculty}/{department}/{teacher}` (যেমন `FBE/IE/muntachir`) — faculty website-এ তাঁর profile-এর link এটা দিয়ে (`profile_site` + `/` + এটা) |
 | department_id | BIGINT UNSIGNED | N, FK department_departments (null on delete), IX | | Primary Department (source-এর short name থেকে) |
 | designation_term_id | BIGINT UNSIGNED | N, FK core_terms (null on delete), IX | | Vocabulary `faculty-member.designation` (ordered; FR-FM-05/06; নতুন পদবি sync তৈরি করে) |
 | designation_note | JSON | N, T | | যেমন "and Head" |
@@ -295,7 +296,7 @@ UQ: `(external_ref, active_key)`, `(employee_id, active_key)` (NULL employee_id 
 |---|---|
 | Source | Settings › Faculty Members: `source` = `json` (`json_path`; খালি = module-এর `resources/data/faculty-members.json` dummy) অথবা `api` (`api_url`, `api_token` encrypted, private)। Driver interface `FacultyMemberSource::records()`; API পেলে শুধু driver / field mapping যোগ হয় |
 | Record format | `{"data": [{id, employee_id, name, designation, designation_note, department, other_departments[], email, phone, extension, office_room, photo_url, employment_type, status, biography, research_interests, links{}, profile{education[], experience[], training[], award[], membership[], publication[]}}]}`; লেখার field string বা `{en, bn}` |
-| মেলানো | `external_ref` (withTrashed) → update / restore; নতুন হলে create; Department short name (case বাদে) → `department_id`; পদবি নাম → term (না থাকলে তৈরি) |
+| মেলানো | `external_ref` (withTrashed) → update / restore; নতুন হলে create; Department short name (case বাদে) → `department_id`, না মিললে source-এর দেওয়া department-এর নাম দিয়ে (v1.10: FMS `IE` = আমাদের `DE`); পদবি নাম → term (না থাকলে তৈরি) |
 | সরানো | এই sync-এ নেই এমন record soft delete (BRL-FM-05: source খালি / ভুল হলে sync থামে, কিছু মোছে না) |
 | ফল | Settings `faculty-member.last_sync` (সময়, যোগ / update / সরানো / অপরিবর্তিত, না মেলা Department, ভুল) — admin তালিকার ওপরে দেখায় |
 | সময় | দিনে একবার (`faculty-member:sync`, 05:30), admin "Sync now" (`Sync:FacultyMember`) |

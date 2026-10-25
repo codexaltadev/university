@@ -39,7 +39,6 @@
             "person_source": true,
             "scopeable": true,
             "searchable": true,
-            "sitemap": true,
             "menu_item_types": true,
             "website_pages": true,
             "metrics": [

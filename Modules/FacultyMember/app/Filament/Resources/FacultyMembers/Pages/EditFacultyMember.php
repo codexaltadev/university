@@ -18,8 +18,8 @@ class EditFacultyMember extends EditRecord
     {
         return [
             Action::make('view')->label(__('facultymember::facultymember.view_page'))->icon(Heroicon::OutlinedArrowTopRightOnSquare)->color('gray')
-                ->url(fn (FacultyMember $record): string => url($record->url()))->openUrlInNewTab()
-                ->visible(fn (FacultyMember $record): bool => $record->isFrontendVisible()),
+                ->url(fn (FacultyMember $record): ?string => $record->profileUrl())->openUrlInNewTab()   // on the faculty website
+                ->visible(fn (FacultyMember $record): bool => $record->isFrontendVisible() && $record->profileUrl() !== null),
         ];
     }
 

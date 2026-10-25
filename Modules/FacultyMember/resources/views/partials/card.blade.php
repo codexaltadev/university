@@ -1,4 +1,4 @@
-{{-- One teacher as a card (grid / cards) or a row (list). Contract: $member (with designation, department), $layout (grid / list / cards) --}}
+{{-- One teacher as a card (grid / cards) or a row (list); the name opens their profile on the faculty website. Contract: $member (with designation, department), $layout (grid / list / cards) --}}
 @php($person = $member->personPresenter())
 @php($row = $layout === 'list')
 @php($size = $row ? '64px' : ($layout === 'cards' ? '120px' : '96px'))
@@ -9,7 +9,7 @@
         <span aria-hidden="true" style="display:grid;place-items:center;width:{{ $size }};height:{{ $size }};border-radius:50%;background:var(--color-surface, #F3F4F9);font-weight:700;font-size:1.4em">{{ mb_substr($person->name(), 0, 1) }}</span>
     @endif
     <div>
-        <h3 style="margin:0;font-size:1.05em">@if ($url = $person->profileUrl())<a href="{{ $url }}">{{ $person->name() }}</a>@else{{ $person->name() }}@endif</h3>
+        <h3 style="margin:0;font-size:1.05em">@if ($url = $person->profileUrl())<a href="{{ $url }}" target="_blank" rel="noopener">{{ $person->name() }}</a>@else{{ $person->name() }}@endif</h3>
         @if ($person->designation())<p style="margin:2px 0">{{ $person->designation() }}</p>@endif
         @if ($member->department)<p style="margin:2px 0;color:var(--color-muted, #6b7280)">{{ $member->department->short_name ?: $member->department->name }}</p>@endif
         @if ($member->isOnLeave())<p style="margin:2px 0"><span class="badge">{{ __('facultymember::facultymember.employment.on_leave') }}</span></p>@endif

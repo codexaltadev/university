@@ -5,13 +5,10 @@ namespace Modules\FacultyMember\Support;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
 use Modules\FacultyMember\Models\FacultyMember;
-use Platform\Assignments\AssignmentEngine;
-use Platform\Assignments\RoleCatalog;
 use Platform\Context\MicrositeResolver;
 use Platform\Context\SiteContext;
 use Platform\Seo\Seo;
@@ -23,9 +20,8 @@ use Platform\Theme\LayoutResolver;
  * /faculty-members (FR-FM-03): teachers in designation order; filters ?faculty=, ?department=,
  * ?designation=, search ?q=; layout grid / list / cards. A Department microsite's
  * /faculty-members shows its own (primary or also there), a Faculty microsite's its
- * departments' (FR-FM-05). /faculty-members/{slug} (FR-FM-04, when profile pages are on):
- * photo, designation, departments, public contacts, links, biography, profile sections and
- * every current public assignment.
+ * departments' (FR-FM-05). No profile page here (owner 2026-10-25): a teacher's profile is the
+ * faculty website's; an old /faculty-members/{slug} address is sent there (301).
  */
 class FacultyMemberWebsite
 {
@@ -50,27 +46,14 @@ class FacultyMemberWebsite
             return response()->view('facultymember::directory', $this->directory($departments, $context));
         }
 
+        // An old profile address: to the teacher's page on the faculty website
         $slug = Str::after($rest, FacultyMember::PATH.'/');
-        if ($context->isMicrosite() || ! settings('faculty-member.profile_pages', true) || str_contains($slug, '/') || ! ($found = FacultyMember::findBySlug($slug, $locale))) {
+        if ($context->isMicrosite() || str_contains($slug, '/') || ! ($found = FacultyMember::findBySlug($slug, $locale))
+            || ! $found[0]->isFrontendVisible() || ! ($profile = $found[0]->profileUrl())) {
             return null;
         }
-        [$member, $current] = $found;
-        if (! $member->isFrontendVisible()) {
-            return null;
-        }
-        if (! $current) {
-            return redirect(Seo::localized($member->url($locale), $locale), 301);   // FR-GEN-32
-        }
 
-        app(Seo::class)->forRecord($member);
-        $member->load(['designation', 'department', 'departments']);
-
-        return response()->view('facultymember::profile', [
-            'member' => $member,
-            'person' => $member->personPresenter(),
-            'departments' => collect([$member->department, ...$member->departments])->filter(fn ($d) => $d?->isFrontendVisible())->unique('id')->values(),
-            'places' => $this->places($member),
-        ]);
+        return redirect()->away($profile, 301);
     }
 
     /** Department ids of a place: null = all (main site), [] = this place has no teachers. */
@@ -127,20 +110,8 @@ class FacultyMemberWebsite
             'designations' => $designations,
             'layout' => in_array($layout, self::VIEWS, true) ? $layout : 'grid',
             'intro' => ! $context->isMicrosite() && filled($intro = settings('faculty-member.intro')) ? (string) $intro : null,
+            'listing' => self::directoryUrl($context),                                       // this place's /faculty-members
+            'place' => $context->isMicrosite() ? $context->entity : null,                    // the Faculty / Department, or null (main site)
         ];
-    }
-
-    /** Current public assignments with the place's name and link (AC-FM-02). */
-    protected function places(FacultyMember $member): Collection
-    {
-        return app(AssignmentEngine::class)->assignmentsOf($member)
-            ->filter(fn ($a): bool => $a->is_active && $a->is_public && (! $a->ends_on || $a->ends_on->isFuture() || $a->ends_on->isToday()))
-            ->load('assignable')
-            ->filter(fn ($a): bool => $a->assignable !== null && (! method_exists($a->assignable, 'isFrontendVisible') || $a->assignable->isFrontendVisible()))
-            ->map(fn ($a): array => [
-                'place' => (string) ($a->assignable->name ?? $a->assignable->title ?? ''),
-                'url' => method_exists($a->assignable, 'url') ? $a->assignable->url() : null,
-                'role' => (string) ($a->role_label ?: app(RoleCatalog::class)->label($a->assignable_type, $a->role_key)),
-            ])->values();
     }
 }

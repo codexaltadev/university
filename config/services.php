@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    // DIU Faculty Management System (teachers, departments, publications) — server side only
+    'fms' => [
+        'url' => env('FMS_API_URL'),
+        'token' => env('FMS_API_TOKEN'),
+        'cache_ttl' => (int) env('FMS_API_CACHE_TTL', 3600),
+    ],
+
 ];

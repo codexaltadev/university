@@ -56,9 +56,10 @@ class FacultyMemberPresenter implements PersonPresenter
         return $this->member->show_extension ? $this->member->extension : null;
     }
 
+    /** On the faculty website (it opens in a new tab); this site has no profile page */
     public function profileUrl(): ?string
     {
-        return settings('faculty-member.profile_pages', true) && $this->member->isFrontendVisible() ? url($this->member->url()) : null;
+        return $this->member->isFrontendVisible() ? $this->member->profileUrl() : null;
     }
 
     public function isActive(): bool

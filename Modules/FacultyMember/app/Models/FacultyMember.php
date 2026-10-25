@@ -54,7 +54,7 @@ class FacultyMember extends BaseModel implements PersonSource, Scopeable
 
     /** Columns the faculty site owns: sync writes them, nobody else (BRL-FM-03). */
     public const SOURCE_COLUMNS = [
-        'external_ref', 'department_id', 'designation_term_id', 'designation_note', 'employee_id', 'name', 'email', 'phone', 'extension',
+        'external_ref', 'source_path', 'department_id', 'designation_term_id', 'designation_note', 'employee_id', 'name', 'email', 'phone', 'extension',
         'office_room', 'photo_url', 'employment_type', 'biography', 'research_interests', 'links', 'profile_items', 'is_active',
     ];
 
@@ -156,12 +156,21 @@ class FacultyMember extends BaseModel implements PersonSource, Scopeable
         return new FacultyMemberPresenter($this);
     }
 
-    /** Profile page when profiles are on, else the directory searched for the name. */
+    /** Here: the directory searched for the name — the profile is on the faculty website (profileUrl()). */
     public function url(?string $locale = null): string
     {
-        return settings('faculty-member.profile_pages', true)
-            ? '/'.self::PATH.'/'.$this->slug($locale)
-            : '/'.self::PATH.'?q='.rawurlencode((string) $this->getTranslation('name', $locale ?? app()->getLocale(), true));
+        return '/'.self::PATH.'?q='.rawurlencode((string) $this->getTranslation('name', $locale ?? app()->getLocale(), true));
+    }
+
+    /**
+     * The teacher's profile on the faculty website (owner 2026-10-25: profiles are always there):
+     * Settings › Faculty Members › Faculty website / {faculty}/{department}/{teacher}; null without an FMS address.
+     */
+    public function profileUrl(): ?string
+    {
+        $site = rtrim((string) settings('faculty-member.profile_site'), '/');
+
+        return $site !== '' && filled($this->source_path) ? $site.'/'.implode('/', array_map('rawurlencode', explode('/', (string) $this->source_path))) : null;
     }
 
     protected function searchBodyAttributes(): array

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\FmsApiClient;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -11,7 +12,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        // DIU Faculty Management System API (config/services.php "fms"), one per application
+        $this->app->singleton(FmsApiClient::class, fn (): FmsApiClient => new FmsApiClient(
+            config('services.fms.url'),
+            config('services.fms.token'),
+            (int) config('services.fms.cache_ttl', 3600),
+        ));
     }
 
     /**

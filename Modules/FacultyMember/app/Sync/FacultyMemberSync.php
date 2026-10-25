@@ -2,6 +2,7 @@
 
 namespace Modules\FacultyMember\Sync;
 
+use App\Services\FmsApiClient;
 use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
 use Modules\Department\Models\Department;
@@ -23,6 +24,9 @@ class FacultyMemberSync
     /** The source chosen in Settings › Faculty Members. */
     public static function configuredSource(): FacultyMemberSource
     {
+        if (settings('faculty-member.source', 'json') === 'fms') {
+            return new FmsSource(app(FmsApiClient::class));
+        }
         if (settings('faculty-member.source', 'json') === 'api') {
             $url = (string) settings('faculty-member.api_url');
             if (blank($url)) {
@@ -68,16 +72,21 @@ class FacultyMemberSync
         }
 
         DB::transaction(function () use ($mapped, $result, &$seen): void {
-            $departments = Department::query()->withoutGlobalScopes()->whereNull('deleted_at')->pluck('id', 'short_name')
-                ->mapWithKeys(fn ($id, $short): array => [mb_strtolower((string) $short) => (int) $id])->all();
+            $all = Department::query()->withoutGlobalScopes()->whereNull('deleted_at')->get(['id', 'short_name', 'name']);
+            $departments = $all->mapWithKeys(fn (Department $d): array => [mb_strtolower((string) $d->short_name) => (int) $d->id])->all();
+            // A source whose code differs from ours (FMS "IE" = our "DE") also gives the name: matched by it next
+            $names = $all->mapWithKeys(fn (Department $d): array => [mb_strtolower(trim((string) $d->name)) => (int) $d->id])->all();
             $designations = $this->designationTerms();
-            $existing = FacultyMember::query()->withoutGlobalScopes()->whereIn('external_ref', array_keys($mapped))->get()->keyBy('external_ref');
+            // IDs as strings: a numeric one ("2125", FMS) turns into an int as an array key, and MySQL would compare it as a number
+            $refs = array_map('strval', array_keys($mapped));
+            $existing = FacultyMember::query()->withoutGlobalScopes()->whereIn('external_ref', $refs)->get()->keyBy('external_ref');
             $unmatched = [];
 
             foreach ($mapped as $ref => $record) {
+                $ref = (string) $ref;
                 $seen[] = $ref;
                 $attributes = $record['attributes'];
-                $attributes['department_id'] = $this->department($record['department'], $departments, $unmatched);
+                $attributes['department_id'] = $this->department($record['department'], $departments, $unmatched, $record['department_name'] ?? null, $names);
                 $attributes['designation_term_id'] = $record['designation'] !== null ? $this->designation($record['designation'], $designations) : null;
                 $others = collect($record['other_departments'])->map(fn (string $d) => $this->department($d, $departments, $unmatched))
                     ->filter(fn (?int $id) => $id !== null && $id !== $attributes['department_id'])->unique()->values()->all();
@@ -116,7 +125,7 @@ class FacultyMemberSync
                     $result->removed++;
                 });
 
-            FacultyMember::query()->withoutGlobalScopes()->whereIn('external_ref', array_keys($mapped))->update(['synced_at' => now()]);
+            FacultyMember::query()->withoutGlobalScopes()->whereIn('external_ref', $refs)->update(['synced_at' => now()]);
             $result->unmatchedDepartments = array_values(array_unique($unmatched));
         });
 
@@ -138,13 +147,16 @@ class FacultyMemberSync
         return $result;
     }
 
-    /** @param array<string, int> $departments short name (lower case) => id */
-    protected function department(?string $short, array $departments, array &$unmatched): ?int
+    /**
+     * @param  array<string, int>  $departments  short name (lower case) => id
+     * @param  array<string, int>  $names  name (lower case) => id, when the source gives the name too
+     */
+    protected function department(?string $short, array $departments, array &$unmatched, ?string $name = null, array $names = []): ?int
     {
         if ($short === null) {
             return null;
         }
-        $id = $departments[mb_strtolower($short)] ?? null;
+        $id = $departments[mb_strtolower($short)] ?? ($name !== null ? $names[mb_strtolower(trim($name))] ?? null : null);
         if ($id === null) {
             $unmatched[] = $short;   // BRL-FM-04
         }

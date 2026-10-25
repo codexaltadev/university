@@ -3,7 +3,9 @@
 namespace Modules\FacultyMember\Providers;
 
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\View;
 use Modules\FacultyMember\Console\SyncFacultyMembersCommand;
+use Modules\FacultyMember\Support\FacultyMembersPage;
 use Modules\FacultyMember\Support\FacultyMemberWebsite;
 use Platform\Context\SiteContext;
 use Platform\Modules\ModuleServiceProvider;
@@ -26,8 +28,10 @@ class FacultyMemberServiceProvider extends ModuleServiceProvider
     {
         parent::boot();
 
-        // Website: /faculty-members, /faculty-members/{slug}, {department}/faculty-members (FR-FM-03/04/05)
+        // Website: /faculty-members, {faculty|department}/faculty-members (FR-FM-03/05); profiles are the faculty website's
         $this->app->make(Website::class)->handle(fn (string $rest, SiteContext $context, string $locale) => $this->app->make(FacultyMemberWebsite::class)->respond($rest, $context, $locale));
+        // What a theme shows on them, ready (themes hold no logic, T-1)
+        View::composer(['facultymember::directory', 'facultymember::sections.list'], fn ($view) => $view->with('page', new FacultyMembersPage($view->getData())));
 
         $this->commands([SyncFacultyMembersCommand::class]);
         $this->app->booted(fn () => $this->app->make(Schedule::class)->command('faculty-member:sync')->dailyAt('05:30')->withoutOverlapping()

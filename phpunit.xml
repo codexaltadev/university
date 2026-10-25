@@ -50,5 +50,7 @@
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>
         <env name="NIGHTWATCH_ENABLED" value="false"/>
+        <!-- Tests never reach the real FMS API: no token (tests that need it fake it) -->
+        <env name="FMS_API_TOKEN" value="" force="true"/>
     </php>
 </phpunit>

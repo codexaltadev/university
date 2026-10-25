@@ -25,10 +25,9 @@ final class FacultyMemberExtension implements ModuleExtension
         $r->metric('faculty-member.count', FacultyMemberCount::class);                          // FR-FM-12
         $r->websitePage('faculty-member.index', label: 'facultymember::facultymember.plural', path: '/'.FacultyMember::PATH);   // also /{department}/faculty-members
         $r->searchable(FacultyMember::class, label: 'facultymember::facultymember.plural', weight: 5);
-        $r->sitemap(FacultyMember::class);
         $r->menuItemType(FacultyMember::class);
         $r->layouts('faculty-member.directory', ['grid', 'list', 'cards']);                     // FR-FM-03; first = default
         $r->homepageSection(FacultyMembersSection::class);                                      // FR-FM-05, FR-DEPT-07
-        $r->settings(FacultyMemberSettings::class);                                             // source, daily sync, profile pages
+        $r->settings(FacultyMemberSettings::class);                                             // source, daily sync, faculty website
     }
 }

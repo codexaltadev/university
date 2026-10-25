@@ -7,6 +7,7 @@
 | microsites, profile, homepage section, metric, scope, person source, search and sitemap.
 */
 
+use App\Services\FmsApiClient;
 use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Http;
 use Livewire\Livewire;
@@ -17,6 +18,7 @@ use Modules\FacultyMember\Filament\Resources\FacultyMembers\Pages\ListFacultyMem
 use Modules\FacultyMember\Metrics\FacultyMemberCount;
 use Modules\FacultyMember\Models\FacultyMember;
 use Modules\FacultyMember\Sections\FacultyMembersSection;
+use Modules\FacultyMember\Settings\FacultyMemberSettings;
 use Modules\FacultyMember\Sync\ApiSource;
 use Modules\FacultyMember\Sync\FacultyMemberSource;
 use Modules\FacultyMember\Sync\FacultyMemberSync;
@@ -184,9 +186,74 @@ it('reads the API, following its pages, with the token', function () {
     Http::assertSent(fn ($request) => $request->hasHeader('Authorization', 'Bearer secret'));
 });
 
+/** A teacher as DIU's FMS API gives it (GET /teachers, /{faculty}/{department}/{teacher}) */
+function fmsTeacher(array $overrides = []): array
+{
+    return array_merge([
+        'id' => 2125, 'slug' => 'muntachir', 'full_name' => 'Muntachir Razzak', 'designation' => 'Assistant Professor', 'designation_title' => 'Assistant Professor',
+        'department' => ['id' => 5, 'name' => 'Computer Science and Engineering', 'code' => 'CSE', 'faculty' => ['id' => 1, 'short_name' => 'FSIT']],
+        'photo_url' => 'https://fms.test/photos/muntachir.jpg', 'office_room' => '605', 'phone' => '01713493093', 'email' => 'web3@example.edu',
+        'employment_status' => null, 'bio' => 'Works on enterprise systems.', 'publications_count' => 1,
+    ], $overrides);
+}
+
+it('syncs the teachers from DIU\'s FMS API, page by page, keeping each teacher\'s FMS address', function () {
+    config(['services.fms' => ['url' => 'https://fms.test/api/v1', 'token' => 'test-token', 'cache_ttl' => 3600]]);
+    app()->forgetInstance(FmsApiClient::class);
+    Http::preventStrayRequests();
+    Http::fake([
+        'fms.test/api/v1/teachers?page=1&per_page=100' => Http::response(['data' => [fmsTeacher()], 'meta' => ['current_page' => 1, 'last_page' => 2, 'total' => 2]]),
+        'fms.test/api/v1/teachers?page=2&per_page=100' => Http::response(['data' => [fmsTeacher(['id' => 2200, 'slug' => 'gone', 'full_name' => 'Left Already', 'employment_status' => 'Resigned',
+            'department' => ['code' => 'BADM', 'name' => 'Business Administration', 'faculty' => ['short_name' => 'FBE']]])], 'meta' => ['current_page' => 2, 'last_page' => 2, 'total' => 2]]),
+    ]);
+    expect((new FacultyMemberSettings)->defaults()['source'])->toBe('json');  // the sample until the owner turns FMS on
+    ($this->sync)();                                                          // another source's teachers ("T-1" …) first
+    settings()->save('faculty-member', ['source' => 'fms']);
+
+    $result = app(FacultyMemberSync::class)->run();
+
+    expect($result->ok())->toBeTrue()->and($result->created)->toBe(2)->and($result->removed)->toBe(5)->and($result->source)->toBe('FMS API fms.test');
+    $member = FacultyMember::query()->where('external_ref', '2125')->sole();
+    expect($member->source_path)->toBe('FSIT/CSE/muntachir')
+        ->and($member->department_id)->toBe($this->cse->id)
+        ->and($member->name)->toBe('Muntachir Razzak')
+        ->and($member->photo_url)->toBe('https://fms.test/photos/muntachir.jpg')
+        ->and(FacultyMember::query()->where('external_ref', '2200')->sole()->is_active)->toBeFalse()     // resigned
+        ->and(FacultyMember::query()->where('external_ref', '2200')->sole()->department_id)->toBe($this->bba->id)   // FMS code BADM ≠ BBA: by name
+        ->and($result->unmatchedDepartments)->toBe([]);
+    Http::assertSent(fn ($request) => $request->hasHeader('Authorization', 'Bearer test-token'));
+});
+
+it('links each teacher to their profile on the faculty website, with no profile page here (owner 2026-10-25)', function () {
+    ($this->sync)([...$this->records, ['id' => '2125', 'source_path' => 'FSIT/CSE/muntachir', 'name' => 'Muntachir Razzak', 'department' => 'CSE', 'designation' => 'Lecturer']]);
+    settings()->save('faculty-member', ['profile_site' => 'https://faculty.example.edu/']);
+    $muntachir = FacultyMember::query()->where('external_ref', '2125')->sole();
+    $rina = FacultyMember::query()->where('external_ref', 'T-1')->sole();                         // no FMS address
+
+    expect($muntachir->profileUrl())->toBe('https://faculty.example.edu/FSIT/CSE/muntachir')
+        ->and($muntachir->personPresenter()->profileUrl())->toBe('https://faculty.example.edu/FSIT/CSE/muntachir')
+        ->and($rina->profileUrl())->toBeNull()
+        ->and($muntachir->url())->toBe('/faculty-members?q=Muntachir%20Razzak');                    // here: the directory
+    expect(moduleView('FacultyMember', 'partials.card', ['member' => $muntachir->load('department'), 'layout' => 'grid']))
+        ->toContain('href="https://faculty.example.edu/FSIT/CSE/muntachir" target="_blank"');
+
+    // The default theme (Phase 4.6b): DIU's sections with their teachers, DeanCard-style cards, "View Profile" out
+    $this->get('/faculty-members')->assertOk()
+        ->assertSeeInOrder(['All (5)', 'FSIT (4)', 'FBE (1)'])
+        ->assertSee('faculty-member-card', false)->assertSee('MR')                                   // initials without a photo
+        ->assertSeeInOrder(['Muntachir Razzak', 'View Profile'])
+        ->assertSee('href="https://faculty.example.edu/FSIT/CSE/muntachir" target="_blank"', false);
+    $this->get('/faculty-members?faculty=FBE')->assertOk()->assertSee('Sabbir Alam')->assertDontSee('Muntachir Razzak');
+
+    $this->get('/faculty-members/'.$muntachir->slug())->assertRedirect('https://faculty.example.edu/FSIT/CSE/muntachir')->assertStatus(301);   // an old address
+    $this->get('/faculty-members/'.$rina->slug())->assertNotFound();
+    expect(view()->exists('facultymember::profile'))->toBeFalse();
+});
+
 it('reads the sample JSON file shipped with the module', function () {
     $records = (new JsonFileSource(JsonFileSource::samplePath()))->records();
-    expect(count($records))->toBeGreaterThan(50);
+    expect(count($records))->toBeGreaterThan(50)
+        ->and($records[0])->toMatchArray(['id' => '1001', 'source_path' => 'FSIT/CSE/arif-alam', 'name' => 'Arif Alam', 'department' => 'CSE', 'designation_note' => 'and Head']);   // the FMS format, read as FMS
 
     $result = app(FacultyMemberSync::class)->run();   // default source: the sample
     expect($result->ok())->toBeTrue()->and($result->source)->toBe('JSON faculty-members.json');
@@ -251,22 +318,6 @@ it('shows a department\'s and a faculty\'s own teachers on their microsites (FR-
     expect($html)->toContain('Dr. Rina Khan')->toContain('All faculty members');
 });
 
-it('shows the profile with sections, links and roles; profile pages can be turned off (FR-FM-02/04)', function () {
-    ($this->sync)();
-    $rina = FacultyMember::query()->where('external_ref', 'T-1')->sole();
-    app(RoleCatalog::class)->sync();
-    app(AssignmentEngine::class)->assign($rina, $this->cse, 'head');
-
-    $this->get($rina->url())->assertOk()
-        ->assertSee('Professor and Head')->assertSee('University of Tokyo')->assertSee('Google Scholar')
-        ->assertSeeInOrder(['Roles', 'Computer Science and Engineering'])
-        ->assertSee('"@type":"Person"', false);
-
-    settings()->save('faculty-member', ['profile_pages' => false]);
-    $this->get('/faculty-members/'.$rina->slug())->assertNotFound();
-    expect($rina->url())->toStartWith('/faculty-members?q=');
-});
-
 it('counts teachers per place (FR-FM-12)', function () {
     ($this->sync)();
     $metric = new FacultyMemberCount;
@@ -277,7 +328,7 @@ it('counts teachers per place (FR-FM-12)', function () {
         ->and($metric->count(StatContext::of($this->fsit->getMorphClass().':'.$this->fsit->id), []))->toBe(3);
 });
 
-it('lets a department user see only their teachers, and offers teachers in the person picker, search and the sitemap', function () {
+it('lets a department user see only their teachers, and offers teachers in the person picker and search, not the sitemap', function () {
     ($this->sync)();
     $rina = FacultyMember::query()->where('external_ref', 'T-1')->sole();
     $sabbir = FacultyMember::query()->where('external_ref', 'T-4')->sole();
@@ -293,5 +344,5 @@ it('lets a department user see only their teachers, and offers teachers in the p
     expect(collect(PersonPicker::search('Rina'))->keys()->all())->toContain(PersonPicker::keyOf($rina))
         ->and($rina->toSearchDocument('en'))->toMatchArray(['title' => 'Dr. Rina Khan']);
     $sitemap = collect(app(Sitemap::class)->entries())->pluck('loc')->implode(' ');
-    expect($sitemap)->toContain($rina->url())->not->toContain('gone-soon');
+    expect($sitemap)->not->toContain('/faculty-members/');                                          // no profile pages here
 });

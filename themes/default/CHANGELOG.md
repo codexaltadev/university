@@ -79,6 +79,10 @@
   Quick Links, search, DIU's table and phone cards) and `modules/administration/profile` (blue
   card, contact boxes, biography, roles); `partials/administration/photo`; `partials/diu/browse-sidebar`
   items may be the page shown (`current`) and drop the arrow (`arrow` false).
+- 4.6b: Faculty Members — `modules/facultymember/directory` (sections with each faculty's
+  teachers, search with department and designation, DeanCard-style cards) and
+  `modules/facultymember/sections/list`; `partials/faculty-member/card` (photo or initials,
+  "View Profile" to the faculty website in a new tab — no profile page here).
 
 ## 1.0.0 — 2026-10-09
 

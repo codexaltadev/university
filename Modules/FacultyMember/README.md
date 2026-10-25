@@ -12,14 +12,24 @@ at a teacher and follow every change the faculty site makes.
 | Depends on | `department`, `faculty`; scope: Department users see their own teachers |
 | Vocabulary | `faculty-member.designation` — the ladder (Professor → … → Lecturer, seeded); its order is the directory order; new designations from the source are added at the end |
 | Permissions | Shield from the resource (`ViewAny/View/Update/Reorder:FacultyMember`; create / delete never allowed); custom `Sync:FacultyMember` |
-| Settings | Website Settings › Faculty Members: source (`json` + `json_path`, or `api` + `api_url` + `api_token`), daily sync, profile pages, intro; Appearance › Layouts `faculty-member.directory` = grid / list / cards |
+| Settings | Website Settings › Faculty Members: source (`fms`, `json` + `json_path`, or `api` + `api_url` + `api_token`), daily sync, faculty website (profiles), title, picture, intro; Appearance › Layouts `faculty-member.directory` = grid / list / cards |
 | Metric | `faculty-member.count` (a department's teachers incl. "also in", a faculty's departments', or all) |
 
 ## Source and sync
 
-* **Now:** `resources/data/faculty-members.json` — **dummy data** (72 fictional teachers on the dev
-  departments) used while the faculty site's API is not available. Another file: Settings ›
-  Faculty Members › JSON file.
+* **Now:** `resources/data/faculty-members.json` — **dummy data in the FMS API format** (the answer of
+  `GET /api/v1/teachers`: 72 fictional teachers on FMS's own department codes and faculties), read
+  through `Sync\FmsSource::record()`. Another file: Settings › Faculty Members › JSON file (our own
+  record format below works too).
+* **When DIU's Faculty Management System (FMS) has the teachers (owner 2026-10-25):** Settings ›
+  Faculty Members › Source = **FMS** — nothing else changes. `Sync\FmsSource` reads `/teachers`
+  through `App\Services\FmsApiClient` (address and token in `.env`, cached; 120 requests a minute
+  for the whole site), 100 a page, and keeps each teacher's FMS address in `source_path`
+  (`FBE/IE/muntachir`). Departments are matched by short name, else by name (FMS `IE` = our `DE`).
+* **Profiles are the faculty website's (owner 2026-10-25):** this site has no profile page. "View
+  Profile" opens Settings › Faculty Members › Faculty website + `/{source_path}`
+  (`https://demofaculty.daffodilvarsity.edu.bd/FBE/IE/muntachir`); an old `/faculty-members/{slug}`
+  is sent there (301); teachers are not in this site's sitemap.
 * **Later:** Settings › Faculty Members › Source = API, the address and token. If the API's field
   names differ from the format below, teach `Sync\RecordMapper::ALIASES` (or the mapper) the new
   names — nothing else changes. `Sync\ApiSource` follows `next_page_url` / `links.next`.
@@ -55,7 +65,7 @@ Also understood: `employeeID`, `position`, `picture` / `photo`, `cell`, `bio`, `
 |---|---|
 | `/faculty-members` | designation order; `?faculty=` / `?department=` (short name), `?designation=` (term id), `?q=` (name, note, research interests), `?view=`; 30 a page |
 | `/{faculty}/faculty-members`, `/{department}/faculty-members` | that place's own teachers (FR-FM-05) |
-| `/faculty-members/{slug}` | photo, designation, departments, public contacts (email written in character references, FR-FM-09), links, biography, research interests, profile sections, roles |
+| `/faculty-members/{slug}` | no page: 301 to the teacher's profile on the faculty website (owner 2026-10-25) |
 
 Homepage section `faculty-member.list` "Faculty Members" (settings `count`, `designations`).
 

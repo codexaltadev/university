@@ -17,11 +17,13 @@ class RecordMapper
     /** @var array<string, list<string>> our key => names accepted in a record, first wins */
     public const ALIASES = [
         'id' => ['id', 'external_id', 'teacher_id'],
+        'source_path' => ['source_path'],
         'employee_id' => ['employee_id', 'employeeID'],
         'name' => ['name'],
         'designation' => ['designation', 'position'],
         'designation_note' => ['designation_note'],
         'department' => ['department', 'department_short_name'],
+        'department_name' => ['department_name'],
         'other_departments' => ['other_departments'],
         'email' => ['email'],
         'phone' => ['phone', 'cell'],
@@ -58,10 +60,12 @@ class RecordMapper
         return [
             'external_ref' => Str::limit($id, 100, ''),
             'department' => $this->text($this->pick($raw, 'department')),
+            'department_name' => $this->text($this->pick($raw, 'department_name')),
             'other_departments' => array_values(array_unique(array_filter(array_map(fn ($d) => $this->text($d), (array) $this->pick($raw, 'other_departments'))))),
             'designation' => $this->text($this->pick($raw, 'designation')),
             'attributes' => [
                 'external_ref' => Str::limit($id, 100, ''),
+                'source_path' => ($s = $this->text($this->pick($raw, 'source_path'))) !== null ? Str::limit($s, 191, '') : null,
                 'employee_id' => ($e = $this->text($this->pick($raw, 'employee_id'))) !== null ? Str::limit($e, 30, '') : null,
                 'name' => $name,
                 'designation_note' => $this->translations($this->pick($raw, 'designation_note')),

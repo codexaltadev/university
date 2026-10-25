@@ -237,6 +237,7 @@ php artisan uwms:install
 | `SCOUT_DRIVER` | `database` (শুরু) বা `meilisearch` |
 | `UWMS_MODULE_RUNTIME_PATH`, `UWMS_THEME_RUNTIME_PATH` | `/var/www/uwms/shared/modules-runtime`, `.../themes-runtime` |
 | `LEGACY_DB_*` | শুধু DIU migration-এর সময়; go-live-এর পর মুছে ফেলা (Part B) |
+| `FMS_API_URL`, `FMS_API_TOKEN`, `FMS_API_CACHE_TTL` | DIU Faculty Management System — teacher, department, publication (`https://…/api/v1`, এই site-এর Sanctum token, `3600`)। Token শুধু server-এর `.env`-এ — git, view বা JS-এ কখনো নয়; সীমা মিনিটে ১২০ request, তাই সব উত্তর cache হয় (`php artisan fms:clear-cache` দিয়ে মোছা)। Token থাকলে Faculty Members-এর source শুরু থেকেই FMS |
 
 ---
 
