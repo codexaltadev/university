@@ -14,6 +14,8 @@ use Modules\Csr\Filament\Resources\Activities\Pages\CreateActivity;
 use Modules\Csr\Models\Activity;
 use Modules\Csr\Sections\CsrSection;
 use Modules\Csr\Support\Categories;
+use Modules\Csr\Support\CsrWebsite;
+use Platform\Context\SiteContext;
 use Platform\Homepage\SectionContext;
 use Platform\Media\MediaLibrary;
 use Platform\Modules\ModulePermissions;
@@ -47,7 +49,12 @@ it('shows category cards, a category with its sub categories, and the activity (
     ($this->make)('Blood donation')->syncTerms(Activity::CATEGORY, [Term::query()->where('name->en', 'Health')->value('id')]);
     ($this->make)('Closed Pool', ['is_active' => false]);
 
-    $this->get('/csr')->assertOk()->assertSeeInOrder(['Environment', 'Green campus work.', 'Health'])->assertSee($picture->url('medium') ?? $picture->url(), false)->assertDontSee('Planting 1000 trees');
+    $this->get('/csr')->assertOk()->assertSeeInOrder(['Where We Create Impact', 'Environment', 'Green campus work.', 'Stories of Change', 'Planting 1000 trees'])   // DIU's page: focus areas with a picture or line
+        ->assertSee($picture->url('medium') ?? $picture->url(), false)->assertSee('50,000+')->assertSee('Individuals Supported');
+    expect(moduleView('Csr', 'index', app(CsrWebsite::class)->respond('csr', SiteContext::site(), 'en')->getOriginalContent()->getData()))
+        ->toContain('Green campus work.')->not->toContain('Planting 1000 trees');                   // the module's own: the categories first
+    $this->get('/csr?category=health')->assertOk()->assertSee('Blood donation')->assertDontSee('Planting 1000 trees');
+    $this->get('/csr?q=planting')->assertOk()->assertSee('Planting 1000 trees')->assertDontSee('Blood donation');
     $this->get('/csr/category/'.$env->slug())->assertOk()->assertSee('Tree Plantation')->assertSee('Planting 1000 trees')->assertDontSee('Blood donation');
     $this->get($planting->url())->assertOk()->assertSee('Students planted trees.')->assertSee('youtube-nocookie.com/embed/dQw4w9WgXcQ', false);
     $this->get('/csr/category/nothing')->assertNotFound();

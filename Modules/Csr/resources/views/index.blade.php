@@ -1,4 +1,5 @@
-{{-- /csr and /csr/category/{slug} (FR-CSR-02). Contract: $category (or null), $children (['term','image'] list), $activities (paginator or null), $layout (cards / grid / timeline), $base --}}
+{{-- /csr and /csr/category/{slug} (FR-CSR-02). Contract: $category (or null), $children (['term','image'] list), $activities (paginator or null), $layout (cards / grid / timeline), $base;
+     for a theme: $categories (all), $stories (paginator "stories": searched ?q=, category ?category=), $picked (?Term), $q, $featured (highlighted first, 3) --}}
 @php($path = url($base.'/'.\Modules\Csr\Models\Activity::PATH))
 <x-theme::layout :title="$category?->name ?? __('csr::csr.plural')">
     <div class="container" style="padding-block:var(--space-10, 40px)">

@@ -89,6 +89,9 @@
 - 4.6d: DIU alumni — `modules/alumni/index`, `show`, `submit`, `sections/pride` with
   `partials/alumni/card` (DIU's AlumniList card: 3:4 photo, briefcase / building lines,
   department badge, Pride).
+- 4.6e-1: DIU CSR — `modules/csr/index` (featured activity, impact numbers, "Our Approach"
+  picture cards, CSR Report; on dark navy "Where We Create Impact" with search, category and
+  focus-area cards, "Stories of Change") and `modules/csr/show`.
 
 ## 1.0.0 — 2026-10-09
 

@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Legacy\Migration\Support\Normalizer;
 use Modules\Csr\Models\Activity;
+use Modules\Csr\Support\Categories;
+use Platform\Media\MediaItem;
 use Platform\Relations\RelationEngine;
 use Platform\Taxonomy\Term;
 use Platform\Taxonomy\Vocabularies;
@@ -14,7 +16,8 @@ use Platform\Taxonomy\Vocabularies;
  * S18C CSR (DB-06 v1.3 §7): `csr_categories` → csr.category terms with their parent and
  * description (pictures wait for S03); `csrs` → activities in their category, on the main site
  * when `is_home` or not placed anywhere else; `is_featured` → highlighted. The date is the day it
- * was entered (the old system had none).
+ * was entered (the old system had none). Category pictures from the Media Library once S03 group
+ * `csr` has them (run S18C again after it); DIU's /csr-activities[/{slug}] → 301 here.
  */
 class S18Csr extends Step
 {
@@ -53,8 +56,14 @@ class S18Csr extends Step
                 'description' => Normalizer::en(Normalizer::text(strip_tags((string) $row->short_description))),
                 'sort_order' => (int) $row->serial,
                 'is_active' => (bool) $row->publication_status,
-            ], after: fn (Term $t, bool $created) => $this->keepSlug($t, $row->slug ?: Str::slug((string) $name), $created),
-                existing: $this->same(Term::class, ['vocabulary_id' => $vocabulary->id, 'name->en' => $name]));
+            ], after: function (Term $t, bool $created) use ($row, $name): void {
+                $this->keepSlug($t, $row->slug ?: Str::slug((string) $name), $created);
+                // the picture S03 put in the library (id map "files", key = its path)
+                $item = filled($row->image) ? $this->ids->record('files', (string) Normalizer::filePath((string) $row->image), MediaItem::class) : null;
+                if ($item) {
+                    app(Categories::class)->setImage($t, $item->id);
+                }
+            }, existing: $this->same(Term::class, ['vocabulary_id' => $vocabulary->id, 'name->en' => $name]));
         }
 
         $engine = app(RelationEngine::class);
@@ -79,8 +88,12 @@ class S18Csr extends Step
                 $term = $terms[(int) $row->csr_category_id] ?? null;
                 $activity->syncTerms(Activity::CATEGORY, $term ? [$term->id] : []);
                 $engine->sync($activity, [], mainSite: true, highlights: $row->is_featured ? ['site:0' => ['order' => 0]] : [], user: null);
+                if (filled($row->csr_slug)) {
+                    $this->oldAddress('/csr-activities/'.$row->csr_slug, $activity);   // DIU's activity address
+                }
             }, existing: $this->same(Activity::class, ['title->en' => $title]));
         }
+        $this->oldAddress('/csr-activities', '/'.Activity::PATH);
         $this->report->review('CSR pictures (photo, photo_two) and category pictures wait for the files (S03); set the category pictures in Services › CSR category pictures.');
     }
 }

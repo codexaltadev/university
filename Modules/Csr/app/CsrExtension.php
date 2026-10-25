@@ -5,6 +5,7 @@ namespace Modules\Csr;
 use Modules\Csr\Filament\CsrPlugin;
 use Modules\Csr\Models\Activity;
 use Modules\Csr\Sections\CsrSection;
+use Modules\Csr\Settings\CsrSettings;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
 
@@ -24,5 +25,6 @@ final class CsrExtension implements ModuleExtension
         $r->searchable(Activity::class, label: 'csr::csr.plural', weight: 3);
         $r->sitemap(Activity::class);
         $r->layouts('csr.listing', ['cards', 'grid', 'timeline']);                                     // FR-CSR-02
+        $r->settings(CsrSettings::class);                                                                // the page's texts, numbers, report
     }
 }

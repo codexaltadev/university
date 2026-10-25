@@ -54,8 +54,21 @@ class CsrWebsite
             $view = request()->query('view');
             $layout = is_string($view) && in_array($view, self::VIEWS, true) ? $view : (app(LayoutResolver::class)->for('csr.listing') ?? 'cards');
 
+            // A theme's DIU page: every activity here (in this category), searched, a category picked by ?category=
+            $search = trim((string) request()->query('q'));
+            $picked = $category ?? $all->first(fn (Term $t): bool => $t->slug($locale) === (string) request()->query('category'));
+            $stories = self::shown($context)
+                ->when($picked, fn (Builder $q) => $q->whereHas('terms', fn (Builder $t) => $t->whereIn('core_terms.id', [$picked->id, ...$picked->descendantIds()])))
+                ->when($search !== '', fn (Builder $q) => $q->whereRaw('LOWER(CAST(title AS CHAR)) LIKE ?', ['%'.mb_strtolower(addcslashes($search, '%_\\')).'%']))
+                ->with('terms')->paginate(6, pageName: 'stories')->withQueryString();
+
             return response()->view('csr::index', [
                 'category' => $category,
+                'categories' => $all,
+                'stories' => $stories,
+                'picked' => $picked,
+                'q' => $search,
+                'featured' => app(RelationEngine::class)->for($context->isMicrosite() ? $context->key() : RelationEngine::SITE_KEY)->content(Activity::class)->highlightedFirst(3),
                 'children' => $children->map(fn (Term $t): array => ['term' => $t, 'image' => $this->categories->image($t)])->all(),
                 'activities' => $activities,
                 'layout' => in_array($layout, self::VIEWS, true) ? $layout : 'cards',
