@@ -418,6 +418,15 @@ Program খুললে বাম দিকে একই অংশগুলো �
 
 ---
 
+### 18.3 Admission-এর page ও Settings
+
+**Settings › Admission**: Apply Now / Request for Information / WhatsApp group-এর link; **Admission Office** — নাম, ঠিকানা, helpline, email, map (Google Maps › Share › Embed a map থেকে শুধু `https://www.google.com/maps/embed?…` ঠিকানাটুকু); **Result page** — উপরের লেখা, "Admission Information"-এর link ও ছবি।
+
+* `/admission/contact` — office-এর তথ্য, map ও **Admission contacts**-এর সব group (ব্যক্তি যোগ করুন group-এ)।
+* `/admission/result` — serial দিয়ে ফলাফল; batch-এর বার্তায় `{name}`, `{program}`, `{serial}` লিখলে ছাত্রের নাম, program ও serial বসে। বার্তায় HTML (bold, list, link) চলে — script বাদ যায়।
+
+---
+
 ## 19. Scholarship
 
 **Academic › Scholarships › + New**: নাম, category, কারা পাবে, শর্ত, পরিমাণ / %, আবেদনের পদ্ধতি ও শেষ তারিখ, সংযুক্ত file। Website-এর `/scholarships` page-এ category অনুযায়ী দেখায়।

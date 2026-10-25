@@ -16,6 +16,9 @@ use Modules\Admission\Models\ResultBatch;
  */
 class ResultLookup extends Component
 {
+    /** The result's tone on the answer (DIU: selected green, waiting yellow, not selected red) */
+    public const TONES = ['selected' => 'success', 'waiting' => 'warning', 'not_selected' => 'danger', 'absent' => 'danger'];
+
     public const PER_MINUTE = 10;
 
     public string $serial = '';
@@ -23,7 +26,7 @@ class ResultLookup extends Component
     /** Honeypot: people never fill it. */
     public string $website = '';
 
-    /** @var array{status: string, name?: string, result?: string, label?: string, message?: ?string, batch?: string}|null */
+    /** @var array{status: string, name?: string, serial?: string, program?: ?string, result?: string, tone?: string, label?: string, message?: ?string, batch?: string}|null */
     public ?array $answer = null;
 
     public function lookup(): void
@@ -38,7 +41,7 @@ class ResultLookup extends Component
 
         $key = 'admission-result:'.request()->ip();
         if (RateLimiter::tooManyAttempts($key, self::PER_MINUTE)) {
-            $this->answer = ['status' => 'too_many', 'message' => __('admission::admission.result_page.too_many', ['seconds' => RateLimiter::availableIn($key)])];
+            $this->answer = ['status' => 'too_many', 'message' => ResultBatch::html(__('admission::admission.result_page.too_many', ['seconds' => RateLimiter::availableIn($key)]))];
 
             return;
         }
@@ -52,7 +55,7 @@ class ResultLookup extends Component
     {
         $batches = ResultBatch::query()->frontendVisible()->latest('id')->get();
         if ($batches->isEmpty()) {
-            return ['status' => 'unpublished', 'message' => __('admission::admission.result_page.unpublished')];   // AC-ADM-02
+            return ['status' => 'unpublished', 'message' => ResultBatch::html(__('admission::admission.result_page.unpublished'))];   // AC-ADM-02
         }
 
         $result = AdmissionResult::query()->where('is_active', true)
@@ -60,7 +63,7 @@ class ResultLookup extends Component
             ->orderByDesc('batch_id')->first();
 
         if ($result === null) {
-            return ['status' => 'not_found', 'message' => $batches->first()->message('not_found') ?? __('admission::admission.result_page.not_found')];
+            return ['status' => 'not_found', 'message' => ResultBatch::html($batches->first()->message('not_found') ?? __('admission::admission.result_page.not_found'))];
         }
 
         $batch = $batches->firstWhere('id', $result->batch_id);
@@ -68,9 +71,12 @@ class ResultLookup extends Component
         return [
             'status' => 'found',
             'name' => $result->student_name,
+            'serial' => $result->application_serial,
+            'program' => $result->program_label ?: null,
             'result' => $result->result,
+            'tone' => self::TONES[$result->result] ?? 'info',   // DIU's badge colour
             'label' => $result->result_label ?: __("admission::admission.results.{$result->result}"),
-            'message' => $batch->message($result->result, $result->student_name),
+            'message' => ResultBatch::html($batch->message($result->result, $result->student_name, null, $result->program_label, $result->application_serial)),   // sanitised HTML
             'batch' => $batch->name,
         ];
     }

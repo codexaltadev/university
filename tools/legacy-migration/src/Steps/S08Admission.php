@@ -13,6 +13,7 @@ use Modules\Admission\Models\AdmissionResult;
 use Modules\Admission\Models\AdmissionSubscriber;
 use Modules\Admission\Models\Circular;
 use Modules\Admission\Models\ResultBatch;
+use Modules\Admission\Settings\AdmissionSettings;
 use Modules\Admission\Support\ResultImporter;
 use Platform\Assignments\Assignment;
 use Platform\Assignments\RoleCatalog;
@@ -34,7 +35,7 @@ class S08Admission extends Step
         '/int-tuition-fees' => '/tuition-fees?category=international',
         '/scholarship' => '/scholarships',
         '/tuition-fee-calculator' => '/waiver-calculator',
-        '/admission-contact' => '/admission#contacts',
+        '/admission-contact' => '/admission/contact',
     ];
 
     public static function key(): string
@@ -61,6 +62,7 @@ class S08Admission extends Step
             }
         }
         $this->landingPage();
+        $this->contactSettings();
 
         if (! Schema::connection('legacy')->hasTable('admission_notices')) {
             $this->report->review('No admission tables in the legacy database: nothing to migrate.');
@@ -185,6 +187,35 @@ class S08Admission extends Step
         return $pages;
     }
 
+    /** DIU's Admission Office (DIUFronend admission-contact, admission-test-result): helpline, email, map, the result page's links */
+    public const OFFICE = [
+        'helpline' => '+8809617901212',
+        'email' => 'admission@daffodilvarsity.edu.bd',
+        'map_url' => 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3648.3585722788043!2d90.31758427589985!3d23.87690048390706!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8ada2664e21%3A0x3c872fd17bc11ddb!2sDaffodil%20International%20University!5e0!3m2!1sen!2sbd!4v1761990285789!5m2!1sen!2sbd',
+        'result_links' => [
+            ['Admission', '/admission'],
+            ['Programs', '/programs'],
+            ['Admission Contact', '/admission/contact'],
+            ['Hall Facilities', 'https://hall.daffodilvarsity.edu.bd/'],
+            ['Admission Guidelines', '/article/admission-guidelines'],
+            ['Fees and Funding', '/tuition-fees'],
+        ],
+    ];
+
+    /** Settings › Admission: DIU's office contact and result page links, only where still empty or as installed. */
+    protected function contactSettings(): void
+    {
+        $now = settings()->group('admission');
+        $installed = app(AdmissionSettings::class)->defaults();
+        settings()->save('admission', array_filter([
+            'helpline' => blank($now['helpline'] ?? null) ? self::OFFICE['helpline'] : null,
+            'email' => blank($now['email'] ?? null) ? self::OFFICE['email'] : null,
+            'map_url' => blank($now['map_url'] ?? null) ? self::OFFICE['map_url'] : null,
+            'result_links' => ($now['result_links'] ?? null) === $installed['result_links']
+                ? array_map(fn (array $l): array => ['label' => ['en' => $l[0]], 'url' => $l[1]], self::OFFICE['result_links']) : null,
+        ], fn ($v) => $v !== null));
+    }
+
     protected function circulars(): void
     {
         foreach ($this->rows('admission_notices') as $row) {
@@ -281,7 +312,7 @@ class S08Admission extends Step
             return;
         }
 
-        $text = fn (?string $message): ?array => filled($message) ? ['en' => str_replace('student_name', '{name}', trim((string) $message))] : null;
+        $text = fn (?string $message): ?array => filled($message) ? ['en' => strtr(trim((string) $message), ['student_name' => '{name}', 'program_name' => '{program}', 'roll_no' => '{serial}'])] : null;
         $title = Normalizer::text($test->title);
 
         $batch = $this->upsert('admission_tests', $test, ResultBatch::class, [

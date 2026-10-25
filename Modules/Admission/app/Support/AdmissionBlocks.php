@@ -27,19 +27,26 @@ class AdmissionBlocks
 
         return Circular::query()->frontendVisible()->when($data['running_only'] ?? true, fn ($q) => $q->running())->ordered()->get()
             ->sortBy(fn (Circular $c): int => $c->isClosed() ? 1 : 0)->take((int) ($data['limit'] ?? 3) ?: 3)
-            ->map(fn (Circular $c): array => [
-                'title' => (string) $c->title,
-                'url' => $c->url(),
-                'closed' => $c->isClosed(),
-                'rows' => collect(self::ROWS)->filter(fn (string $word, string $key): bool => $c->{$key} !== null)
-                    ->map(fn (string $word, string $key): array => [
-                        'label' => __("admission::admission.dates.{$key}"),
-                        'date' => $c->{$key}->translatedFormat('F j, Y'),
-                        'iso' => $c->{$key}->toDateString(),
-                        'past' => $past = $c->{$key}->copy()->endOfDay()->isPast(),
-                        'status' => __('admission::admission.status.'.($past ? 'expired' : $word)),
-                    ])->values()->all(),
-            ])->values()->all();
+            ->map(fn (Circular $c): array => static::card($c))->values()->all();
+    }
+
+    /** One circular as DIU's notice: name, address, open or closed, each date with its status. @return array{title: string, url: string, closed: bool, session: ?string, rows: list<array{label: string, date: string, iso: string, status: string, past: bool}>} */
+    public static function card(Circular $c): array
+    {
+        return [
+            'title' => (string) $c->title,
+            'url' => $c->url(),
+            'closed' => $c->isClosed(),
+            'session' => filled($c->session_label) ? (string) $c->session_label : null,
+            'rows' => collect(self::ROWS)->filter(fn (string $word, string $key): bool => $c->{$key} !== null)
+                ->map(fn (string $word, string $key): array => [
+                    'label' => __("admission::admission.dates.{$key}"),
+                    'date' => $c->{$key}->translatedFormat('F j, Y'),
+                    'iso' => $c->{$key}->toDateString(),
+                    'past' => $past = $c->{$key}->copy()->endOfDay()->isPast(),
+                    'status' => __('admission::admission.status.'.($past ? 'expired' : $word)),
+                ])->values()->all(),
+        ];
     }
 
     public function circularsUrl(): string

@@ -1,4 +1,4 @@
-{{-- Admission result lookup (FR-ADM-06). Contract: wire:model serial, website (honeypot); wire:submit lookup; $answer (status, name, label, message, batch) --}}
+{{-- Admission result lookup (FR-ADM-06). Contract: wire:model serial, website (honeypot); wire:submit lookup; $answer (status, name, serial, program, result, tone, label, message — sanitised HTML, batch) --}}
 <div class="admission-result" x-data>
     <form wire:submit="lookup" class="admission-result__form" style="display:flex;flex-wrap:wrap;gap:var(--space-3, 12px);align-items:flex-end">
         <label style="flex:1 1 260px;display:grid;gap:var(--space-1, 4px)">
@@ -22,7 +22,7 @@
                     <p><strong>{{ __('admission::admission.fields.result') }}:</strong> {{ $answer['label'] }}</p>
                 @endif
                 @if (filled($answer['message'] ?? null))
-                    <div style="white-space:pre-line">{{ $answer['message'] }}</div>
+                    <div class="admission-result__message">{!! $answer['message'] !!}</div>
                 @endif
             </div>
         @endif

@@ -3,12 +3,13 @@
 namespace Modules\Admission\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 use Platform\Models\BaseModel;
 use Spatie\Translatable\HasTranslations;
 
 /**
  * One admission test's results (FR-ADM-05/08): a session's list, imported from a file, with
- * the message shown for each result ({name} = the student). Active = published.
+ * the message shown for each result ({name} = the student, {program}, {serial}). Active = published.
  * Removing a batch removes its results (BRL-ADM-01).
  */
 class ResultBatch extends BaseModel
@@ -45,11 +46,21 @@ class ResultBatch extends BaseModel
     }
 
     /** The message for a result in a language (the default language's when missing), with the name filled in. */
-    public function message(string $result, ?string $name = null, ?string $locale = null): ?string
+    public function message(string $result, ?string $name = null, ?string $locale = null, ?string $program = null, ?string $serial = null): ?string
     {
         $texts = (array) (($this->messages ?? [])[$result] ?? []);
         $text = settings()->translate($texts, $locale);
 
-        return filled($text) ? strtr((string) $text, ['{name}' => (string) $name]) : null;
+        return filled($text) ? strtr((string) $text, ['{name}' => (string) $name, '{program}' => (string) $program, '{serial}' => (string) $serial]) : null;
+    }
+
+    /** A message as website HTML: the Office's HTML (DIU's messages are HTML), sanitised; plain text keeps its lines. */
+    public static function html(?string $message): ?string
+    {
+        if (blank($message)) {
+            return null;
+        }
+
+        return $message !== strip_tags($message) ? Str::sanitizeHtml($message) : nl2br(e($message));
     }
 }

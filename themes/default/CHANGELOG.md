@@ -119,6 +119,9 @@
 - 4.7b-2: DIU admission eligibility — `modules/program/blocks/eligibility` ("Faculty of …", round level buttons with
   counts, Full Program Name / Short Tag rows that open the eligibility and DIU's Quick Links); `partials/menus/browse`
   headings fold their children.
+- 4.7b-3: DIU admission pages — `modules/admission/result` and `livewire/result-lookup` (/admission-test-result),
+  `modules/admission/contact` (/admission-contact), `modules/admission/circulars` / `circular` with
+  `partials/admission/circular`.
 
 ## 1.0.0 — 2026-10-09
 

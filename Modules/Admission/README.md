@@ -12,7 +12,7 @@ page blocks for the `/admission` page and any other page. Optional: Program (res
 | Category | vocabulary `admission.highlight-category` (Notice, Facility, Campus Life …) |
 | People | contact groups are assignable (role `contact`): Administration people, or manual ones |
 | Permissions | resource `…:Circular`, `…:AdmissionHighlight`, `…:AdmissionStep`, `…:AdmissionContactGroup`, `…:ResultBatch`, `…:AdmissionSubscriber`; the "Admission Office" role gets them on install (seeder, once) |
-| Settings | Website Settings › Admission: Apply Now link, Request for Information link, WhatsApp group link, text on the result page |
+| Settings | Website Settings › Admission: Apply Now link, Request for Information link, WhatsApp group link; the Admission Office (name, address, helpline, email, Google Maps embed); the result page's text, links and picture |
 | Website | `/admission` is a **Page** (made on install with the module's blocks and an empty "Admission" free menu as its sidebar); its section pages are its child pages. Module pages: `/admission/result`, `/admission/circulars`, `/admission/circulars/{slug}` |
 
 * **Circulars:** session as text ("Fall 2026") until the Session module; dates apply from / last day / test /
@@ -37,9 +37,10 @@ page blocks for the `/admission` page and any other page. Optional: Program (res
 
 | View | Variables |
 |---|---|
-| `circulars` | `$circulars` (open first) |
-| `circular` | `$circular` |
-| `result` | `$intro` |
+| `contact` | `$page` (Support\AdmissionPage: office, social, contacts) |
+| `circulars` | `$circulars` (open first), `$page` |
+| `circular` | `$circular`, `$page` (circular(): dates with status, sanitised body, PDF, apply link) |
+| `result` | `$intro`, `$page` (intro, resultLinks, resultImage, applyUrl, office) |
 | `subscription` | `$message` |
 | `partials.circular-card`, `partials.dates` | `$circular` |
 | `blocks.*` | `$data`, `$locale`, `$admission` (Support\AdmissionBlocks: circulars, links, highlights, steps, contacts) |

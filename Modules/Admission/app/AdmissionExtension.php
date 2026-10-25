@@ -28,6 +28,7 @@ final class AdmissionExtension implements ModuleExtension
     {
         $r->filamentPlugin(AdmissionPlugin::class);                                            // Academic › Admission
         $r->websitePage('admission.result', label: 'admission::admission.result_page.title', path: '/admission/result');       // Menus › Module page
+        $r->websitePage('admission.contact', label: 'admission::admission.contact_page.title', path: '/admission/contact');
         $r->websitePage('admission.circulars', label: 'admission::admission.circular.plural', path: '/'.Circular::PATH);
         $r->assignable(AdmissionContactGroup::class, roles: [AdmissionContactGroup::ROLE]);   // contact people (FR-ADM-10)
         $r->searchable(Circular::class, label: 'admission::admission.circular.plural', weight: 6);

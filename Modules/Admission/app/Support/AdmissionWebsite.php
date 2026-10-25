@@ -10,13 +10,15 @@ use Platform\Context\SiteContext;
 use Platform\Seo\Seo;
 
 /**
- * The module's own pages (FR-ADM-16, DB-03 v1.5 §10): /admission/result (result lookup),
+ * The module's own pages (FR-ADM-16, DB-03 v1.5 §10): /admission/result (result lookup), /admission/contact,
  * /admission/circulars and /admission/circulars/{slug}. /admission itself and its section
  * pages are Pages (FR-ADM-13), not answered here.
  */
 class AdmissionWebsite
 {
     public const RESULT = 'admission/result';
+
+    public const CONTACT = 'admission/contact';
 
     public function respond(string $rest, SiteContext $context, string $locale): Response|RedirectResponse|null
     {
@@ -31,6 +33,12 @@ class AdmissionWebsite
             return response()->view('admission::result', [
                 'intro' => filled($intro = settings('admission.result_page_intro')) ? (string) $intro : null,
             ]);
+        }
+
+        if ($rest === self::CONTACT) {   // DIU's /admission-contact
+            app(Seo::class)->set(['title' => __('admission::admission.contact_page.title'), 'path' => '/'.self::CONTACT]);
+
+            return response()->view('admission::contact');
         }
 
         if ($rest === Circular::PATH) {

@@ -252,3 +252,33 @@ it('gives the Admission Office the admission permissions once, and nobody else',
     $this->actingAs($user);
     $this->get(CircularResource::getUrl('index'))->assertOk()->assertSee('Fall 2026 (Tri Semester)');
 });
+
+it('shows DIU\'s result, contact and circular pages, with the office from Settings and HTML messages made safe (Phase 4.7b-3)', function () {
+    app(RoleCatalog::class)->sync();
+    settings()->save('admission', ['helpline' => '+8809617901212', 'email' => 'admission@example.edu', 'apply_url' => 'https://admission.example.edu/',
+        'map_url' => 'https://www.google.com/maps/embed?pb=diu'], translatable: ['office_name', 'office_address']);
+    $this->batch->update(['messages' => ['selected' => ['en' => '<p>Dear {name}, you are selected for {program} ({serial}).</p><script>alert(1)</script>']]]);
+    AdmissionResult::create(['batch_id' => $this->batch->id, 'program_label' => 'BSc in CSE', 'application_serial' => 'A100', 'student_name' => 'Ayesha Rahman', 'result' => 'selected']);
+
+    // the result: name, serial, program, the message as safe HTML with its placeholders filled
+    Livewire::test(ResultLookup::class)->set('serial', 'A100')->call('lookup')
+        ->assertSet('answer.tone', 'success')->assertSet('answer.program', 'BSc in CSE')
+        ->assertSeeHtml('<p>Dear Ayesha Rahman, you are selected for BSc in CSE (A100).</p>')
+        ->assertDontSeeHtml('<script>alert(1)</script>');
+
+    $this->get('/admission/result')->assertOk()
+        ->assertSeeInOrder(['Admission Test Result', 'Application Serial Number', 'Admission Information', 'Admission Contact', 'Need Assistance?', 'admission@example.edu', '+8809617901212']);
+
+    $group = AdmissionContactGroup::create(['name' => ['en' => 'International Admission'], 'is_active' => true]);
+    app(AssignmentEngine::class)->assign(ManualPerson::create(['name' => ['en' => 'Ms. Nadia'], 'designation' => ['en' => 'Counselor'], 'phone' => '+8801713000000']), $group, AdmissionContactGroup::ROLE);
+    $this->get('/admission/contact')->assertOk()
+        ->assertSeeInOrder(['Admission Contact', 'Daffodil International University', 'Admission Helpline', '+8809617901212', 'Apply Online', 'International Admission', 'Ms. Nadia', 'Counselor'])
+        ->assertSee('https://www.google.com/maps/embed?pb=diu', false);
+
+    settings()->save('admission', ['map_url' => 'https://evil.example/maps/embed?x']);
+    $this->get('/admission/contact')->assertOk()->assertDontSee('evil.example', false);   // only Google Maps embeds
+
+    $this->get('/admission/circulars')->assertOk()->assertSeeInOrder(['Fall 2026 (Tri Semester)', 'Open', 'Last day to apply', 'Summer 2026', 'Closed']);
+    $this->get($this->fall->url())->assertOk()->assertSeeInOrder(['Fall 2026 (Tri Semester)', 'Last day to apply', 'Apply Now'])
+        ->assertSee('https://admission.example.edu/', false);
+});

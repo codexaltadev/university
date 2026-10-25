@@ -8,6 +8,7 @@ use Livewire\Livewire;
 use Modules\Admission\Livewire\ResultLookup;
 use Modules\Admission\Livewire\SubscribeForm;
 use Modules\Admission\Support\AdmissionBlocks;
+use Modules\Admission\Support\AdmissionPage;
 use Modules\Admission\Support\AdmissionWebsite;
 use Platform\Context\SiteContext;
 use Platform\Modules\ModuleServiceProvider;
@@ -35,6 +36,7 @@ class AdmissionServiceProvider extends ModuleServiceProvider
 
         // What themes show (T-1): the blocks' circulars, links, cards, steps and contacts
         View::composer('admission::blocks.*', fn ($view) => $view->with('admission', new AdmissionBlocks($view->getData())));
+        View::composer(['admission::result', 'admission::contact', 'admission::circulars', 'admission::circular'], fn ($view) => $view->with('page', new AdmissionPage($view->getData())));
 
         // Website: /admission/result, /admission/circulars[/{slug}] (FR-ADM-16); /admission itself is a page
         $this->app->make(Website::class)->handle(fn (string $rest, SiteContext $context, string $locale) => $this->app->make(AdmissionWebsite::class)->respond($rest, $context, $locale));
