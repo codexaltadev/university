@@ -41,3 +41,4 @@ Installable module M-03 (SRS Part 2). Academic › Programs and the program page
 | `sections.by-level` | `$items` (list of `level`, `programs`), `$section`, `$settings` |
 | `microsite.home` | `$entity` (Program), `$context`, `$page` (`Support\ProgramPage`, added by a view composer: the parts that have something in order — `sections()`, `overview()`, `eligibility()`, `majorGroups()`, `careers()`, `tab(key)` / `otherTabs()`, `stats()`, `facts()`, `quickLinks()`, `image()`, `youtubeId()`, `aiSummary()` … — so a theme's version needs no PHP, T-1) |
 | `microsite.items` | `$entity`, `$part` = majors / variants / careers / people |
+| `blocks.eligibility` | page block "Admission eligibility" (`program-eligibility`: a faculty, links): `$data`, `$locale`, `$eligibility` (`Support\EligibilityPage`: `head()` — "Faculty of …" and overview, `levels()` — the faculty's listed programs by level with short name and sanitised eligibility, `links()`) |

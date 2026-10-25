@@ -412,6 +412,7 @@ Program খুললে বাম দিকে একই অংশগুলো �
 
 * একাধিক rule মিললে কোনটি প্রযোজ্য (সর্বোচ্চ, নাকি যোগফল একটি সীমা পর্যন্ত) — **Waiver Calculator › Settings**।
 * **Waiver categories**-এ প্রতিটির **ছোট বর্ণনা** দিতে পারেন (যেমন "SSC ও HSC GPA অনুযায়ী") — calculator-এ নামের নিচে দেখায়; খালি রাখলে শুধু নাম। প্রথম ৬টি category দেখায়, বাকিগুলো "Show all"-এ — তাই বেশি ব্যবহৃতগুলো ক্রমে উপরে রাখুন।
+* **ভর্তির যোগ্যতা (Admission eligibility)** block — যেকোনো page-এ: একটি faculty বেছে নিন, প্রতিটি program-এর নিচে কোন link দেখাবে দিন। Faculty-র listed program-গুলো level অনুযায়ী (Undergraduate / Graduate) দেখায়, প্রতিটি খুললে Program-এর **Eligibility** (General ও English Medium) — তাই যোগ্যতা বদলাতে Program-এর form-এ যান। `/admission`-এর নিচে প্রতিটি faculty-র এমন একটি page আছে।
 * `/waiver-calculator` page-এর উপরের শিরোনাম ("Calculate Your Fees"), নিচের লাইন ও ছবি, এবং form-এর উপরের **"Important Notice"** — শিরোনাম, লেখা (disclaimer; খালি রাখলে notice দেখায় না), button-এর নাম ("View Details") ও link (default `/scholarships`) — একই **Settings**-এ।
 * **Waiver Calculator website-এর সবচেয়ে বেশি ব্যবহৃত tool — rule বদলানোর পর সবসময় Rule test চালান।**
 

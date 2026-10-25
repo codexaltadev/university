@@ -4,6 +4,7 @@ namespace Modules\Program;
 
 use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
+use Modules\Program\Blocks\EligibilityBlock;
 use Modules\Program\Filament\Parts\DepartmentProgramsPart;
 use Modules\Program\Filament\Parts\FacultyProgramsPart;
 use Modules\Program\Filament\ProgramPlugin;
@@ -37,6 +38,7 @@ final class ProgramExtension implements ModuleExtension
         $r->metric('program.count', ProgramCount::class);
         $r->metric('program.majors', MajorCount::class);                   // FR-PROG-11
         $r->metric('program.industry-experts', IndustryExpertCount::class);
+        $r->pageBlock(EligibilityBlock::class);                   // admission eligibility of a faculty on any page (DIU's /admission/faculty/{slug})
         $r->layouts('program.listing', ['card', 'list', 'table', 'detailed']);     // FR-PROG-12
         $r->homepageSection(FeaturedProgramsSection::class);                        // FR-PROG-16
         $r->homepageSection(ProgramsByLevelSection::class);

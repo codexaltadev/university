@@ -2,8 +2,10 @@
 
 namespace Legacy\Migration\Steps;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
 use Legacy\Migration\Support\Normalizer;
 use Modules\Admission\Models\AdmissionContactGroup;
 use Modules\Admission\Models\AdmissionHighlight;
@@ -79,7 +81,7 @@ class S08Admission extends Step
         'sections' => [
             ['Admission Information', '/admission', false],
             ['Admission Schedule', '/article/admission-test-schedule', false],
-            ['Admission Eligibility', '/programs', false],
+            ['Admission Eligibility', null, false],   // a heading over a page per faculty (eligibilityPages)
             ['International Student Admission', 'https://daffodilvarsity.edu.bd/photos/international/Booklet-for-Int-Students.pdf', true],
             ['Tuition Fees', '/tuition-fees', true],
             ['Campus Life & Institutes', '/campus-life', true],
@@ -90,6 +92,11 @@ class S08Admission extends Step
             ['Transfer Credits', '/article/credit-transfer'],
             ['Waiver & Scholarship', '/scholarships'],
             ['Photo Frame', 'https://photoframe.daffodilvarsity.edu.bd/admission-photo-frame'],
+        ],
+        'eligibility_links' => [
+            ['Tuition Fees', '/tuition-fees'],
+            ['Waiver & Scholarship', '/scholarships'],
+            ['Online Admission', 'https://admission.daffodilvarsity.edu.bd/'],
         ],
         'order' => ['admission-apply', 'admission-circulars', 'admission-subscribe', 'admission-highlights', 'admission-steps', 'admission-contacts', 'admission-result-lookup'],
     ];
@@ -118,13 +125,64 @@ class S08Admission extends Step
         $landing->setTranslation('content', 'en', $blocks->all());
         $landing->save();
 
+        $faculties = $this->eligibilityPages($landing);
+
         $editor = 'Modules\\Menu\\Support\\MenuEditor';
         $menu = $landing->sidebar_menu_id ? 'Modules\\Menu\\Models\\Menu'::query()->find($landing->sidebar_menu_id) : null;
         if (class_exists($editor) && $menu && ! $menu->items()->exists()) {
             app($editor)->save($menu, array_map(fn (array $s): array => [
-                'type' => 'url', 'url' => $s[1], 'title' => ['en' => $s[0]], 'open_in_new_tab' => $s[2], 'is_active' => true, 'children' => [],
+                'type' => $s[1] === null ? 'heading' : 'url', 'url' => $s[1], 'title' => ['en' => $s[0]], 'open_in_new_tab' => $s[2], 'is_active' => true,
+                'children' => $s[1] === null ? array_map(fn ($p): array => [
+                    'type' => 'url', 'url' => $p->url(), 'title' => ['en' => (string) $p->title], 'open_in_new_tab' => false, 'is_active' => true, 'children' => [],
+                ], $faculties) : [],
             ], self::LANDING['sections']));
         }
+    }
+
+    /**
+     * DIU's "Admission Eligibility": a page under /admission per faculty with listed programs (/admission/{short name}-eligibility: page addresses are one per site, "fsit" is taken) holding
+     * the Program module's eligibility block; DIU's /admission/faculty/{short name} leads there. Pages already there stay.
+     *
+     * @return list<Model> the faculty pages, in the faculties' order
+     */
+    protected function eligibilityPages(Model $landing): array
+    {
+        $faculty = 'Modules\\Faculty\\Models\\Faculty';
+        $program = 'Modules\\Program\\Models\\Program';
+        if (! class_exists($faculty) || ! class_exists($program) || ! $program::moduleIsActive()) {
+            return [];
+        }
+
+        $page = $landing::class;
+        $children = $page::query()->where('parent_id', $landing->getKey())->get();
+        $pages = [];
+        foreach ($faculty::query()->frontendVisible()->ordered()->get() as $f) {
+            if (! $program::query()->listed()->whereHas('department', fn ($d) => $d->where('faculty_id', $f->getKey()))->exists()) {
+                continue;
+            }
+            $short = Str::slug((string) ($f->short_name ?: $f->name));
+            $slug = $short.'-eligibility';
+            $child = $children->first(fn (Model $c): bool => $c->slug('en') === $slug);
+            if ($child === null) {
+                $child = (new $page([
+                    'parent_id' => $landing->getKey(),
+                    'title' => ['en' => (Str::startsWith(Str::lower((string) $f->name), 'faculty') ? '' : 'Faculty of ').$f->name],   // DIU's "Faculty of Science and Information Technology"
+                    'template' => 'with-sidebar',
+                    'content' => ['en' => [['type' => 'program-eligibility', 'data' => [
+                        'faculty' => $f->getKey(),
+                        'links' => array_map(fn (array $l): array => ['label' => ['en' => $l[0]], 'url' => $l[1]], self::LANDING['eligibility_links']),
+                    ]]]],
+                    'sort_order' => count($pages) + 1,
+                    'is_active' => true,
+                ]))->setOwnerKey('site:0');
+                $child->save();
+                $child->changeSlug('en', $slug);
+            }
+            $this->oldAddress('/admission/faculty/'.$short, $child);
+            $pages[] = $child;
+        }
+
+        return $pages;
     }
 
     protected function circulars(): void

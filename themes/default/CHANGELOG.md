@@ -116,6 +116,9 @@
   block in the theme's), `partials/page/blocks` for templates; the with-sidebar template as DIU's /admission (excerpt
   in the hero, `partials/menus/browse` "Browse by Section (NN)", Quick Links); `modules/admission/blocks/*` (notice
   card, links, outline buttons, steps, contacts) and `modules/admission/livewire/subscribe-form` (NotificationForm).
+- 4.7b-2: DIU admission eligibility — `modules/program/blocks/eligibility` ("Faculty of …", round level buttons with
+  counts, Full Program Name / Short Tag rows that open the eligibility and DIU's Quick Links); `partials/menus/browse`
+  headings fold their children.
 
 ## 1.0.0 — 2026-10-09
 

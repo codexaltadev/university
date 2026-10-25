@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Event;
 use Livewire\Livewire;
 use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
+use Modules\Page\Blocks\PageBlocks;
 use Modules\Program\Database\Factories\ProgramFactory;
 use Modules\Program\Database\Seeders\ProgramDatabaseSeeder;
 use Modules\Program\Filament\Resources\Programs\Pages\CreateProgram;
@@ -23,6 +24,7 @@ use Modules\Program\Models\Program;
 use Modules\Program\Sections\FeaturedProgramsSection;
 use Modules\Program\Sections\ProgramsByLevelSection;
 use Modules\Program\Settings\ProgramSettings;
+use Modules\Program\Support\EligibilityPage;
 use Platform\Events\EntityHierarchyChanged;
 use Platform\Exceptions\ParentHasActiveChildren;
 use Platform\Homepage\SectionContext;
@@ -383,4 +385,30 @@ it('lets only permitted users into the program screens', function () {
     $this->actingAs(superAdmin());
     $this->get(ProgramResource::getUrl())->assertOk()->assertSee('BSc CSE');
     $this->get(ProgramResource::getUrl('create'))->assertOk();
+});
+
+it('shows a faculty\'s admission eligibility as a page block: programs by level with their eligibility (DIU /admission/faculty)', function () {
+    Program::factory()->create(['department_id' => $this->cse->id, 'level_term_id' => $this->grad, 'name' => ['en' => 'MSc in CSE'], 'short_name' => 'MSc CSE']);
+    Program::factory()->create(['department_id' => $this->bba->id, 'level_term_id' => $this->ug, 'name' => ['en' => 'Bachelor of Business Administration']]);
+    $block = fn (int $faculty): string => (string) PageBlocks::render([['type' => 'program-eligibility', 'data' => [
+        'faculty' => $faculty, 'links' => [['label' => ['en' => 'Tuition Fees'], 'url' => '/tuition-fees']],
+    ]]], 'en');
+
+    expect(PageBlocks::all())->toHaveKey('program-eligibility');
+
+    // The default theme: DIU's level buttons with counts, full name and short tag, the eligibility, the program page and the links
+    $html = $block($this->fsit->id);
+    expect($html)->toContain('Faculty of Science and Information Technology')
+        ->toContain('Undergraduate Program (1)')->toContain('Graduate Program (1)')
+        ->toContain('BSc in Computer Science and Engineering')->toContain('BSc CSE')->toContain('MSc in CSE')
+        ->toContain('General Student')->toContain('SSC and HSC GPA 2.5 each.')
+        ->toContain('English Medium Student')->toContain('Five O Level and two A Level subjects.')
+        ->toContain(e(url($this->bsc->url())))->toContain(url('/tuition-fees'))
+        ->not->toContain('Bachelor of Business Administration')       // another faculty's
+        ->not->toContain('<diu-rich-html');                            // a module block in the theme's look
+
+    // The module's own view, for themes without their own
+    $data = ['data' => ['faculty' => $this->fbe->id], 'locale' => 'en'];
+    expect(moduleView('program', 'blocks.eligibility', [...$data, 'eligibility' => new EligibilityPage($data)]))
+        ->toContain('Bachelor of Business Administration')->not->toContain('BSc in Computer Science and Engineering');
 });
