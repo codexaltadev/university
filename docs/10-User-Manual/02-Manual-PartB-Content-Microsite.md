@@ -349,6 +349,8 @@ Screen-এ লেখা থাকে, যেমন: *"This microsite uses Engine
 * মেয়াদ শেষ হলে (Until পেরোলে) নিজে থেকে **Former**-এ চলে যায়।
 * ব্যক্তির মূল তথ্য (ছবি, পদবি) বদলাতে নামে click → মূল profile খোলে।
 
+**Website-এ Administration directory (`/administration`, DIU-র মতো):** উপরে বড় ছবি ও শিরোনাম; বাঁয়ে **Browse by Section** — প্রতিটি public category ও তার মানুষের সংখ্যা ("Management (5)"), একটি বাছা (শুরুতে প্রথমটি), নিচে **Quick Links**; ডানে খোঁজার ঘর (নাম বা পদবি, সব section জুড়ে) ও table — ছবি, নাম, পদবি, email, phone, Ext. (phone-এ card)। Profile পাতা চালু থাকলে নামে চাপলে নীল card-এ ছবি, নাম, পদবি, office, যোগাযোগ, জীবনী ও **Roles**। শিরোনাম, উপরের ছবি, উপরের লেখা ও Quick Links: **Settings › Administration**। Category-র ক্রম ও কোনটি public: **People › Staff categories**।
+
 ---
 
 ## 17. Program

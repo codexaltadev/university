@@ -59,6 +59,7 @@ class AdministrationWebsite
             'person' => $member->personPresenter(),
             'office' => $this->office($member->primary_office_id),
             'places' => $this->places($member),
+            ...$this->sections(),
         ]);
     }
 
@@ -82,13 +83,28 @@ class AdministrationWebsite
         return [
             'groups' => $categories->map(fn (AdministrationCategory $c): array => ['category' => $c, 'members' => $members->where('category_id', $c->id)->values()])
                 ->filter(fn (array $g): bool => $g['members']->isNotEmpty())->values(),
-            'categories' => $categories,
+            ...$this->sections($categories),
+            'search' => trim((string) $request->query('q')),
             'groupOptions' => $categories->pluck('group')->unique()->values(),
             'offices' => $offices,
             'officeNames' => $offices->pluck('name', 'id'),
             'total' => $members->count(),
             'layout' => in_array($layout, self::VIEWS, true) ? $layout : 'grid',
             'intro' => filled($intro = settings('administration.intro')) ? (string) $intro : null,
+        ];
+    }
+
+    /**
+     * The public categories and their people before any filter — the sections a theme lists beside
+     * the directory and a profile (DIU's "Management (5)").
+     *
+     * @return array{categories: Collection, counts: array<int, int>}
+     */
+    protected function sections(?Collection $categories = null): array
+    {
+        return [
+            'categories' => $categories ?? AdministrationCategory::query()->public()->ordered()->get(),
+            'counts' => Member::query()->frontendVisible()->reorder()->selectRaw('category_id, count(*) as people')->groupBy('category_id')->pluck('people', 'category_id')->map(fn ($n): int => (int) $n)->all(),
         ];
     }
 

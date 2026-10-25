@@ -56,6 +56,10 @@ class S03Media extends Step
         'notices' => [['notice', 'notice_files', 'file_name', 'Modules\\Notice\\Models\\Notice', 'attachments', 'notice_id', 'notices', 'file_title']],
         'gallery' => [['gallery', 'gallery_photos', 'photo_name', null, null]],   // only into the library: S17G puts them in albums
         'visitors' => [['international', 'visitors', 'photo', 'Modules\\International\\Models\\Visitor', 'photo']],
+        'administration' => [
+            ['administration', 'admins', 'photo', 'Modules\\Administration\\Models\\Member', 'photo'],
+            ['administration', 'staff', 'photo', 'Modules\\Administration\\Models\\Member', 'photo'],
+        ],
         'documents' => [   // only into the library: S17D gives each document its file and thumbnail
             ['documents', 'flipbooks', 'thumb', null, null],
             ['documents', 'prospectuses', 'prospectus_file', null, null],

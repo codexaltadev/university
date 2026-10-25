@@ -17,11 +17,13 @@ use Modules\Administration\Filament\Resources\Members\Pages\CreateMember;
 use Modules\Administration\Filament\Resources\Members\Pages\ListMembers;
 use Modules\Administration\Models\AdministrationCategory;
 use Modules\Administration\Models\Member;
+use Modules\Administration\Support\AdministrationWebsite;
 use Modules\Administration\Support\MemberSheet;
 use Modules\Menu\Support\MenuLinks;
 use Modules\Office\Models\Office;
 use Platform\Assignments\AssignmentEngine;
 use Platform\Assignments\RoleCatalog;
+use Platform\Context\SiteContext;
 use Platform\Filament\Components\PersonPicker;
 use Platform\Modules\ModulePermissions;
 use Platform\Scope\UserScopeFilter;
@@ -64,15 +66,17 @@ it('keeps the category ladder sound and an employee ID one person\'s (FR-ADMN-02
 
 it('lists public categories in ladder order, filters, searches and switches layout (FR-ADMN-04, AC-ADMN-02, AC-ADMN-04)', function () {
     $this->get('/administration')->assertOk()
-        ->assertSeeInOrder(['Management', 'Prof. Rahman', 'Director', 'Mr. Bari', 'Ms. Akter', 'Officer', 'Mr. Karim'])
-        ->assertDontSee('Mr. Driver Alam');                                                           // support, not public
+        ->assertSeeInOrder(['Management (', 'Director (2)', 'Officer (', 'Prof. Rahman'])                // DIU: the sections with their people, the first chosen
+        ->assertDontSee('Mr. Bari')->assertDontSee('Mr. Driver Alam');                                // support, not public
+    expect(moduleView('Administration', 'directory', app(AdministrationWebsite::class)->respond('administration', SiteContext::site(), 'en')->getOriginalContent()->getData()))
+        ->toContain('Prof. Rahman', 'Mr. Bari', 'Mr. Karim');                                        // the module's own view: every group
 
     $this->get('/administration?category='.$this->director->id)->assertOk()
         ->assertSeeInOrder(['Mr. Bari', 'Ms. Akter'])->assertDontSee('Prof. Rahman')->assertDontSee('Mr. Karim');
     $this->get('/administration?group=officer')->assertOk()->assertSee('Mr. Karim')->assertDontSee('Prof. Rahman');
     $this->get('/administration?office='.$this->exam->id)->assertOk()->assertSee('Ms. Nahar')->assertDontSee('Mr. Karim');
     $this->get('/administration?q=registrar')->assertOk()->assertSee('Mr. Karim')->assertDontSee('Ms. Nahar');
-    $this->get('/administration?view=table')->assertOk()->assertSee('<table', false)->assertSee('karim@example.edu');
+    $this->get('/administration?view=table&category='.$this->officer->id)->assertOk()->assertSee('<table', false)->assertSee('karim@example.edu');
 });
 
 it('shows one phone number on every place the person holds, and their roles on the profile (AC-ADMN-01, AC-ADMN-03)', function () {
@@ -98,7 +102,7 @@ it('hides contacts that are not public, everywhere (FR-ADMN-07)', function () {
 
     $person = app(AssignmentEngine::class)->people($this->registrar)->first();
     expect($person->phone())->toBeNull()->and($person->email())->toBe('karim@example.edu');
-    $this->get('/administration')->assertOk()->assertDontSee('+880 1711 000000')->assertSee('karim@example.edu');
+    $this->get('/administration?category='.$this->officer->id)->assertOk()->assertDontSee('+880 1711 000000')->assertSee('karim@example.edu');
     $this->get($this->deputy->url())->assertOk()->assertDontSee('+880 1711 000000');
 });
 

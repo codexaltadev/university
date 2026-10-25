@@ -1,5 +1,5 @@
 {{--
-    /administration (FR-ADMN-04). Contract: $groups (list of [category, members]), $categories (public, in order),
+    /administration (FR-ADMN-04). Contract: $groups (list of [category, members]), $categories (public, in order), $counts (category id => people, unfiltered), $search,
     $groupOptions (groups in use), $offices (Office list; empty without the Office module), $officeNames (id => name),
     $total, $layout (grid / list / table), $intro (HTML or null)
 --}}

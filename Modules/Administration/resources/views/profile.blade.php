@@ -1,6 +1,6 @@
 {{--
     /administration/{slug} (FR-ADMN-05). Contract: $member, $person (PersonPresenter: public contacts only), $office (or null),
-    $places (list of [place, url, role] — current public assignments)
+    $places (list of [place, url, role] — current public assignments), $categories, $counts (the sections, as on the directory)
 --}}
 <x-theme::layout :title="$person->name()">
     <div class="container" style="padding-block:var(--space-8, 32px)">

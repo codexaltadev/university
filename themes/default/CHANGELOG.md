@@ -75,6 +75,10 @@
   text, dates, Maybe Later / Explore Now), `slots/announcement` (bar and countdown tiles in the
   navy → blue gradient) and `slots/ticker` (navy strip, "Latest" tab, endless run); above the
   homepage hero (z-40); icon `megaphone`.
+- 4.6a: DIU administration — `modules/administration/directory` (sections with their people,
+  Quick Links, search, DIU's table and phone cards) and `modules/administration/profile` (blue
+  card, contact boxes, biography, roles); `partials/administration/photo`; `partials/diu/browse-sidebar`
+  items may be the page shown (`current`) and drop the arrow (`arrow` false).
 
 ## 1.0.0 — 2026-10-09
 

@@ -1,7 +1,8 @@
 {{--
     DIU Academics Sidebar: "Browse by Section (NN)" — tabs of the page (an Alpine "current" on the page
     switches them) and links (↗, external ones in a new tab), then Quick Links; on phones a box with the
-    current one and See More. Contract: $items (list of [id, label, url = null for a tab]), $quickLinks (list of [label, url]),
+    current one and See More. Contract: $items (list of [id, label, url = null for a tab, optional current (a link to the page shown) and
+    arrow (false: no ↗ — sections of one listing)]), $quickLinks (list of [label, url]),
     $width (optional width classes; DIU Academics' 420px by default)
 --}}
 <aside class="hidden lg:block w-full {{ $width ?? 'lg:w-[420px]' }} shrink-0" aria-labelledby="browse-title">
@@ -12,10 +13,11 @@
                 @foreach ($items as $item)
                     <li>
                         @if ($item['url'])
-                            <a href="{{ $item['url'] }}" @if (str_starts_with($item['url'], 'http')) target="_blank" rel="noopener noreferrer" @endif
-                               class="group flex w-full text-[22px] text-slate-700 font-medium items-center my-3 rounded-none p-[10px] text-left hover:bg-blue-50 hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600">
+                            <a href="{{ $item['url'] }}" @if (str_starts_with($item['url'], 'http')) target="_blank" rel="noopener noreferrer" @endif @if ($item['current'] ?? false) aria-current="page" @endif
+                               @class(['group flex w-full text-[22px] font-medium items-center my-3 rounded-none p-[10px] text-left hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600',
+                                       'border-l-3 border-primary bg-blue-50 text-slate-900' => $item['current'] ?? false, 'text-slate-700 hover:bg-blue-50' => ! ($item['current'] ?? false)])>
                                 <span class="truncate">{{ $item['label'] }}</span>
-                                <x-theme::icon name="arrow-up-right" class="w-4 h-4 text-secondary" />
+                                @if ($item['arrow'] ?? true)<x-theme::icon name="arrow-up-right" class="w-4 h-4 text-secondary" />@endif
                             </a>
                         @else
                             <button type="button" @click="current = @js($item['id'])" :aria-current="current === @js($item['id']) ? 'page' : null"
@@ -41,7 +43,7 @@
             <div class="w-1 sm:w-1.5 h-8 bg-primary mr-4 sm:mr-6 mt-1 flex-shrink-0"></div>
             <h3 class="text-xl sm:text-3xl font-semibold text-secondary leading-tight">
                 @foreach ($items as $item)
-                    @if (! $item['url'])<span x-show="current === @js($item['id'])" @if (! $loop->first) x-cloak @endif>{{ $item['label'] }}</span>@endif
+                    @if (! $item['url'])<span x-show="current === @js($item['id'])" @if (! $loop->first) x-cloak @endif>{{ $item['label'] }}</span>@elseif ($item['current'] ?? false)<span>{{ $item['label'] }}</span>@endif
                 @endforeach
             </h3>
         </div>
@@ -52,7 +54,7 @@
                    class="flex items-center gap-5 text-lg sm:text-2xl font-medium transition-all duration-200 hover:no-underline"
                    :class="(more ? 'border-b py-2 border-neutral-200 ' : '') + (more || {{ $loop->index }} === 0 ? 'text-neutral-800' : 'text-gray-400 pointer-events-none') + (! more && {{ $loop->index }} === 2 ? ' opacity-0' : '')">
                     <span>{{ $item['label'] }}</span>
-                    @if ($item['url'])<x-theme::icon name="arrow-up-right" class="w-5 h-5 sm:w-6 sm:h-6 text-secondary flex-shrink-0" />@endif
+                    @if ($item['url'] && ($item['arrow'] ?? true))<x-theme::icon name="arrow-up-right" class="w-5 h-5 sm:w-6 sm:h-6 text-secondary flex-shrink-0" />@endif
                 </a>
             @endforeach
         </div>

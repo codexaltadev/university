@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Legacy\Migration\Support\IdMap;
 use Legacy\Migration\Support\Normalizer;
+use Modules\Administration\Models\AdministrationCategory;
 use Modules\Department\Models\Department;
 use Modules\Events\Models\Event;
 use Modules\Faculty\Models\Faculty;
@@ -61,6 +62,10 @@ function legacySchema(): void
         'events' => fn (Blueprint $t) => [$t->string('title')->nullable(), $t->longText('content')->nullable(), $t->date('event_date')->nullable(), $t->string('event_time')->nullable(), $t->string('location')->nullable(), $t->string('url')->nullable(), $t->string('photo')->nullable(), $t->unsignedBigInteger('department_id')->nullable(), $t->unsignedBigInteger('lab_facility_id')->nullable(), $t->unsignedBigInteger('event_category_id')->nullable(), $t->string('is_home')->default('0'), $t->tinyInteger('publication_status')->default(1), $t->timestamp('created_at')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'testimonials' => fn (Blueprint $t) => [$t->string('name'), $t->string('designation')->nullable(), $t->string('organization')->nullable(), $t->text('quote')->nullable(), $t->string('photo')->nullable(), $t->integer('sort_order')->default(0), $t->string('testimonialable_type')->nullable(), $t->unsignedBigInteger('testimonialable_id')->nullable()],
         'mba_testimonials' => fn (Blueprint $t) => [$t->unsignedBigInteger('department_program_type_id')->nullable(), $t->string('name'), $t->string('batch')->nullable(), $t->string('photo')->nullable(), $t->text('description')->nullable(), $t->tinyInteger('publication_status')->default(1)],
+        'admin_categories' => fn (Blueprint $t) => [$t->string('category_name'), $t->string('category_slug')->nullable(), $t->integer('serial')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->timestamp('deleted_at')->nullable()],
+        'admins' => fn (Blueprint $t) => [$t->unsignedBigInteger('admin_category_id'), $t->string('name'), $t->string('designation')->nullable(), $t->string('email')->nullable(), $t->string('phone')->nullable(), $t->string('extension')->nullable(), $t->string('office_id')->nullable(), $t->string('photo')->nullable(), $t->integer('serial')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->string('unique_id')->nullable(), $t->timestamp('deleted_at')->nullable()],
+        'staff_categories' => fn (Blueprint $t) => [$t->string('category_name'), $t->string('category_slug')->nullable(), $t->integer('serial')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->timestamp('deleted_at')->nullable()],
+        'staff' => fn (Blueprint $t) => [$t->unsignedBigInteger('staff_category_id'), $t->string('name'), $t->string('designation')->nullable(), $t->string('email')->nullable(), $t->string('phone')->nullable(), $t->string('extension')->nullable(), $t->string('office_id')->nullable(), $t->string('photo')->nullable(), $t->integer('serial')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->timestamp('deleted_at')->nullable()],
         'notice_categories' => fn (Blueprint $t) => [$t->string('name'), $t->timestamp('deleted_at')->nullable()],
         'notices' => fn (Blueprint $t) => [$t->string('title')->nullable(), $t->string('slug')->nullable(), $t->longText('content')->nullable(), $t->unsignedBigInteger('department_id')->nullable(), $t->unsignedBigInteger('notice_category_id')->nullable(), $t->string('is_home')->default('0'), $t->integer('view_counter')->default(0), $t->tinyInteger('publication_status')->default(1), $t->timestamp('created_at')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'notice_files' => fn (Blueprint $t) => [$t->unsignedBigInteger('notice_id'), $t->string('file_title')->nullable(), $t->string('file_name')->nullable(), $t->timestamp('deleted_at')->nullable()],
@@ -393,6 +398,24 @@ it('migrates notices, keeps DIU\'s /noticeboard addresses and puts each notice\'
     $this->get('/noticeboard')->assertRedirect('/notices')->assertStatus(301);
     $this->get('/noticeboard/seat-plan-22-august')->assertRedirect($notice->url());
     $this->get($notice->url())->assertOk()->assertSeeInOrder(['View/Download', 'Seat plan, 22 August', 'Slot A', 'Slot C']);
+});
+
+it('migrates administration into DIU\'s sections of /administration (S11)', function () {
+    $l = DB::connection('legacy');
+    $l->table('admin_categories')->insert([
+        ['id' => 1, 'category_name' => 'Management', 'category_slug' => 'management', 'serial' => 1],
+        ['id' => 2, 'category_name' => 'Director', 'category_slug' => 'director', 'serial' => 2],
+    ]);
+    $l->table('admins')->insert([
+        ['id' => 1, 'admin_category_id' => 1, 'name' => 'Professor Dr. M. R. Kabir', 'designation' => 'Vice Chancellor', 'email' => 'vc@example.edu', 'serial' => 1, 'unique_id' => 'kabir-686fdc089f3a'],
+        ['id' => 2, 'admin_category_id' => 2, 'name' => 'Md. Director', 'designation' => 'Director (IT)', 'email' => null, 'serial' => 1, 'unique_id' => 'director-1'],
+    ]);
+
+    $this->artisan('legacy:migrate', ['--step' => ['S11'], '--no-report' => true])->assertSuccessful();
+
+    $director = AdministrationCategory::query()->where('name->en', 'Director')->firstOrFail();
+    $this->get('/administration?category='.$director->id)->assertOk()->assertSee('Md. Director')->assertDontSee('Professor Dr. M. R. Kabir');
+    $this->get('/administration')->assertOk()->assertSeeInOrder(['Management (1)', 'Director (1)', 'Professor Dr. M. R. Kabir', 'Vice Chancellor', 'vc@example.edu']);
 });
 
 it('migrates testimonials onto their program and the main site, the first of each program chosen for the homepage, MBA copies skipped (S17M)', function () {
