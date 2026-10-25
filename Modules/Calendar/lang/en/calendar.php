@@ -82,4 +82,8 @@ return [
         'end_without_start' => 'An end date needs a start date.',
         'end_before_start' => 'The end is before the start.',
     ],
+    'page' => [
+        'subtitle' => 'Session dates, examinations, holidays and deadlines of Daffodil International University',
+        'academic_year' => 'Academic Year', 'duration' => 'Duration', 'total' => 'Total Events', 'event' => 'Event', 'date' => 'Date',
+    ],
 ];

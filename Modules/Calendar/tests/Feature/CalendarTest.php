@@ -128,6 +128,7 @@ it('shows the running calendars first, filters by audience, and lists the others
     $this->get('/academic-calendar')->assertOk()
         ->assertSeeInOrder(['Spring 2026 (TRI)', 'Mid-Examination', '22 – 28 February 2026', 'Other calendars', 'Fall 2024'])
         ->assertSee('Spring 2026 (BI)')
+        ->assertSeeInOrder(['Academic Calendar', 'Academic Year', 'Duration', 'Total Events', 'Event', 'Date'])        // DIU's Registrar card (Phase 4.5f)
         ->assertSee('Thesis Defence')->assertSee('Eid-ul-Fitr Vacation');
 
     $this->get('/academic-calendar?audience=graduate')->assertOk()

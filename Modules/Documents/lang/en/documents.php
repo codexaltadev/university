@@ -99,4 +99,12 @@ return [
         'failed' => 'The book could not be opened here.',
         'open_pdf' => 'Open the PDF',
     ],
+    'settings' => [
+        'page' => 'The downloads page', 'page_help' => 'Title and text on top of /downloads. Empty: the theme\'s own.',
+        'title' => 'Title', 'text' => 'Text',
+    ],
+    'page' => [
+        'view_flipbook' => 'View Flipbook', 'view_pdf' => 'View PDF', 'open' => 'Open', 'kind' => 'Type:', 'category' => 'Category:',
+        'download_pdf' => 'Download', 'details' => 'Details',
+    ],
 ];

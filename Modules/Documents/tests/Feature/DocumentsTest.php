@@ -164,3 +164,21 @@ it('fills the Downloads and Prospectus sections and the page block (FR-DOC-08)',
     expect($html)->toContain('x-data="flipbook(');
     expect(DocumentBlock::documents(['documents' => [$form->id, $book->id]])->pluck('id')->all())->toBe([$form->id, $book->id]);
 });
+
+it('shows downloads as DIU\'s digital brochures: a card with the kind, View Flipbook / View PDF and a download, texts from Settings (Phase 4.5f)', function () {
+    $book = ($this->make)('Student Handbook 2026', 'guidebook', ['show_as_flipbook' => true, 'allow_download' => true], file: ($this->pdf)('handbook.pdf'));
+    ($this->make)('Admission Rules', 'policy', ['show_as_flipbook' => false, 'allow_download' => true], file: ($this->pdf)('rules.pdf'));
+    ($this->make)('Old Brochure', 'other');   // no file yet
+
+    $this->get('/downloads')->assertOk()
+        ->assertSeeInOrder(['Downloads', 'Browse our interactive flipbooks and downloadable guides', 'Type:', 'All'])
+        ->assertSeeInOrder(['Student Handbook 2026', 'View Flipbook'])
+        ->assertSeeInOrder(['Admission Rules', 'View PDF'])
+        ->assertSeeInOrder(['Old Brochure', 'Details'])
+        ->assertSee(url($book->url().'/file'), false);
+
+    $this->get($book->url())->assertOk()->assertSeeInOrder(['Guidebook', 'Student Handbook 2026', 'Download', 'File']);
+
+    settings()->save('documents', ['title' => ['en' => 'Brochures & Forms'], 'text' => ['en' => 'Everything to read.']]);
+    $this->get('/downloads')->assertSee('Brochures &amp; Forms', false)->assertSee('Everything to read.');
+});

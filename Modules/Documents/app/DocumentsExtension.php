@@ -7,6 +7,7 @@ use Modules\Documents\Filament\DocumentsPlugin;
 use Modules\Documents\Models\Document;
 use Modules\Documents\Sections\DownloadsSection;
 use Modules\Documents\Sections\ProspectusSection;
+use Modules\Documents\Settings\DocumentsSettings;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
 
@@ -29,5 +30,6 @@ final class DocumentsExtension implements ModuleExtension
         $r->sitemap(Document::class);
         $r->menuItemType(Document::class);
         $r->layouts('documents.listing', ['table', 'cards', 'list']);                                 // FR-DOC-04; first = default
+        $r->settings(DocumentsSettings::class);                                                       // the downloads page's own text
     }
 }

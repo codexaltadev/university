@@ -56,6 +56,14 @@ class S03Media extends Step
         'notices' => [['notice', 'notice_files', 'file_name', 'Modules\\Notice\\Models\\Notice', 'attachments', 'notice_id', 'notices', 'file_title']],
         'gallery' => [['gallery', 'gallery_photos', 'photo_name', null, null]],   // only into the library: S17G puts them in albums
         'visitors' => [['international', 'visitors', 'photo', 'Modules\\International\\Models\\Visitor', 'photo']],
+        'documents' => [   // only into the library: S17D gives each document its file and thumbnail
+            ['documents', 'flipbooks', 'thumb', null, null],
+            ['documents', 'prospectuses', 'prospectus_file', null, null],
+            ['documents', 'prospectuses', 'prospectus_thumbs', null, null],
+            ['documents', 'charter_guidebooks', 'file_name', null, null],
+            ['documents', 'policies', 'policy_file_name', null, null],
+            ['documents', 'policies', 'icon', null, null],
+        ],
     ];
 
     /** Plan §3: at most 4 downloads at once, 3 tries */

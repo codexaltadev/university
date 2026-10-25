@@ -131,7 +131,7 @@ class S17Documents extends Step
                 if (blank($path)) {
                     continue;
                 }
-                $item = $this->ids->record('files', (string) $path, MediaItem::class);
+                $item = $this->ids->record('files', (string) Normalizer::filePath($path), MediaItem::class);   // the path as S03 keeps it
                 $item ? $document->syncMedia($field, [$item->id]) : ($field === 'file' ? $this->waiting++ : null);
             }
         });

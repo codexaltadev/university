@@ -167,6 +167,7 @@ Page তৈরি করে **Menu**-তে যোগ না করলে visito
 * **Can be downloaded:** বন্ধ করলে শুধু পড়া যাবে, Download button থাকবে না। **Private:** শুধু login করা user দেখবেন।
 * **নতুন version** (যেমন নীতিমালা হালনাগাদ): document খুলে উপরে **New version** → নতুন file, version ও তারিখ দিন। নতুনটি একই জায়গায় দেখাবে; পুরোনোটি তালিকা থেকে সরে যায়, তবে তার link কাজ করে এবং "নতুন version আছে" জানায়।
 * **Show in** দিয়ে department / office-এ; website: `/downloads` (ধরন, category, বছর, খোঁজা; table / cards / list)। Download সংখ্যা তালিকায় দেখা যায়। Homepage: **Downloads** ও **Prospectus** section; যেকোনো Page-এ **Documents** block (তালিকা বা flipbook)।
+* Default theme-এ (DIU-র "Digital Brochures"-এর মতো) `/downloads`: উপরে শিরোনাম ও একটি লাইন (**Settings › Documents**-এ বদলানো যায়; শুরুতে "Downloads"), **Type** ও **Category** বাছার pill, খোঁজা; প্রতিটি document একটি card — thumbnail (Media Library থেকে; না থাকলে রঙিন জায়গা), ধরন, শিরোনাম, session / version / program / file-এর আকার, **View Flipbook** (flipbook চালু থাকলে) বা **View PDF**, পাশে download চিহ্ন; file না থাকলে **Details**। Document-এর page-এ উপরে ধরন, শিরোনাম, তথ্য ও **Download**, তারপর flipbook বা PDF।
 
 ---
 
@@ -208,7 +209,7 @@ Page তৈরি করে **Menu**-তে যোগ না করলে visito
   * Title, তারিখ, **Level** (International / National / Regional / Institutional), প্রতিযোগিতা / পুরস্কার, প্রদানকারী, স্থান (Champion, Runner-up …), দলের নাম, বিস্তারিত।
   * **Achieved by** — Person Picker দিয়ে শিক্ষার্থী, শিক্ষক বা alumni (তাঁদের directory থেকে নাম-ছবি আসে) বা নতুন ব্যক্তি; প্রত্যেকের note (যেমন "Team lead")।
   * ছবি ও আরো ছবি Media Library থেকে; **Related news** — একই অর্জনের সংবাদ থাকলে বেছে দিন।
-  * **Show in** দিয়ে department / program / club-এ; Admin চাইলে main site-এ। Website: `/achievements` (বছর, level, category; cards / timeline / grid)। Homepage: **Recent Achievements** section (চাইলে শুধু International)। Statistics-এ counter: **Achievements** metric, level দিয়ে (যেমন "100+ International Awards")।
+  * **Show in** দিয়ে department / program / club-এ; Admin চাইলে main site-এ। Website: `/achievements` (বছর, level, category; cards / timeline / grid)। Homepage: **Recent Achievements** section (চাইলে শুধু International)। Default theme-এ (DIU-র event card-এর মতো): উপরে **All / International / National / Regional / Institutional** switch, বছর ও category; প্রতিটি card-এ ছবি, তার উপর level ও স্থান (যেমন "International · Champion"), শিরোনাম, তারিখ; অর্জনের page-এ পাশে **Details** (তারিখ, level, প্রতিযোগিতা, প্রদানকারী …)। Statistics-এ counter: **Achievements** metric, level দিয়ে (যেমন "100+ International Awards")।
 * **Testimonials** (**Content › Testimonials**): শিক্ষার্থী, alumni, অভিভাবক, নিয়োগকর্তা বা অংশীদারের কথা।
   1. **Person** — Faculty Members, Administration বা Alumni থেকে খুঁজুন (নাম, ছবি, পদবি সেখান থেকে আসবে), না পেলে **+** দিয়ে নতুন ব্যক্তি যোগ করুন।
   2. **Their title here** — নামের নিচে পদবির বদলে দেখাবে, যেমন "Parent of a CSE student"। খালি রাখলে পদবি দেখাবে।
@@ -303,7 +304,7 @@ Screen-এ লেখা থাকে, যেমন: *"This microsite uses Engine
 * Header: logo (আপনার Department-এর নিজস্ব logo থাকলে), কোন menu।
 * Footer: column সংখ্যা ও প্রতিটি column-এ কী (About লেখা, menu, যোগাযোগ, social link, newsletter form, **Important Links** — চাইলে একটি group)। চালু থাকা module-গুলো নিজেদের footer block এখানে যোগ করে।
 
-**Important Links** (**Content › Important Links**): UGC, Student Portal, Library-র মতো link — শিরোনাম, ঠিকানা (`https://…` বা এই site-এর `/…`), নতুন tab-এ খুলবে কিনা, Media Library থেকে লোগো, **Group** (যেমন "Government", "Student Services"), **Show in** (প্রতিটি department-এর নিজের link)। তালিকায় টেনে ক্রম সাজান। Website: `/links` (group অনুযায়ী); homepage-এ **Important Links** section; footer-এ উপরের block। প্রতি সোমবার system বাইরের link-গুলো যাচাই করে — কোনোটি না খুললে আপনি notification পাবেন; তালিকায় **Broken** filter ও **Check now**।
+**Important Links** (**Content › Important Links**): UGC, Student Portal, Library-র মতো link — শিরোনাম, ঠিকানা (`https://…` বা এই site-এর `/…`), নতুন tab-এ খুলবে কিনা, Media Library থেকে লোগো, **Group** (যেমন "Government", "Student Services"), **Show in** (প্রতিটি department-এর নিজের link)। তালিকায় টেনে ক্রম সাজান। Website: `/links` (group অনুযায়ী — প্রতিটি link একটি tile: লোগো, শিরোনাম, বিবরণ, নতুন tab-এ খুললে তীর চিহ্ন; Settings › Layouts-এ list-ও করা যায়); homepage-এ **Important Links** section; footer-এ উপরের block। প্রতি সোমবার system বাইরের link-গুলো যাচাই করে — কোনোটি না খুললে আপনি notification পাবেন; তালিকায় **Broken** filter ও **Check now**।
 
 ---
 
@@ -446,7 +447,7 @@ Program খুললে বাম দিকে একই অংশগুলো �
 2. **Events** অংশ: প্রতিটি তারিখ — শুরু ও শেষ তারিখ (ঘরে), title, ধরন (Class, Exam, Holiday …), audience (Undergraduate / Graduate; খালি = সবার), প্রয়োজনে লিখিত ব্যাখ্যা ("1st week of March")। ঘরে তারিখ না দিলে event শুধু লেখা হিসেবে দেখায়, Google Calendar ও "Upcoming Academic Dates"-এ আসে না।
 3. অনেক তারিখ একসাথে: **Import** (Excel)।
 
-Website-এ `/academic-calendar`-এ চলতি calendar আগে দেখায়; Table / Month / Timeline view, PDF download, এবং visitor Google Calendar-এ যোগ করতে পারেন (`.ics`)। Faculty microsite ও Program page-এ সেই faculty-র calendar দেখায়।
+Website-এ `/academic-calendar`-এ চলতি calendar আগে দেখায় — DIU Registrar-এর মতো card: নীল মাথায় "Academic Calendar" ও session বদলানোর তালিকা, তারপর **Academic Year / Duration / Total Events**, তারপর তারিখের table (ধরনের রঙিন badge); উপরে বছর, session, faculty, audience বাছা যায়; Table / Month / Timeline view, PDF download, এবং visitor Google Calendar-এ যোগ করতে পারেন (`.ics`)। Faculty microsite ও Program page-এ সেই faculty-র calendar দেখায়।
 
 ---
 

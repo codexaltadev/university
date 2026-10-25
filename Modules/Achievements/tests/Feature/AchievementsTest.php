@@ -57,6 +57,8 @@ it('lists the main site\'s achievements by the date achieved, filtered by year, 
 
     $this->get('/achievements')->assertOk()
         ->assertSeeInOrder(['National Hackathon Runner-up', 'ICPC Asia West Champion', 'Old Debate Win'])
+        ->assertSeeInOrder(['All', 'International', 'National', 'Regional', 'Institutional'])                     // the level switch (Phase 4.5f)
+        ->assertSee('International · Champion')
         ->assertDontSee('Hidden one')->assertDontSee('CSE only win');
     $this->get('/achievements?level=international')->assertOk()->assertSee('ICPC Asia West Champion')->assertDontSee('National Hackathon');
     $this->get('/achievements?year=2023')->assertOk()->assertSee('Old Debate Win')->assertDontSee('ICPC');

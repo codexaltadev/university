@@ -55,4 +55,5 @@ return [
         'level' => 'Choose a level.',
         'date' => 'Give the date of the achievement.',
     ],
+    'page' => ['details' => 'Details'],
 ];

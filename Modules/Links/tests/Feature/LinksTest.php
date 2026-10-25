@@ -54,6 +54,7 @@ it('lists the main site\'s links by group, in their order (FR-LINK-01/02)', func
     $this->get('/links')->assertOk()
         ->assertSeeInOrder(['Government', 'UGC', 'Student Services', 'Student Portal', 'Library', 'Other links', 'Alumni'])
         ->assertSee('href="'.url('/library').'"', false)->assertSee('target="_blank"', false)
+        ->assertSee('(opens in a new tab)')                                                           // tiles with an arrow (Phase 4.5f)
         ->assertDontSee('Hidden')->assertDontSee('CSE Lab Booking');
     $this->get(rtrim($cse->url(), '/').'/links')->assertOk()->assertSee('CSE Lab Booking')->assertDontSee('UGC');
 

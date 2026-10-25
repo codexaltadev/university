@@ -65,6 +65,12 @@
   testimonials); `modules/international/visitors` (/visitors in DIU's testimonial look); a
   testimonial's country shown when from abroad. Section `testimonials` becomes DIU testimonial
   cards (three columns, country when abroad), each opening its testimonial on /testimonials.
+- 4.5f: DIU downloads, calendar, achievements, links — `modules/documents/index` / `show`
+  (Digital Brochures cards: thumbnail, kind, View Flipbook / View PDF, download),
+  `modules/calendar/index` / `show` with `partials/calendar/card` (Registrar card: session
+  switcher, Academic Year / Duration / Total Events, coloured type badges),
+  `modules/achievements/index` / `show` (event-card look, level switch, Details sidebar),
+  `modules/links/index` (tiles or list per group).
 
 ## 1.0.0 — 2026-10-09
 

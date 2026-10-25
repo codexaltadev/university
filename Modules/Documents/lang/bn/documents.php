@@ -99,4 +99,12 @@ return [
         'failed' => 'বইটি এখানে খোলা গেল না।',
         'open_pdf' => 'PDF খুলুন',
     ],
+    'settings' => [
+        'page' => 'ডাউনলোডের পেজ', 'page_help' => '/downloads-এর উপরের শিরোনাম ও লেখা। খালি: theme-এর নিজের।',
+        'title' => 'শিরোনাম', 'text' => 'লেখা',
+    ],
+    'page' => [
+        'view_flipbook' => 'ফ্লিপবুক দেখুন', 'view_pdf' => 'PDF দেখুন', 'open' => 'খুলুন', 'kind' => 'ধরন:', 'category' => 'বিভাগ:',
+        'download_pdf' => 'ডাউনলোড', 'details' => 'বিস্তারিত',
+    ],
 ];
