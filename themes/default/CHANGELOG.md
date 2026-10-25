@@ -94,7 +94,10 @@
   focus-area cards, "Stories of Change") and `modules/csr/show`.
 - 4.6e-2: DIU partners — `modules/partners/index` (DIU's /mps logo cards with type tabs) and
   `modules/partners/discounts` (DIU's /discount-partners: categories sidebar, blue head with
-  search, table with "Show More", phone cards).
+  search, table with "Show More", phone cards); every partner card tagged with its type.
+- 4.6e-3: DIU rankings — `modules/accreditation/rankings` ("All Ranking": logo, title, rank,
+  year, text; Quick Links); `modules/accreditation/index` and `show` (accreditations and
+  memberships as cards tagged with their category).
 
 ## 1.0.0 — 2026-10-09
 

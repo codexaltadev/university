@@ -14,7 +14,9 @@ use Modules\Accreditation\Filament\Resources\Rankings\Pages\CreateRanking;
 use Modules\Accreditation\Models\Accreditation;
 use Modules\Accreditation\Models\Ranking;
 use Modules\Accreditation\Sections\RecognitionSection;
+use Modules\Accreditation\Support\AccreditationWebsite;
 use Modules\Program\Models\Program;
+use Platform\Context\SiteContext;
 use Platform\Homepage\SectionContext;
 use Platform\Modules\ModulePermissions;
 use Platform\Relations\RelationEngine;
@@ -71,7 +73,10 @@ it('shows each ranking\'s latest year first, the trend by agency, and the homepa
 
     expect(Ranking::query()->where('rank_label', '801–1000')->value('rank_value'))->toBe(801)
         ->and(Ranking::query()->where('rank_label', '#45')->value('agency_key'))->toBe('the-impact-rankings');
-    $this->get('/rankings')->assertOk()->assertSeeInOrder(['801–1000', '#45', '2101', __('accreditation::accreditation.trend'), 'QS World University Rankings', '2025', '801–1000', '2024', '1001–1200']);
+    expect(moduleView('Accreditation', 'rankings', app(AccreditationWebsite::class)->respond('rankings', SiteContext::site(), 'en')->getOriginalContent()->getData()))
+        ->toContain(__('accreditation::accreditation.trend'));                                       // the module's own: latest and the trend
+    $this->get('/rankings')->assertOk()                                                                // DIU's: every result, newest first
+        ->assertSeeInOrder(['Global Rankings &amp; Achievements', 'All Ranking', 'QS World University Rankings', '801–1000', '2025', 'THE Impact Rankings', '#45', 'QS World University Rankings', '1001–1200', '2024', 'Webometrics', '2101', '2023', 'Tuition Fees'], false);
     expect(fn () => ($this->rank)('QS World University Rankings', 2025, '700'))->toThrow(ValidationException::class);
 
     $items = (new RecognitionSection)->items(new SectionContext('site:0', ['count' => 10], 'en'));

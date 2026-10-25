@@ -1,4 +1,4 @@
-{{-- /rankings (FR-ACR-04). Contract: $latest (each result's latest year), $trends (agency → ['name','key','rows']), $base --}}
+{{-- /rankings (FR-ACR-04). Contract: $latest (each result's latest year), $trends (agency → ['name','key','rows']), $all (every result, newest first), $base --}}
 <x-theme::layout :title="__('accreditation::accreditation.rankings')">
     <div class="container" style="padding-block:var(--space-10, 40px)">
         <h1>{{ __('accreditation::accreditation.rankings') }}</h1>

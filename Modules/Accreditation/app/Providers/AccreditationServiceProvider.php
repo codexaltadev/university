@@ -3,8 +3,10 @@
 namespace Modules\Accreditation\Providers;
 
 use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Support\Facades\View;
 use Modules\Accreditation\Console\ExpiringAccreditationsCommand;
 use Modules\Accreditation\Support\AccreditationWebsite;
+use Modules\Accreditation\Support\RecognitionPage;
 use Platform\Context\SiteContext;
 use Platform\Modules\ModuleServiceProvider;
 use Platform\Website\Website;
@@ -25,6 +27,8 @@ class AccreditationServiceProvider extends ModuleServiceProvider
     {
         parent::boot();
         $this->app->make(Website::class)->handle(fn (string $rest, SiteContext $context, string $locale) => $this->app->make(AccreditationWebsite::class)->respond($rest, $context, $locale));
+        // What a theme shows on them, ready (DIU's /rankings; themes hold no logic, T-1)
+        View::composer(['accreditation::rankings', 'accreditation::index', 'accreditation::show'], fn ($view) => $view->with('page', new RecognitionPage($view->getData())));
         $this->commands([ExpiringAccreditationsCommand::class]);
         $this->app->booted(fn () => $this->app->make(Schedule::class)->command('accreditation:expiring')->dailyAt('06:00')->withoutOverlapping());   // FR-ACR-02
     }

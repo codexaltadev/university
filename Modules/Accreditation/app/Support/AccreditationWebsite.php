@@ -35,7 +35,7 @@ class AccreditationWebsite
             }
             app(Seo::class)->set(['title' => __('accreditation::accreditation.rankings'), 'path' => '/'.$rest]);
 
-            return response()->view('accreditation::rankings', ['latest' => self::latest($rankings), 'trends' => self::trends($rankings), 'base' => $base]);
+            return response()->view('accreditation::rankings', ['latest' => self::latest($rankings), 'trends' => self::trends($rankings), 'all' => $rankings, 'base' => $base]);
         }
 
         if ($rest !== Accreditation::PATH && ! Str::startsWith($rest, Accreditation::PATH.'/')) {
