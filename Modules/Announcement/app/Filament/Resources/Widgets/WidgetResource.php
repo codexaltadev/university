@@ -31,6 +31,7 @@ use Modules\Announcement\Filament\Resources\Widgets\Pages\CreateWidget;
 use Modules\Announcement\Filament\Resources\Widgets\Pages\EditWidget;
 use Modules\Announcement\Filament\Resources\Widgets\Pages\ListWidgets;
 use Modules\Announcement\Models\Widget;
+use Modules\Announcement\Support\Announcements;
 use Modules\Announcement\Support\CurrentPage;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\PublishingPanel;
@@ -88,7 +89,10 @@ class WidgetResource extends Resource
                 Grid::make(1)->columnSpan(2)->schema([
                     Section::make()->schema([
                         Radio::make('widget_type')->label(__('announcement::announcement.fields.type'))->options(self::options('types', Widget::TYPES))
-                            ->descriptions(self::options('type_help', Widget::TYPES))->default('bar')->required()->live(),
+                            ->descriptions(self::options('type_help', Widget::TYPES))->default('bar')->required()->live()
+                            // Settings › Announcements turns each kind on; an editor sees when this one is still off
+                            ->helperText(fn (Get $get): ?string => in_array($get('widget_type'), Announcements::disabled(), true)
+                                ? __('announcement::announcement.settings.off', ['type' => __('announcement::announcement.types.'.$get('widget_type'))]) : null),
                         TranslatableTabs::make()->schema(fn (string $locale): array => [
                             TextInput::make("title.{$locale}")->label(__('announcement::announcement.fields.title'))->maxLength(150),
                             RichEditor::make("body.{$locale}")->label(__('announcement::announcement.fields.body'))->fileAttachments(false)->visible($is('popup')),

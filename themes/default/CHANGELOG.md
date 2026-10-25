@@ -71,6 +71,10 @@
   switcher, Academic Year / Duration / Total Events, coloured type badges),
   `modules/achievements/index` / `show` (event-card look, level switch, Details sidebar),
   `modules/links/index` (tiles or list per group).
+- 4.5g: announcements — `modules/announcement/slots/popup` (DIU's greeting popup: picture,
+  text, dates, Maybe Later / Explore Now), `slots/announcement` (bar and countdown tiles in the
+  navy → blue gradient) and `slots/ticker` (navy strip, "Latest" tab, endless run); above the
+  homepage hero (z-40); icon `megaphone`.
 
 ## 1.0.0 — 2026-10-09
 

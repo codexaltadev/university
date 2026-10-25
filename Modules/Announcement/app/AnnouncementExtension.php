@@ -4,6 +4,7 @@ namespace Modules\Announcement;
 
 use Modules\Announcement\Filament\AnnouncementPlugin;
 use Modules\Announcement\Models\Widget;
+use Modules\Announcement\Settings\AnnouncementSettings;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
 
@@ -18,5 +19,6 @@ final class AnnouncementExtension implements ModuleExtension
     {
         $r->filamentPlugin(AnnouncementPlugin::class);   // Content › Announcements
         $r->attachable(Widget::class);                   // "Show in", main site (Admin) — FR-ANW-02
+        $r->settings(AnnouncementSettings::class);       // each kind on / off (all off at first), texts
     }
 }

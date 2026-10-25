@@ -12,7 +12,9 @@ use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
 use Livewire\Livewire;
 use Modules\Announcement\Filament\Resources\Widgets\Pages\CreateWidget;
+use Modules\Announcement\Filament\Resources\Widgets\Pages\ListWidgets;
 use Modules\Announcement\Models\Widget;
+use Modules\Announcement\Settings\AnnouncementSettings;
 use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
 use Modules\Notice\Models\Notice;
@@ -25,6 +27,7 @@ beforeEach(function () {
     app(ModulePermissions::class)->sync('Announcement');
     app(ModulePermissions::class)->syncAttachable('announcement', [Widget::class]);
     $this->engine = app(RelationEngine::class);
+    settings()->save('announcement', ['popup' => true, 'ticker' => true, 'bar' => true, 'countdown' => true]);   // all off at first
 
     $this->make = function (string $type, string $title, array $attributes = [], array $places = [], bool $main = true): Widget {
         $w = Widget::factory()->create(['widget_type' => $type, 'title' => ['en' => $title], ...$attributes]);
@@ -81,7 +84,10 @@ it('runs the ticker lines with the latest notices of the board (FR-ANW-06)', fun
     $this->engine->sync($notice, [], mainSite: true, user: null);
 
     $this->get('/')->assertOk()->assertSeeInOrder(['Welcome to the new website', 'Mid-term exam routine'])
-        ->assertSee('announcement-ticker', false)->assertSee('prefers-reduced-motion', false);
+        ->assertSee('announcement-ticker__track', false)->assertSee('aria-hidden="true"', false);   // shown twice for an endless run, the copy hidden
+
+    settings()->saveFor(new AnnouncementSettings, ['ticker_label' => ['en' => 'Breaking']]);
+    $this->get('/')->assertSee('Breaking');
 });
 
 it('counts down, then hides or shows the message (FR-ANW-07)', function () {
@@ -103,4 +109,24 @@ it('is made in the admin with the type\'s own fields', function () {
 
     expect(Widget::query()->sole()->pages)->toBe('all');
     $this->get('/notices')->assertSee('Library open late')->assertSee('var(--color-accent)', false);
+});
+
+it('shows each kind only while it is on in Settings › Announcements — all off at first (owner 2026-10-25)', function () {
+    settings()->save('announcement', ['popup' => false, 'ticker' => false, 'bar' => false, 'countdown' => false]);
+    ($this->make)('bar', 'Library open late');
+    ($this->make)('ticker', 'Ticker', ['body' => ['en' => 'Welcome to the new website']]);
+    ($this->make)('countdown', 'Convocation 2026', ['target_at' => '2026-12-01 10:00']);
+    ($this->make)('popup', 'Eid Mubarak', ['link_url' => '/admission']);
+
+    $this->get('/')->assertOk()->assertDontSee('Library open late')->assertDontSee('Welcome to the new website')
+        ->assertDontSee('Convocation 2026')->assertDontSee('Eid Mubarak');
+
+    $this->actingAs(superAdmin());
+    Livewire::test(ListWidgets::class)->assertSee('Turned off in Settings › Announcements, so not shown: Popup, News ticker, Countdown, Announcement bar.');
+    Livewire::test(CreateWidget::class)->fillForm(['widget_type' => 'popup'])->assertSee('Popup is turned off in Settings › Announcements');
+
+    settings()->save('announcement', ['popup' => true, 'bar' => true]);
+    $this->get('/')->assertOk()->assertSee('Library open late')->assertSee('Eid Mubarak')->assertDontSee('Welcome to the new website')->assertDontSee('Convocation 2026')
+        ->assertSeeInOrder(['Eid Mubarak', 'Maybe Later', 'Explore Now'])                                // DIU's greeting popup
+        ->assertSee('from-secondary via-primary to-secondary', false);                                    // DIU's navy → blue
 });

@@ -193,6 +193,9 @@ Page তৈরি করে **Menu**-তে যোগ না করলে visito
 | **Popup** | Page খুললে ছোট window | ঈদ শুভেচ্ছা, admission ঘোষণা |
 | **Countdown** | Homepage-এ সময় গণনা | "Admission শেষ হতে ৫ দিন" |
 
+> **আগে চালু করুন — Settings › Announcements:** চারটি ধরনের প্রতিটি (Popup, News ticker, Announcement bar, Countdown) website-এ দেখাবে **শুধু সেখানে চালু করলে**; শুরুতে সবগুলো বন্ধ। বন্ধ থাকলে সেই ধরনের কোনো announcement-ই কোথাও দেখাবে না (তৈরি করা থাকলেও)। Announcements তালিকার উপরে লেখা থাকে কোন ধরনগুলো বন্ধ; form-এ বন্ধ ধরন বাছলেও সতর্কবার্তা আসে। একই জায়গায় ticker-এর নাম ("Latest") ও popup বন্ধের button-এর লেখা ("Maybe Later") বদলানো যায়।
+
+* Default theme-এ (DIU-র greeting popup-এর মতো): popup-এ উপরে ছবি (link থাকলে ছবিতে চাপলেও যায়), নিচে লেখা, শুরুর তারিখ ও "Valid till …", **Maybe Later** ও **Explore Now** (button-এর লেখা না দিলে)। Bar ও countdown header-এর নিচে DIU-র নীল রঙে (অথবা বাছা রঙে), countdown-এ দিন / ঘণ্টা / মিনিট / সেকেন্ডের ঘর; ticker গাঢ় নীল লাইনে, বাঁয়ে "Latest"।
 * **Show from / Expires** দিন — পুরনো popup যেন থেকে না যায়।
 * **Popup:** ছবি (Media Library), লেখা, button; **How often** — প্রতি visit / দিনে একবার / শুধু একবার (দর্শকের browser মনে রাখে); একই page-এ একটিই popup দেখায় — যার **Priority** বেশি। দর্শক Esc চেপে বা × দিয়ে বন্ধ করতে পারেন।
 * **Ticker:** এক লাইনের লেখা ও link; **Add the latest notices** চালু করলে এই site-এর notice board-এর নতুন notice-ও চলে।

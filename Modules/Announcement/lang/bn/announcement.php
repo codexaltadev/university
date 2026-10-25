@@ -5,6 +5,8 @@ return [
     'singular' => 'ঘোষণা',
     'plural' => 'ঘোষণা',
     'more' => 'বিস্তারিত',
+    'explore' => 'বিস্তারিত দেখুন',
+    'valid_till' => ':date পর্যন্ত',
     'close' => 'বন্ধ',
     'ticker_label' => 'সর্বশেষ',
     'types' => [
@@ -82,5 +84,14 @@ return [
         'pages' => 'অন্তত একটি page বেছে নিন।',
         'url' => 'https://, http:// বা / দিয়ে শুরু ঠিকানা দিন।',
         'expiry' => 'দেখানো শুরুর পরে শেষ হতে হবে।',
+    ],
+    'settings' => [
+        'shown' => 'Website-এ দেখাবে',
+        'shown_help' => 'প্রতিটি ধরন website-এ দেখাবে শুধু এখানে চালু থাকলে; বন্ধ থাকলে সেই ধরনের কোনো announcement-ই দেখাবে না।',
+        'texts' => 'লেখা',
+        'ticker_label' => 'Ticker-এর নাম',
+        'popup_later' => 'Popup বন্ধের button',
+        'off' => ':type, Settings › Announcements-এ বন্ধ — সেখানে চালু না করা পর্যন্ত দেখাবে না।',
+        'off_list' => 'Settings › Announcements-এ বন্ধ, তাই দেখাচ্ছে না: :types।',
     ],
 ];

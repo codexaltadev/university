@@ -37,14 +37,35 @@ class Announcements
         return request()->attributes->get($memo);
     }
 
+    /** A kind shows on the website only while it is on in Settings › Announcements (owner 2026-10-25; all off at first) */
+    public static function enabled(string $type): bool
+    {
+        return (bool) settings('announcement.'.$type);
+    }
+
+    /** @return list<string> the kinds turned off */
+    public static function disabled(): array
+    {
+        return array_values(array_filter(Widget::TYPES, fn (string $type): bool => ! self::enabled($type)));
+    }
+
     public function slot(string $name, SiteContext $context): ?HtmlString
     {
         try {
-            $widgets = $this->here($context);
+            $types = array_values(array_filter(match ($name) {
+                'announcement' => ['bar', 'countdown'],
+                'ticker' => ['ticker'],
+                'popup' => ['popup'],
+                default => [],
+            }, self::enabled(...)));
+            if ($types === []) {
+                return null;
+            }
+            $widgets = $this->here($context)->whereIn('widget_type', $types)->values();
             $html = match ($name) {
-                'announcement' => ($w = $widgets->whereIn('widget_type', ['bar', 'countdown'])->values())->isEmpty() ? '' : view('announcement::slots.announcement', ['widgets' => $w])->render(),
-                'ticker' => ($items = $this->tickerItems($widgets->where('widget_type', 'ticker')->values(), $context)) === [] ? '' : view('announcement::slots.ticker', ['items' => $items])->render(),
-                'popup' => ($p = $widgets->where('widget_type', 'popup')->sortByDesc('priority')->first()) ? view('announcement::slots.popup', ['widget' => $p])->render() : '',
+                'announcement' => $widgets->isEmpty() ? '' : view('announcement::slots.announcement', ['widgets' => $widgets])->render(),
+                'ticker' => ($items = $this->tickerItems($widgets, $context)) === [] ? '' : view('announcement::slots.ticker', ['items' => $items, 'label' => (string) settings('announcement.ticker_label')])->render(),
+                'popup' => ($p = $widgets->sortByDesc('priority')->first()) ? view('announcement::slots.popup', ['widget' => $p, 'later' => (string) settings('announcement.popup_later')])->render() : '',
                 default => '',
             };
 

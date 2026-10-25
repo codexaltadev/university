@@ -5,6 +5,8 @@ return [
     'singular' => 'announcement',
     'plural' => 'Announcements',
     'more' => 'Learn more',
+    'explore' => 'Explore Now',
+    'valid_till' => 'Valid till :date',
     'close' => 'Close',
     'ticker_label' => 'Latest',
     'types' => [
@@ -82,5 +84,14 @@ return [
         'pages' => 'Choose at least one page.',
         'url' => 'Give an address starting with https://, http:// or /.',
         'expiry' => 'It must end after it starts to show.',
+    ],
+    'settings' => [
+        'shown' => 'Shown on the website',
+        'shown_help' => 'Each kind shows on the website only when it is on here; off = none of its announcements show, wherever they are set.',
+        'texts' => 'Texts',
+        'ticker_label' => 'Ticker label',
+        'popup_later' => 'Popup close button',
+        'off' => ':type is turned off in Settings › Announcements — it will not show until it is turned on there.',
+        'off_list' => 'Turned off in Settings › Announcements, so not shown: :types.',
     ],
 ];
