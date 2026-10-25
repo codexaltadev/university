@@ -5,6 +5,7 @@ namespace Modules\Alumni;
 use Modules\Alumni\Filament\AlumniPlugin;
 use Modules\Alumni\Models\Alumnus;
 use Modules\Alumni\Sections\PrideAlumniSection;
+use Modules\Alumni\Settings\AlumniSettings;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
 
@@ -26,5 +27,6 @@ final class AlumniExtension implements ModuleExtension
         $r->menuItemType(Alumnus::class);
         $r->layouts('alumni.directory', ['grid', 'cards', 'list']);                           // FR-ALUM-02; first = default
         $r->homepageSection(PrideAlumniSection::class);                                       // FR-ALUM-04
+        $r->settings(AlumniSettings::class);                                                  // the page's title, text, picture, portal link
     }
 }

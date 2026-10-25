@@ -2,8 +2,10 @@
 
 namespace Modules\Alumni\Providers;
 
+use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 use Modules\Alumni\Livewire\SubmitForm;
+use Modules\Alumni\Support\AlumniPage;
 use Modules\Alumni\Support\AlumniWebsite;
 use Platform\Context\SiteContext;
 use Platform\Modules\ModuleServiceProvider;
@@ -30,5 +32,7 @@ class AlumniServiceProvider extends ModuleServiceProvider
 
         // Website: /alumni, /alumni/submit, /alumni/{slug}, /{department|program}/alumni (FR-ALUM-02/03/05)
         $this->app->make(Website::class)->handle(fn (string $rest, SiteContext $context, string $locale) => $this->app->make(AlumniWebsite::class)->respond($rest, $context, $locale));
+        // What a theme shows on them, ready (DIU's AlumniList look; themes hold no logic, T-1)
+        View::composer(['alumni::index', 'alumni::show', 'alumni::submit', 'alumni::sections.pride'], fn ($view) => $view->with('page', new AlumniPage($view->getData())));
     }
 }

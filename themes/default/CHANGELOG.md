@@ -86,6 +86,9 @@
 - 4.6c: DIU committees — `modules/committee/index` and `show` through `partials/committee/page`
   ("Committee Categories" sidebar with member counts, blue-headed members table, phone cards
   and select; /committees opens the first committee).
+- 4.6d: DIU alumni — `modules/alumni/index`, `show`, `submit`, `sections/pride` with
+  `partials/alumni/card` (DIU's AlumniList card: 3:4 photo, briefcase / building lines,
+  department badge, Pride).
 
 ## 1.0.0 — 2026-10-09
 

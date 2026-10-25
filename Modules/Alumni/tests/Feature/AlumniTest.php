@@ -53,7 +53,7 @@ it('fills the department from the program and keeps a student ID one person\'s (
 });
 
 it('filters the directory and never shows a phone unless switched on (FR-ALUM-02/06, AC-ALUM-01)', function () {
-    $this->get('/alumni')->assertOk()->assertSeeInOrder(['Rahim Uddin', 'Pride'])->assertSee('Karim Mia')->assertSee('Nila Akter');
+    $this->get('/alumni')->assertOk()->assertSeeInOrder(['alumni-card', 'Pride', 'Rahim Uddin'])->assertSee('Karim Mia')->assertSee('Nila Akter');
 
     $this->get('/alumni?department='.$this->cse->id.'&year=2015')->assertOk()
         ->assertSee('Rahim Uddin')->assertDontSee('Karim Mia')->assertDontSee('Nila Akter')
@@ -73,6 +73,26 @@ it('filters the directory and never shows a phone unless switched on (FR-ALUM-02
 it('shows a department\'s and a program\'s own alumni on their microsites (FR-ALUM-05)', function () {
     $this->get(rtrim($this->cse->url(), '/').'/alumni')->assertOk()->assertSee('Rahim Uddin')->assertSee('Karim Mia')->assertDontSee('Nila Akter');
     $this->get(rtrim($this->bsc->url(), '/').'/alumni')->assertOk()->assertSee('Rahim Uddin')->assertDontSee('Karim Mia');
+});
+
+it('shows a faculty\'s departments\' alumni, and a program without its own its department\'s (owner 2026-10-25)', function () {
+    $fsit = $this->cse->faculty;
+    $fbe = Faculty::factory()->create(['short_name' => 'FBE']);
+    $bba = Department::factory()->create(['faculty_id' => $fbe->id, 'short_name' => 'BBA', 'name' => ['en' => 'Business Administration']]);
+    Alumnus::factory()->create(['name' => ['en' => 'Sumon Business'], 'department_id' => $bba->id]);
+
+    $this->get(rtrim($fsit->url(), '/').'/alumni')->assertOk()
+        ->assertSee('Rahim Uddin')->assertSee('Karim Mia')->assertSee('Nila Akter')->assertDontSee('Sumon Business')
+        ->assertSee('Computer Science and Engineering')->assertSee('name="department"', false);    // a faculty's departments to choose from
+    $this->get(rtrim($fsit->url(), '/').'/alumni?department='.$this->eee->id)->assertOk()->assertSee('Nila Akter')->assertDontSee('Karim Mia');
+
+    $eeeProgram = Program::factory()->create(['department_id' => $this->eee->id, 'name' => ['en' => 'B.Sc. in EEE']]);   // nobody set on it
+    $this->get(rtrim($eeeProgram->url(), '/').'/alumni')->assertOk()->assertSee('Nila Akter')->assertDontSee('Rahim Uddin');
+
+    $items = (new PrideAlumniSection)->items(new SectionContext($fsit->getMorphClass().':'.$fsit->id, ['count' => 4], 'en'));
+    expect($items->pluck('id')->all())->toBe([$this->rahim->id])
+        ->and(Alumnus::ownerOf($bba))->toBe(['department_id' => [$bba->id]])
+        ->and(Alumnus::ownerOf($this->bsc))->toBe(['program_id' => [$this->bsc->id]]);
 });
 
 it('lists Pride alumni in the homepage section (FR-ALUM-04)', function () {

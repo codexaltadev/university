@@ -34,6 +34,7 @@
         "custom_permissions": [],
         "provides": {
             "person_source": true,
+            "settings": true,
             "scopeable": true,
             "searchable": true,
             "sitemap": true,

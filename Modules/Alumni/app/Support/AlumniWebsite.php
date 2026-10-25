@@ -16,7 +16,8 @@ use Platform\Theme\LayoutResolver;
 /**
  * /alumni (FR-ALUM-02): active alumni, Pride first; filters department, program, batch, year,
  * job type and a search over name / designation / organization (AC-ALUM-01); grid / cards /
- * list. A Department or Program microsite's /alumni shows its own (FR-ALUM-05). /alumni/{slug}:
+ * list. A Department, Faculty or Program microsite's /alumni shows its own (FR-ALUM-05,
+ * Alumnus::ownerOf(): a Faculty its departments', a Program its own or else its department's). /alumni/{slug}:
  * photo, what they do, story, video, public contacts (FR-ALUM-03). /alumni/submit: the form.
  */
 class AlumniWebsite
@@ -33,7 +34,7 @@ class AlumniWebsite
         }
         $owner = $this->owner($context);
         if ($context->isMicrosite() && $owner === null) {
-            return null;   // only Department and Program microsites have alumni
+            return null;   // only Department, Faculty and Program microsites have alumni
         }
         $base = $context->isMicrosite() ? rtrim((string) app(MicrositeResolver::class)->urlFor($context->entity, $locale), '/') : '';
 
@@ -65,28 +66,22 @@ class AlumniWebsite
         return response()->view('alumni::show', ['alumnus' => $alumnus, 'person' => $alumnus->personPresenter()]);
     }
 
-    /** ['department_id' => 3] or ['program_id' => 7] for a microsite of either; null otherwise. */
+    /** Whose alumni this site shows (Alumnus::ownerOf); null = none */
     protected function owner(SiteContext $context): ?array
     {
-        if (! $context->isMicrosite()) {
-            return [];
-        }
-
-        return match ($context->entity->getMorphClass()) {
-            'department.department' => ['department_id' => $context->entity->getKey()],
-            'program.program' => ['program_id' => $context->entity->getKey()],
-            default => null,
-        };
+        return Alumnus::ownerOf($context->isMicrosite() ? $context->entity : null);
     }
 
     /** @return array<string, mixed> */
     protected function directory(array $owner): array
     {
         $request = request();
-        $base = Alumnus::query()->frontendVisible()->where($owner);
+        $base = Alumnus::query()->frontendVisible()->ownedBy($owner);
+        // One department (a Department site, a Program shown by its department) or a program: no department choice
+        $oneDepartment = isset($owner['program_id']) || count($owner['department_id'] ?? [0, 0]) === 1;
 
         $query = (clone $base)
-            ->when($request->filled('department') && ! isset($owner['department_id']) && ! isset($owner['program_id']), fn (Builder $q) => $q->where('department_id', (int) $request->query('department')))
+            ->when($request->filled('department') && ! $oneDepartment, fn (Builder $q) => $q->where('department_id', (int) $request->query('department')))
             ->when($request->filled('program') && ! isset($owner['program_id']), fn (Builder $q) => $q->where('program_id', (int) $request->query('program')))
             ->when($request->filled('batch'), fn (Builder $q) => $q->where('batch', (string) $request->query('batch')))
             ->when($request->filled('year'), fn (Builder $q) => $q->where('passing_year', (int) $request->query('year')))
@@ -104,7 +99,7 @@ class AlumniWebsite
 
         return [
             'alumni' => $query->paginate(self::PER_PAGE)->withQueryString(),
-            'departments' => isset($owner['department_id']) || isset($owner['program_id']) ? collect() : $this->options(Alumnus::DEPARTMENT, (clone $base)->distinct()->pluck('department_id')),
+            'departments' => $oneDepartment ? collect() : $this->options(Alumnus::DEPARTMENT, (clone $base)->distinct()->pluck('department_id')),
             'programs' => isset($owner['program_id']) ? collect() : $this->options(Alumnus::PROGRAM, (clone $base)->distinct()->pluck('program_id')),
             'batches' => (clone $base)->whereNotNull('batch')->distinct()->orderBy('batch')->pluck('batch'),
             'years' => (clone $base)->whereNotNull('passing_year')->distinct()->orderByDesc('passing_year')->pluck('passing_year'),

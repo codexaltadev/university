@@ -42,17 +42,11 @@ class PrideAlumniSection extends Section
     /** @return Collection<int, Alumnus> */
     public function items(SectionContext $ctx): Collection
     {
-        $site = $ctx->site();
-        $owner = match ($site->entity?->getMorphClass()) {
-            'department.department' => ['department_id' => $site->entity->getKey()],
-            'program.program' => ['program_id' => $site->entity->getKey()],
-            null => [],
-            default => null,
-        };
+        $owner = Alumnus::ownerOf($ctx->site()->entity);   // a Faculty's departments, a Program's (or its department's) too
         if ($owner === null) {
             return collect();
         }
 
-        return Alumnus::query()->frontendVisible()->pride()->where($owner)->ordered()->limit((int) ($ctx->setting('count') ?: 8))->get();
+        return Alumnus::query()->frontendVisible()->pride()->ownedBy($owner)->ordered()->limit((int) ($ctx->setting('count') ?: 8))->get();
     }
 }

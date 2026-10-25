@@ -4,6 +4,7 @@ namespace Modules\Alumni\Models;
 
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Validation\ValidationException;
 use Modules\Alumni\Database\Factories\AlumnusFactory;
 use Modules\Alumni\Support\AlumnusPresenter;
@@ -97,6 +98,38 @@ class Alumnus extends BaseModel implements PersonSource, Scopeable
     public function scopePride(Builder $query): Builder
     {
         return $query->where($this->qualifyColumn('is_pride'), true);
+    }
+
+    /**
+     * Whose alumni a site shows (FR-ALUM-05, owner 2026-10-25): the main site everyone ([]); a Department its own;
+     * a Faculty its departments'; a Program those set on it — or, while nobody is, its department's (DIU's data
+     * names departments only). null = this kind of site has no alumni.
+     *
+     * @return array<string, list<int>>|null column => ids
+     */
+    public static function ownerOf(?Model $place): ?array
+    {
+        return match ($place?->getMorphClass()) {
+            null => [],
+            'department.department' => ['department_id' => [(int) $place->getKey()]],
+            'faculty.faculty' => ['department_id' => class_exists(self::DEPARTMENT)
+                ? ((self::DEPARTMENT)::query()->withoutGlobalScopes()->whereNull('deleted_at')->where('faculty_id', $place->getKey())->pluck('id')->map(fn ($id): int => (int) $id)->all() ?: [0])
+                : [0]],
+            'program.program' => static::query()->where('program_id', $place->getKey())->exists() || ! $place->department_id
+                ? ['program_id' => [(int) $place->getKey()]]
+                : ['department_id' => [(int) $place->department_id]],
+            default => null,
+        };
+    }
+
+    /** @param  array<string, list<int>>  $owner  from ownerOf() */
+    public function scopeOwnedBy(Builder $query, array $owner): Builder
+    {
+        foreach ($owner as $column => $ids) {
+            $query->whereIn($this->qualifyColumn($column), $ids);
+        }
+
+        return $query;
     }
 
     /** Visitor submissions not yet checked (admin "New submissions"). */
