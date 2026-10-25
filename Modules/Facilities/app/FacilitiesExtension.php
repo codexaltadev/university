@@ -5,6 +5,7 @@ namespace Modules\Facilities;
 use Modules\Facilities\Filament\FacilitiesPlugin;
 use Modules\Facilities\Models\Facility;
 use Modules\Facilities\Sections\FacilitiesSection;
+use Modules\Facilities\Settings\FacilitiesSettings;
 use Modules\Facilities\Tabs\ProgramFacilitiesTab;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
@@ -25,6 +26,7 @@ final class FacilitiesExtension implements ModuleExtension
         $r->searchable(Facility::class, label: 'facilities::facilities.plural', weight: 4);
         $r->sitemap(Facility::class);
         $r->layouts('facilities.listing', ['icons', 'cards', 'list']);                                  // FR-FCL-02
+        $r->settings(FacilitiesSettings::class);                                                         // the page's title, line, picture
 
         $program = 'Modules\\Program\\Models\\Program';
         if (class_exists($program)) {

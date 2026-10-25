@@ -101,6 +101,8 @@
 - 4.6e-4: DIU international — `modules/international/home` (numbers, featured partners),
   `partners` (DIU's International Linkage: Browse by Section, country picker, university
   cards, table layout), `conferences` and `conference` (picture cards); flag pictures.
+- 4.6e-5: facilities — `modules/facilities/index` (category pills, DIU's program-page facility
+  picture cards in a grid) and `show`.
 
 ## 1.0.0 — 2026-10-09
 

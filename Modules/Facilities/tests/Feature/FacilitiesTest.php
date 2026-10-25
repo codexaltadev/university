@@ -46,6 +46,7 @@ it('lists the place\'s facilities in their order, by category, with a page or a 
     $this->get('/facilities')->assertOk()->assertSeeInOrder(['Medical Centre', 'Library'])
         ->assertSee('href="https://library.example.edu"', false)->assertSee('target="_blank"', false)->assertDontSee('Closed Pool')->assertDontSee('CSE Robotics');
     $this->get('/facilities?category=health')->assertOk()->assertSee('Medical Centre')->assertDontSee('Library');
+    $this->get('/facilities')->assertSeeInOrder(['Campus Facilities', 'facility-card', 'Medical Centre'], false);   // the default theme: DIU's picture cards
     $this->get($medical->url())->assertOk()->assertSee('Open 24 hours.');
     $this->get('/facilities/'.Facility::query()->get()->first(fn ($f) => $f->title === 'Library')->slug())->assertNotFound();   // no text: no page
     $this->get(rtrim($cse->url(), '/').'/facilities')->assertOk()->assertSee('CSE Robotics Lab Room');
