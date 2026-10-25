@@ -67,6 +67,9 @@ class SubscribeForm extends Component
 
     public function render(): View
     {
-        return view('admission::livewire.subscribe-form');
+        return view('admission::livewire.subscribe-form', [
+            'channels' => AdmissionSubscriber::CHANNELS,
+            'whatsappGroup' => filled($url = settings('admission.whatsapp_group_url')) ? (string) $url : null,
+        ]);
     }
 }

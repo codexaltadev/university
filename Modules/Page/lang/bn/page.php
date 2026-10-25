@@ -12,6 +12,7 @@ return [
     ],
     'sidebar_inherit' => 'Parent page-এর মতো',
     'fields' => [
+        'quick_links' => 'Quick Links (sidebar menu-র নিচে)',
         'sidebar_menu' => 'Sidebar menu',
         'title' => 'শিরোনাম',
         'excerpt' => 'সংক্ষিপ্ত বিবরণ',

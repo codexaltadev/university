@@ -47,9 +47,14 @@ class Page extends BaseModel implements Scopeable
 
     protected $table = 'page_pages';
 
-    protected $fillable = ['parent_id', 'title', 'excerpt', 'content', 'template', 'sidebar_menu_id', 'published_at', 'expires_at', 'sort_order', 'is_active'];
+    protected $fillable = ['parent_id', 'title', 'excerpt', 'content', 'template', 'sidebar_menu_id', 'quick_links', 'published_at', 'expires_at', 'sort_order', 'is_active'];
 
     public array $translatable = ['title', 'excerpt', 'content'];
+
+    protected function casts(): array
+    {
+        return [...parent::casts(), 'quick_links' => 'array'];
+    }
 
     protected string $slugSource = 'title';
 

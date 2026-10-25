@@ -15,6 +15,7 @@ use Modules\Page\Blocks\PageBlocks;
 use Modules\Page\Models\Page;
 use Platform\Context\UrlRules;
 use Platform\Context\WorkingIn;
+use Platform\Filament\Components\LinkListField;
 use Platform\Filament\Components\MediaPicker;
 use Platform\Filament\Components\PublishingPanel;
 use Platform\Filament\Components\SeoPanel;
@@ -62,6 +63,9 @@ class PageForm
                             ->placeholder(__('page::page.sidebar_inherit'))
                             ->helperText(__('page::page.help.sidebar_menu'))
                             ->visible(fn (Get $get): bool => $get('template') === 'with-sidebar' && app(SiteData::class)->has('free-menus')),
+                        // DB-02 v0.3: "Quick Links" under the sidebar menu (DIU's /admission)
+                        LinkListField::make('quick_links')->label(__('page::page.fields.quick_links'))
+                            ->visible(fn (Get $get): bool => $get('template') === 'with-sidebar'),
                         WebAddressField::make(prefix: fn (Get $get, ?Page $record): string => static::addressPrefix($get, $record))
                             ->rules([fn (Get $get, ?Page $record): Closure => function (string $attribute, mixed $value, Closure $fail) use ($get, $record): void {
                                 // FR-GEN-35: a top-level page's address may not be an entity's under the same owner

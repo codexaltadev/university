@@ -92,6 +92,11 @@ return [
         'absent' => 'Absent',
     ],
 
+    'status' => ['active' => 'Active', 'upcoming' => 'Upcoming', 'expired' => 'Expired'],
+    'notices_title' => 'List of Admission Announce Notices',
+    'notify' => 'Enter Email or <strong>WhatsApp number</strong> for real-time notifications.',
+    'get_update' => 'Get Update',
+    'how_to_apply' => 'How to Apply',
     'channels' => ['email' => 'Email', 'whatsapp' => 'WhatsApp'],
 
     'import' => [

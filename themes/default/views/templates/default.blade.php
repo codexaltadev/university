@@ -4,7 +4,7 @@
         @include('theme::partials.page.hero', ['page' => $page])
         <div class="container mx-auto px-4 py-8 mt-10">
             <article class="page--default overflow-hidden">
-                <div class="pl-4">@include('theme::partials.page.body')</div>
+                <div class="pl-4">@include('theme::partials.page.blocks')</div>
             </article>
         </div>
     </div>

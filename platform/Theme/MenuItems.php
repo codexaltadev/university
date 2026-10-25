@@ -30,7 +30,7 @@ final class MenuItems
                 'url' => $url,
                 'target' => ! empty($item['new_tab']) ? '_blank' : null,
                 'type' => $url === null ? 'heading' : 'link',
-                'isActive' => ($url !== null && rtrim($url, '/') === $current) || $children->contains(fn (Fluent $c): bool => $c->isActive),
+                'isActive' => ($url !== null && rtrim(url($url), '/') === $current) || $children->contains(fn (Fluent $c): bool => $c->isActive),   // "/admission" too
                 'children' => $children,
             ]);
         });

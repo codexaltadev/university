@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-02 |
-| Version | 0.2 — 2026-10-11: free menu (`menu_menus.location` null), page-এর নিজের sidebar menu (`page_pages.sidebar_menu_id`), module landing page (§5.1, §8.1) |
+| Version | 0.2 — 2026-10-11: free menu (`menu_menus.location` null), page-এর নিজের sidebar menu (`page_pages.sidebar_menu_id`), module landing page (§5.1, §8.1); v0.3 (2026-10-26, Phase 4.7b): `page_pages.quick_links` — sidebar-এর নিচে "Quick Links" (DIU-র /admission) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md) (conventions), SRS Part 1, SAD Part A / B |
@@ -295,6 +295,7 @@ Source module inactive হলে section লুকানো হয় render-এ
 | content | JSON | N, T | | ভাষা অনুযায়ী block array (FR-PAGE-01/02) |
 | template | VARCHAR(50) | | `default` | FR-PAGE-04 |
 | sidebar_menu_id | BIGINT UNSIGNED | N, IX (অন্য module-এর table — FK নয়, SAD Part A §6.6) | | *(v0.2)* এই page-এর বাম পাশের menu (একই owner-এর menu)। Null = parent page-এরটি, তাও না থাকলে owner-এর `sidebar` location-এর menu |
+| quick_links | JSON | N | | *(v0.3)* sidebar menu-র নিচে "Quick Links" — `[{label: {en, bn}, url}]` (LinkListField, `link_list()`); শুধু with-sidebar template |
 | published_at, expires_at | TIMESTAMP | N | | |
 | sort_order | INT UNSIGNED | | 0 | |
 | ⚙ | | | | |

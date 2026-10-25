@@ -58,6 +58,7 @@ class S08Admission extends Step
                 $this->oldAddress($old, $new);
             }
         }
+        $this->landingPage();
 
         if (! Schema::connection('legacy')->hasTable('admission_notices')) {
             $this->report->review('No admission tables in the legacy database: nothing to migrate.');
@@ -70,6 +71,60 @@ class S08Admission extends Step
         $this->contacts();
         $this->results();
         $this->subscribers();
+    }
+
+    /** DIU's /admission (DIUFronend admission/layout, routes): its line, "Browse by Section", Quick Links, blocks in its order */
+    public const LANDING = [
+        'excerpt' => 'Browse 51 undergraduate and graduate programs across six DIU faculties—complete with admissions requirements, scholarship and financial-aid details, plus executive certificates and online courses for lifelong learners.',
+        'sections' => [
+            ['Admission Information', '/admission', false],
+            ['Admission Schedule', '/article/admission-test-schedule', false],
+            ['Admission Eligibility', '/programs', false],
+            ['International Student Admission', 'https://daffodilvarsity.edu.bd/photos/international/Booklet-for-Int-Students.pdf', true],
+            ['Tuition Fees', '/tuition-fees', true],
+            ['Campus Life & Institutes', '/campus-life', true],
+            ['Guideline for Guardian', '/article/guidelines-for-guardians', true],
+        ],
+        'quick_links' => [
+            ['Waiver Calculator', '/waiver-calculator'],
+            ['Transfer Credits', '/article/credit-transfer'],
+            ['Waiver & Scholarship', '/scholarships'],
+            ['Photo Frame', 'https://photoframe.daffodilvarsity.edu.bd/admission-photo-frame'],
+        ],
+        'order' => ['admission-apply', 'admission-circulars', 'admission-subscribe', 'admission-highlights', 'admission-steps', 'admission-contacts', 'admission-result-lookup'],
+    ];
+
+    /** The install's /admission page as DIU's: only what is still empty or as installed (an editor's changes stay). */
+    protected function landingPage(): void
+    {
+        $page = 'Modules\\Page\\Models\\Page';
+        if (! class_exists($page) || ($landing = $page::query()->ownedBy('site:0')->whereNull('parent_id')->get()->first(fn ($p): bool => $p->url() === '/admission')) === null) {
+            return;
+        }
+
+        if (blank($landing->getTranslation('excerpt', 'en', false))) {
+            $landing->setTranslation('excerpt', 'en', self::LANDING['excerpt']);
+        }
+        if (blank($landing->quick_links)) {
+            $landing->quick_links = array_map(fn (array $l): array => ['label' => ['en' => $l[0]], 'url' => $l[1]], self::LANDING['quick_links']);
+        }
+
+        // blocks in DIU's order; the Apply block opens with DIU's heading
+        $blocks = collect((array) $landing->getTranslation('content', 'en', false));
+        $order = array_flip(self::LANDING['order']);
+        $blocks = $blocks->sortBy(fn (array $b): int => $order[$b['type'] ?? ''] ?? 99)->values()
+            ->map(fn (array $b): array => ($b['type'] ?? '') === 'admission-apply' && blank($b['data']['heading'] ?? null)
+                ? ['type' => $b['type'], 'data' => [...(array) $b['data'], 'heading' => 'Admission Information']] : $b);
+        $landing->setTranslation('content', 'en', $blocks->all());
+        $landing->save();
+
+        $editor = 'Modules\\Menu\\Support\\MenuEditor';
+        $menu = $landing->sidebar_menu_id ? 'Modules\\Menu\\Models\\Menu'::query()->find($landing->sidebar_menu_id) : null;
+        if (class_exists($editor) && $menu && ! $menu->items()->exists()) {
+            app($editor)->save($menu, array_map(fn (array $s): array => [
+                'type' => 'url', 'url' => $s[1], 'title' => ['en' => $s[0]], 'open_in_new_tab' => $s[2], 'is_active' => true, 'children' => [],
+            ], self::LANDING['sections']));
+        }
     }
 
     protected function circulars(): void

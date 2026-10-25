@@ -112,6 +112,10 @@
   Then shorter (owner): one card with three numbered steps, a program search grouped by faculty, one-line
   waiver categories (first 6, "Show all") with their own description, Golden GPA only at GPA 5, gender buttons,
   an empty "Your fee estimate" card until Calculate, phones scrolled to the result.
+- 4.7b-1: DIU admission — page blocks each in `partials/page/block` (page text in DIU's article look, a module's
+  block in the theme's), `partials/page/blocks` for templates; the with-sidebar template as DIU's /admission (excerpt
+  in the hero, `partials/menus/browse` "Browse by Section (NN)", Quick Links); `modules/admission/blocks/*` (notice
+  card, links, outline buttons, steps, contacts) and `modules/admission/livewire/subscribe-form` (NotificationForm).
 
 ## 1.0.0 — 2026-10-09
 

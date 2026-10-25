@@ -48,22 +48,28 @@ class PageBlocks
         return RichEditor::make($name)->fileAttachments(false);
     }
 
+    /** The theme's wrapper around each block, when it has one (e.g. page text in its own styles, module blocks in the theme's) */
+    public const WRAPPER = 'theme::partials.page.block';
+
     /**
      * The blocks of one language as website HTML: each block's view (theme override
-     * first); a block whose module is off is skipped.
+     * first), inside the theme's block wrapper when there is one ($type, $core, $html);
+     * a block whose module is off is skipped.
      *
      * @param  list<array{type: string, data: array}>  $blocks
      */
     public static function render(array $blocks, string $locale): HtmlString
     {
         $catalogue = static::all();
+        $wrapper = view()->exists(self::WRAPPER);
         $html = '';
 
         foreach ($blocks as $block) {
             $class = $catalogue[$block['type'] ?? ''] ?? null;
 
             if ($class && view()->exists($class::view())) {
-                $html .= view($class::view(), ['data' => (array) ($block['data'] ?? []), 'locale' => $locale])->render();
+                $one = view($class::view(), ['data' => (array) ($block['data'] ?? []), 'locale' => $locale])->render();
+                $html .= $wrapper ? view(self::WRAPPER, ['type' => $class::name(), 'core' => in_array($class, self::CORE, true), 'html' => new HtmlString($one)])->render() : $one;
             }
         }
 

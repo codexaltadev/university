@@ -42,7 +42,7 @@ page blocks for the `/admission` page and any other page. Optional: Program (res
 | `result` | `$intro` |
 | `subscription` | `$message` |
 | `partials.circular-card`, `partials.dates` | `$circular` |
-| `blocks.*` | `$data`, `$locale` |
+| `blocks.*` | `$data`, `$locale`, `$admission` (Support\AdmissionBlocks: circulars, links, highlights, steps, contacts) |
 | `sections.going-on` | `$items`, `$section`, `$settings` |
 | `livewire.result-lookup` | `wire:model` `serial`, `website` (trap); `wire:submit` `lookup`; `$answer` (status, name, label, message, batch) |
-| `livewire.subscribe-form` | `wire:model` `channel`, `contact`, `website` (trap); `wire:submit` `subscribe`; `$done` |
+| `livewire.subscribe-form` | `wire:model` `channel`, `contact`, `website` (trap); `wire:submit` `subscribe`; `$done`, `$channels`, `$whatsappGroup` |

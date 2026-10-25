@@ -32,6 +32,8 @@ use Modules\Admission\Models\Circular;
 use Modules\Admission\Models\ResultBatch;
 use Modules\Admission\Notifications\ConfirmSubscription;
 use Modules\Admission\Support\ResultImporter;
+use Modules\Menu\Models\Menu;
+use Modules\Menu\Support\MenuEditor;
 use Modules\Menu\Support\MenuLinks;
 use Modules\Page\Models\Page;
 use Platform\Assignments\AssignmentEngine;
@@ -195,6 +197,18 @@ it('builds the /admission page with the module blocks and a sidebar menu on inst
         ->assertSee('https://admission.example.edu/', false)
         ->assertDontSee('Summer 2026');   // closed: not in "running only"
     $this->get('/admission/result')->assertOk()->assertSee('Admission Test Result');
+
+    // The default theme: DIU's /admission — "Browse by Section" from the sidebar menu, the page's Quick Links, the blocks in
+    // the theme's look (not inside the page-text wrapper), the circulars as DIU's notice card
+    app(MenuEditor::class)->save(Menu::query()->findOrFail($page->sidebar_menu_id), [
+        ['type' => 'url', 'url' => '/admission', 'title' => ['en' => 'Admission Information'], 'is_active' => true, 'children' => []],
+        ['type' => 'url', 'url' => '/tuition-fees', 'title' => ['en' => 'Tuition Fees'], 'open_in_new_tab' => true, 'is_active' => true, 'children' => []],
+    ]);
+    $page->update(['excerpt' => ['en' => 'Browse 51 programs.'], 'quick_links' => [['label' => ['en' => 'Waiver Calculator'], 'url' => '/waiver-calculator']]]);
+    $this->get('/admission')->assertOk()
+        ->assertSeeInOrder(['Browse 51 programs.', 'Browse by Section (02)', 'Admission Information', 'Tuition Fees', 'Quick Links', 'Waiver Calculator', 'List of Admission Announce Notices', 'Fall 2026 (Tri Semester)', 'Last day to apply'])
+        ->assertSee('aria-current="page"', false)
+        ->assertDontSee('<diu-rich-html', false);
 });
 
 it('offers its pages to menus, keeps them from child pages and lists circulars in search and the sitemap (FR-ADM-16)', function () {

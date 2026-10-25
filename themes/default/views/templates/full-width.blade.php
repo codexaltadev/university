@@ -2,6 +2,6 @@
 <x-theme::layout :title="$page->title">
     @include('theme::partials.page.hero', ['page' => $page])
     <article class="page--full-width py-8">
-        @include('theme::partials.page.body')
+        @include('theme::partials.page.blocks')
     </article>
 </x-theme::layout>

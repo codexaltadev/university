@@ -116,6 +116,8 @@ About, Message from Head, Lab Facilities-এর মতো স্থায়ী 
 |---|---|
 | Title * | — |
 | **Template** | Default, Full width, With sidebar, Landing |
+| Excerpt | With sidebar-এ উপরের ছবির শিরোনামের নিচে লাইন হিসেবেও দেখায় (যেমন `/admission`) |
+| Sidebar menu, **Quick Links** | শুধু With sidebar: বাম পাশে "Browse by Section" — একটি free menu (Menus-এ তৈরি); তার নিচে Quick Links — নাম ও link-এর তালিকা (যেমন Waiver Calculator, Transfer Credits) |
 | Content blocks | **+ Add block** → Text, Image, Gallery, Video, File list, Accordion, Contact form, People list, Call-to-action, **HTML (যেমন লেখা)** … টেনে ক্রম বদলানো যায়। HTML block-এ class সহ HTML (table, card, accordion) রাখা যায় — পুরনো site থেকে আসা page-গুলো এতেই আছে; default theme এগুলো DIU-র মতো Bootstrap 5 দিয়ে দেখায়, script ও frame বাদ যায় |
 | Parent page | Page-এর ভেতরে page (যেমন About › History) |
 

@@ -92,6 +92,11 @@ return [
         'absent' => 'অনুপস্থিত',
     ],
 
+    'status' => ['active' => 'চলছে', 'upcoming' => 'আসছে', 'expired' => 'শেষ'],
+    'notices_title' => 'ভর্তির ঘোষণার তালিকা',
+    'notify' => 'সঙ্গে সঙ্গে খবর পেতে Email বা <strong>WhatsApp নম্বর</strong> দিন।',
+    'get_update' => 'Update পান',
+    'how_to_apply' => 'কীভাবে আবেদন করবেন',
     'channels' => ['email' => 'Email', 'whatsapp' => 'WhatsApp'],
 
     'import' => [

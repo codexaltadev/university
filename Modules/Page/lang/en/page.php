@@ -12,6 +12,7 @@ return [
     ],
     'sidebar_inherit' => 'Same as the parent page',
     'fields' => [
+        'quick_links' => 'Quick Links (under the sidebar menu)',
         'sidebar_menu' => 'Sidebar menu',
         'title' => 'Title',
         'excerpt' => 'Short description',
