@@ -28,6 +28,7 @@
         "custom_permissions": [],
         "provides": {
             "attachable": true,
+            "settings": true,
             "website_pages": true,
             "vocabularies": [
                 "partners.discount-category"

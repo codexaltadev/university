@@ -15,8 +15,9 @@ use Platform\Taxonomy\Vocabularies;
  * S18P Partners (DB-06 v1.3 §8): `discount_partner_categories` → partners.discount-category (the
  * Font Awesome icon → the nearest Heroicon); `discount_partners` → type "discount" (value from its
  * HTML, details → terms); `mps` → by `mps_categories`: Members → membership, Partners → industry,
- * Supporting Unit / Accreditations → other; `is_international` kept; `lab_facility_id` → shown in
- * that lab (S18L) instead of the main site. Logos wait for S03.
+ * Supporting Unit → other, Accreditations → accreditation (owner 2026-10-25); `is_international` kept; `lab_facility_id` → shown in
+ * that lab (S18L) instead of the main site. Logos wait for S03 (group `partners`). DIU's /mps/{category},
+ * /discount-partners and /discount-partners/{id} → 301 to /partners?type= and /student-discounts?category=.
  */
 class S18Partners extends Step
 {
@@ -28,7 +29,8 @@ class S18Partners extends Step
         'handshake' => 'heroicon-o-hand-raised', 'ethernet' => 'heroicon-o-squares-2x2',
     ];
 
-    public const MPS_TYPES = [1 => 'membership', 2 => 'industry', 3 => 'other', 4 => 'other'];
+    /** mps_categories: Members, Partners, Supporting Unit, Accreditations (shown with memberships, tagged) */
+    public const MPS_TYPES = [1 => 'membership', 2 => 'industry', 3 => 'other', 4 => 'accreditation'];
 
     public static function key(): string
     {
@@ -56,9 +58,12 @@ class S18Partners extends Step
                 $icon = self::ICONS[Str::afterLast((string) $row->icon, 'fa-')] ?? null;
                 $terms[$row->id] = $this->upsert('discount_partner_categories', $row, Term::class, [
                     'vocabulary_id' => $vocabulary->id, 'name' => Normalizer::en($name), 'icon' => $icon, 'sort_order' => (int) $row->id, 'is_active' => (bool) $row->status,
-                ], after: fn (Term $t, bool $created) => $this->keepSlug($t, Str::slug((string) $name), $created),
-                    existing: $this->same(Term::class, ['vocabulary_id' => $vocabulary->id, 'name->en' => $name]));
+                ], after: function (Term $t, bool $created) use ($name, $row): void {
+                    $this->keepSlug($t, Str::slug((string) $name), $created);
+                    $this->oldAddress('/discount-partners/'.$row->id, '/'.Partner::DISCOUNT_PATH.'?category='.$t->slug());   // DIU's category page
+                }, existing: $this->same(Term::class, ['vocabulary_id' => $vocabulary->id, 'name->en' => $name]));
             }
+            $this->oldAddress('/discount-partners', '/'.Partner::DISCOUNT_PATH);
             foreach ($this->rows('discount_partners') as $row) {
                 $name = Normalizer::text($row->title);
                 $value = Normalizer::text(trim(preg_replace('/\s+/', ' ', strip_tags(str_replace(['<br>', '<br/>', '<br />', '</p>'], ' ', (string) $row->discount_value)))));
@@ -79,6 +84,11 @@ class S18Partners extends Step
         }
 
         if (Schema::connection('legacy')->hasTable('mps')) {
+            if (Schema::connection('legacy')->hasTable('mps_categories')) {
+                foreach ($this->rows('mps_categories') as $row) {   // DIU's /mps/members … → the type's tab
+                    $this->oldAddress('/mps/'.$row->category_slug, '/'.Partner::PATH.'?type='.(self::MPS_TYPES[(int) $row->id] ?? 'other'));
+                }
+            }
             foreach ($this->rows('mps', fn ($q) => $q->whereNull('deleted_at')) as $i => $row) {
                 $name = Normalizer::text($row->title);
                 $lab = $row->lab_facility_id && class_exists(Lab::class) ? $this->ids->record('lab_facilities', $row->lab_facility_id, Lab::class) : null;
@@ -96,7 +106,6 @@ class S18Partners extends Step
                 ], after: fn (Partner $p) => $engine->sync($p, $lab ? [$lab->getMorphClass().':'.$lab->getKey()] : [], mainSite: $lab === null, user: null),
                     existing: $this->same(Partner::class, ['partner_type' => $type, 'name->en' => $name]));   // a discount partner of the same name stays apart
             }
-            $this->report->review('mps "Accreditations" (4) became partners of type "other": move them to Accreditations if they are accreditations.');
         }
         $this->report->review('Partner logos wait for the files (S03).');
     }

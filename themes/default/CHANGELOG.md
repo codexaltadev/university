@@ -92,6 +92,9 @@
 - 4.6e-1: DIU CSR — `modules/csr/index` (featured activity, impact numbers, "Our Approach"
   picture cards, CSR Report; on dark navy "Where We Create Impact" with search, category and
   focus-area cards, "Stories of Change") and `modules/csr/show`.
+- 4.6e-2: DIU partners — `modules/partners/index` (DIU's /mps logo cards with type tabs) and
+  `modules/partners/discounts` (DIU's /discount-partners: categories sidebar, blue head with
+  search, table with "Show More", phone cards).
 
 ## 1.0.0 — 2026-10-09
 

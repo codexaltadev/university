@@ -5,6 +5,7 @@ namespace Modules\Partners;
 use Modules\Partners\Filament\PartnersPlugin;
 use Modules\Partners\Models\Partner;
 use Modules\Partners\Sections\PartnersSection;
+use Modules\Partners\Settings\PartnersSettings;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
 
@@ -22,5 +23,6 @@ final class PartnersExtension implements ModuleExtension
         $r->homepageSection(PartnersSection::class);                                                     // FR-PRT-05
         $r->websitePage('partners.index', label: 'partners::partners.plural', path: '/'.Partner::PATH);
         $r->websitePage('partners.discounts', label: 'partners::partners.discounts', path: '/'.Partner::DISCOUNT_PATH);
+        $r->settings(PartnersSettings::class);                                                           // the pages' titles, lines, Quick Links
     }
 }

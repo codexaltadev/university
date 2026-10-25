@@ -44,6 +44,15 @@ it('shows partners by type and the current student discounts by category (FR-PRT
         ->assertDontSee('Pizza Place')->assertSee(__('partners::partners.see_discounts'));
     $this->get('/partners?type=membership')->assertOk()->assertSee('IEEE')->assertDontSee('Acme Software');
     $this->get('/student-discounts')->assertOk()->assertSeeInOrder(['Food', 'Pizza Place', '20% off'])->assertDontSee('Old Cafe')->assertDontSee('Future Gym');
+
+    // The default theme (Phase 4.6e): DIU's /mps logo cards and /discount-partners categories, table and search
+    $this->get('/partners')->assertSee('partner-card', false)->assertSee('acme.example.com');
+    ($this->make)('AACSB', ['partner_type' => 'accreditation']);                                     // owner 2026-10-25: tagged beside the memberships
+    $this->get('/partners')->assertSeeInOrder(['Membership', 'Accreditation', 'Industry'])           // the tabs
+        ->assertSeeInOrder(['partner-tag', 'Membership', 'IEEE'], false)->assertSeeInOrder(['partner-tag', 'Accreditation', 'AACSB'], false);
+    $this->get('/partners?type=accreditation')->assertSee('AACSB')->assertDontSee('IEEE');
+    $this->get('/student-discounts')->assertSeeInOrder(['Discount Partners', 'Food (1)', '1 partner offering exclusive discounts', 'Partner Organization', 'Pizza Place', '20% off'], false);
+    $this->get('/student-discounts?category=food&q=burger')->assertOk()->assertDontSee('Pizza Place');
 });
 
 it('keeps a department\'s partners there, fills the carousel highlights first (FR-PRT-03/05) and checks the input', function () {

@@ -39,7 +39,8 @@ class Partner extends BaseModel implements Scopeable
 
     public const CATEGORY = 'partners.discount-category';
 
-    public const TYPES = ['industry', 'sponsor', 'membership', 'discount', 'other'];
+    /** accreditation (owner 2026-10-25): shown beside memberships, each card tagged with its type */
+    public const TYPES = ['membership', 'accreditation', 'industry', 'sponsor', 'discount', 'other'];
 
     public static string $titleAttribute = 'name';
 

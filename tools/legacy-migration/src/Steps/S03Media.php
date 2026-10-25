@@ -60,6 +60,7 @@ class S03Media extends Step
             ['csr', 'csrs', 'photo', 'Modules\\Csr\\Models\\Activity', 'image'],
             ['csr', 'csr_categories', 'image', null, null],   // only into the library: S18C gives each category its picture
         ],
+        'partners' => [['partners', 'mps', 'photo', 'Modules\\Partners\\Models\\Partner', 'logo']],
         'alumni' => [['alumni', 'alumnis', 'photo', 'Modules\\Alumni\\Models\\Alumnus', 'photo']],
         'administration' => [
             ['administration', 'admins', 'photo', 'Modules\\Administration\\Models\\Member', 'photo'],
