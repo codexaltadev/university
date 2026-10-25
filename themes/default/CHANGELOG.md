@@ -98,6 +98,9 @@
 - 4.6e-3: DIU rankings — `modules/accreditation/rankings` ("All Ranking": logo, title, rank,
   year, text; Quick Links); `modules/accreditation/index` and `show` (accreditations and
   memberships as cards tagged with their category).
+- 4.6e-4: DIU international — `modules/international/home` (numbers, featured partners),
+  `partners` (DIU's International Linkage: Browse by Section, country picker, university
+  cards, table layout), `conferences` and `conference` (picture cards); flag pictures.
 
 ## 1.0.0 — 2026-10-09
 

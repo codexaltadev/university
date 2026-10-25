@@ -98,6 +98,8 @@ class InternationalWebsite
             'partners' => $layout === 'countries' ? null : $query->paginate($layout === 'table' ? 50 : 48)->withQueryString(),
             'countries' => $countries,
             'perCountry' => $perCountry,
+            // every country's partners, unfiltered (a theme's country picker)
+            'countryCounts' => (clone $all)->reorder()->selectRaw('country_id, COUNT(*) AS total')->groupBy('country_id')->pluck('total', 'country_id'),
             'country' => $country,
             'type' => $type,
             'q' => $q,

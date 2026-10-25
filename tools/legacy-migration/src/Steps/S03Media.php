@@ -56,6 +56,11 @@ class S03Media extends Step
         'notices' => [['notice', 'notice_files', 'file_name', 'Modules\\Notice\\Models\\Notice', 'attachments', 'notice_id', 'notices', 'file_title']],
         'gallery' => [['gallery', 'gallery_photos', 'photo_name', null, null]],   // only into the library: S17G puts them in albums
         'visitors' => [['international', 'visitors', 'photo', 'Modules\\International\\Models\\Visitor', 'photo']],
+        'international' => [
+            ['international', 'countries', 'country_flag', 'Modules\\International\\Models\\Country', 'flag'],
+            ['international', 'international_linkages', 'university_logo', 'Modules\\International\\Models\\Institution', 'logo'],
+            ['international', 'international_conferences', 'conference_image', 'Modules\\International\\Models\\Conference', 'image'],
+        ],
         'csr' => [
             ['csr', 'csrs', 'photo', 'Modules\\Csr\\Models\\Activity', 'image'],
             ['csr', 'csr_categories', 'image', null, null],   // only into the library: S18C gives each category its picture

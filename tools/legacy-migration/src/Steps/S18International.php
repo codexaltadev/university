@@ -11,6 +11,7 @@ use Modules\International\Models\Conference;
 use Modules\International\Models\Country;
 use Modules\International\Models\Institution;
 use Modules\International\Models\Visitor;
+use Modules\International\Support\InternationalWebsite;
 use Platform\Relations\RelationEngine;
 use Platform\Taxonomy\Term;
 use Platform\Taxonomy\Vocabularies;
@@ -92,6 +93,8 @@ class S18International extends Step
                 existing: $this->same(Institution::class, ['country_id' => $country->id, 'name->en' => $name]));
         }
         $this->report->review('Partner institutions: the old list had no agreement kind, dates or MoU — all are "other"; set them over time (or import a sheet).');
+        $this->oldAddress('/international-linkage', '/'.InternationalWebsite::ROOT.'/partners');   // DIU's linkage page
+        $this->oldAddress('/featured-partner', '/'.InternationalWebsite::ROOT);                    // the highlighted partners are on /international
 
         $vocabulary = app(Vocabularies::class)->find(Conference::CATEGORY);
         $terms = [];
@@ -101,7 +104,11 @@ class S18International extends Step
                 'vocabulary_id' => $vocabulary->id, 'name' => Normalizer::en($name), 'sort_order' => (int) $row->id, 'is_active' => (bool) $row->publication_status,
             ], after: fn (Term $t, bool $created) => $this->keepSlug($t, $row->slug, $created),
                 existing: $this->same(Term::class, ['vocabulary_id' => $vocabulary->id, 'name->en' => $name]));
+            if (filled($row->slug)) {
+                $this->oldAddress('/conferences/'.$row->slug, '/'.Conference::PATH);   // DIU's /conferences/{category}
+            }
         }
+        $categorySlugs = $this->legacy()->table('international_conference_categories')->pluck('slug', 'id');
         foreach ($this->rows('international_conferences', fn ($q) => $q->whereNull('deleted_at')) as $row) {
             $title = (string) Normalizer::text($row->conference_title);
             $year = preg_match('/\b(19|20)\d{2}\b/', $title, $m) ? (int) $m[0] : null;
@@ -110,11 +117,14 @@ class S18International extends Step
                 'body' => Normalizer::en(Normalizer::html($row->conference_detail)),
                 'starts_on' => $year ? "{$year}-01-01" : substr((string) $row->created_at, 0, 10),
                 'is_active' => (bool) $row->publication_status,
-            ], after: function (Conference $c, bool $created) use ($engine, $terms, $row): void {
+            ], after: function (Conference $c, bool $created) use ($engine, $terms, $row, $categorySlugs): void {
                 $this->keepSlug($c, preg_match('/^\d+$/', (string) $row->slug) ? null : $row->slug, $created);
                 $term = $terms[(int) $row->international_conference_category_id] ?? null;
                 $c->syncTerms(Conference::CATEGORY, $term ? [$term->id] : []);
                 $engine->sync($c, [], mainSite: true, user: null);
+                if ($category = $categorySlugs[(int) $row->international_conference_category_id] ?? null) {
+                    $this->oldAddress('/conferences/'.$category.'/'.$row->id, $c);   // DIU's conference page
+                }
             }, existing: $this->same(Conference::class, ['title->en' => $title]));
         }
         $this->report->review('Conferences: the old system had no dates — the year in the title (or the day entered) was used; set the real dates and venue.');
