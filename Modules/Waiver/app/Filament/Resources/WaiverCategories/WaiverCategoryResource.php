@@ -63,6 +63,8 @@ class WaiverCategoryResource extends Resource
         return $schema->columns(2)->components([
             TranslatableTabs::make()->schema(fn (string $locale, bool $isDefault): array => [
                 TextInput::make("name.{$locale}")->label(__('waiver::waiver.fields.name'))->required($isDefault)->maxLength(255),
+                TextInput::make("description.{$locale}")->label(__('waiver::waiver.fields.description'))->maxLength(120)
+                    ->helperText(__('waiver::waiver.help.description')),
             ]),
             Select::make('level_term_id')->label(__('waiver::waiver.fields.level'))->required()->live()
                 ->options(fn (): array => app(Vocabularies::class)->options('program.level')),

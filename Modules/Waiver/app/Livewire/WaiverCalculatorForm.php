@@ -21,7 +21,7 @@ use Platform\Taxonomy\Term;
  * programs' tuitions, the level's waiver categories and the boards its rules use;
  * the results asked for follow the rules too (SSC / HSC GPA or undergraduate CGPA;
  * a diploma category asks the Diploma CGPA in place of HSC). Nothing is stored (BRL-FEE-03).
- * The view is theme-overridable: modules/fee/livewire/waiver-calculator.
+ * The view is theme-overridable: modules/waiver/livewire/waiver-calculator (with `$calc`, CalculatorForm).
  */
 class WaiverCalculatorForm extends Component
 {
@@ -114,6 +114,13 @@ class WaiverCalculatorForm extends Component
             'tuition_id' => $result->tuition?->id, 'rule_id' => $result->rule?->id, 'min' => $result->min, 'max' => $result->max];
     }
 
+    /** DIU's "Reset": the choices and the answer go, the fee category and level stay. */
+    public function clear(): void
+    {
+        $this->reset(['tuitionId', 'waiverCategoryId', 'boardId', 'gender', 'ssc', 'sscGolden', 'hsc', 'hscGolden', 'cgpa', 'answer']);
+        $this->resetValidation();
+    }
+
     public function render(): View
     {
         $tuition = $this->answer ? Tuition::query()->with(['program', 'category'])->find($this->answer['tuition_id']) : null;
@@ -130,6 +137,12 @@ class WaiverCalculatorForm extends Component
             'tuition' => $tuition,
             'rule' => $this->answer ? WaiverRule::query()->find($this->answer['rule_id']) : null,
             'disclaimer' => $this->disclaimer(),
+            'feeCategoryId' => $this->feeCategoryId,
+            'levelId' => $this->levelId,
+            'tuitionId' => $this->tuitionId,
+            'waiverCategoryId' => $this->waiverCategoryId,
+            'ssc' => $this->ssc,
+            'hsc' => $this->hsc,
         ]);
     }
 
@@ -158,7 +171,7 @@ class WaiverCalculatorForm extends Component
 
         return Tuition::query()->visible()->where('fee_category_id', $this->feeCategoryId)
             ->whereHas('program', fn (Builder $p) => $p->where('level_term_id', $this->levelId))
-            ->with('program')->ordered()->get();
+            ->with('program.department.faculty')->ordered()->get();
     }
 
     /** @return Collection<int, WaiverCategory> */

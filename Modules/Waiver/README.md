@@ -23,12 +23,19 @@ the public calculator; scholarships follow (3.4c). Tuition fees are the Tuition 
   then on a tie the included category's rule, then the older one; waiver = tuition × % (admission and other fees
   are not waived); ranges where credits vary; print; disclaimer from the settings; nothing is stored.
   **Same results as DIU's legacy calculator: golden master, 27,648 cases, 100%** (`tests/Golden`, Test Plan §7.1.1).
-* **Settings › Waiver Calculator** (`settings('waiver.waiver_mode')`, `settings('waiver.disclaimer')`): when several
-  rules match — the highest (DIU) or added up to the smallest cap; disclaimer.
+* **Settings › Waiver Calculator** (`settings('waiver.waiver_mode')`, `settings('waiver.disclaimer')` …): when several
+  rules match — the highest (DIU) or added up to the smallest cap; the page's title, line and picture on top
+  (default "Calculate Your Fees"); the "Important Notice" — title, the disclaimer as its text (empty = no notice),
+  button label and link (default `/scholarships`).
+* **For themes (T-1)**: `Support\CalculatorPage` (`$page` in `calculator.page`: title, text, image, breadcrumbs,
+  notice) and `Support\CalculatorForm` (`$calc` in `livewire.waiver-calculator`: programs, waiver category tiles with
+  DIU's icon by name and its description, how many show before "Show all", programs grouped by faculty with
+  search terms, the chosen program's duration / credits / total, golden GPA allowed, the result panel's figures,
+  why there is no waiver). The component's `clear()` is DIU's "Reset".
 
 ### Views (theme-overridable: `themes/{theme}/views/modules/waiver/…`)
 
 | View | Variables |
 |---|---|
-| `calculator.page` | — (holds `<livewire:waiver.calculator />`) |
-| `livewire.waiver-calculator` | see the component: lists, `$fields`, `$diploma`, `$answer`, `$tuition`, `$rule`, `$disclaimer` |
+| `calculator.page` | `$page` (CalculatorPage); holds `<livewire:waiver.calculator />` |
+| `livewire.waiver-calculator` | see the component: lists, `$fields`, `$diploma`, `$answer`, `$tuition`, `$rule`, `$disclaimer`, `$tuitionId`, `$waiverCategoryId`, `$ssc`, `$hsc`; `$calc` (CalculatorForm) |

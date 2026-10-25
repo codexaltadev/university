@@ -27,6 +27,7 @@ use Modules\Waiver\Livewire\WaiverCalculatorForm;
 use Modules\Waiver\Models\Board;
 use Modules\Waiver\Models\WaiverCategory;
 use Modules\Waiver\Models\WaiverRule;
+use Modules\Waiver\Support\CalculatorForm;
 use Modules\Waiver\Support\WaiverCalculator;
 use Modules\Waiver\Support\WaiverResult;
 use Platform\Modules\ModulePermissions;
@@ -196,7 +197,8 @@ it('creates a rule with ordered categories and genders, and tests rules on the a
 it('runs the calculator on /waiver-calculator from the data, storing nothing (FR-FEE-06/08, BRL-FEE-03)', function () {
     settings()->save('waiver', ['disclaimer' => ['en' => 'Figures are estimates; the Admission Office decides.']], translatable: ['disclaimer']);
 
-    $this->get('/waiver-calculator')->assertOk()->assertSee('Waiver Calculator')->assertSeeLivewire(WaiverCalculatorForm::class);
+    $this->get('/waiver-calculator')->assertOk()->assertSee('Waiver Calculator')->assertSeeLivewire(WaiverCalculatorForm::class)
+        ->assertSeeInOrder(['Calculate Your Fees', 'Important Notice', 'Figures are estimates; the Admission Office decides.', '/scholarships', 'View Details']);   // the default theme: DIU's hero and notice, from Settings
 
     $rows = DB::table('waiver_rules')->count();
     Livewire::test(WaiverCalculatorForm::class)
@@ -220,10 +222,14 @@ it('runs the calculator on /waiver-calculator from the data, storing nothing (FR
         ->assertSee('50%')
         ->assertSee('৳ 597,750')                                       // 952,500 − 50% of 709,500
         ->assertSee('৳ 61,750')
-        ->assertSee('Figures are estimates; the Admission Office decides.')
+        ->assertSeeInOrder(['Congratulations!', '50%', 'Fee Summary', 'Payable During Admission', 'After waiver Total Cost will be'])   // DIU's result panel
         ->set('hsc', '4.95')
         ->assertSet('hscGolden', false)                               // golden only at GPA 5
-        ->assertSet('answer', null);
+        ->assertSet('answer', null)
+        ->set('hsc', '5')->call('calculate')
+        ->call('clear')                                               // DIU's "Reset"
+        ->assertSet('answer', null)->assertSet('tuitionId', null)->assertSet('ssc', null)
+        ->assertSet('feeCategoryId', $this->local->id);
 
     expect(DB::table('waiver_rules')->count())->toBe($rows);
 
@@ -243,4 +249,24 @@ it('keeps the rules in Academic › Waiver Calculator, not in the Program Hub', 
 
     $this->get(ProgramResource::getUrl('view', ['record' => $this->bsc]))->assertOk()
         ->assertDontSee('waiver-rules', false);
+});
+
+it('gives each waiver category DIU\'s tile icon by its name, and no notice without a disclaimer', function () {
+    expect(CalculatorForm::icon('Result Based Waiver (SSC & HSC)'))->toBe('award')
+        ->and(CalculatorForm::icon('Sibling / Spouse'))->toBe('users')
+        ->and(CalculatorForm::icon('Female'))->toBe('star')
+        ->and(CalculatorForm::icon('Physically Challenged'))->toBe('shield')
+        ->and(CalculatorForm::icon('Tribal/Ethnic Group'))->toBe('globe')
+        ->and(CalculatorForm::icon('Daffodil International College'))->toBe('graduation-cap')
+        ->and(CalculatorForm::icon('Diploma Holders'))->toBe('book-open');
+
+    // The short form (owner 2026-10-25): three steps, a category's own description under its name, programs to search
+    $this->result->update(['description' => ['en' => 'By SSC and HSC GPA']]);
+    Livewire::test(WaiverCalculatorForm::class)
+        ->assertSeeInOrder(['Choose your program', 'Choose your waiver category', 'By SSC and HSC GPA', 'Your results', 'Your fee estimate'])
+        ->assertSee('B. Sc. in Software Engineering')
+        ->assertDontSee('Waiver category for');
+
+    settings()->save('waiver', ['disclaimer' => ['en' => '']], translatable: ['disclaimer']);
+    $this->get('/waiver-calculator')->assertOk()->assertDontSee('Important Notice');
 });

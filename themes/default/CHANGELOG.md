@@ -103,6 +103,15 @@
   cards, table layout), `conferences` and `conference` (picture cards); flag pictures.
 - 4.6e-5: facilities — `modules/facilities/index` (category pills, DIU's program-page facility
   picture cards in a grid) and `show`.
+- 4.7a: DIU's Waiver Calculator (/tuition-fee-calculator) — `modules/waiver/calculator/page` (hero
+  "Calculate Your Fees", Important Notice card with View Details) and `modules/waiver/livewire/waiver-calculator`
+  (Basic Information, waiver category tiles with icons and a check badge — a select on phones, Program & Details
+  with duration / credits / total, Academic Results with Golden GPA, Additional Information, "Calculate My Fees";
+  result panel: Congratulations!, the waiver %, Program, Fee Summary, Payable During Admission, total after
+  waiver, Print / Reset); icons award, star, shield, trending-up, check, zap, banknote, alert-circle, home.
+  Then shorter (owner): one card with three numbered steps, a program search grouped by faculty, one-line
+  waiver categories (first 6, "Show all") with their own description, Golden GPA only at GPA 5, gender buttons,
+  an empty "Your fee estimate" card until Calculate, phones scrolled to the result.
 
 ## 1.0.0 — 2026-10-09
 

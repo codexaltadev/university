@@ -52,6 +52,13 @@ class S08Admission extends Step
 
     protected function handle(): void
     {
+        // DIU's own addresses keep working (Site › Redirects), except where only the query differs
+        foreach (self::LINKS as $old => $new) {
+            if (parse_url($new, PHP_URL_PATH) !== $old) {
+                $this->oldAddress($old, $new);
+            }
+        }
+
         if (! Schema::connection('legacy')->hasTable('admission_notices')) {
             $this->report->review('No admission tables in the legacy database: nothing to migrate.');
 

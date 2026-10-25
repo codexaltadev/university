@@ -13,7 +13,7 @@ use Spatie\Translatable\HasTranslations;
  * A waiver category of one program level (FR-FEE-05): Result Based, Female, Sibling …
  * Choosing it also matches the rules of the categories it includes (DB-03 v1.1:
  * "Female" includes "Result Based"). A diploma category takes the Diploma CGPA (0–4)
- * in place of the HSC result.
+ * in place of the HSC result. Its description is the calculator's line under the name (v1.11).
  */
 class WaiverCategory extends BaseModel
 {
@@ -24,9 +24,9 @@ class WaiverCategory extends BaseModel
 
     protected $table = 'waiver_categories';
 
-    protected $fillable = ['level_term_id', 'name', 'uses_diploma_result', 'sort_order', 'is_active'];
+    protected $fillable = ['level_term_id', 'name', 'description', 'uses_diploma_result', 'sort_order', 'is_active'];
 
-    public array $translatable = ['name'];
+    public array $translatable = ['name', 'description'];
 
     protected function casts(): array
     {
