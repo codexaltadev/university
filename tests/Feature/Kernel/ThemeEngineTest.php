@@ -102,18 +102,18 @@ it('activates another theme, logs it and publishes its assets', function () {
 });
 
 it('draws module views from the active theme first, then the module (FR-THEME-10, FR-THEME-11)', function () {
-    campusTheme($this->runtime, files: ['views/modules/faq/index.blade.php' => 'THEME-OVERRIDE']);
+    campusTheme($this->runtime, files: ['views/modules/faq/blocks/faq.blade.php' => 'THEME-OVERRIDE']);
 
-    expect(view('faq::index')->getPath())->toStartWith(base_path('Modules/Faq'));
+    expect(view('faq::blocks.faq')->getPath())->toStartWith(base_path('Modules/Faq'));
 
     $this->themes->activate('campus');
     $this->themes->apply();
-    expect(view('faq::index')->getPath())->toStartWith($this->runtime.'/campus/views/modules/faq');
+    expect(view('faq::blocks.faq')->getPath())->toStartWith($this->runtime.'/campus/views/modules/faq');
 
     // Back to a theme without the override: the module's own view, content untouched
     $this->themes->activate('default');
     $this->themes->apply();
-    expect(view('faq::index')->getPath())->toStartWith(base_path('Modules/Faq'));
+    expect(view('faq::blocks.faq')->getPath())->toStartWith(base_path('Modules/Faq'));
 });
 
 it('turns design tokens into a hashed CSS file with the admin\'s colours (FR-THEME-04/07, AC-THEME-01)', function () {

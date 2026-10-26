@@ -33,8 +33,13 @@ class S17Faqs extends Step
         return ['faq'];
     }
 
+    /** DIU's "Scholarship & Waiver FAQ Center" (/waiver/faq) is the FAQ's own category here */
+    public const WAIVER_FAQ = '/faq?category=waiver-and-scholarship';
+
     protected function handle(): void
     {
+        $this->oldAddress('/waiver/faq', self::WAIVER_FAQ);
+
         if (! Schema::connection('legacy')->hasTable('faqs')) {
             $this->report->review('No faqs table in the legacy database: nothing to migrate.');
 

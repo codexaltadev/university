@@ -44,7 +44,14 @@ return [
     ],
 
     'settings' => [
+        'title' => 'Page-এর শিরোনাম',
+        'title_help' => 'শেষ শব্দটি রঙিন দেখায় (DIU: Frequently Asked Questions)।',
+        'text' => 'শিরোনামের নিচের লাইন',
         'per_page' => 'প্রতি page-এ প্রশ্ন',
         'show_helpful_buttons' => '"এটি কি কাজে লেগেছে?" দেখাবে',
+    ],
+    'page' => [
+        'categories' => 'Category',
+        'questions' => ':countটি প্রশ্ন',
     ],
 ];

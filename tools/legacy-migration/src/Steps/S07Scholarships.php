@@ -156,7 +156,7 @@ class S07Scholarships extends Step
         settings()->save('scholarship', array_filter([
             'side_links' => blank($now['side_links'] ?? null) ? $links([
                 ...array_map(fn (string $slug, string $name): array => [$name, '/article/'.$slug], array_keys(self::SIDE), self::SIDE),
-                ['Waiver and Scholarship FAQ', '/faq'],
+                ['Waiver and Scholarship FAQ', S17Faqs::WAIVER_FAQ],
             ]) : null,
             'quick_links' => ($now['quick_links'] ?? null) === $installed['quick_links'] ? $links(self::QUICK) : null,
         ], fn ($v) => $v !== null));

@@ -42,6 +42,7 @@ it('shows the main site\'s FAQs by category, with the category text and FAQPage 
 
     $this->get('/faq')->assertOk()
         ->assertSeeInOrder(['Admission', 'Questions before you apply.', 'How do I apply?', 'Exam', 'When is the exam?', 'Other questions', 'Where is the library?'])
+        ->assertSeeInOrder(['Frequently Asked', 'Questions', 'Find answers to common questions', 'Categories', 'All', '3', 'Admission', '1', 'Exam', '1', '1 question'])   // the default theme: DIU's /faq
         ->assertDontSee('Hidden one?')->assertDontSee('Not on the main site?')
         ->assertSee('"@type":"FAQPage"', false)
         ->assertSee('data-search=', false);

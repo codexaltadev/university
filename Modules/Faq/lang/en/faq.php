@@ -44,7 +44,14 @@ return [
     ],
 
     'settings' => [
+        'title' => 'Page title',
+        'title_help' => 'Its last word shows in colour (DIU: Frequently Asked Questions).',
+        'text' => 'Line under the title',
         'per_page' => 'Questions per page',
         'show_helpful_buttons' => 'Show "Was this helpful?"',
+    ],
+    'page' => [
+        'categories' => 'Categories',
+        'questions' => '{1} :count question|[2,*] :count questions',
     ],
 ];

@@ -2,6 +2,8 @@
 
 namespace Modules\Faq\Providers;
 
+use Illuminate\Support\Facades\View;
+use Modules\Faq\Support\FaqPage;
 use Modules\Faq\Support\FaqWebsite;
 use Platform\Context\SiteContext;
 use Platform\Modules\ModuleServiceProvider;
@@ -29,6 +31,8 @@ class FaqServiceProvider extends ModuleServiceProvider
     public function boot(): void
     {
         parent::boot();
+
+        View::composer('faq::index', fn ($view) => $view->with('page', new FaqPage($view->getData())));   // for themes (T-1)
 
         // Website: /faq and /{entity}/faq (FR-FAQ-02/03)
         $this->app->make(Website::class)->handle(fn (string $rest, SiteContext $context, string $locale) => $this->app->make(FaqWebsite::class)->respond($rest, $context, $locale));

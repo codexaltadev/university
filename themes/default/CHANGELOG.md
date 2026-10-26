@@ -129,6 +129,8 @@
   ("Browse by Section", Quick Links, the texts in DIU's article look, folding scholarships by category).
 - 4.7e: DIU transport — `modules/transport/index` (Transport Pass, schedule card, stop search, Regular / Shuttle /
   Friday route cards with greyed past trips and the stops line, Transport Fees).
+- 4.7f: DIU FAQ — `modules/faq/index` (centred title, search, categories with counts, question cards opening
+  with + / −).
 
 ## 1.0.0 — 2026-10-09
 
