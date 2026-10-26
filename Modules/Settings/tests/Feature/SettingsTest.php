@@ -159,6 +159,12 @@ it('shows visitors the maintenance message, signed-in users the website (FR-SET-
 
     $this->get('/')->assertStatus(503)->assertSee('Back at 10 pm');
     $this->get('/admin/login')->assertOk();
+
+    // How long and whom to write to, as DIU's maintenance page (the default theme) shows them
+    settings()->save('maintenance', ['duration' => ['en' => 'Back within a few hours'], 'help_email' => 'info@example.edu'], translatable: ['message', 'duration']);
+    $this->get('/')->assertStatus(503)
+        ->assertSeeInOrder(['Under Maintenance', 'Back at 10 pm', 'Expected Duration', 'Back within a few hours', 'Need Help?', 'info@example.edu'])
+        ->assertDontSee('site-header', false);                               // no menus while under maintenance
     $this->actingAs(makeUser())->get('/')->assertOk();
 });
 

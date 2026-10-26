@@ -5,13 +5,14 @@ namespace Modules\Settings\Groups;
 use App\Models\User;
 use BackedEnum;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Support\Icons\Heroicon;
 use Modules\Settings\Support\SettingsAccess;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Settings\ModuleSettings;
 
-/** FR-SET-08: visitors see a message; signed-in admins still see the website. */
+/** FR-SET-08: visitors see a message (and, Phase 4.7h, how long it lasts and whom to write to); signed-in admins still see the website. */
 class MaintenanceSettings extends ModuleSettings
 {
     public function group(): string
@@ -36,12 +37,12 @@ class MaintenanceSettings extends ModuleSettings
 
     public function translatable(): array
     {
-        return ['message'];
+        return ['message', 'duration'];
     }
 
     public function defaults(): array
     {
-        return ['enabled' => false];
+        return ['enabled' => false, 'duration' => null, 'help_email' => null];
     }
 
     public function canAccess(User $user): bool
@@ -57,7 +58,10 @@ class MaintenanceSettings extends ModuleSettings
             TranslatableTabs::make()->schema(fn (string $locale): array => [
                 Textarea::make("message.{$locale}")->label(__('settings::settings.fields.maintenance_message'))
                     ->placeholder(__('frontend.maintenance', locale: $locale))->rows(3)->maxLength(1000),
+                TextInput::make("duration.{$locale}")->label(__('settings::settings.fields.maintenance_duration'))
+                    ->placeholder(__('settings::settings.help.maintenance_duration', locale: $locale))->maxLength(150),
             ]),
+            TextInput::make('help_email')->label(__('settings::settings.fields.maintenance_help_email'))->email()->maxLength(191),
         ];
     }
 }

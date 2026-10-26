@@ -119,4 +119,13 @@ return [
             'credits' => ':value credits', 'semesters' => ':value Semester', 'duration' => ':value', 'total_fees' => ':value', 'next_start' => ':value',
         ],
     ],
+    'errors' => [
+        'not_found' => 'Page not found',
+        'not_found_text' => 'The page you are looking for may have moved or no longer exists. Search for it, or go back.',
+        'back' => 'Go Back',
+        'maintenance' => 'Under Maintenance',
+        'duration' => 'Expected Duration',
+        'help' => 'Need Help?',
+        'thanks' => 'Thank you for your patience and understanding',
+    ],
 ];

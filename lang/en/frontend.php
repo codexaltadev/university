@@ -22,5 +22,6 @@ return [
     'previous' => 'Previous',
     'next' => 'Next',
     'language' => 'Language',
+    'not_found' => 'The page you are looking for is not here.',
     'maintenance' => 'The website is being updated. Please check back soon.',
 ];

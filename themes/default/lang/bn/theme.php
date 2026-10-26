@@ -119,4 +119,13 @@ return [
             'credits' => ':value ক্রেডিট', 'semesters' => ':value সেমিস্টার', 'duration' => ':value', 'total_fees' => ':value', 'next_start' => ':value',
         ],
     ],
+    'errors' => [
+        'not_found' => 'Page পাওয়া যায়নি',
+        'not_found_text' => 'যে page খুঁজছেন তা সরে গেছে বা আর নেই। খুঁজে দেখুন, অথবা আগের page-এ ফিরে যান।',
+        'back' => 'ফিরে যান',
+        'maintenance' => 'রক্ষণাবেক্ষণ চলছে',
+        'duration' => 'কতক্ষণ লাগবে',
+        'help' => 'সাহায্য দরকার?',
+        'thanks' => 'ধৈর্য ও সহযোগিতার জন্য ধন্যবাদ',
+    ],
 ];

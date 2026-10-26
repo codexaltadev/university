@@ -22,6 +22,8 @@ class SiteMaintenance
         return response()->view('settings::maintenance', [
             'message' => settings('maintenance.message') ?: __('frontend.maintenance'),
             'siteName' => settings('general.site_name'),
+            'duration' => filled($d = settings('maintenance.duration')) ? (string) $d : null,
+            'email' => filled($e = settings('maintenance.help_email')) ? (string) $e : null,
         ], 503)->header('Retry-After', '3600');
     }
 

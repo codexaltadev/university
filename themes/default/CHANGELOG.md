@@ -134,6 +134,8 @@
 - 4.7g: search — `search` (DIU-look results page with shortcuts, module tabs, result cards, popular searches) and
   `livewire/instant-search` (excerpts, keyboard, recent and popular searches, shortcuts).
 - 4.7g-2: newsletter — `modules/newsletter/index` (sign-up card, past issues) and `issue`.
+- 4.7h: `errors/404` (Page not found with search, Go Back, Home), `modules/settings/maintenance` (DIU's Under
+  Maintenance with duration and help cards), component `bare` (a page without menus).
 
 ## 1.0.0 — 2026-10-09
 

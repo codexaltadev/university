@@ -16,5 +16,6 @@ return [
     'previous' => 'আগের',
     'next' => 'পরের',
     'language' => 'ভাষা',
+    'not_found' => 'আপনি যে page খুঁজছেন তা এখানে নেই।',
     'maintenance' => 'Website হালনাগাদ হচ্ছে। একটু পরে আবার দেখুন।',
 ];

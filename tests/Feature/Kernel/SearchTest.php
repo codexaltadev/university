@@ -178,3 +178,8 @@ it('tells the modules what visitors searched on the search page, not while they 
     Event::assertDispatchedTimes(SearchPerformed::class, 1);
     Event::assertDispatched(SearchPerformed::class, fn (SearchPerformed $e): bool => $e->query === 'Cyber Security' && $e->total === 2);
 });
+
+it('answers a missing page with the theme\'s "Page not found": the menus, a search and the way home (Phase 4.7h)', function () {
+    $this->get('/no-such-page-here')->assertNotFound()
+        ->assertSeeInOrder(['site-header', '404', 'Page not found', 'name="q"', 'Go Back', 'Home'], false);
+});

@@ -1,3 +1,4 @@
+{{-- The maintenance page (FR-SET-08), themes may override it (modules/settings/maintenance). Contract: $message, $siteName, $duration, $email (both may be null) --}}
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -17,6 +18,8 @@
     <main>
         <h1>{{ $siteName }}</h1>
         <p>{{ $message }}</p>
+        @if ($duration ?? null)<p>{{ $duration }}</p>@endif
+        @if ($email ?? null)<p><a href="mailto:{{ $email }}">{{ $email }}</a></p>@endif
     </main>
 </body>
 </html>

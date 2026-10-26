@@ -140,7 +140,7 @@ Department / Office-এর content শুধু তাদের microsite-এ �
 | **Fees & Waiver** | একাধিক waiver rule মিললে নিয়ম (সর্বোচ্চ / সীমা পর্যন্ত যোগ), calculator-এর disclaimer |
 | **Notices** | "New" চিহ্ন কত দিন |
 | **Inquiries** | Inquiry type ও কোন type কোথায় যাবে, captcha চালু কিনা, কত দিন পর মুছবে |
-| **Maintenance** | Website সাময়িক বন্ধের বার্তা |
+| **Maintenance** | Website সাময়িক বন্ধের বার্তা, কতক্ষণ চলবে ও সাহায্যের email (visitor "Under Maintenance" page দেখেন; login করা user website-ই দেখেন) |
 | অন্যান্য module | চালু module-এর নিজস্ব tab (Transport, FAQ …) |
 
 **Transport** (বাম menu-র **Transport**):
