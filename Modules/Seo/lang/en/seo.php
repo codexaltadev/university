@@ -77,4 +77,19 @@ return [
     'notifications' => [
         'redirect_created' => 'Redirect created.',
     ],
+    'search' => [
+        'label' => 'search term',
+        'plural' => 'Search terms',
+        'term' => 'Searched for',
+        'results' => 'Results',
+        'last_searched_at' => 'Last searched',
+        'found' => 'Found something',
+        'open' => 'Search it',
+        'settings' => 'Search',
+        'synonyms' => 'Synonyms',
+        'synonyms_help' => 'One rule a line: word = what it also means. "cse = computer science and engineering" finds the CSE pages for "cse". Several words or meanings: separate them with commas.',
+        'show_popular' => 'Show "Popular searches"',
+        'popular' => 'Popular searches',
+        'popular_help' => 'Comma-separated, e.g. Admission, Tuition fees, Waiver. Empty: the most searched terms that found something in the last 90 days.',
+    ],
 ];

@@ -15,8 +15,10 @@ use Modules\Seo\Filament\Resources\NotFoundLogs\Pages\ListNotFoundLogs;
 use Modules\Seo\Filament\Resources\Redirects\Pages\CreateRedirect;
 use Modules\Seo\Filament\Resources\Redirects\Pages\ListRedirects;
 use Modules\Seo\Filament\Resources\Redirects\RedirectResource;
+use Modules\Seo\Filament\Resources\SearchTerms\Pages\ListSearchTerms;
 use Modules\Seo\Models\NotFoundLog;
 use Modules\Seo\Models\Redirect;
+use Modules\Seo\Models\SearchTerm;
 use Modules\Seo\Support\Redirects;
 use Platform\Modules\ModulePermissions;
 
@@ -143,4 +145,31 @@ it('lets only permitted users manage redirects', function () {
     $this->actingAs(makeUser(['ViewAny:Redirect']));
     $this->get(RedirectResource::getUrl())->assertOk();
     $this->get(RedirectResource::getUrl('create'))->assertForbidden();
+});
+
+it('counts what visitors search and what they miss, offers the popular searches, and lists them on screen (Phase 4.7g)', function () {
+    $this->get('/search?q=Admission')->assertOk();
+    $this->get('/search?q=admission%20%20')->assertOk();                        // the same search, whatever the case and spaces
+    $this->get('/search?q=Hostel+rent')->assertOk();                        // nothing on the site: a miss
+
+    expect(SearchTerm::query()->orderBy('term')->get(['term', 'hits', 'last_results'])->toArray())->toBe([
+        ['term' => 'admission', 'hits' => 2, 'last_results' => 1],
+        ['term' => 'hostel rent', 'hits' => 1, 'last_results' => 0],
+    ]);
+
+    // Popular searches: the ones in Settings › Search, else the most searched that found something
+    $this->get('/search')->assertOk()->assertSeeInOrder(['Popular searches', 'admission'])->assertDontSee('hostel rent');
+    settings()->save('search', ['popular' => 'Tuition fees, Waiver']);
+    $this->get('/search')->assertOk()->assertSeeInOrder(['Popular searches', 'Tuition fees', 'Waiver']);
+    settings()->save('search', ['show_popular' => false]);
+    $this->get('/search')->assertOk()->assertDontSee('Popular searches');
+
+    $this->actingAs(superAdmin());
+    Livewire::test(ListSearchTerms::class)->assertCanSeeTableRecords(SearchTerm::all())
+        ->filterTable('found', false)->assertCanSeeTableRecords(SearchTerm::query()->where('term', 'hostel rent')->get())
+        ->assertCanNotSeeTableRecords(SearchTerm::query()->where('term', 'admission')->get());
+
+    // Not searched for 180 days: gone
+    SearchTerm::query()->where('term', 'hostel rent')->update(['last_searched_at' => now()->subDays(181)]);
+    expect(SearchTerm::clean())->toBe(1);
 });

@@ -131,6 +131,8 @@
   Friday route cards with greyed past trips and the stops line, Transport Fees).
 - 4.7f: DIU FAQ — `modules/faq/index` (centred title, search, categories with counts, question cards opening
   with + / −).
+- 4.7g: search — `search` (DIU-look results page with shortcuts, module tabs, result cards, popular searches) and
+  `livewire/instant-search` (excerpts, keyboard, recent and popular searches, shortcuts).
 
 ## 1.0.0 — 2026-10-09
 

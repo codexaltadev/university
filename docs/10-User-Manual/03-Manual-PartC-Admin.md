@@ -198,6 +198,7 @@ Website: `/transport` (stop দিয়ে খোঁজা সহ); homepage-�
 | **Redirects** | পুরনো ঠিকানা → নতুন ঠিকানা (301 স্থায়ী / 302 সাময়িক); কতবার ব্যবহৃত হয়েছে |
 | **Import** | অনেক redirect একসাথে CSV দিয়ে |
 | **404 log** | Visitor কোন ঠিকানায় গিয়ে "Page not found" পেয়েছেন, কতবার — পাশে **Create redirect** |
+| **Search terms** | Website-এর search-এ visitor কী খুঁজেছেন, কতবার, শেষবার কত ফল এসেছে; **"Found something" = No** দিলে যা খুঁজে পাওয়া যায়নি — সেই লেখা তৈরি করুন, বা **Settings › Search**-এ synonym দিন (যেমন `cse = computer science and engineering`)। একই Settings-এ "Popular searches" (search window ও ফাঁকা search page-এ দেখায়) |
 
 **সাপ্তাহিক অভ্যাস:** 404 log-এর শীর্ষ ঠিকানাগুলোর redirect তৈরি করুন — বিশেষ করে go-live-এর প্রথম মাসে।
 

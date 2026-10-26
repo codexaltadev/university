@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-02 |
-| Version | 0.2 — 2026-10-11: free menu (`menu_menus.location` null), page-এর নিজের sidebar menu (`page_pages.sidebar_menu_id`), module landing page (§5.1, §8.1); v0.3 (2026-10-26, Phase 4.7b): `page_pages.quick_links` — sidebar-এর নিচে "Quick Links" (DIU-র /admission) |
+| Version | 0.2 — 2026-10-11: free menu (`menu_menus.location` null), page-এর নিজের sidebar menu (`page_pages.sidebar_menu_id`), module landing page (§5.1, §8.1); v0.3 (2026-10-26, Phase 4.7b): `page_pages.quick_links` — sidebar-এর নিচে "Quick Links" (DIU-র /admission); v0.4 (2026-10-26, Phase 4.7g): `seo_search_terms` — website-এ কী খোঁজা হয় ও কী পাওয়া যায় না (§9.4) |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md) (conventions), SRS Part 1, SAD Part A / B |
@@ -356,6 +356,19 @@ Loop প্রতিরোধ (FR-SEO-09) application-এ save-এর সময�
 
 > L শ্রেণী হলেও hit-এর সময় `hits` update হয় (aggregate log)। পুরনো resolved row ৯০ দিন পর মুছে যায়।
 
+### 9.4 `seo_search_terms` — L *(v0.4)*
+
+| Column | Type | Key / N | বর্ণনা |
+|---|---|---|---|
+| id | BIGINT UNSIGNED | PK | |
+| term | VARCHAR(191) | | ছোট হাতের, ফাঁকা কমানো খোঁজা |
+| term_hash | CHAR(64) | UQ | SHA-256 of term |
+| hits | INT UNSIGNED | | কতবার খোঁজা হয়েছে |
+| last_results | INT UNSIGNED | | শেষবার কত ফল (০ = পাওয়া যায়নি) |
+| first_searched_at, last_searched_at | TIMESTAMP | IX (last_searched_at) | |
+
+> Search page-এর প্রথম পাতায় খোঁজা হলে (kernel event `SearchPerformed`) লেখা হয়, type করার সময় নয়। ১৮০ দিন খোঁজা না হলে মুছে যায়। "Popular searches" = Settings › Search-এ দেওয়াগুলো, নইলে গত ৯০ দিনে সবচেয়ে বেশি খোঁজা যেগুলোয় ফল ছিল।
+
 ---
 
 ## 10. C-17 Global Search — `core_search_index` — S (P-16)
@@ -582,6 +595,7 @@ Sanctum default (`tokenable` morph, `abilities`, `last_used_at`, `expires_at`) �
 | 14 | core_seo_meta | C | C-12 | P-14 |
 | 15 | seo_redirects | B | C-12 | P-15 |
 | 16 | seo_not_found_logs | L | C-12 | — |
+| 16a | seo_search_terms *(v0.4)* | L | C-12 | — |
 | 17 | core_search_index | S | C-17 | P-16 |
 | 18 | core_stat_sets | B | C-20 | P-07 |
 | 19 | core_stat_items | B | C-20 | — |

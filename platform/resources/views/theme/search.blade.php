@@ -1,7 +1,8 @@
 {{--
     Search page (FR-SRCH-02/06). Themes may override it (views/search.blade.php).
     Contract: $results = [query, total, groups: slug => [label, count], items: paginator of
-    [title, excerpt (highlighted HTML), url, module, label]], $module, $scope, $scopeLabel.
+    [title, excerpt (highlighted HTML), url, module, label]], $module, $scope, $scopeLabel,
+    $shortcuts (the modules' pages the query names: list of [label, url]).
 --}}
 <x-theme::layout :title="__('platform::search.title')">
     <div class="container search-page" style="padding-block:var(--space-10, 40px)">
@@ -27,6 +28,14 @@
 
         @if ($results['query'] !== '')
             <p aria-live="polite" class="search-page__count">{{ trans_choice('platform::search.count', $results['total'], ['count' => $results['total'], 'query' => $results['query']]) }}</p>
+        @endif
+
+        @if (($shortcuts ?? []) !== [])
+            <ul class="search-page__shortcuts" style="list-style:none;padding:0;display:flex;flex-wrap:wrap;gap:var(--space-2, 8px)">
+                @foreach ($shortcuts as $link)
+                    <li><a href="{{ $link['url'] }}" class="btn btn--primary">{{ $link['label'] }}</a></li>
+                @endforeach
+            </ul>
         @endif
 
         @if ($results['groups'] !== [])

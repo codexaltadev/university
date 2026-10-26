@@ -1,6 +1,6 @@
 # Seo
 
-Core module C-12 (SRS Part 1). Site › Redirects, Site › 404 log and the Settings › SEO tab. The
+Core module C-12 (SRS Part 1). Site › Redirects, Site › 404 log, Site › Search terms and the Settings › SEO and Search tabs. The
 per-record SEO panel, the head tags, sitemap.xml and robots.txt belong to the kernel (`Platform\Seo`).
 
 | | |
@@ -18,3 +18,12 @@ per-record SEO panel, the head tags, sitemap.xml and robots.txt belong to the ke
   first / last seen and referrer; "Redirect" makes one in a click and marks it resolved. Resolved rows go
   after 90 days.
 * **Changed web addresses** (slug history) answer 301 by themselves (FR-GEN-32); no redirect row needed.
+
+### Search terms and Settings › Search (Phase 4.7g)
+
+* **Search terms:** every search on the search page (the kernel's `SearchPerformed`, first page only — not the header box
+  while typing), lower case: how often and how many results the last time; "No results" shows what visitors do not
+  find. Rows not searched for 180 days go (`seo:search-terms-clean`).
+* **Settings › Search:** synonyms, one rule a line (`cse = computer science and engineering`) — the kernel's search
+  matches a word by its synonyms; "Popular searches" (entered, else the most searched terms that found something in
+  90 days), given to `theme::search` and `theme::livewire.instant-search` as `$popular`.

@@ -21,7 +21,10 @@ use Platform\Support\PublishDate;
  * Website search (C-17, SAD Part B §3): one index row per visible record and
  * language (FR-SRCH-03/04), kept current by IndexSearchDocument (FR-SRCH-09).
  * MySQL FULLTEXT in boolean mode with prefix matching; words shorter than the
- * FULLTEXT minimum, and Bangla words, are matched with LIKE as well.
+ * FULLTEXT minimum, and Bangla words, are matched with LIKE as well. A word may have
+ * synonyms (settings('search.synonyms'): "cse = computer science and engineering"):
+ * a record matching any of them matches the word. Titles that start with the query
+ * come first.
  */
 class SearchIndex
 {
@@ -29,7 +32,45 @@ class SearchIndex
 
     public const EXCERPT = 220;
 
+    /** @var array{0: string, 1: array<string, list<string>>}|null the synonyms text and its map */
+    protected ?array $synonyms = null;
+
     public function __construct(protected Registry $registry, protected Languages $languages) {}
+
+    /**
+     * The synonyms from Settings, one rule a line: "cse, c.s.e = computer science and engineering, computer science".
+     *
+     * @return array<string, list<string>> word (lower case) => its synonyms
+     */
+    public function synonyms(): array
+    {
+        $text = (string) settings('search.synonyms');
+        if ($this->synonyms !== null && $this->synonyms[0] === $text) {
+            return $this->synonyms[1];
+        }
+
+        $map = [];
+        foreach (preg_split('/\R/u', $text) ?: [] as $line) {
+            if (! str_contains($line, '=')) {
+                continue;
+            }
+            [$words, $means] = array_map('trim', explode('=', $line, 2));
+            $means = array_values(array_filter(array_map(fn (string $m): string => Str::lower(Str::squish($m)), explode(',', $means))));
+            foreach (array_filter(array_map(fn (string $w): string => Str::lower(trim($w)), explode(',', $words))) as $word) {
+                $map[$word] = array_values(array_unique([...($map[$word] ?? []), ...array_diff($means, [$word])]));
+            }
+        }
+
+        $this->synonyms = [$text, $map];
+
+        return $map;
+    }
+
+    /** @return list<string> the term and its synonyms */
+    protected function alternatives(string $term): array
+    {
+        return [$term, ...($this->synonyms()[Str::lower($term)] ?? [])];
+    }
 
     /** @return array<class-string<Model>, array{module: string, label: string, weight: int}> */
     public function registered(): array
@@ -138,6 +179,8 @@ class SearchIndex
             return ['query' => $query, 'total' => 0, 'groups' => [], 'items' => new LengthAwarePaginator([], 0, $perPage, $page)];
         }
 
+        $marks = collect($terms)->flatMap(fn (string $t): array => $this->alternatives($t))->unique()->values()->all();   // what to highlight
+
         $base = fn (): Builder => $this->matching(SearchDocument::query(), $terms)
             ->where('locale', $locale)
             ->whereIn('module_slug', array_keys($labels))
@@ -152,12 +195,16 @@ class SearchIndex
         $items = $base()
             ->when($module, fn (Builder $q) => $q->where('module_slug', $module))
             ->select('*')
-            ->selectRaw('(MATCH(title, body) AGAINST (? IN BOOLEAN MODE) * weight + IF(title LIKE ?, 10, 0)) as score', [$this->booleanQuery($terms), '%'.$this->escapeLike($query).'%'])
+            // the text's relevance, damped (a long text that repeats a word must not beat a page about it), then the title:
+            // the whole query in it, starting it, and each word or synonym in it
+            ->selectRaw('(LN(1 + MATCH(title, body) AGAINST (? IN BOOLEAN MODE)) * weight * 4 + IF(title LIKE ?, 10, 0) + IF(title LIKE ?, 15, 0)'
+                .str_repeat(' + IF(title LIKE ?, 60, 0)', count($titleMarks = array_slice($marks, 0, 8))).') as score',
+                [$this->booleanQuery($terms), '%'.$this->escapeLike($query).'%', $this->escapeLike($query).'%', ...array_map(fn (string $m): string => '%'.$this->escapeLike($m).'%', $titleMarks)])
             ->orderByDesc('score')->orderByDesc('published_at')->orderBy('id')
             ->paginate($perPage, ['*'], 'page', $page)
             ->through(fn (SearchDocument $doc): array => [
-                'title' => $this->highlight(e($doc->title), $terms),
-                'excerpt' => $this->highlight(e($this->excerpt((string) $doc->body, $terms)), $terms),
+                'title' => $this->highlight(e($doc->title), $marks),
+                'excerpt' => $this->highlight(e($this->excerpt((string) $doc->body, $marks)), $marks),
                 'url' => $doc->url,
                 'module' => $doc->module_slug,
                 'label' => $labels[$doc->module_slug] ?? Str::headline($doc->module_slug),
@@ -165,6 +212,27 @@ class SearchIndex
             ]);
 
         return ['query' => $query, 'total' => array_sum(array_column($groups, 'count')), 'groups' => $groups, 'items' => $items];
+    }
+
+    /**
+     * The modules' own pages whose name holds every word of the query, or a synonym of it ("tuition fees" → Tuition Fees,
+     * "cse" with its synonym → …): the page a visitor most likely wants, shown above the results. These pages (Tuition
+     * Fees, Waiver Calculator, Transport …) are not records, so the index does not hold them.
+     *
+     * @return list<array{label: string, url: string}>
+     */
+    public function shortcuts(string $query, int $limit = 3): array
+    {
+        $terms = $this->terms(Str::of($query)->squish()->limit(self::MAX_QUERY, '')->toString());
+        if ($terms === []) {
+            return [];
+        }
+
+        return collect($this->registry->all('websitePage'))
+            ->map(fn (array $page): array => ['label' => (string) __($page['label']), 'url' => url(Seo::localized($page['path'], app()->getLocale()))])
+            ->filter(fn (array $page): bool => collect($terms)->every(fn (string $term): bool => collect($this->alternatives($term))
+                ->contains(fn (string $word): bool => mb_stripos($page['label'], $word) !== false)))
+            ->unique('url')->take($limit)->values()->all();
     }
 
     /** @param array{module: string, label: string, weight: int} $info */
@@ -215,8 +283,9 @@ class SearchIndex
     }
 
     /**
-     * Every term must match: FULLTEXT for long Latin words, LIKE for short words and
-     * scripts the FULLTEXT parser splits (Bangla vowel signs, FR-SRCH-04).
+     * Every term must match — itself or one of its synonyms: FULLTEXT for long Latin words,
+     * LIKE for short words, phrases and scripts the FULLTEXT parser splits (Bangla vowel
+     * signs, FR-SRCH-04).
      *
      * @param  list<string>  $terms
      */
@@ -224,11 +293,13 @@ class SearchIndex
     {
         foreach ($terms as $term) {
             $query->where(function (Builder $q) use ($term): void {
-                $like = '%'.$this->escapeLike($term).'%';
-                $q->where('title', 'like', $like)->orWhere('body', 'like', $like);
+                foreach ($this->alternatives($term) as $word) {
+                    $like = '%'.$this->escapeLike($word).'%';
+                    $q->orWhere('title', 'like', $like)->orWhere('body', 'like', $like);
 
-                if ($this->fullTextFriendly($term)) {
-                    $q->orWhereRaw('MATCH(title, body) AGAINST (? IN BOOLEAN MODE)', [$term.'*']);
+                    if ($this->fullTextFriendly($word)) {
+                        $q->orWhereRaw('MATCH(title, body) AGAINST (? IN BOOLEAN MODE)', [$word.'*']);
+                    }
                 }
             });
         }
@@ -236,12 +307,21 @@ class SearchIndex
         return $query;
     }
 
-    /** @param list<string> $terms */
+    /** @param list<string> $terms the words (prefix) and their synonyms (a phrase in quotes) for the score */
     protected function booleanQuery(array $terms): string
     {
-        $words = array_filter($terms, fn (string $t): bool => $this->fullTextFriendly($t));
+        $parts = [];
+        foreach ($terms as $term) {
+            foreach ($this->alternatives($term) as $i => $word) {
+                if ($i === 0 && $this->fullTextFriendly($word)) {
+                    $parts[] = $word.'*';
+                } elseif ($i > 0 && preg_match('/^[\p{Latin}\p{N} ]+$/u', $word) && mb_strlen($word) >= 3) {
+                    $parts[] = str_contains($word, ' ') ? '"'.$word.'"' : $word.'*';
+                }
+            }
+        }
 
-        return $words === [] ? '""' : implode(' ', array_map(fn (string $t): string => $t.'*', $words));
+        return $parts === [] ? '""' : implode(' ', array_unique($parts));
     }
 
     protected function fullTextFriendly(string $term): bool

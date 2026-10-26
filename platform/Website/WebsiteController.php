@@ -8,6 +8,7 @@ use Platform\Context\FallbackResolver;
 use Platform\Context\MicrositeOwners;
 use Platform\Context\MicrositeResolver;
 use Platform\Context\SiteContext;
+use Platform\Events\SearchPerformed;
 use Platform\Localization\Languages;
 use Platform\Search\SearchIndex;
 use Platform\Seo\Seo;
@@ -74,8 +75,13 @@ class WebsiteController
 
         $results['items']->withPath(route('search'))->appends(array_filter(['q' => $results['query'], 'module' => $module, 'in' => $scope]));
 
+        if ($results['query'] !== '' && $results['items']->currentPage() === 1) {
+            SearchPerformed::dispatch($results['query'], $results['total'], $module, $scope);   // what people look for (and miss)
+        }
+
         return response()->view('theme::search', [
             'results' => $results,
+            'shortcuts' => $module || $scope ? [] : app(SearchIndex::class)->shortcuts($results['query']),   // the page a visitor most likely wants
             'module' => $module,
             'scope' => $scope,
             'scopeLabel' => $scope ? MicrositeOwners::label($scope) : null,

@@ -7,9 +7,11 @@
 | FR-SRCH-01..06, FR-SRCH-09, AC-SRCH-01.
 */
 
+use Illuminate\Support\Facades\Event;
 use Livewire\Livewire;
 use Modules\Office\Models\Office;
 use Modules\Page\Models\Page;
+use Platform\Events\SearchPerformed;
 use Platform\Modules\ModuleManager;
 use Platform\Search\Livewire\InstantSearch;
 use Platform\Search\SearchDocument;
@@ -126,8 +128,7 @@ it('rebuilds the index from the records', function () {
 
 it('shows the search page with groups, filter and scope, not indexed by search engines', function () {
     $this->get('/search?q=cyber+security')->assertOk()
-        ->assertSee('2 results for')
-        ->assertSee('Offices (1)')
+        ->assertSeeInOrder(['Found', '2', 'results for', 'Offices', '(1)'])                    // the default theme's page
         ->assertSee('<mark>Cyber</mark>', false)
         ->assertSee('noindex', false);
 
@@ -150,4 +151,30 @@ it('suggests the top results while typing (FR-SRCH-05)', function () {
         ->assertDontSee('board 6');
 
     $this->get('/')->assertSee('instant-search-q', false);                   // in the theme's header
+});
+
+it('finds a word by its synonyms, puts the pages named after it first, and offers the module page it names (Phase 4.7g)', function () {
+    settings()->save('search', ['synonyms' => "cse = computer science and engineering\nsec, cyber = security"]);
+    $long = Page::factory()->create(['title' => ['en' => 'Civil Engineering'], 'content' => ['en' => [['type' => 'text', 'data' => ['body' => '<p>'.str_repeat('CSE and EEE courses. ', 80).'</p>']]]]]);
+    $cse = Page::factory()->create(['title' => ['en' => 'Computer Science and Engineering'], 'content' => ['en' => [['type' => 'text', 'data' => ['body' => '<p>The department.</p>']]]]]);
+
+    $found = $this->index->search('cse');
+    expect($found['items']->pluck('url')->all())->toBe([$cse->url(), $long->url()])          // named after it first, though the other repeats "CSE"
+        ->and((string) $found['items'][0]['title'])->toBe('<mark>Computer Science and Engineering</mark>');
+    expect($this->index->search('sec lab')['items']->pluck('url')->all())->toBe([$this->lab->url()]);   // "sec" = "security"
+
+    expect($this->index->shortcuts('cyber'))->toBe([])                                       // no module page named so
+        ->and($this->index->shortcuts('page'))->toBe([]);
+});
+
+it('tells the modules what visitors searched on the search page, not while they type (Phase 4.7g)', function () {
+    Event::fake([SearchPerformed::class]);
+
+    $this->get('/search?q=Cyber+Security')->assertOk();
+    $this->get('/search?q=Cyber+Security&page=2')->assertOk();
+    $this->get('/search')->assertOk();
+    Livewire::test(InstantSearch::class)->set('q', 'cyber');
+
+    Event::assertDispatchedTimes(SearchPerformed::class, 1);
+    Event::assertDispatched(SearchPerformed::class, fn (SearchPerformed $e): bool => $e->query === 'Cyber Security' && $e->total === 2);
 });

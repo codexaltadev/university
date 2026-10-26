@@ -29,6 +29,7 @@ class InstantSearch extends Component
 
         return view('theme::livewire.instant-search', [
             'results' => $results,
+            'shortcuts' => $results && ! $this->scope ? app(SearchIndex::class)->shortcuts($this->q, 2) : [],
             'allUrl' => route('search', array_filter(['q' => $this->q, 'in' => $this->scope])),
         ]);
     }

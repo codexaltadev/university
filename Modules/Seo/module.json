@@ -27,7 +27,8 @@
         "optional_dependencies": [],
         "morph_aliases": {
             "seo.redirect": "Modules\\Seo\\Models\\Redirect",
-            "seo.not-found-log": "Modules\\Seo\\Models\\NotFoundLog"
+            "seo.not-found-log": "Modules\\Seo\\Models\\NotFoundLog",
+            "seo.search-term": "Modules\\Seo\\Models\\SearchTerm"
         },
         "custom_permissions": [
             "Manage:Seo"

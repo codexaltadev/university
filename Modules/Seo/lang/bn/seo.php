@@ -77,4 +77,19 @@ return [
     'notifications' => [
         'redirect_created' => 'Redirect তৈরি হয়েছে।',
     ],
+    'search' => [
+        'label' => 'search term',
+        'plural' => 'Search terms',
+        'term' => 'যা খোঁজা হয়েছে',
+        'results' => 'ফলাফল',
+        'last_searched_at' => 'শেষ খোঁজা',
+        'found' => 'কিছু পাওয়া গেছে',
+        'open' => 'খুঁজে দেখুন',
+        'settings' => 'Search',
+        'synonyms' => 'সমার্থক শব্দ',
+        'synonyms_help' => 'প্রতি লাইনে একটি নিয়ম: শব্দ = এর অর্থ। "cse = computer science and engineering" দিলে "cse" খুঁজলে CSE-এর page আসবে। একাধিক শব্দ বা অর্থ কমা দিয়ে আলাদা করুন।',
+        'show_popular' => '"জনপ্রিয় খোঁজা" দেখান',
+        'popular' => 'জনপ্রিয় খোঁজা',
+        'popular_help' => 'কমা দিয়ে, যেমন Admission, Tuition fees, Waiver। খালি: গত ৯০ দিনে যা সবচেয়ে বেশি খোঁজা হয়েছে এবং কিছু পাওয়া গেছে।',
+    ],
 ];
