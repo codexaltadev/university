@@ -403,6 +403,7 @@ Program খুললে বাম দিকে একই অংশগুলো �
 
 * নতুন session-এর fee নতুন record হিসেবে দিন — পুরনো session archive-এ থাকে।
 * অনেক program একসাথে: **Import** (Excel) — আগে **Export** করে নমুনা file নিন, পূরণ করে import; import-এর আগে preview ও ভুলের তালিকা দেখায়।
+* `/tuition-fees` page-এর শিরোনাম, লাইন, ছবি, table-এর উপরের **নোটিশ** (যেমন "Undergraduate-এর সব শিক্ষার্থী Laptop পাবে"), প্রতিটি faculty-র নিচের **Quick Links** ও "Need Assistance?"-এর link — **Settings › Tuition Fees**। Major column-এ Program-এর Majors দেখায় (৬টির বেশি হলে "মোট Nটি major")।
 
 ### 18.2 Waiver rule
 

@@ -136,9 +136,28 @@ it('lists /tuition-fees by category, grouped by faculty, with filters (FR-FEE-03
     $this->get('/tuition-fees?level=graduate')->assertSee('Master of Business Administration')->assertDontSee('B. Sc. in Software Engineering');
     $this->get('/tuition-fees?faculty=fsit')->assertSee('B. Sc. in Software Engineering')->assertDontSee('Master of Business Administration');
 
+    // The default theme: DIU's page — texts and links from Settings › Tuition Fees, the categories, the levels, the columns
+    settings()->save('tuition', ['notice' => ['en' => 'All Students of Undergraduate Program Will Get a Laptop Free.']], translatable: ['notice']);
+    $this->get('/tuition-fees')->assertOk()
+        ->assertSeeInOrder(['Tuition &amp; Fees at a Glance', 'All Students of Undergraduate Program Will Get a Laptop Free.', 'Local', 'International',
+            'All Programs', 'Undergraduate Program', 'Graduate Program', 'Search For Programs',
+            'Full Program Name', 'Credit Hours', 'Duration', 'Payable During Admission', 'Total Tuition Fees', 'Total Program Fees',
+            'B. Sc. in Software Engineering', '৳ 61,750', 'Quick Links', 'Need Assistance?', 'Estimate My Fees'], false);
+
     // An inactive program takes its fees off the page (BRL-PROG-03)
     $this->mba->update(['is_active' => false]);
     $this->get('/tuition-fees')->assertDontSee('৳ 189,025', false);
+});
+
+it('shows the yearly international fees as DIU does: a column per year and other fees, no majors (Phase 4.7c)', function () {
+    tuitionWith($this->bsc, $this->intl, [
+        [TuitionLine::ADMISSION, 'Admission fee', 1514, null], [TuitionLine::YEAR, '1st Year', 2664, null], [TuitionLine::YEAR, '2nd Year', 2300, null],
+        [TuitionLine::OTHER, 'Other fees', 2181, null],
+    ]);
+
+    $this->get('/tuition-fees?category=international')->assertOk()
+        ->assertSeeInOrder(['Payable During Admission', '1st Year', '2nd Year', 'Other Fees *', 'Total Tuition Fees', '$ 1,514', '$ 2,664', '$ 2,300', '$ 2,181'])
+        ->assertDontSee('Average Semester Fees')->assertDontSee('>Majors<', false);
 });
 
 it('adds a "Tuition Fees" tab to the program page, only where fees exist (FR-FEE-04, FR-PROG-18)', function () {

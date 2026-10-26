@@ -6,6 +6,7 @@ use Modules\Program\Models\Program;
 use Modules\Tuition\Filament\Parts\ProgramTuitionPart;
 use Modules\Tuition\Filament\TuitionPlugin;
 use Modules\Tuition\Models\Tuition;
+use Modules\Tuition\Settings\TuitionSettings;
 use Modules\Tuition\Tabs\TuitionTab;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
@@ -24,5 +25,6 @@ final class TuitionExtension implements ModuleExtension
         $r->entityTab(Program::class, TuitionTab::class);                // FR-FEE-04, FR-PROG-18
         $r->entityFormPart(Program::class, ProgramTuitionPart::class);   // read only, last part of the Program editor
         $r->layouts('tuition.listing', ['grouped', 'compact']);          // FR-FEE-03
+        $r->settings(TuitionSettings::class);                            // the page's texts and links (DIU's /tuition-fees)
     }
 }

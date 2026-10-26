@@ -32,7 +32,7 @@ Its own team enters the data (by default the Admission Office). The Waiver modul
 
 | View | Variables |
 |---|---|
-| `listing.grouped` / `listing.compact` | `$category`, `$categories`, `$groups` (list of `faculty`, `tuitions`), `$choices`, `$selected`, `$options` |
+| `listing.grouped` / `listing.compact` | `$category`, `$categories`, `$groups` (list of `faculty`, `tuitions`), `$choices`, `$selected`, `$options`, `$page` (Support\TuitionPage: title, text, image, notice, quickLinks, helpLinks, heading, categories, levels, columns, groups) |
 | `listing.table` | `$tuitions`, `$withFaculty` |
 | `partials.filters` | `$category`, `$categories`, `$choices`, `$selected` |
 | `partials.summary` | `$tuition`, `$detailed` |

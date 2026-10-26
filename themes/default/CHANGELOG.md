@@ -122,6 +122,9 @@
 - 4.7b-3: DIU admission pages — `modules/admission/result` and `livewire/result-lookup` (/admission-test-result),
   `modules/admission/contact` (/admission-contact), `modules/admission/circulars` / `circular` with
   `partials/admission/circular`.
+- 4.7c: DIU tuition fees — `modules/tuition/listing/grouped` (notice, Local / International, level tabs and
+  search, folding faculty cards with the blue-headed table or phone cards, yearly columns for international fees,
+  Quick Links, "Need Assistance?").
 
 ## 1.0.0 — 2026-10-09
 

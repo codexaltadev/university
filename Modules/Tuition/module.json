@@ -37,6 +37,7 @@
         },
         "custom_permissions": [],
         "provides": {
+            "settings": true,
             "scopeable": true,
             "entity_tabs": true,
             "entity_form_parts": true,

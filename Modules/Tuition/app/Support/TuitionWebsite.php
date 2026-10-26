@@ -45,7 +45,7 @@ class TuitionWebsite
 
         $tuitions = $category === null ? collect() : Tuition::query()->visible()
             ->where('fee_category_id', $category->id)
-            ->with(['program.department.faculty', 'program.level', 'lines', 'category'])
+            ->with(['program.department.faculty', 'program.level', 'program.majors', 'lines', 'category'])
             ->when($selected['level'], fn ($q, Term $level) => $q->whereHas('program', fn ($p) => $p->where('level_term_id', $level->id)))
             ->when($selected['department'], fn ($q, Department $d) => $q->whereHas('program', fn ($p) => $p->where('department_id', $d->id)))
             ->when($selected['faculty'], fn ($q, Faculty $f) => $q->whereHas('program.department', fn ($d) => $d->where('faculty_id', $f->id)))

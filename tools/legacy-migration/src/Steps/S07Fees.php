@@ -39,8 +39,15 @@ class S07Fees extends Step
         return ['program', 'tuition', 'waiver'];
     }
 
+    /** DIU's notice above the /tuition-fees tables (DIUFronend tuition-fees) */
+    public const NOTICE = 'All Students of Undergraduate Program Will Get a Laptop Free.';
+
     protected function handle(): void
     {
+        if (blank(settings()->group('tuition')['notice'] ?? null)) {   // Settings › Tuition Fees, only while empty
+            settings()->save('tuition', ['notice' => ['en' => self::NOTICE]], translatable: ['notice']);
+        }
+
         foreach ($this->rows('tuition_categories') as $row) {
             // "local-tuition" → "local", "international-tuition" → "international" (/tuition-fees?category=international)
             $code = Str::limit(Str::before(Str::slug((string) $row->category_code), '-tuition'), 20, '');
