@@ -82,6 +82,10 @@ return [
         'scheduled_at' => 'খালি: "পাঠান" এখনই পাঠাবে।',
     ],
     'settings' => [
+        'page_title' => 'Page-এর শিরোনাম',
+        'image' => 'উপরের ছবি',
+        'show_issues' => '/newsletter-এ পুরনো সংখ্যা দেখান',
+        'show_issues_help' => 'পাঠানো campaign, যার সব list public; private list-এর campaign কখনো দেখায় না।',
         'per_minute' => 'প্রতি মিনিটে ইমেইল',
         'per_minute_help' => 'মেইল সার্ভার যতটা অনুমতি দেয় তার কম রাখুন।',
         'intro' => '/newsletter পেজের লাইন',
@@ -102,5 +106,13 @@ return [
         'email_taken' => 'এই ইমেইল আগেই সাবস্ক্রাইবার।',
         'status' => 'অবস্থা বাছুন।',
         'list_key' => 'অন্য তালিকায় নেই এমন key দিন।',
+    ],
+    'page' => [
+        'subscribe' => 'Subscribe করুন',
+        'issues' => 'পুরনো সংখ্যা',
+        'read' => 'পড়ুন',
+        'read_more' => 'আরও পড়ুন',
+        'none' => 'এখনো কোনো সংখ্যা পাঠানো হয়নি।',
+        'all' => 'সব সংখ্যা',
     ],
 ];

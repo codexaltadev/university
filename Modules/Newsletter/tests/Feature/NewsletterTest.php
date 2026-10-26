@@ -100,3 +100,28 @@ it('puts Admission\'s confirmed email subscribers on "Admission Updates" (FR-NLT
     $admission->update(['unsubscribed_at' => now()]);
     expect($subscriber->fresh()->lists->first()->pivot->unsubscribed_at)->not->toBeNull();
 });
+
+it('shows the past issues on /newsletter: sent, in its language, to public lists only (Phase 4.7g)', function () {
+    $public = MailingList::query()->create(['key' => 'general', 'name' => ['en' => 'General'], 'is_public' => true, 'is_active' => true]);
+    $staff = MailingList::query()->create(['key' => 'staff', 'name' => ['en' => 'Staff'], 'is_public' => false, 'is_active' => true]);
+    $issue = function (string $subject, MailingList $list, string $status = 'sent', string $locale = 'en'): Campaign {
+        $c = new Campaign(['subject' => $subject, 'locale' => $locale, 'body' => '<h2>Admission</h2><p>Apply until 22 December.</p>', 'is_active' => true]);
+        $c->forceFill(['send_status' => $status, 'sent_at' => $status === 'sent' ? now()->subDay() : null])->save();
+        $c->lists()->sync([$list->id]);
+
+        return $c;
+    };
+    $october = $issue('October issue', $public);
+    $issue('Staff memo', $staff);                                // to a private list
+    $issue('Draft issue', $public, 'draft');                    // not sent
+    $issue('বাংলা সংখ্যা', $public, 'sent', 'bn');                // another language
+
+    $this->get('/newsletter')->assertOk()
+        ->assertSeeInOrder(['DIU Newsletter', 'Subscribe', 'Past issues', 'October issue', 'Admission Apply until 22 December.', 'Read'])
+        ->assertDontSee('Staff memo')->assertDontSee('Draft issue')->assertDontSee('বাংলা সংখ্যা');
+    $this->get('/newsletter/issues/'.$october->id)->assertOk()->assertSee('October issue')->assertSee('<h2>Admission</h2>', false);
+    $this->get('/newsletter/issues/'.Campaign::query()->where('subject', 'Staff memo')->value('id'))->assertNotFound();
+
+    settings()->save('newsletter', ['show_issues' => false]);
+    $this->get('/newsletter')->assertOk()->assertDontSee('Past issues')->assertDontSee('October issue');
+});

@@ -4,10 +4,12 @@ namespace Modules\Newsletter\Providers;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 use Modules\Newsletter\Console\DispatchCampaignsCommand;
 use Modules\Newsletter\Livewire\SubscribeForm;
 use Modules\Newsletter\Models\Delivery;
+use Modules\Newsletter\Support\NewsletterPage;
 use Modules\Newsletter\Support\NewsletterWebsite;
 use Modules\Newsletter\Support\Subscriptions;
 use Platform\Context\SiteContext;
@@ -33,6 +35,7 @@ class NewsletterServiceProvider extends ModuleServiceProvider
         parent::boot();
         $this->app->make(Website::class)->handle(fn (string $rest, SiteContext $context, string $locale) => $this->app->make(NewsletterWebsite::class)->respond($rest, $context, $locale));
         Livewire::component('newsletter.subscribe', SubscribeForm::class);                              // FR-NLT-01
+        View::composer(['newsletter::index', 'newsletter::issue'], fn ($view) => $view->with('page', new NewsletterPage($view->getData())));   // for themes (T-1)
         if (! $this->app->routesAreCached()) {
             Route::middleware('web')->group(module_path($this->name, 'routes/web.php'));                  // confirm / unsubscribe links
         }

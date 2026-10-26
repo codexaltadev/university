@@ -508,4 +508,5 @@ Closed প্রশ্ন নির্দিষ্ট সময় (default ২�
 * **Campaign › + New:** বিষয়, লেখা, কোন list → **Send test** (নিজের email-এ দেখে নিন) → **Send now** বা নির্দিষ্ট সময়।
 * News বা Notice থেকে সরাসরি campaign — *পরে আসবে*; এখন campaign-এ **Link** ঘরে খবরের ঠিকানা দিন।
 * Footer-এ subscribe form: **Header & Footer**-এ "Newsletter" block যোগ করুন; `/newsletter` পেজেও form আছে। নতুন subscriber email-এর link-এ click করলে তবেই সক্রিয় হন।
+* `/newsletter`-এ **পুরনো সংখ্যা** দেখায়: পাঠানো campaign, যার সব list **public** — private list-এর (যেমন Staff) campaign কখনো দেখায় না। শিরোনাম, ছবি ও পুরনো সংখ্যা দেখাবে কিনা — **Settings › Newsletter**।
 * প্রতিটি email-এ unsubscribe link নিজে থেকে থাকে; **Report**-এ কতগুলো গেল, কতগুলো ব্যর্থ।

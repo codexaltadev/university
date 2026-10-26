@@ -82,6 +82,10 @@ return [
         'scheduled_at' => 'Empty: "Send" sends now.',
     ],
     'settings' => [
+        'page_title' => 'Page title',
+        'image' => 'Picture on top',
+        'show_issues' => 'Show the past issues on /newsletter',
+        'show_issues_help' => 'Sent campaigns whose lists are all public; one to a private list never shows.',
         'per_minute' => 'Emails a minute',
         'per_minute_help' => 'Keep it under what the mail server allows.',
         'intro' => 'Line on the /newsletter page',
@@ -102,5 +106,13 @@ return [
         'email_taken' => 'This email is already a subscriber.',
         'status' => 'Choose a status.',
         'list_key' => 'Give a key not used by another list.',
+    ],
+    'page' => [
+        'subscribe' => 'Subscribe',
+        'issues' => 'Past issues',
+        'read' => 'Read',
+        'read_more' => 'Read more',
+        'none' => 'No issue has been sent yet.',
+        'all' => 'All issues',
     ],
 ];

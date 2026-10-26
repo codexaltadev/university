@@ -133,6 +133,7 @@
   with + / −).
 - 4.7g: search — `search` (DIU-look results page with shortcuts, module tabs, result cards, popular searches) and
   `livewire/instant-search` (excerpts, keyboard, recent and popular searches, shortcuts).
+- 4.7g-2: newsletter — `modules/newsletter/index` (sign-up card, past issues) and `issue`.
 
 ## 1.0.0 — 2026-10-09
 
