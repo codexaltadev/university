@@ -28,6 +28,12 @@ return [
     'copy_to_service' => 'Copy to another service',
     'add_stop' => 'Add a stop',
     'add_departure' => 'Add a time',
+    'page_title' => 'Transport Service',
+    'route_label' => 'Route:',
+    'view_map' => 'View Route on Google Map',
+    'view_map_short' => 'View Map',
+    'no_schedule' => 'No schedule available',
+    'stops_toggle' => 'Stops and notes',
     'pass' => [
         'how' => 'How to Get Your Pass',
         'why' => 'Why It Matters',

@@ -127,6 +127,8 @@
   Quick Links, "Need Assistance?").
 - 4.7d: DIU scholarships — `modules/scholarship/listing` and `show` with `partials/scholarship/item`
   ("Browse by Section", Quick Links, the texts in DIU's article look, folding scholarships by category).
+- 4.7e: DIU transport — `modules/transport/index` (Transport Pass, schedule card, stop search, Regular / Shuttle /
+  Friday route cards with greyed past trips and the stops line, Transport Fees).
 
 ## 1.0.0 — 2026-10-09
 

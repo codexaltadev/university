@@ -31,6 +31,6 @@ session or cookies; `Access-Control-Allow-Origin: *`; cached 5 minutes by browse
 
 | View | Variables |
 |---|---|
-| `transport::index` | `$timetable` (ok, title, semester, policy_pdf, service, groups), `$group`, `$stops`, `$page` |
+| `transport::index` | `$timetable` (ok, title, semester, policy_pdf, service, groups), `$group`, `$stops`, `$page`, `$transport` (Support\TransportView: pass, schedule, groups, finder, stops, fees — so a theme needs no PHP, T-1) |
 | `transport::partials.finder` | `$stops`, `$routes`, `$link`, `$id` |
 | `transport::sections.finder` | `$items` (timetable, stops), `$section`, `$settings` |

@@ -74,7 +74,8 @@ it('shows /transport with the schedule, tabs, departures, notes and the stop sea
         ->assertSeeInOrder(['Dhanmondi &lt;&gt; DSC', 'No bus on: Friday', 'Departure from Dhanmondi - Sobhanbag Mosque', '7:00 AM', '10:00 AM', 'Departure from Daffodil Smart City-DSC', '1:30 PM', '4:20 PM'], false)
         ->assertSee('Be there 10 minutes early.')
         ->assertSee('<option value="Asad Gate">', false)
-        ->assertSeeInOrder(['Transport Fees', 'Tri-Semester', '3000/=tk']);
+        ->assertSeeInOrder(['Transport Fees', 'Tri-Semester', '3000/=tk'])
+        ->assertSeeInOrder(['Transport Service', 'Get Your DIU Transport Pass', 'How to Get Your Pass', 'Why It Matters', 'Find your bus', 'Route:', 'Dhanmondi &lt;&gt; DSC'], false);   // the default theme: DIU's /transport
 
     $items = (new TransportFinderSection)->items(new SectionContext('site:0', [], 'en'));
     expect($items['stops'])->toContain('Mirpur-1, Sony Cinema Hall');

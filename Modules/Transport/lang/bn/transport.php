@@ -28,6 +28,12 @@ return [
     'copy_to_service' => 'অন্য service-এ copy করুন',
     'add_stop' => 'একটি stop যোগ করুন',
     'add_departure' => 'একটি সময় যোগ করুন',
+    'page_title' => 'পরিবহন সেবা',
+    'route_label' => 'Route:',
+    'view_map' => 'Google Map-এ route দেখুন',
+    'view_map_short' => 'Map',
+    'no_schedule' => 'কোনো সময়সূচি নেই',
+    'stops_toggle' => 'Stop ও নোট',
     'pass' => [
         'how' => 'কীভাবে pass পাবেন',
         'why' => 'কেন দরকার',
