@@ -123,8 +123,16 @@ it('offers the listing to menus, answers a menu category link, and shows as an a
     settings()->save('scholarship', ['intro' => ['en' => '<p>Waiver and scholarship schemes.</p>']], translatable: ['intro', 'outro']);
     settings()->save('layouts', ['scholarship.listing' => ['layout' => 'accordion']]);
     $this->get('/scholarships')->assertOk()
-        ->assertSee('Waiver and scholarship schemes.')
-        ->assertSee('<details class="accordion__item"', false);
+        ->assertSee('Waiver and scholarship schemes.');
+    expect(moduleView('scholarship', 'listing', ['groups' => collect([['category' => null, 'scholarships' => Scholarship::query()->topLevel()->withCount('parts')->get()]]),
+        'categories' => collect(), 'selected' => null, 'scholarships' => collect(), 'layout' => 'accordion', 'intro' => null, 'outro' => null]))
+        ->toContain('<details class="accordion__item"');   // the module's own accordion layout, for themes without their own
+
+    // The default theme: DIU's /scholarship — hero, "Browse by Section" and Quick Links from Settings, folding items
+    settings()->save('scholarship', ['side_links' => [['label' => ['en' => 'Lutfar Rahman Scholarship'], 'url' => '/article/lutfar-rahman-scholarship']]]);
+    $this->get('/scholarships')->assertOk()
+        ->assertSeeInOrder(['Explore various scholarship opportunities at DIU', 'Browse by Section (01)', 'Lutfar Rahman Scholarship', 'Quick Links', 'Tuition Fees',
+            'Waiver and scholarship schemes.', 'DIU Scholarship', 'Merit and need based.']);
 });
 
 it('shows scholarships on any page through the Scholarships block', function () {

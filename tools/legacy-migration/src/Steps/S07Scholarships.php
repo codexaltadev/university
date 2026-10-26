@@ -5,6 +5,7 @@ namespace Legacy\Migration\Steps;
 use Illuminate\Support\Facades\Schema;
 use Legacy\Migration\Support\Normalizer;
 use Modules\Scholarship\Models\Scholarship;
+use Modules\Scholarship\Settings\ScholarshipSettings;
 use Platform\Settings\Settings;
 use Platform\Taxonomy\Term;
 use Platform\Taxonomy\Vocabularies;
@@ -32,8 +33,25 @@ class S07Scholarships extends Step
         return ['scholarship'];
     }
 
+    /** DIU's /scholarship sidebar (DIUFronend scholarship/layout): the named scholarships are articles here (/article/{slug}) */
+    public const SIDE = [
+        'chairman-endowment-fund-scholarship' => 'Chairman Endowment Fund Scholarship',
+        'lutfar-rahman-scholarship' => 'Lutfar Rahman Scholarship',
+        'razia-begum-scholarship' => 'Razia Begum Scholarship',
+        'mofiz-uddin-scholarship' => 'Mofiz Uddin Majumder Scholarship',
+        'delwar-hussain-scholarship' => 'Delwar Hussain Chowdhury Scholarship',
+        'late-hafez-and-late-mrs.-jarina-begum-scholarship' => 'Late Hafez Md. Abdur Rahim and Late Mrs. Jarina Begum Scholarship',
+        'late-professor-dr.-ahmad-and-late-mrs.-mahbuba-hossain-scholarship' => 'Late Professor Dr. Ahmad Husain and Late Mrs. Mahbuba Hossain Scholarship',
+        'mrs-wasia-rahman-and-professor-dr-m-lutfar-rahman-scholarship-fund' => 'Mrs. Wasia Rahman and Professor Dr. M. Lutfar Rahman Scholarship',
+    ];
+
+    /** DIU's /scholarship Quick Links */
+    public const QUICK = [['Notice', '/notices'], ['Tuition Fees', '/tuition-fees'], ['Waiver Calculator', '/waiver-calculator'], ['Waiver & Scholarship', '/scholarships']];
+
     protected function handle(): void
     {
+        $this->page();
+
         if (! Schema::connection('legacy')->hasTable('scholarship_categories')) {
             $this->report->review('No scholarship tables in the legacy database: nothing to migrate.');
 
@@ -122,6 +140,30 @@ class S07Scholarships extends Step
                 'is_active' => (bool) $row->publication_status,
             ], after: fn (Scholarship $s) => $term ? $s->syncTerms(Scholarship::CATEGORY, [$term]) : null,
                 existing: $this->same(Scholarship::class, ['parent_id' => null, 'title->en' => $title]));
+        }
+    }
+
+    /**
+     * Settings › Scholarships as DIU's /scholarship: the named scholarships and the FAQ beside the list, the Quick Links —
+     * only while still empty or as installed; DIU's /scholarship/{slug} addresses lead to the articles (301).
+     */
+    protected function page(): void
+    {
+        $now = settings()->group('scholarship');
+        $installed = app(ScholarshipSettings::class)->defaults();
+        $links = fn (array $list): array => array_map(fn (array $l): array => ['label' => ['en' => $l[0]], 'url' => $l[1]], $list);
+
+        settings()->save('scholarship', array_filter([
+            'side_links' => blank($now['side_links'] ?? null) ? $links([
+                ...array_map(fn (string $slug, string $name): array => [$name, '/article/'.$slug], array_keys(self::SIDE), self::SIDE),
+                ['Waiver and Scholarship FAQ', '/faq'],
+            ]) : null,
+            'quick_links' => ($now['quick_links'] ?? null) === $installed['quick_links'] ? $links(self::QUICK) : null,
+        ], fn ($v) => $v !== null));
+
+        $this->oldAddress('/scholarship/diu-scholarship', '/'.Scholarship::PATH);
+        foreach (array_keys(self::SIDE) as $slug) {
+            $this->oldAddress('/scholarship/'.$slug, '/article/'.$slug);
         }
     }
 }

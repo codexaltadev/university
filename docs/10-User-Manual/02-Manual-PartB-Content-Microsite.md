@@ -430,7 +430,9 @@ Program খুললে বাম দিকে একই অংশগুলো �
 
 ## 19. Scholarship
 
-**Academic › Scholarships › + New**: নাম, category, কারা পাবে, শর্ত, পরিমাণ / %, আবেদনের পদ্ধতি ও শেষ তারিখ, সংযুক্ত file। Website-এর `/scholarships` page-এ category অনুযায়ী দেখায়।
+**Academic › Scholarships › + New**: নাম, category, কারা পাবে, শর্ত, পরিমাণ / %, আবেদনের পদ্ধতি ও শেষ তারিখ, সংযুক্ত file। Website-এর `/scholarships` page-এ category অনুযায়ী ভাঁজ করা তালিকায় দেখায়।
+
+**Settings › Scholarships**: শিরোনাম, লাইন, ছবি, তালিকার উপরের ও নিচের লেখা, বাম পাশের **"Browse by Section"**-এর link (যেমন নামওয়ালা scholarship-গুলোর page, FAQ) ও **Quick Links**।
 
 ---
 

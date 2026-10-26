@@ -32,6 +32,13 @@ return [
         'limit_help' => 'খালি: সব।',
     ],
     'settings' => [
+        'page' => 'Scholarship page (/scholarships)',
+        'title' => 'শিরোনাম',
+        'text' => 'শিরোনামের নিচের লাইন',
+        'image' => 'উপরের ছবি',
+        'side_links' => '"Browse by Section"-এর link',
+        'side_links_help' => 'Scholarship-গুলোর পাশে (DIU: নামওয়ালা scholarship ও Waiver and Scholarship FAQ)।',
+        'quick_links' => 'Quick Links',
         'intro' => 'Scholarship তালিকার উপরের লেখা',
         'outro' => 'Scholarship তালিকার নিচের লেখা',
     ],
@@ -61,5 +68,10 @@ return [
         'one_level' => 'Call শুধু এমন scholarship-এর অধীনে যায় যা নিজে call নয়।',
         'has_parts' => 'এই scholarship-এর নিজের call আছে, তাই এটি মূল scholarship-ই থাকবে।',
         'delete_parts_first' => 'আগে এর call-গুলো সরান বা মুছুন।',
+    ],
+    'page' => [
+        'details' => 'বিস্তারিত',
+        'deadline' => 'শেষ তারিখ',
+        'files' => 'File',
     ],
 ];

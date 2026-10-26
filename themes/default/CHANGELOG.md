@@ -125,6 +125,8 @@
 - 4.7c: DIU tuition fees — `modules/tuition/listing/grouped` (notice, Local / International, level tabs and
   search, folding faculty cards with the blue-headed table or phone cards, yearly columns for international fees,
   Quick Links, "Need Assistance?").
+- 4.7d: DIU scholarships — `modules/scholarship/listing` and `show` with `partials/scholarship/item`
+  ("Browse by Section", Quick Links, the texts in DIU's article look, folding scholarships by category).
 
 ## 1.0.0 — 2026-10-09
 

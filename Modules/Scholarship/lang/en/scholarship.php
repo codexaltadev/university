@@ -32,6 +32,13 @@ return [
         'limit_help' => 'Empty: all.',
     ],
     'settings' => [
+        'page' => 'The Scholarships page (/scholarships)',
+        'title' => 'Title',
+        'text' => 'Line under the title',
+        'image' => 'Picture on top',
+        'side_links' => '"Browse by Section" links',
+        'side_links_help' => 'Beside the scholarships (DIU: the named scholarships and the Waiver and Scholarship FAQ).',
+        'quick_links' => 'Quick Links',
         'intro' => 'Text above the list of scholarships',
         'outro' => 'Text below the list of scholarships',
     ],
@@ -61,5 +68,10 @@ return [
         'one_level' => 'A call can only go under a scholarship that is not itself a call.',
         'has_parts' => 'This scholarship has calls of its own, so it stays a scholarship.',
         'delete_parts_first' => 'Move or delete its calls first.',
+    ],
+    'page' => [
+        'details' => 'Details',
+        'deadline' => 'Last date',
+        'files' => 'Files',
     ],
 ];

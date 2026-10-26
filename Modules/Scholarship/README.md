@@ -30,5 +30,5 @@ opportunities under them. No dependency — it runs with or without the Tuition 
 
 | View | Variables |
 |---|---|
-| `listing` | `$groups` (list of `category`, `scholarships`), `$categories`, `$selected`, `$scholarships` (with `parts_count`) |
-| `show` | `$scholarship`, `$parent` (or null), `$parts` (open first) |
+| `listing` | `$groups` (list of `category`, `scholarships`), `$categories`, `$selected`, `$scholarships` (with `parts_count`), `$page` (Support\ScholarshipPage: title, text, image, sideLinks, quickLinks, intro, outro, groups) |
+| `show` | `$scholarship`, `$parent` (or null), `$parts` (open first), `$page` (scholarship(): sections, apply, files, parts) |
