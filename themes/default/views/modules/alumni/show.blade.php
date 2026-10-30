@@ -7,7 +7,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $person->name(),
         'subtitle' => ($headline = $alumnus->headline()) ? e($headline) : null,
-        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs($person->name()),
     ])
 
@@ -52,7 +52,7 @@
                     @endif
                 </aside>
 
-                <main class="lg:col-span-2 space-y-8">
+                <div class="lg:col-span-2 space-y-8">
                     <div class="space-y-3">
                         @if ($p['designation'])<p class="flex items-start gap-2 text-xl text-gray-800"><x-theme::icon name="briefcase" class="w-5 h-5 text-gray-400 shrink-0 mt-1" />{{ $p['designation'] }}</p>@endif
                         @if ($p['organization'])<p class="flex items-start gap-2 text-lg text-gray-600"><x-theme::icon name="building" class="w-5 h-5 text-gray-400 shrink-0 mt-1" />{{ $p['organization'] }}</p>@endif
@@ -69,7 +69,7 @@
                         </section>
                     @endif
                     <p><a href="{{ $page->listingUrl() }}" class="inline-flex items-center gap-2 text-primary font-medium"><x-theme::icon name="arrow-left" class="w-4 h-4" />{{ __('alumni::alumni.all_alumni') }}</a></p>
-                </main>
+                </div>
             </div>
         </div>
     @endif

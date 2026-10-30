@@ -35,3 +35,9 @@ Thumbs.db
 
 # Live DIU frontend (Next.js) — reference for the default theme only, its own repository
 /DIUFronend
+
+# Pest Browser: screenshots of failed browser tests
+/tests/Browser/Screenshots
+
+# Lighthouse CI (Phase 4.8c): its working folder; reports go to storage/lighthouse
+/.lighthouseci

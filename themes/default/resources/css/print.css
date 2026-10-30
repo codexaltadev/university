@@ -1,0 +1,39 @@
+/*
+ * Print (Phase 4.8d; Theme Guide §13 "Print view": Notice, Waiver result). Only the page's own
+ * content on white paper: no header, menus, footer, announcements or windows; dark heroes and
+ * white text become black on white (browsers drop backgrounds when printing); content still
+ * waiting to slide in (.reveal) is shown; links in written text print their address.
+ */
+@media print {
+    @page { margin: 1.5cm; }
+
+    .no-print, .skip-link, .site-header, .site-footer, .announcements, .announcement-ticker, .breadcrumb,
+    [role="dialog"], video, iframe, [x-data^="carousel"] button { display: none !important; }
+
+    *, *::before, *::after {
+        color: black !important;
+        background: transparent !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+        border-color: currentColor;
+    }
+
+    html { font-size: 11pt; }
+    body.site, body.site:has(.site-header.fixed) { padding-top: 0 !important; }
+
+    /* Heroes pulled under the floating header, full screen tall, with a picture behind the title */
+    [style*="--header-h"] { margin-top: 0 !important; height: auto !important; min-height: 0 !important; }
+    .page-hero, main section, main header { min-height: 0 !important; padding-top: 0.5cm !important; padding-bottom: 0.5cm !important; }
+    main .min-h-screen, main [class*="min-h-["] { min-height: 0 !important; }
+    .page-hero img, .page-hero button, main section > img.absolute, main header > img.absolute { display: none !important; }
+
+    .reveal { opacity: 1 !important; transform: none !important; }
+
+    .prose a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 0.85em; word-break: break-all; }
+
+    h1, h2, h3, h4 { break-after: avoid; }
+    img, tr, figure, .card, .accordion__item { break-inside: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    table { border-collapse: collapse; }
+    th, td { border: 1px solid; }
+}

@@ -75,12 +75,9 @@
                     @if ($facts = $calc->program())
                         <dl class="grid grid-cols-3 gap-2 pt-1.5">
                             @foreach ([['clock', $facts['duration'], 'fields.duration'], ['book-open', $facts['credits'], 'fields.credits'], ['banknote', $facts['total'], 'calculator.total_fees']] as [$icon, $value, $label])
-                                <div class="flex items-center gap-2 rounded-lg bg-slate-50 px-3 py-2 border border-slate-200 min-w-0">
-                                    <x-theme::icon :name="$icon" class="size-4 shrink-0 text-slate-400 max-sm:hidden" />
-                                    <div class="min-w-0">
-                                        <dt class="text-[11px] text-slate-500 leading-tight">{{ __('waiver::waiver.'.$label) }}</dt>
-                                        <dd class="font-semibold text-slate-900 text-xs truncate">{{ $value }}</dd>
-                                    </div>
+                                <div class="relative rounded-lg bg-slate-50 px-3 sm:pl-9 py-2 border border-slate-200 min-w-0">
+                                    <dt class="text-[11px] text-slate-500 leading-tight"><x-theme::icon :name="$icon" class="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-slate-400 max-sm:hidden" />{{ __('waiver::waiver.'.$label) }}</dt>
+                                    <dd class="font-semibold text-slate-900 text-xs truncate">{{ $value }}</dd>
                                 </div>
                             @endforeach
                         </dl>
@@ -201,7 +198,7 @@
 
     <div class="lg:col-span-1 lg:sticky lg:top-24" aria-live="polite">
         @if ($result = $calc->result())
-            <div class="rounded-lg border border-slate-200 bg-white shadow-lg overflow-hidden scroll-mt-24" x-init="window.innerWidth < 1024 && $nextTick(() => $el.scrollIntoView({ behavior: 'smooth', block: 'start' }))">
+            <div class="rounded-lg border border-slate-200 bg-white shadow-lg overflow-hidden scroll-mt-24" x-init="window.innerWidth < 1024 && $nextTick(() => $el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }))">
                 <div class="bg-gradient-to-br from-primary to-blue-700 px-6 pt-8 pb-12 text-center">
                     <h3 class="text-2xl font-bold text-white">{{ __('waiver::waiver.calculator.congratulations') }}</h3>
                     <p class="mt-2 text-blue-100 text-sm">{{ $result['message'] }}</p>
@@ -229,7 +226,7 @@
                             @foreach ([['calculator.total_cost', $result['total']], ['calculator.tuition_fees', $result['tuition']], ['calculator.other_fees', $result['other']]] as [$label, $value])
                                 <div class="flex items-center justify-between gap-3"><dt class="text-slate-600 font-medium">{{ __('waiver::waiver.'.$label) }}</dt><dd class="font-semibold text-slate-900 text-right">{{ $value }}</dd></div>
                             @endforeach
-                            <div class="flex items-center justify-between gap-3"><dt class="text-slate-600 font-medium">{{ __('waiver::waiver.calculator.waiver_amount') }}</dt><dd class="font-semibold text-green-600 text-right">− {{ $result['waiver'] }}</dd></div>
+                            <div class="flex items-center justify-between gap-3"><dt class="text-slate-600 font-medium">{{ __('waiver::waiver.calculator.waiver_amount') }}</dt><dd class="font-semibold text-green-700 text-right">− {{ $result['waiver'] }}</dd></div>
                         </dl>
                     </div>
 
@@ -243,7 +240,7 @@
 
                     <div class="rounded-lg bg-green-50 p-4 text-center border border-green-200">
                         <div class="text-xs text-green-700 font-semibold mb-1">{{ __('waiver::waiver.calculator.after_waiver_total') }}</div>
-                        <div class="text-2xl font-bold text-green-600">{{ $result['final'] }}</div>
+                        <div class="text-2xl font-bold text-green-700">{{ $result['final'] }}</div>
                     </div>
 
                     @if ($result['range'])<p class="text-xs text-slate-500">{{ __('waiver::waiver.calculator.range_note') }}</p>@endif
@@ -256,7 +253,7 @@
                 </div>
             </div>
         @elseif ($sorry = $calc->sorry())
-            <div class="rounded-lg border border-slate-200 bg-white shadow-lg overflow-hidden text-center scroll-mt-24" x-init="window.innerWidth < 1024 && $nextTick(() => $el.scrollIntoView({ behavior: 'smooth', block: 'start' }))">
+            <div class="rounded-lg border border-slate-200 bg-white shadow-lg overflow-hidden text-center scroll-mt-24" x-init="window.innerWidth < 1024 && $nextTick(() => $el.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' }))">
                 <div class="bg-gradient-to-br from-secondary to-primary px-6 py-8">
                     <h3 class="text-2xl font-bold text-white">{{ __('waiver::waiver.calculator.sorry') }}</h3>
                 </div>

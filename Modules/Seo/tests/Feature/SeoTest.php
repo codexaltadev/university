@@ -11,6 +11,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Livewire\Livewire;
 use Modules\Page\Models\Page;
+use Modules\Seo\Database\Seeders\SeoDatabaseSeeder;
 use Modules\Seo\Filament\Resources\NotFoundLogs\Pages\ListNotFoundLogs;
 use Modules\Seo\Filament\Resources\Redirects\Pages\CreateRedirect;
 use Modules\Seo\Filament\Resources\Redirects\Pages\ListRedirects;
@@ -172,4 +173,21 @@ it('counts what visitors search and what they miss, offers the popular searches,
     // Not searched for 180 days: gone
     SearchTerm::query()->where('term', 'hostel rent')->update(['last_searched_at' => now()->subDays(181)]);
     expect(SearchTerm::clean())->toBe(1);
+});
+
+it('seeds the default description from the university\'s name, never over what an admin wrote (FR-SEO-01)', function () {
+    settings()->save('general', ['university_name' => ['en' => 'Harbor University', 'bn' => 'হারবার বিশ্ববিদ্যালয়']], translatable: ['university_name']);
+
+    $this->seed(SeoDatabaseSeeder::class);
+
+    expect(settings()->get('seo.default_description', locale: 'en'))->toStartWith('Harbor University — official website')
+        ->and(settings()->get('seo.default_description', locale: 'bn'))->toStartWith('হারবার বিশ্ববিদ্যালয়-এর অফিসিয়াল ওয়েবসাইট')
+        ->and(mb_strlen(settings()->get('seo.default_description', locale: 'en')))->toBeLessThanOrEqual(160);
+    $this->get('/')->assertSee('<meta name="description" content="Harbor University — official website', false);
+
+    settings()->save('seo', ['default_description' => ['en' => 'Our own words.']], translatable: ['default_description']);
+    $this->seed(SeoDatabaseSeeder::class);                                          // again: only the empty language is filled
+
+    expect(settings()->get('seo.default_description', locale: 'en'))->toBe('Our own words.')
+        ->and(settings()->get('seo.default_description', locale: 'bn'))->toStartWith('হারবার বিশ্ববিদ্যালয়');
 });

@@ -17,7 +17,7 @@
             @foreach ($trends as $trend)
                 <section id="trend-{{ $trend['key'] }}" style="margin-top:var(--space-6, 24px)">
                     <h3>{{ $trend['name'] }}</h3>
-                    <div style="overflow-x:auto">
+                    <div tabindex="0" style="overflow-x:auto">
                         <table class="table" style="width:100%;border-collapse:collapse">
                             <thead><tr>
                                 <th style="text-align:left;padding:8px;border-bottom:2px solid var(--color-border)">{{ __('accreditation::accreditation.fields.year') }}</th>

@@ -17,6 +17,7 @@ use Modules\Department\Filament\Resources\Departments\Pages\CreateDepartment;
 use Modules\Department\Filament\Resources\Departments\Pages\EditDepartment;
 use Modules\Department\Models\Department;
 use Modules\Department\Sections\DepartmentsSection;
+use Modules\Department\Settings\DepartmentSettings;
 use Modules\Faculty\Models\Faculty;
 use Modules\Menu\Support\MenuEditor;
 use Modules\Menu\Support\MenuTree;
@@ -33,7 +34,6 @@ use Platform\Search\SearchIndex;
 use Platform\Statistics\StatContext;
 use Platform\Statistics\Statistics;
 use Platform\Statistics\StatSet;
-use Platform\Theme\LayoutResolver;
 use Tests\Fixtures\Models\FixtureChild;
 
 beforeEach(function () {
@@ -230,23 +230,39 @@ it('lists departments on /departments grouped by Faculty, with filter, layouts a
     $ext = Department::factory()->create(['faculty_id' => $this->fe->id, 'name' => ['en' => 'Department of Architecture'], 'external_url' => 'https://arch.example.edu']);
     $hidden = Department::factory()->create(['faculty_id' => $this->fsit->id, 'name' => ['en' => 'Department of Hidden Things'], 'show_in_listing' => false]);
 
-    $this->get('/departments')->assertOk()
-        ->assertSeeInOrder(['Faculty of Science and Information Technology', 'Department of Computer Science and Engineering', 'Faculty of Engineering', 'Department of Electrical Engineering'])
-        ->assertSee('department-card--grid', false)
-        ->assertSee('href="https://arch.example.edu"', false)
-        ->assertDontSee('Department of Hidden Things');
+    $data = $this->get('/departments')->assertOk()->original->getData();   // the view's data, for the module's own layouts below
+    $names = fn (string $url) => $this->get($url)->viewData('groups')->flatMap(fn (array $g) => $g['departments']->pluck('name'))->all();
+    expect($this->get('/departments')->viewData('groups')->map(fn (array $g) => $g['faculty']->short_name)->all())->toBe(['FSIT', 'FE'])
+        ->and($names('/departments'))->toContain('Department of Computer Science and Engineering', 'Department of Electrical Engineering')->not->toContain('Department of Hidden Things')
+        ->and($names('/departments?faculty=fe'))->toContain('Department of Electrical Engineering')->not->toContain('Department of Computer Science and Engineering')
+        ->and($this->get('/departments?faculty=fe')->viewData('listed')->pluck('name')->all())->toContain('Department of Computer Science and Engineering');   // the theme switches without a reload
 
-    $this->get('/departments?faculty=fe')->assertOk()
-        ->assertSee('Department of Electrical Engineering')
-        ->assertDontSee('Department of Computer Science and Engineering');
-
-    app(LayoutResolver::class)->choose('department.listing', 'list');
-    $this->get('/departments')->assertSee('department-card--list', false)->assertSee('Software, systems and AI.');
+    // The module's own layouts (themes may replace them)
+    $grid = moduleView('Department', 'listing.grid', $data);
+    expect($grid)->toContain('department-card--grid', 'href="https://arch.example.edu"')->not->toContain('Department of Hidden Things')
+        ->and(moduleView('Department', 'listing.list', $data))->toContain('department-card--list', 'Software, systems and AI.');
 
     // Hidden keeps its address; departments of an inactive Faculty leave the list
     $this->get($hidden->url())->assertOk();
     $this->fe->update(['is_active' => false]);
-    $this->get('/departments')->assertDontSee('Department of Electrical Engineering');
+    expect($names('/departments'))->not->toContain('Department of Electrical Engineering');
+});
+
+it('shows DIU\'s /departments in the default theme with the text and Quick Links of Settings › Departments (Phase 4.8)', function () {
+    Department::factory()->create(['faculty_id' => $this->fe->id, 'name' => ['en' => 'Department of Electrical Engineering'], 'short_name' => 'EEE']);
+
+    $this->get('/departments')->assertOk()
+        ->assertSee('All Departments')
+        ->assertSeeInOrder(['Browse by Faculty (03)', 'Browse ALL', 'Faculty of Science and Information Technology', 'Faculty of Engineering', 'Quick Links', 'Contact Page'])
+        ->assertSeeInOrder(['Department of Computer Science and Engineering', 'Software, systems and AI.', 'Department of Electrical Engineering'])
+        ->assertSee("faculty === 'all' || faculty === 'FE'", false);
+    $this->get('/departments?faculty=fe')->assertSee("faculty: 'FE'", false)->assertSee('Department of Computer Science and Engineering');
+
+    settings()->saveFor(new DepartmentSettings, [
+        'listing_title' => ['en' => 'Our Departments'],
+        'quick_links' => [['label' => ['en' => 'Research Centres'], 'url' => '/research']],
+    ]);
+    $this->get('/departments')->assertSee('Our Departments')->assertSee('Research Centres')->assertDontSee('Contact Page');
 });
 
 it('shows a default microsite home with about, Head and counters (FR-DEPT-03/07)', function () {

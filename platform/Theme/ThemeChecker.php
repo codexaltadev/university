@@ -21,6 +21,7 @@ class ThemeChecker
         '/::(query|where|find|all|create|first|get)\s*\(/' => 'model call',
         '/\b(eval|exec|shell_exec|system|passthru|proc_open|popen|file_put_contents|unlink)\s*\(/' => 'forbidden function',
         '/\b(App\\\\Models|Modules\\\\)/' => 'class reference',
+        '/<x-[\w.:-]+\s[^>]*@(js|json)\(/' => '@js / @json in a component tag (left as text: pass :attr="$value")',
     ];
 
     /** @return list<string> errors; empty = the theme may be installed */

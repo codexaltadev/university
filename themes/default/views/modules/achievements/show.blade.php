@@ -7,7 +7,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $achievement->title,
         'subtitle' => null,
-        'image' => theme_asset('images/event-hero.jpg'),
+        'image' => theme_asset('images/event-hero.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url($base ?: '/')], ['label' => __('achievements::achievements.plural'), 'url' => $page->listingUrl()], ['label' => $achievement->title, 'url' => request()->url()]],
     ])
 
@@ -32,7 +32,7 @@
                             <div class="grid sm:grid-cols-2 gap-4">
                                 @foreach ($achievers as $person)
                                     <div class="flex items-center gap-4 border border-gray-100 rounded-xl p-4">
-                                        <div class="w-14 h-14 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center shrink-0">@if ($person->photoUrl())<img src="{{ $person->photoUrl() }}" alt="" class="w-full h-full object-cover">@else<x-theme::icon name="user" class="w-6 h-6 text-gray-400" />@endif</div>
+                                        <div class="w-14 h-14 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center shrink-0">@if ($person->photoUrl())<img loading="lazy" decoding="async" src="{{ $person->photoUrl() }}" alt="" class="w-full h-full object-cover">@else<x-theme::icon name="user" class="w-6 h-6 text-gray-400" />@endif</div>
                                         <div class="min-w-0">
                                             <p class="font-semibold text-gray-900">@if ($person->profileUrl())<a href="{{ $person->profileUrl() }}" class="hover:text-primary">{{ $person->name() }}</a>@else{{ $person->name() }}@endif</p>
                                             @if ($person->note() || $person->designation())<p class="text-sm text-gray-500">{{ $person->note() ?: $person->designation() }}</p>@endif
@@ -48,7 +48,7 @@
                             <h2 id="ach-gallery" class="text-2xl font-bold text-gray-900 mb-6">{{ __('achievements::achievements.fields.gallery') }}</h2>
                             <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                 @foreach ($gallery as $item)
-                                    <a href="{{ $item->url('large') ?? $item->url() }}" target="_blank" rel="noopener" class="block aspect-[4/3] rounded-lg overflow-hidden bg-gray-100"><img src="{{ $item->url('medium') ?? $item->url() }}" alt="{{ $item->alt_text ?? '' }}" loading="lazy" class="w-full h-full object-cover hover:scale-105 transition-transform"></a>
+                                    <a href="{{ $item->url('large') ?? $item->url() }}" target="_blank" rel="noopener" class="block aspect-[4/3] rounded-lg overflow-hidden bg-gray-100"><img decoding="async" src="{{ $item->url('medium') ?? $item->url() }}" alt="{{ $item->alt_text ?? '' }}" loading="lazy" class="w-full h-full object-cover hover:scale-105 transition-transform"></a>
                                 @endforeach
                             </div>
                         </section>

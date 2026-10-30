@@ -8,7 +8,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $page->title(),
         'subtitle' => null,
-        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url('/')], ['label' => $page->title(), 'url' => $page->listingUrl()], ['label' => $person->name(), 'url' => url($member->url())]],
     ])
 
@@ -18,7 +18,7 @@
                 @include('theme::partials.diu.browse-sidebar', ['items' => $page->sections(), 'quickLinks' => $page->quickLinks()])
 
                 @if ($p = $page->profile())
-                    <main class="administration-profile flex-1 min-w-0">
+                    <div class="administration-profile flex-1 min-w-0">
                         <div class="rounded-xl bg-gradient-to-r from-primary to-blue-600 text-white">
                             <div class="px-6 sm:px-8 py-8">
                                 <a href="{{ $page->backUrl() }}" class="inline-flex items-center gap-2 mb-6 text-blue-100 hover:text-white hover:no-underline transition-colors">
@@ -83,7 +83,7 @@
                                 </ul>
                             </section>
                         @endif
-                    </main>
+                    </div>
                 @endif
             </div>
         </div>

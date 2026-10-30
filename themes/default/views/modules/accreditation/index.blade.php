@@ -7,7 +7,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $page->text('accreditations_title') ?? __('accreditation::accreditation.plural'),
         'subtitle' => ($line = $page->text('accreditations_text')) ? e($line) : null,
-        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs($page->text('accreditations_title') ?? __('accreditation::accreditation.plural'), 'accreditations'),
     ])
 

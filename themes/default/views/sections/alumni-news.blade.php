@@ -24,11 +24,11 @@
                 @if ($items && ($featured = collect($items)->first()))
                     <div class="w-full h-[300px] relative rounded-b-lg overflow-hidden mb-6">
                         @if ($image = $featured->featuredImage())
-                            <img src="{{ $image->url('large') ?? $image->url() }}" alt="{{ $featured->title }}" class="absolute inset-0 w-full h-full object-cover">
+                            <img loading="lazy" decoding="async" src="{{ $image->url('large') ?? $image->url() }}" alt="{{ $featured->title }}" class="absolute inset-0 w-full h-full object-cover">
                         @endif
                     </div>
                     @if ($category = $featured->termsIn('news.category')->first())
-                        <div class="inline-block text-green-600 text-sm md:text-base font-bold px-2 py-1 rounded mb-3">• {{ $category->name }}</div>
+                        <div class="inline-block text-green-700 text-sm md:text-base font-bold px-2 py-1 rounded mb-3">• {{ $category->name }}</div>
                     @endif
                     <a href="{{ url($featured->url()) }}" class="hover:underline"><x-theme::heading tag="h3" size="md">{{ $featured->title }}</x-theme::heading></a>
                     <p class="text-neutral-600 text-xs">{{ $featured->shownAt()?->format('n/j/Y') }}</p>
@@ -39,13 +39,13 @@
                     <div class="grid grid-cols-12 items-center gap-4 last:border-none border-b border-gray-400 pb-5">
                         <div class="flex-1 col-span-8">
                             @if ($category = $post->termsIn('news.category')->first())
-                                <div class="inline-block text-green-600 text-sm md:text-base font-bold pt-1 rounded mb-2">• {{ $category->name }}</div>
+                                <div class="inline-block text-green-700 text-sm md:text-base font-bold pt-1 rounded mb-2">• {{ $category->name }}</div>
                             @endif
                             <a href="{{ url($post->url()) }}" class="hover:underline"><h4 class="font-bold text-gray-900 text-lg mb-2 leading-tight">{{ $post->title }}</h4></a>
                             <p class="text-neutral-600 text-xs">{{ $post->shownAt()?->format('n/j/Y') }}</p>
                         </div>
                         @if ($image = $post->featuredImage())
-                            <img src="{{ $image->url('medium') ?? $image->url() }}" alt="{{ $post->title }}" loading="lazy" class="col-span-4 w-full h-[136px] object-cover rounded flex-shrink-0">
+                            <img decoding="async" src="{{ $image->url('medium') ?? $image->url() }}" alt="{{ $post->title }}" loading="lazy" class="col-span-4 w-full h-[136px] object-cover rounded flex-shrink-0">
                         @endif
                     </div>
                 @endforeach

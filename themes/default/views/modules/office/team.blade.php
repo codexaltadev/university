@@ -3,7 +3,7 @@
     @include('theme::partials.diu.hero', [
         'title' => __('office::office.page.team_members'),
         'subtitle' => e(__('office::office.page.site_suffix', ['name' => $entity->name, 'site' => settings('general.site_name')])),
-        'image' => $page->image()?->url('large') ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image()?->url('large') ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url('/')], ['label' => $entity->name, 'url' => $page->url()], ['label' => __('office::office.page.team'), 'url' => $page->url('team')]],
     ])
 

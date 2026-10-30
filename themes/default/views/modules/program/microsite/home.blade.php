@@ -12,7 +12,7 @@
     <div class="relative w-full min-h-screen flex items-center overflow-hidden">
         <div class="absolute inset-0 bg-secondary">
             @if ($image = $page->image())
-                <img src="{{ $image->url('large') ?? $image->url() }}" alt="{{ $entity->name }}" class="w-full h-full object-cover">
+                <img src="{{ $image->url('large') ?? $image->url() }}" alt="{{ $entity->name }}" fetchpriority="high" decoding="async" class="w-full h-full object-cover">
             @endif
         </div>
         <div class="absolute inset-0 bg-black/60"></div>
@@ -140,7 +140,7 @@
                 </div>
             @endif
 
-            <main class="flex-1 w-full min-w-0">
+            <div class="flex-1 w-full min-w-0">
                 {{-- AI Summary --}}
                 @if ($summary = $page->aiSummary())
                                         <x-theme::reveal>
@@ -450,7 +450,7 @@
                         {!! $tab['html'] !!}
                     </section>
                 @endforeach
-            </main>
+            </div>
         </div>
     </div>
 </div>

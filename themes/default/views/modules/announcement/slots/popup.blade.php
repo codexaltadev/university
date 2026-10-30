@@ -28,13 +28,13 @@
                     <div class="flex items-center justify-center min-h-0 flex-1 overflow-y-auto">
                         @if ($href = $widget->href())
                             <a href="{{ $href }}" x-on:click="close()" class="block group relative hover:no-underline">
-                                <img src="{{ $image->url('large') ?? $image->url() }}" alt="{{ $image->alt_text ?: (string) $widget->title }}" class="block max-w-full max-h-[70vh] object-contain transition-transform duration-500 group-hover:scale-[1.015]">
+                                <img loading="lazy" decoding="async" src="{{ $image->url('large') ?? $image->url() }}" alt="{{ $image->alt_text ?: (string) $widget->title }}" class="block max-w-full max-h-[70vh] object-contain transition-transform duration-500 group-hover:scale-[1.015]">
                                 <span class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center pb-6">
                                     <span class="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-white text-slate-900 font-extrabold text-sm shadow-2xl">{{ $widget->button_text ?: __('announcement::announcement.explore') }} <x-theme::icon name="arrow-right" class="w-4 h-4 text-primary" /></span>
                                 </span>
                             </a>
                         @else
-                            <img src="{{ $image->url('large') ?? $image->url() }}" alt="{{ $image->alt_text ?: (string) $widget->title }}" class="block max-w-full max-h-[70vh] object-contain">
+                            <img loading="lazy" decoding="async" src="{{ $image->url('large') ?? $image->url() }}" alt="{{ $image->alt_text ?: (string) $widget->title }}" class="block max-w-full max-h-[70vh] object-contain">
                         @endif
                     </div>
                 @endif

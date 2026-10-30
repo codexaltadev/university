@@ -35,9 +35,9 @@
             </div>
             <button type="button" x-show="maxIndex > 0" @click="prev()" class="absolute left-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg text-gray-800 hover:bg-white flex items-center justify-center cursor-pointer z-10"><x-theme::icon name="chevron-left" class="w-4 h-4" /><span class="sr-only">{{ __('theme::theme.previous') }}</span></button>
             <button type="button" x-show="maxIndex > 0" @click="next()" class="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full shadow-lg text-gray-800 hover:bg-white flex items-center justify-center cursor-pointer z-10"><x-theme::icon name="chevron-right" class="w-4 h-4" /><span class="sr-only">{{ __('theme::theme.next') }}</span></button>
-            <div x-show="maxIndex > 0" class="flex justify-center gap-2 -mt-6">
+            <div x-show="maxIndex > 0" class="flex justify-center -mt-6">
                 <template x-for="i in maxIndex + 1" :key="i">
-                    <button type="button" @click="go(i - 1)" class="w-3 h-3 rounded-full transition-all cursor-pointer" :class="index === i - 1 ? 'bg-primary scale-125' : 'bg-black/30'"><span class="sr-only" x-text="i"></span></button>
+                    <button type="button" @click="go(i - 1)" class="p-1.5 cursor-pointer" :aria-current="index === i - 1"><span class="block w-3 h-3 rounded-full transition-all" :class="index === i - 1 ? 'bg-primary scale-125' : 'bg-black/30'"></span><span class="sr-only" x-text="i"></span></button>
                 </template>
             </div>
         </div>

@@ -8,6 +8,7 @@
 @import "tailwindcss";
 @import "./chrome.css";   /* header, menus, drawer, search, footer */
 @import "./sections.css"; /* homepage sections: rotating border, reveal on scroll */
+@import "./print.css";    /* paper: the page's content only, black on white */
 
 /* Views whose classes must be in the build: the theme's and every module's */
 @source "../../views";
@@ -17,6 +18,24 @@
 /* Department / faculty name beside the logo (DIU uses Mina); bundled, Latin + Bangla */
 @font-face { font-family: "Mina"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/mina-700-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: "Mina"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/mina-700-bengali.woff2") format("woff2"); unicode-range: U+0951-0952, U+0964-0965, U+0980-09FE, U+1CD0, U+1CD2, U+1CD5-1CD6, U+1CD8, U+1CE1, U+1CEA, U+1CED, U+1CF2, U+1CF5-1CF7, U+200C-200D, U+20B9, U+25CC, U+A8F1; }
+
+/* The default text fonts (tokens font-heading / font-body / font-bn), bundled: no render-blocking request to
+   Google Fonts (Lighthouse, Phase 4.8c). theme.json "fonts" lists them, so the kernel asks Google only for others */
+@font-face { font-family: "Hind Siliguri"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/hind-siliguri-400-bengali.woff2") format("woff2"); unicode-range: U+0951-0952, U+0964-0965, U+0980-09FE, U+1CD0, U+1CD2, U+1CD5-1CD6, U+1CD8, U+1CE1, U+1CEA, U+1CED, U+1CF2, U+1CF5-1CF7, U+200C-200D, U+20B9, U+25CC, U+A8F1, U+11DF0-11DF1; }
+@font-face { font-family: "Hind Siliguri"; font-style: normal; font-weight: 400; font-display: swap; src: url("../fonts/hind-siliguri-400-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Hind Siliguri"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/hind-siliguri-500-bengali.woff2") format("woff2"); unicode-range: U+0951-0952, U+0964-0965, U+0980-09FE, U+1CD0, U+1CD2, U+1CD5-1CD6, U+1CD8, U+1CE1, U+1CEA, U+1CED, U+1CF2, U+1CF5-1CF7, U+200C-200D, U+20B9, U+25CC, U+A8F1, U+11DF0-11DF1; }
+@font-face { font-family: "Hind Siliguri"; font-style: normal; font-weight: 500; font-display: swap; src: url("../fonts/hind-siliguri-500-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Hind Siliguri"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/hind-siliguri-600-bengali.woff2") format("woff2"); unicode-range: U+0951-0952, U+0964-0965, U+0980-09FE, U+1CD0, U+1CD2, U+1CD5-1CD6, U+1CD8, U+1CE1, U+1CEA, U+1CED, U+1CF2, U+1CF5-1CF7, U+200C-200D, U+20B9, U+25CC, U+A8F1, U+11DF0-11DF1; }
+@font-face { font-family: "Hind Siliguri"; font-style: normal; font-weight: 600; font-display: swap; src: url("../fonts/hind-siliguri-600-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Hind Siliguri"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/hind-siliguri-700-bengali.woff2") format("woff2"); unicode-range: U+0951-0952, U+0964-0965, U+0980-09FE, U+1CD0, U+1CD2, U+1CD5-1CD6, U+1CD8, U+1CE1, U+1CEA, U+1CED, U+1CF2, U+1CF5-1CF7, U+200C-200D, U+20B9, U+25CC, U+A8F1, U+11DF0-11DF1; }
+@font-face { font-family: "Hind Siliguri"; font-style: normal; font-weight: 700; font-display: swap; src: url("../fonts/hind-siliguri-700-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Manrope"; font-style: normal; font-weight: 400 700; font-display: swap; src: url("../fonts/manrope-400-700-latin.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+
+/* Until Manrope arrives: Arial (Liberation Sans on Linux) scaled to Manrope's width and line height, so the hero
+   text keeps its lines when the font swaps in (Lighthouse CLS, Phase 4.8c). The kernel puts "Manrope Fallback"
+   after "Manrope" in the font stack; values measured in Chromium (regular / bold) */
+@font-face { font-family: "Manrope Fallback"; font-weight: 100 549; src: local("Arial"), local("ArialMT"), local("Liberation Sans"); size-adjust: 102.88%; ascent-override: 104.01%; descent-override: 29.16%; line-gap-override: 0%; }
+@font-face { font-family: "Manrope Fallback"; font-weight: 550 900; src: local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"); size-adjust: 100.65%; ascent-override: 106.31%; descent-override: 29.81%; line-gap-override: 0%; }
 
 /* Tokens → utilities: bg-primary, text-secondary, font-heading, shadow-card … follow the admin's choice */
 @theme inline reference {
@@ -84,6 +103,9 @@
         font-size: var(--font-size-base);
         line-height: var(--line-height-body);
         -webkit-font-smoothing: antialiased;
+        /* Content sliding in from the side (.reveal left / right) must not make the page scroll sideways
+           (DIU: body overflow-x hidden); clip keeps the sticky header working (Phase 4.8d) */
+        overflow-x: clip;
     }
 
     /* Bangla: own font and taller line come from the kernel tokens (:lang(bn)) */
@@ -197,6 +219,4 @@
     .home-section--dark h2 { color: inherit; }
     .home-section__title { font-size: var(--text-2xl); margin: 0 0 var(--space-2); }
     .home-section__sub { color: var(--color-text-muted); margin: 0 0 var(--space-8); }
-
-    @media print { .no-print { display: none !important; } }
 }

@@ -9,7 +9,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $page->current()?->name ?? __('committee::committee.plural'),
         'subtitle' => null,
-        'image' => theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs(),
     ])
 
@@ -64,7 +64,7 @@
                         </div>
                     </aside>
 
-                    <main class="lg:col-span-4 min-w-0 space-y-6">
+                    <div class="lg:col-span-4 min-w-0 space-y-6">
                         @if ($committee = $page->current())
                             @if ($committee->termLabel() || $committee->isPrevious() || $page->nextTermUrl())
                                 <div class="flex flex-wrap items-center gap-3 text-sm">
@@ -154,7 +154,7 @@
                                 </section>
                             @endif
                         @endif
-                    </main>
+                    </div>
                 </div>
             @endif
         </div>

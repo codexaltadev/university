@@ -9,7 +9,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $page->title(),
         'subtitle' => $page->subtitle() ? e($page->subtitle()) : null,
-        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs(),
     ])
 
@@ -20,7 +20,7 @@
                     @include('theme::partials.diu.browse-sidebar', ['items' => $sections, 'quickLinks' => [], 'width' => 'lg:w-[320px]'])
                 @endif
 
-                <main class="flex-1 min-w-0">
+                <div class="flex-1 min-w-0">
                     @if ($intro = $page->intro())
                         <div class="prose max-w-none mb-6">{!! $intro !!}</div>
                     @endif
@@ -61,7 +61,7 @@
                         </div>
                         {{ $members->links('theme::partials.diu.pagination') }}
                     @endif
-                </main>
+                </div>
             </div>
         </div>
     </div>

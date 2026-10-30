@@ -2,7 +2,7 @@
 @if (filled(theme_option('footer_cta_title')))
     <div class="site-footer__cta relative">
         <div class="absolute inset-0">
-            <img src="{{ theme_image('footer_cta_image', 'images/footer-cta.jpg') }}" alt="" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-cover [object-position:50%_35%]">
+            <img src="{{ theme_image('footer_cta_image', 'images/footer-cta.webp') }}" alt="" loading="lazy" decoding="async" class="absolute inset-0 h-full w-full object-cover [object-position:50%_35%]">
             <div class="absolute top-[55%] inset-0 bg-gradient-to-t from-secondary via-secondary/50 to-transparent z-10"></div>
             <div class="absolute inset-0 bg-gradient-to-r from-black/100 via-black/50 to-transparent"></div>
         </div>

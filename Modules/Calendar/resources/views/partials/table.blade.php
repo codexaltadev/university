@@ -2,7 +2,7 @@
 @if ($events->isEmpty())
     <p>{{ __('calendar::calendar.no_dates') }}</p>
 @else
-    <div style="overflow-x:auto">
+    <div tabindex="0" style="overflow-x:auto">
         <table class="table calendar-table" style="width:100%">
             <thead>
                 <tr>

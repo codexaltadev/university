@@ -9,7 +9,7 @@
     @include('theme::partials.diu.hero', [
         'title' => settings('testimonials.title') ?: __('testimonials::testimonials.plural'),
         'subtitle' => e(settings('testimonials.text')),
-        'image' => media_url(settings('testimonials.image'), 'large') ?? theme_asset('images/testimonials-banner.jpg'),
+        'image' => media_url(settings('testimonials.image'), 'large') ?? theme_asset('images/testimonials-banner.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url($base ?: '/')], ['label' => settings('testimonials.title') ?: __('testimonials::testimonials.plural'), 'url' => $page->listingUrl()]],
     ])
 
@@ -57,7 +57,7 @@
                                 <button type="button" @click="open = null; history.replaceState(null, '', location.pathname + location.search)" class="absolute top-4 right-4 p-2 rounded-full hover:bg-gray-100 cursor-pointer" aria-label="{{ __('testimonials::testimonials.page.close') }}"><x-theme::icon name="close" class="w-5 h-5 text-gray-600" /></button>
                                 <div class="px-6 py-8 sm:px-8 sm:py-10 border-b border-gray-200 flex flex-col sm:flex-row items-start sm:items-center gap-4">
                                     <div class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
-                                        @if ($card['photo'])<img src="{{ $card['photo'] }}" alt="{{ $card['name'] }}" class="w-full h-full object-cover">@else<x-theme::icon name="user" class="w-10 h-10 text-gray-400" />@endif
+                                        @if ($card['photo'])<img loading="lazy" decoding="async" src="{{ $card['photo'] }}" alt="{{ $card['name'] }}" class="w-full h-full object-cover">@else<x-theme::icon name="user" class="w-10 h-10 text-gray-400" />@endif
                                     </div>
                                     <div class="flex-1">
                                         <h2 id="{{ $card['id'] }}-name" class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">

@@ -35,7 +35,7 @@
         @else
             <p style="margin-top:var(--space-4, 16px)">{{ __('international::international.found', ['count' => number_format($partners->total())]) }}</p>
             @if ($layout === 'table')
-                <div style="overflow-x:auto">
+                <div tabindex="0" style="overflow-x:auto">
                     <table class="table" style="width:100%;border-collapse:collapse">
                         <thead><tr>
                             @foreach (['name', 'country', 'agreement_type', 'expires_on'] as $col)<th style="text-align:left;padding:8px;border-bottom:2px solid var(--color-border)">{{ __('international::international.fields.'.$col) }}</th>@endforeach

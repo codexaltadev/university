@@ -50,7 +50,7 @@
                 </aside>
             @endif
 
-            <main class="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+            <div class="flex-1 min-w-0 px-4 sm:px-6 lg:px-8 py-8 space-y-8">
                 @foreach ($page->groups() as $group)
                     <section class="bg-white rounded-xl border border-gray-200 overflow-hidden" x-show="[...$el.querySelectorAll('[data-search]')].some(e => match(e.dataset.search))">
                         <div class="px-6 py-5 border-b border-gray-200 bg-gray-50">
@@ -81,7 +81,7 @@
                     </section>
                 @endforeach
                 <p x-cloak x-show="q.trim() !== '' && ! [...$root.querySelectorAll('[data-search]')].some(e => match(e.dataset.search))" class="text-center py-10 text-gray-500">{{ __('faq::faq.no_match') }}</p>
-            </main>
+            </div>
         </div>
     </div>
     <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_HEX_TAG) !!}</script>

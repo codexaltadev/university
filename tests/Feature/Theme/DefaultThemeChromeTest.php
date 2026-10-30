@@ -7,6 +7,7 @@
 */
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\File;
 use Modules\HeaderFooter\Support\Regions;
 use Modules\Menu\Support\MenuEditor;
 use Platform\Context\FallbackResolver;
@@ -14,6 +15,7 @@ use Platform\Context\SiteContext;
 use Platform\Seo\Seo;
 use Platform\Theme\MenuItems;
 use Platform\Theme\Themes;
+use Symfony\Component\Finder\SplFileInfo;
 
 beforeEach(function () {
     app(Themes::class)->flush();
@@ -123,7 +125,7 @@ it('draws the footer band, the call-to-action and the admin\'s link columns', fu
 
     $this->get('/')->assertOk()
         ->assertSee('Campus Life in 60 Seconds')->assertSee('Get a Virtual Tour')
-        ->assertSee('Start Your Journey<br>', false)->assertSee('with Us')->assertSee('themes/default/images/footer-cta.jpg', false)
+        ->assertSee('Start Your Journey<br>', false)->assertSee('with Us')->assertSee('themes/default/images/footer-cta.webp', false)
         ->assertSee('Get in Touch')->assertSee('/article/contact', false)
         ->assertSee('Copyright © '.now()->year.' Daffodil International University');
 
@@ -140,4 +142,24 @@ it('opens every menu level as an accordion in the mobile menu', function () {
 
     // DIU MobileMegaMenu: a parent only opens its accordion, the links are its children
     expect($html)->toContain('x-collapse')->toContain('/about/mission')->not->toContain('href="/about"')->toContain('/contact');
+});
+
+it('keeps one main landmark: only the layouts open <main> (Phase 4.8b, axe landmark-no-duplicate-main)', function () {
+    $nested = collect(File::allFiles(base_path('themes/default/views')))
+        ->reject(fn (SplFileInfo $file): bool => str_starts_with(str_replace('\\', '/', $file->getRelativePathname()), 'layouts/') || $file->getFilename() === 'bare.blade.php')
+        ->filter(fn (SplFileInfo $file): bool => str_contains($file->getContents(), '<main'))
+        ->map->getRelativePathname()->values()->all();
+
+    expect($nested)->toBe([]);
+});
+
+it('gives phones the small copy of a theme hero picture, nothing for other pictures (Phase 4.8c)', function () {
+    expect(theme_image_small(theme_asset('images/page-hero.webp')))->toBe(theme_asset('images/page-hero-sm.webp'))
+        ->and(theme_image_small(theme_asset('images/page-hero.jpg')))->toBe(theme_asset('images/page-hero-sm.webp'))   // an address saved before 4.8c
+        ->and(theme_image_small(theme_asset('images/footer-cta.webp')))->toBeNull()                                  // no small copy
+        ->and(theme_image_small('https://cdn.example.edu/hero.webp'))->toBeNull()
+        ->and(theme_image_small(null))->toBeNull();
+
+    $this->get('/transport')->assertOk()
+        ->assertSee('<source media="(max-width: 767px)" srcset="'.theme_asset('images/page-hero-sm.webp').'">', false);
 });

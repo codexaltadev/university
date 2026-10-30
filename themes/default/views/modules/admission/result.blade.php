@@ -5,7 +5,7 @@
     Contract: $intro; $page (AdmissionPage); the form is the admission.result-lookup Livewire component
 --}}
 <x-theme::layout :title="__('admission::admission.result_page.title')">
-    <main class="min-h-screen bg-gradient-to-br from-blue-50 to-white px-4 pt-32 pb-10" style="margin-top: calc(-1 * var(--header-h, 0px))">
+    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-white px-4 pt-32 pb-10" style="margin-top: calc(-1 * var(--header-h, 0px))">
         <div class="container mx-auto">
             <div class="flex flex-col items-center mt-10 md:mt-16">
                 <h1 class="text-3xl md:text-4xl font-bold mb-4 text-center text-primary">{{ __('admission::admission.result_page.title') }}</h1>
@@ -47,20 +47,20 @@
                     <h2 class="text-xl font-bold text-gray-800 mb-6">{{ __('admission::admission.contact_page.assistance') }}</h2>
                     <dl class="grid gap-6 md:grid-cols-2 text-gray-700">
                         @if ($office['email'])
-                            <div class="flex gap-3"><x-theme::icon name="mail" class="size-5 mt-0.5 text-primary" /><div><dt class="font-medium text-gray-900">{{ __('admission::admission.contact_page.email') }}</dt><dd><a href="mailto:{{ $office['email'] }}" class="hover:underline">{{ $office['email'] }}</a></dd></div></div>
+                            <div class="relative pl-8"><dt class="font-medium text-gray-900"><x-theme::icon name="mail" class="absolute left-0 top-0.5 size-5 text-primary" />{{ __('admission::admission.contact_page.email') }}</dt><dd><a href="mailto:{{ $office['email'] }}" class="hover:underline">{{ $office['email'] }}</a></dd></div>
                         @endif
                         @if ($office['address'])
-                            <div class="flex gap-3"><x-theme::icon name="building" class="size-5 mt-0.5 text-primary" /><div><dt class="font-medium text-gray-900">{{ __('admission::admission.contact_page.office') }}</dt><dd>{{ $office['name'] }}@if ($office['name'] && $office['address']), @endif{{ $office['address'] }}</dd></div></div>
+                            <div class="relative pl-8"><dt class="font-medium text-gray-900"><x-theme::icon name="building" class="absolute left-0 top-0.5 size-5 text-primary" />{{ __('admission::admission.contact_page.office') }}</dt><dd>{{ $office['name'] }}@if ($office['name'] && $office['address']), @endif{{ $office['address'] }}</dd></div>
                         @endif
                         @if ($office['helpline'])
-                            <div class="flex gap-3"><x-theme::icon name="phone" class="size-5 mt-0.5 text-primary" /><div><dt class="font-medium text-gray-900">{{ __('admission::admission.contact_page.helpline') }}</dt><dd><a href="tel:{{ $office['tel'] }}" class="hover:underline">{{ $office['helpline'] }}</a></dd></div></div>
+                            <div class="relative pl-8"><dt class="font-medium text-gray-900"><x-theme::icon name="phone" class="absolute left-0 top-0.5 size-5 text-primary" />{{ __('admission::admission.contact_page.helpline') }}</dt><dd><a href="tel:{{ $office['tel'] }}" class="hover:underline">{{ $office['helpline'] }}</a></dd></div>
                         @endif
                         @if ($apply)
-                            <div class="flex gap-3"><x-theme::icon name="globe" class="size-5 mt-0.5 text-primary" /><div><dt class="font-medium text-gray-900">{{ __('admission::admission.contact_page.online') }}</dt><dd><a href="{{ $apply }}" target="_blank" rel="noopener" class="hover:underline break-all">{{ $apply }}</a></dd></div></div>
+                            <div class="relative pl-8"><dt class="font-medium text-gray-900"><x-theme::icon name="globe" class="absolute left-0 top-0.5 size-5 text-primary" />{{ __('admission::admission.contact_page.online') }}</dt><dd><a href="{{ $apply }}" target="_blank" rel="noopener" class="hover:underline break-all">{{ $apply }}</a></dd></div>
                         @endif
                     </dl>
                 </div>
             </section>
         @endif
-    </main>
+    </div>
 </x-theme::layout>

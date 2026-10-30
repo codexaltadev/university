@@ -7,7 +7,7 @@
     @include('theme::partials.diu.hero', [
         'title' => (string) $activity->title,
         'subtitle' => e(__('csr::csr.page.detail')),
-        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs((string) $activity->title),
     ])
 

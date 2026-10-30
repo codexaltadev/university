@@ -9,7 +9,7 @@
         @include('theme::partials.diu.hero', [
             'title' => $place->name,
             'subtitle' => e($page->heroText()),
-            'image' => media_url(settings('lab.listing_image'), 'large') ?? theme_asset('images/faculty-banner.jpg'),
+            'image' => media_url(settings('lab.listing_image'), 'large') ?? theme_asset('images/faculty-banner.webp'),
             'breadcrumbs' => [
                 ['label' => __('theme::theme.home'), 'url' => url('/')],
                 ['label' => settings('lab.listing_title') ?: __('lab::lab.page.laboratories'), 'url' => url('/labs')],
@@ -17,7 +17,7 @@
             ],
         ])
 
-        <main class="min-h-screen bg-white">
+        <div class="min-h-screen bg-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-10 lg:py-12">
                 @if ($first = $page->first())
                     <div class="flex flex-col lg:flex-row gap-8">
@@ -32,16 +32,16 @@
                     <p class="text-gray-600 text-center py-16">{{ __('lab::lab.none') }}</p>
                 @endif
             </div>
-        </main>
+        </div>
     @else
         @include('theme::partials.diu.hero', [
             'title' => settings('lab.listing_title') ?: __('lab::lab.page.laboratories'),
             'subtitle' => e(settings('lab.listing_text')),
-            'image' => media_url(settings('lab.listing_image'), 'large') ?? theme_asset('images/faculty-banner.jpg'),
+            'image' => media_url(settings('lab.listing_image'), 'large') ?? theme_asset('images/faculty-banner.webp'),
             'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url('/')], ['label' => settings('lab.listing_title') ?: __('lab::lab.page.laboratories'), 'url' => url('/labs')]],
         ])
 
-        <main class="min-h-screen bg-white">
+        <div class="min-h-screen bg-white">
             <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
                 {{-- Beyond DIU: find a lab (FR-LAB-05) --}}
                 <form method="get" class="flex flex-wrap justify-end gap-2 mb-10" role="search">
@@ -103,6 +103,6 @@
                     @endforelse
                 </div>
             </div>
-        </main>
+        </div>
     @endif
 </x-theme::layout>

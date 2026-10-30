@@ -9,7 +9,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $page->text('discounts_title') ?? __('partners::partners.discounts'),
         'subtitle' => ($line = $page->text('discounts_text')) ? e($line) : null,
-        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs($page->text('discounts_title') ?? __('partners::partners.discounts'), 'student-discounts'),
     ])
 
@@ -20,7 +20,7 @@
                     @include('theme::partials.diu.browse-sidebar', ['items' => $categories, 'quickLinks' => $page->quickLinks(), 'width' => 'lg:w-[360px]'])
                 @endif
 
-                <main class="flex-1 min-w-0">
+                <div class="flex-1 min-w-0">
                     <div class="bg-gradient-to-r from-primary to-blue-600 rounded-2xl p-8 mb-8 text-white">
                         <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                             <div>
@@ -99,7 +99,7 @@
                             @endforeach
                         </div>
                     @endif
-                </main>
+                </div>
             </div>
         </div>
     </div>

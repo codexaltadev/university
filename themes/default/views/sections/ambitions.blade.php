@@ -35,7 +35,7 @@
                                             <template x-if="playing"><iframe src="{{ $embed }}?autoplay=1" title="{{ $alumnus->name }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen class="w-full h-[400px] border-0"></iframe></template>
                                         @endif
                                         @if ($photo = $alumnus->firstMedia('photo'))
-                                            <img x-show="! playing" src="{{ $photo->url('medium') ?? $photo->url() }}" alt="{{ $alumnus->name }}" class="w-full h-[400px] object-cover">
+                                            <img loading="lazy" decoding="async" x-show="! playing" src="{{ $photo->url('medium') ?? $photo->url() }}" alt="{{ $alumnus->name }}" class="w-full h-[400px] object-cover">
                                         @else
                                             <div x-show="! playing" class="w-full h-[400px] bg-blue-900"></div>
                                         @endif
@@ -66,7 +66,7 @@
                                 {{-- the narrow card --}}
                                 <div x-show="active !== {{ $loop->index }}" @if ($loop->first) x-cloak @endif class="relative rounded-4xl overflow-hidden">
                                     @if ($photo = $alumnus->firstMedia('photo'))
-                                        <img src="{{ $photo->url('medium') ?? $photo->url() }}" alt="{{ $alumnus->name }}" loading="lazy" class="w-full h-[400px] object-cover hover:scale-105 transition-transform duration-300">
+                                        <img decoding="async" src="{{ $photo->url('medium') ?? $photo->url() }}" alt="{{ $alumnus->name }}" loading="lazy" class="w-full h-[400px] object-cover hover:scale-105 transition-transform duration-300">
                                     @else
                                         <div class="w-full h-[400px] bg-blue-900"></div>
                                     @endif

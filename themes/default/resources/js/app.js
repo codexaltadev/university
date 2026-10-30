@@ -2,6 +2,11 @@
 // its instance and never load a second copy.
 document.documentElement.classList.add('js');
 
+// Reduced motion (UI/UX Part B §8): background videos stop on their poster / first frame
+if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.querySelectorAll('video[autoplay]').forEach((video) => { video.autoplay = false; video.pause(); });
+}
+
 // DIU RichHtmlContent: page text written for the old site (Bootstrap tables, cards, accordions) shown as
 // DIU shows it — in a shadow root with Bootstrap 5.0.2, out of reach of the site's own CSS; collapse
 // toggles wired by hand. <diu-rich-html data-css="…/bootstrap-5.0.2.min.css">…</diu-rich-html>
@@ -156,8 +161,10 @@ document.addEventListener('alpine:init', () => {
     }));
 
     // Number counting up once it scrolls into view (DIU Counter): <span x-data="counter(5600, '+')" x-intersect.once="run()" x-text="text"></span>
+    // Printing shows the final number, also of counters never scrolled to.
     Alpine.data('counter', (value = 0, suffix = '') => ({
         current: 0,
+        init() { window.addEventListener('beforeprint', () => { this.current = value; }); },
         get text() { return `${Math.floor(this.current).toLocaleString()}${suffix}`; },
         run() {
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { this.current = value; return; }

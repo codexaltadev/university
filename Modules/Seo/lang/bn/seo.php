@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'seed' => [
+        'description' => ':name-এর অফিসিয়াল ওয়েবসাইট: ভর্তি, প্রোগ্রাম, অনুষদ, টিউশন ফি, বৃত্তি, গবেষণা, নোটিশ ও সংবাদ।',
+    ],
     'settings' => [
         'tab' => 'SEO',
         'title_pattern' => 'Page title-এর ধাঁচ',

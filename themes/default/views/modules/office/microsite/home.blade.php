@@ -8,7 +8,7 @@
 @include('theme::partials.diu.hero', [
     'title' => $entity->name,
     'subtitle' => e(__('office::office.page.site_suffix', ['name' => $entity->name, 'site' => settings('general.site_name')])),
-    'image' => $page->image()?->url('large') ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+    'image' => $page->image()?->url('large') ?? theme_image('page_hero_image', 'images/page-hero.webp'),
     'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url('/')], ['label' => $entity->name, 'url' => $page->url()]],
 ])
 
@@ -63,7 +63,7 @@
                         <div class="flex flex-col sm:flex-row gap-6 items-start">
                             @if ($head = $message['person'])
                                 <div class="sm:w-48 shrink-0 text-center">
-                                    @if ($head->photoUrl())<img src="{{ $head->photoUrl() }}" alt="{{ $head->name() }}" class="w-32 h-32 mx-auto rounded-full object-cover border-2 border-gray-200">@endif
+                                    @if ($head->photoUrl())<img loading="lazy" decoding="async" src="{{ $head->photoUrl() }}" alt="{{ $head->name() }}" class="w-32 h-32 mx-auto rounded-full object-cover border-2 border-gray-200">@endif
                                     <p class="mt-3 font-bold text-gray-900">{{ $head->name() }}</p>
                                     @if ($head->designation())<p class="text-sm text-gray-500">{{ $head->designation() }}</p>@endif
                                 </div>

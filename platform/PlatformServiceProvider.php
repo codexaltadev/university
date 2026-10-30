@@ -60,6 +60,7 @@ use Platform\Theme\Themes;
 use Platform\Views\ViewCounter;
 use Platform\Website\Website;
 use Platform\Website\WebsiteController;
+use Symfony\Component\HtmlSanitizer\HtmlSanitizerConfig;
 
 /**
  * Platform kernel. Registered before nwidart's provider (bootstrap/providers.php),
@@ -87,6 +88,10 @@ class PlatformServiceProvider extends ServiceProvider
 
         // lang/ files plus the admin's interface-string overrides (FR-LANG-03)
         $this->app->extend('translation.loader', fn ($files) => new DatabaseTranslationLoader($files));
+
+        // Pictures inside content (Str::sanitizeHtml) load when scrolled to (Lighthouse offscreen images, Phase 4.8c)
+        $this->app->extend(HtmlSanitizerConfig::class, fn (HtmlSanitizerConfig $config): HtmlSanitizerConfig => $config
+            ->forceAttribute('img', 'loading', 'lazy')->forceAttribute('img', 'decoding', 'async'));
 
         // ZIP-installed modules, and bundled ones not yet in composer's autoload
         // (a fresh module:make-uwms must work without "composer dump-autoload")

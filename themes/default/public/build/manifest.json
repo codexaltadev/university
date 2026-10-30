@@ -1,6 +1,6 @@
 {
   "resources/css/app.css": {
-    "file": "assets/app-CTwC0PfM.css",
+    "file": "assets/app-DIxpOnZV.css",
     "name": "app",
     "names": [
       "app.css"
@@ -9,8 +9,53 @@
     "isEntry": true,
     "assets": [
       "assets/mina-700-latin-DkgfOKzP.woff2",
-      "assets/mina-700-bengali-gGQePSSq.woff2"
+      "assets/mina-700-bengali-gGQePSSq.woff2",
+      "assets/hind-siliguri-400-bengali-rHQ7AW0H.woff2",
+      "assets/hind-siliguri-400-latin-esES0U7a.woff2",
+      "assets/hind-siliguri-500-bengali-UuhTmLlo.woff2",
+      "assets/hind-siliguri-500-latin-S8HLIV69.woff2",
+      "assets/hind-siliguri-600-bengali-DLZF4s8q.woff2",
+      "assets/hind-siliguri-600-latin-DHrLfb92.woff2",
+      "assets/hind-siliguri-700-bengali-FVd7rFqZ.woff2",
+      "assets/hind-siliguri-700-latin-DO_14aHP.woff2",
+      "assets/manrope-400-700-latin-DHIcAJRg.woff2"
     ]
+  },
+  "resources/fonts/hind-siliguri-400-bengali.woff2": {
+    "file": "assets/hind-siliguri-400-bengali-rHQ7AW0H.woff2",
+    "src": "resources/fonts/hind-siliguri-400-bengali.woff2"
+  },
+  "resources/fonts/hind-siliguri-400-latin.woff2": {
+    "file": "assets/hind-siliguri-400-latin-esES0U7a.woff2",
+    "src": "resources/fonts/hind-siliguri-400-latin.woff2"
+  },
+  "resources/fonts/hind-siliguri-500-bengali.woff2": {
+    "file": "assets/hind-siliguri-500-bengali-UuhTmLlo.woff2",
+    "src": "resources/fonts/hind-siliguri-500-bengali.woff2"
+  },
+  "resources/fonts/hind-siliguri-500-latin.woff2": {
+    "file": "assets/hind-siliguri-500-latin-S8HLIV69.woff2",
+    "src": "resources/fonts/hind-siliguri-500-latin.woff2"
+  },
+  "resources/fonts/hind-siliguri-600-bengali.woff2": {
+    "file": "assets/hind-siliguri-600-bengali-DLZF4s8q.woff2",
+    "src": "resources/fonts/hind-siliguri-600-bengali.woff2"
+  },
+  "resources/fonts/hind-siliguri-600-latin.woff2": {
+    "file": "assets/hind-siliguri-600-latin-DHrLfb92.woff2",
+    "src": "resources/fonts/hind-siliguri-600-latin.woff2"
+  },
+  "resources/fonts/hind-siliguri-700-bengali.woff2": {
+    "file": "assets/hind-siliguri-700-bengali-FVd7rFqZ.woff2",
+    "src": "resources/fonts/hind-siliguri-700-bengali.woff2"
+  },
+  "resources/fonts/hind-siliguri-700-latin.woff2": {
+    "file": "assets/hind-siliguri-700-latin-DO_14aHP.woff2",
+    "src": "resources/fonts/hind-siliguri-700-latin.woff2"
+  },
+  "resources/fonts/manrope-400-700-latin.woff2": {
+    "file": "assets/manrope-400-700-latin-DHIcAJRg.woff2",
+    "src": "resources/fonts/manrope-400-700-latin.woff2"
   },
   "resources/fonts/mina-700-bengali.woff2": {
     "file": "assets/mina-700-bengali-gGQePSSq.woff2",
@@ -21,7 +66,7 @@
     "src": "resources/fonts/mina-700-latin.woff2"
   },
   "resources/js/app.js": {
-    "file": "assets/app-CqSi3c2n.js",
+    "file": "assets/app-soat0dkC.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true

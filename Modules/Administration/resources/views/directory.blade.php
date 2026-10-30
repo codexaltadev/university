@@ -52,7 +52,7 @@
             <section class="administration-group" style="margin-top:var(--space-8, 32px)">
                 <h2>{{ $group['category']->name }}</h2>
                 @if ($layout === 'table')
-                    <div style="overflow-x:auto">
+                    <div tabindex="0" style="overflow-x:auto">
                         <table class="table" style="width:100%">
                             <thead><tr>
                                 <th scope="col">{{ __('administration::administration.fields.name') }}</th>

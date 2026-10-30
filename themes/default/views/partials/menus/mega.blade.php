@@ -4,7 +4,7 @@
         @foreach ($items as $item)
             @if ($item->children->isNotEmpty() && $item->mega)
                 <li class="static group" @mouseenter="open = {{ $loop->index }}" @focusout="if (! $el.contains($event.relatedTarget)) open = null">
-                    <button type="button" class="nav__link block cursor-pointer px-4 py-[22px] text-secondary font-semibold text-base transition-all duration-300 hover:font-bold" :class="{ 'underline underline-offset-4': open === {{ $loop->index }} }"
+                    <button type="button" class="nav__link block cursor-pointer px-2 xl:px-4 py-[22px] text-secondary font-semibold text-base transition-all duration-300 hover:font-bold" :class="{ 'underline underline-offset-4': open === {{ $loop->index }} }"
                             @click="open = open === {{ $loop->index }} ? null : {{ $loop->index }}" :aria-expanded="open === {{ $loop->index }}">{{ $item->label }}</button>
                     <div class="nav__panel--mega absolute top-full w-full left-0 right-0 rounded-b bg-white shadow-lg z-50" x-show="open === {{ $loop->index }}" x-transition.opacity x-cloak>
                         <div class="container mx-auto px-4 py-6">
@@ -29,13 +29,13 @@
                 </li>
             @elseif ($item->children->isNotEmpty())
                 <li class="relative group" @mouseenter="open = {{ $loop->index }}" @focusout="if (! $el.contains($event.relatedTarget)) open = null">
-                    <button type="button" class="nav__link block cursor-pointer px-4 py-[22px] text-secondary font-semibold text-base transition-all duration-300 hover:font-bold" :class="{ 'underline underline-offset-4': open === {{ $loop->index }} }"
+                    <button type="button" class="nav__link block cursor-pointer px-2 xl:px-4 py-[22px] text-secondary font-semibold text-base transition-all duration-300 hover:font-bold" :class="{ 'underline underline-offset-4': open === {{ $loop->index }} }"
                             @click="open = open === {{ $loop->index }} ? null : {{ $loop->index }}" :aria-expanded="open === {{ $loop->index }}">{{ $item->label }}</button>
                     @include('theme::partials.menus.panel', ['item' => $item, 'index' => $loop->index])
                 </li>
             @else
                 <li class="static">
-                    <a href="{{ $item->url }}" @if ($item->target) target="_blank" rel="noopener" @endif @if ($item->isActive) aria-current="page" @endif class="nav__link block px-4 py-[22px] text-secondary font-semibold text-base transition-all duration-300 hover:font-bold hover:no-underline">{{ $item->label }}</a>
+                    <a href="{{ $item->url }}" @if ($item->target) target="_blank" rel="noopener" @endif @if ($item->isActive) aria-current="page" @endif class="nav__link block px-2 xl:px-4 py-[22px] text-secondary font-semibold text-base transition-all duration-300 hover:font-bold hover:no-underline">{{ $item->label }}</a>
                 </li>
             @endif
         @endforeach

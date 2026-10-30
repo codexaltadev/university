@@ -7,7 +7,7 @@
 @include('theme::partials.diu.hero', [
     'title' => $page->department()?->name ?? $entity->name,
     'subtitle' => e($page->heroText()),
-    'image' => $page->image()?->url('large') ?? media_url(settings('lab.listing_image'), 'large') ?? theme_asset('images/faculty-banner.jpg'),
+    'image' => $page->image()?->url('large') ?? media_url(settings('lab.listing_image'), 'large') ?? theme_asset('images/faculty-banner.webp'),
     'breadcrumbs' => array_values(array_filter([
         ['label' => __('theme::theme.home'), 'url' => url('/')],
         ['label' => settings('lab.listing_title') ?: __('lab::lab.page.laboratories'), 'url' => url('/labs')],
@@ -16,7 +16,7 @@
     ])),
 ])
 
-<main class="min-h-screen bg-white">
+<div class="min-h-screen bg-white">
     <div class="container mx-auto px-4 py-8">
         @if ($page->department())
             <div class="mb-8">
@@ -34,4 +34,4 @@
             </div>
         </div>
     </div>
-</main>
+</div>

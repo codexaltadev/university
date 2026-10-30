@@ -2,7 +2,7 @@
 @php
     $range = fn ($t, $min, $max) => $max !== null && (float) $max > (float) $min ? $t->category->money($min).' – '.$t->category->money($max) : $t->category->money($min);
 @endphp
-<div style="overflow-x:auto">
+<div tabindex="0" style="overflow-x:auto">
     <table class="tuition-table" style="width:100%;border-collapse:collapse">
         <thead>
             <tr style="text-align:left;border-bottom:2px solid var(--color-border)">

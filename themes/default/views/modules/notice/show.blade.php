@@ -8,7 +8,7 @@
     @include('theme::partials.diu.hero', [
         'title' => settings('notice.notice_title') ?: __('notice::notice.on_board'),
         'subtitle' => null,
-        'image' => media_url(settings('notice.board_image'), 'large') ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => media_url(settings('notice.board_image'), 'large') ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => [
             ['label' => __('theme::theme.home'), 'url' => url($base ?: '/')],
             ['label' => settings('notice.board_title') ?: __('notice::notice.on_board'), 'url' => $page->boardUrl()],
@@ -16,7 +16,7 @@
         ],
     ])
 
-    <main class="bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50 min-h-screen pb-20">
+    <div class="bg-gradient-to-br from-slate-50 via-blue-50/30 to-indigo-50 min-h-screen pb-20">
         <div class="container mx-auto px-4 pt-20 flex justify-center">
             <article class="w-full bg-white/95 rounded-3xl border border-slate-100 p-8 md:p-12">
                 <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
@@ -79,5 +79,5 @@
                 @endif
             </article>
         </div>
-    </main>
+    </div>
 </x-theme::layout>

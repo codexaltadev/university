@@ -9,6 +9,7 @@ per-record SEO panel, the head tags, sitemap.xml and robots.txt belong to the ke
 | Tables | `seo_redirects` (B), `seo_not_found_logs` (L) — DB-02 §9.2/9.3; kernel `core_seo_meta` (§9.1) |
 | Permissions | resource: `…:Redirect`, `ViewAny / Delete:NotFoundLog`; custom `Manage:Seo` (Settings › SEO) |
 | Settings | `seo`: title_pattern, default_description, og_image, google / bing verification, organization_type, robots_txt |
+| Seeder | `SeoDatabaseSeeder` (also run by `DatabaseSeeder`): the default description in every language from General › University name (`seo::seo.seed.description`); fills only empty languages, safe to run again |
 
 * **Redirects:** old address (normalized: no query, no trailing slash, lower case) → an address or a record
   of the website (follows its current address). 301 / 302, active, visits. Saving refuses loops and

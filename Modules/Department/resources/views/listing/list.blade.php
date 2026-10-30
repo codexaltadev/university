@@ -1,4 +1,4 @@
-{{-- /departments, layout "list" (FR-DEPT-09), grouped by Faculty. Contract: $groups, $faculties, $currentFaculty, $options --}}
+{{-- /departments, layout "list" (FR-DEPT-09), grouped by Faculty. Contract: $groups, $faculties, $listed, $currentFaculty, $options --}}
 <x-theme::layout :title="__('department::department.plural')">
     <div class="container" style="padding-block:var(--space-10, 40px)">
         <h1>{{ __('department::department.plural') }}</h1>

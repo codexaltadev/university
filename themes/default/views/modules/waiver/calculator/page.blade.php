@@ -8,7 +8,7 @@
         @include('theme::partials.diu.hero', [
             'title' => $page->title(),
             'subtitle' => $page->text() ? e($page->text()) : null,
-            'image' => $page->image() ?? theme_asset('images/faculty-banner.jpg'),
+            'image' => $page->image() ?? theme_asset('images/faculty-banner.webp'),
             'breadcrumbs' => $page->breadcrumbs(),
         ])
 

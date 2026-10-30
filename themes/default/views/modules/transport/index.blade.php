@@ -10,7 +10,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $transport->title(),
         'subtitle' => $transport->intro() ? e($transport->intro()) : null,
-        'image' => theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $transport->breadcrumbs(),
     ])
 
@@ -112,7 +112,7 @@
                                                         </div>
                                                         @if ($route['days_off'])<p class="mt-1 text-xs text-gray-500">{{ __('transport::transport.day_off') }}: {{ $route['days_off'] }}</p>@endif
                                                     </div>
-                                                    <button type="button" x-on:click="open = ! open" x-bind:aria-expanded="open" class="lg:hidden text-secondary cursor-pointer"><x-theme::icon name="chevron-down" class="w-6 h-6 transition-transform" x-bind:class="open && 'rotate-180'" /></button>
+                                                    <button type="button" x-on:click="open = ! open" x-bind:aria-expanded="open" aria-label="{{ __('theme::theme.show_details') }}: {{ $route['name'] }}" class="lg:hidden text-secondary cursor-pointer"><x-theme::icon name="chevron-down" class="w-6 h-6 transition-transform" x-bind:class="open && 'rotate-180'" /></button>
                                                 </div>
                                                 <div class="flex flex-col sm:flex-row gap-3 sm:gap-6 lg:px-8 lg:border-r lg:border-neutral-300">
                                                     @foreach ([[$route['from'], $route['to_campus'], 'to_campus'], [$route['to'], $route['from_campus'], 'from_campus']] as [$place, $trips, $direction])
@@ -179,7 +179,7 @@
             @if (($fees = $transport->fees()) !== [])
                 <section class="mb-8 md:mb-20">
                     <h2 class="text-lg md:text-2xl font-semibold text-neutral-800 mb-6">{{ __('transport::transport.fees.title') }}</h2>
-                    <div class="border border-secondary rounded-xl overflow-x-auto bg-white">
+                    <div class="border border-secondary rounded-xl overflow-x-auto bg-white" tabindex="0">
                         <table class="w-full min-w-[420px]">
                             <thead>
                                 <tr class="text-base md:text-2xl text-gray-600 font-normal">

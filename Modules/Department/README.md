@@ -21,7 +21,9 @@ Installable module M-02 (SRS Part 2). Academic › Departments and the departmen
 * **Delete guard:** a Department with active Programs or Faculty Members cannot be deleted (BRL-DEPT-02 — those
   modules register `relationTarget(…, parent: Department::class)`); its Faculty cannot be deleted while it is active.
 * **Website:** `/departments` grouped by Faculty, `?faculty={short name}` shows one; layouts grid / list / card
-  (Appearance › Layouts). A department with its own website links there. Departments of an inactive Faculty leave
+  (Appearance › Layouts); views also get `$listed`, every listed department whatever the filter. Settings ›
+  Departments: the page's title, text, picture and Quick Links (`settings('department.…')`, DIU's by default).
+  A department with its own website links there. Departments of an inactive Faculty leave
   the list. Microsite `/department/{slug}` (parent: its Faculty); until it builds its own homepage,
   `department::microsite.home` shows cover, about, counters, Head's message and contact (FR-DEPT-07).
 * **Counters:** every new Department gets its own stat set — Programs, Faculty Members (shown once those modules

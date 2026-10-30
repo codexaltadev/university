@@ -7,7 +7,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $page->text('home_title') ?? __('international::international.title'),
         'subtitle' => ($line = $page->text('home_text')) ? e($line) : null,
-        'image' => $page->image('home') ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image('home') ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs(),
     ])
 

@@ -7,7 +7,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $page->text('partners_title') ?? __('partners::partners.plural'),
         'subtitle' => ($line = $page->text('partners_text')) ? e($line) : null,
-        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs($page->text('partners_title') ?? __('partners::partners.plural'), 'partners'),
     ])
 

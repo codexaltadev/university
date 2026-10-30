@@ -46,4 +46,10 @@ return [
     'actions' => [
         'view_site' => 'View microsite',
     ],
+    'settings' => [
+        'listing' => 'The Departments page (/departments)',
+        'listing_help' => 'Title, text and picture on top. Empty: the theme\'s own.',
+        'title' => 'Title', 'text' => 'Text', 'image' => 'Picture',
+        'quick_links' => 'Quick Links',
+    ],
 ];

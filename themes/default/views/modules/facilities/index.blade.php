@@ -7,7 +7,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $page->title(),
         'subtitle' => $page->text() ? e($page->text()) : null,
-        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs(),
     ])
 
@@ -29,7 +29,7 @@
                     @foreach ($cards as $card)
                         <a href="{{ $card['url'] ?? '#' }}" @if ($card['external']) target="_blank" rel="noopener" @endif
                            class="facility-card group relative isolate flex aspect-[4/5] w-full overflow-hidden rounded-[20px] bg-black shadow-xl ring-1 ring-black/30 transition-transform hover:-translate-y-0.5 hover:no-underline">
-                            <img src="{{ $card['image'] ?? theme_asset('images/program/facility.jpg') }}" alt="{{ $card['title'] }}" loading="lazy" class="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110">
+                            <img src="{{ $card['image'] ?? theme_asset('images/program/facility.webp') }}" alt="{{ $card['title'] }}" loading="lazy" class="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110">
                             <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/0"></div>
                             <div class="relative mt-auto z-10 flex w-full items-end justify-between p-5">
                                 <div class="max-w-[80%] text-white">

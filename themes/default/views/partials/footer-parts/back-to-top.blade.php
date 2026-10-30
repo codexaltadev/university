@@ -9,7 +9,7 @@
                         stroke-dasharray="150.8" :stroke-dashoffset="150.8 * (1 - progress / 100)" />
             </svg>
             <button type="button" class="absolute inset-0 m-1 bg-primary hover:bg-secondary text-white rounded-full shadow-lg transition-all duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-4 focus:ring-blue-600/50 active:scale-95 cursor-pointer"
-                    @click="window.scrollTo({ top: 0, behavior: 'smooth' })" title="{{ __('theme::theme.back_to_top') }}">
+                    @click="window.scrollTo({ top: 0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' })" title="{{ __('theme::theme.back_to_top') }}">
                 <x-theme::icon name="chevron-up" class="h-5 w-5 mx-auto" />
                 <span class="sr-only">{{ __('theme::theme.back_to_top') }}</span>
             </button>

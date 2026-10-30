@@ -98,6 +98,12 @@ final class ThemeManifest
         return (array) ($this->data['tokens'] ?? []);
     }
 
+    /** @return list<string> font families the theme carries in its own CSS (@font-face): never asked of Google Fonts */
+    public function fonts(): array
+    {
+        return array_values((array) ($this->data['fonts'] ?? []));
+    }
+
     /** @return list<array{key: string, type: string, label?: string, options?: list<string>, default?: mixed}> */
     public function options(): array
     {

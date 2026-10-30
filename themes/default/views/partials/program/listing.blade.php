@@ -11,7 +11,7 @@
     @include('theme::partials.diu.hero', [
         'title' => settings('program.listing_title') ?: __('theme::theme.programs.title'),
         'subtitle' => e(settings('program.listing_text') ?: __('theme::theme.programs.subtitle')),
-        'image' => media_url(settings('program.listing_image'), 'large') ?? theme_asset('images/programs-banner.jpg'),
+        'image' => media_url(settings('program.listing_image'), 'large') ?? theme_asset('images/programs-banner.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url('/')], ['label' => __('theme::theme.programs.crumb'), 'url' => url('/programs')]],
     ])
 
@@ -27,7 +27,7 @@
             pick(f) { this.faculty = f; const c = this.counts[f] || { UG: 0, PG: 0 }; if (! c[this.level]) this.level = c.UG ? 'UG' : 'PG'; this.filters = false },
             init() { this.pick(this.faculty) },
          }">
-        <main class="mx-auto container px-4 sm:px-6 lg:px-8 py-4 flex flex-col lg:flex-row md:gap-12">
+        <div class="mx-auto container px-4 sm:px-6 lg:px-8 py-4 flex flex-col lg:flex-row md:gap-12">
             {{-- Browse by Faculty (desktop) --}}
             <x-theme::reveal direction="left">
                 <aside class="hidden lg:block w-full lg:w-[420px] shrink-0" aria-labelledby="faculty-browse-title">
@@ -105,26 +105,26 @@
                     @endforeach
 
                     {{-- The programs --}}
-                    <div class="overflow-hidden rounded-xl bg-white mt-4">
+                    <div class="overflow-hidden rounded-xl bg-white mt-4" role="table" aria-label="{{ __('theme::theme.programs.full_name') }}">
                         <div class="hidden md:grid grid-cols-12 bg-white px-4 py-3 text-xs font-semibold text-slate-600 border-b border-slate-200" role="row">
                             <div class="text-xl col-span-9" role="columnheader">{{ __('theme::theme.programs.full_name') }}</div>
                             <div class="text-xl col-span-3 text-right" role="columnheader">{{ __('theme::theme.programs.short_tag') }}</div>
                         </div>
-                        <ul role="rowgroup" class="divide-y divide-neutral-500">
+                        <div role="rowgroup" class="divide-y divide-neutral-500">
                             @foreach ($listed as $program)
-                                <li role="row" class="grid grid-cols-1 md:grid-cols-12 mt-4 md:mt-6 p-[10px] hover:bg-slate-50"
+                                <div role="row" class="grid grid-cols-1 md:grid-cols-12 mt-4 md:mt-6 p-[10px] hover:bg-slate-50"
                                     x-show="faculty === @js($program->department?->faculty?->short_name) && level === @js(str_contains((string) $program->level?->slug(), 'graduate') && ! str_contains((string) $program->level?->slug(), 'under') ? 'PG' : 'UG')" x-cloak>
                                     <div class="col-span-1 md:col-span-9" role="cell">
                                         <a href="{{ url((string) $program->url()) }}" class="inline-flex items-center gap-2 text-lg md:text-[24px] text-black font-medium hover:no-underline">{{ $program->name }}</a>
                                     </div>
                                     <div class="col-span-1 mt-2 md:col-span-3 md:text-right text-sm md:text-xl text-black font-medium" role="cell">{{ $program->short_name }}</div>
-                                </li>
+                                </div>
                             @endforeach
-                        </ul>
+                        </div>
                     </div>
                 </x-theme::reveal>
             </section>
-        </main>
+        </div>
 
         {{-- Program Filters drawer (phones) --}}
         <div class="lg:hidden" x-show="filters" x-cloak>

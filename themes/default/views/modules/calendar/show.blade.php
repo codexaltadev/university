@@ -6,7 +6,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $calendar->title,
         'subtitle' => e(__('calendar::calendar.page.subtitle')),
-        'image' => theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url('/')], ['label' => __('calendar::calendar.plural'), 'url' => $page->listingUrl()], ['label' => $calendar->title, 'url' => request()->url()]],
     ])
 

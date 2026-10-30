@@ -30,7 +30,7 @@
                     @endif
                     @if ($second = $latest[1] ?? null)
                         <a href="{{ $second['url'] }}" class="group grid grid-cols-1 sm:grid-cols-2 rounded-xl overflow-hidden bg-indigo-50 hover:no-underline lg:col-start-1 lg:row-start-2 self-end">
-                            <span class="block h-56 sm:h-full bg-indigo-950">@if ($second['image'])<img src="{{ $second['image'] }}" alt="" class="w-full h-full object-cover">@endif</span>
+                            <span class="block h-56 sm:h-full bg-indigo-950">@if ($second['image'])<img loading="lazy" decoding="async" src="{{ $second['image'] }}" alt="" class="w-full h-full object-cover">@endif</span>
                             <span class="block p-5">
                                 <span class="block font-semibold text-indigo-950 leading-snug">{{ $second['title'] }}</span>
                                 @if ($second['text'])<span class="block mt-3 text-sm text-gray-600 text-center line-clamp-3">{{ $second['text'] }}</span>@endif

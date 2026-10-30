@@ -6,7 +6,7 @@
     @include('theme::partials.diu.hero', [
         'title' => __('alumni::alumni.submit.title'),
         'subtitle' => e(__('alumni::alumni.submit.intro')),
-        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs(__('alumni::alumni.submit.title')),
     ])
 

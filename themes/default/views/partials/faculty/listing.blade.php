@@ -9,7 +9,7 @@
     @include('theme::partials.diu.hero', [
         'title' => settings('faculty.listing_title') ?: __('theme::theme.faculties.title'),
         'subtitle' => e(settings('faculty.listing_text') ?: __('theme::theme.faculties.subtitle')),
-        'image' => media_url(settings('faculty.listing_image'), 'large') ?? theme_asset('images/faculty-banner.jpg'),
+        'image' => media_url(settings('faculty.listing_image'), 'large') ?? theme_asset('images/faculty-banner.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url('/')], ['label' => __('theme::theme.faculties.crumb'), 'url' => url('/faculties')]],
     ])
 
@@ -109,10 +109,10 @@
         'heading' => __('theme::theme.faculties.services_heading'),
         'subheading' => __('theme::theme.faculties.services_text'),
         'cards' => [
-            ['image' => ['url' => theme_asset('images/services/es-3.jpg')], 'title' => __('theme::theme.faculties.service_transport'), 'text' => __('theme::theme.faculties.service_transport_text'), 'url' => url('/transport')],
-            ['image' => ['url' => theme_asset('images/services/es-4.jpg')], 'title' => __('theme::theme.faculties.service_hostel'), 'text' => __('theme::theme.faculties.service_hostel_text'), 'url' => 'https://hall.daffodilvarsity.edu.bd/'],
-            ['image' => ['url' => theme_asset('images/services/es-2.jpg')], 'title' => __('theme::theme.faculties.service_scholarships'), 'text' => __('theme::theme.faculties.service_scholarships_text'), 'url' => url('/scholarships')],
-            ['image' => ['url' => theme_asset('images/services/es-1.jpg')], 'title' => __('theme::theme.faculties.service_life'), 'text' => __('theme::theme.faculties.service_life_text'), 'url' => url('/campus-life')],
+            ['image' => ['url' => theme_asset('images/services/es-3.webp')], 'title' => __('theme::theme.faculties.service_transport'), 'text' => __('theme::theme.faculties.service_transport_text'), 'url' => url('/transport')],
+            ['image' => ['url' => theme_asset('images/services/es-4.webp')], 'title' => __('theme::theme.faculties.service_hostel'), 'text' => __('theme::theme.faculties.service_hostel_text'), 'url' => 'https://hall.daffodilvarsity.edu.bd/'],
+            ['image' => ['url' => theme_asset('images/services/es-2.webp')], 'title' => __('theme::theme.faculties.service_scholarships'), 'text' => __('theme::theme.faculties.service_scholarships_text'), 'url' => url('/scholarships')],
+            ['image' => ['url' => theme_asset('images/services/es-1.webp')], 'title' => __('theme::theme.faculties.service_life'), 'text' => __('theme::theme.faculties.service_life_text'), 'url' => url('/campus-life')],
         ],
     ])
 </x-theme::layout>

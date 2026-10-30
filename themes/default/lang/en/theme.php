@@ -4,6 +4,7 @@ return [
     'skip_to_content' => 'Skip to content',
     'primary_nav' => 'Main menu',
     'read_more' => 'Read more',
+    'show_details' => 'Show details',
     'view_all' => 'View all',
     'search' => 'Search',
     'search_start' => 'Start typing to search',
@@ -42,6 +43,14 @@ return [
         'undergraduate' => 'Undergraduate', 'postgraduate' => 'Post Graduate', 'program_word' => ' Program',
         'filters' => 'Program Filters',
         'full_name' => 'Full Program Name', 'short_tag' => 'Short Tag / Initials',
+    ],
+    'departments' => [
+        'title' => 'All Departments',
+        'subtitle' => 'Browse 51 undergraduate and graduate programs across six DIU faculties—complete with admissions requirements, scholarship and financial-aid details, plus executive certificates and online courses for lifelong learners.',
+        'crumb' => 'Departments',
+        'browse_all' => 'Browse ALL',
+        'all' => 'All Departments',
+        'list' => 'Departments list',
     ],
     'faculties' => [
         'title' => 'Explore DIU’s Faculties',

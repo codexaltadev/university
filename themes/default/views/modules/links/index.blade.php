@@ -6,7 +6,7 @@
     @include('theme::partials.diu.hero', [
         'title' => __('links::links.plural'),
         'subtitle' => null,
-        'image' => theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url('/')], ['label' => __('links::links.plural'), 'url' => request()->url()]],
     ])
 

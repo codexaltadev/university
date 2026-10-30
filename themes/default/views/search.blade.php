@@ -10,7 +10,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $results['query'] !== '' ? $results['query'] : __('platform::search.title'),
         'subtitle' => null,
-        'image' => theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url('/')], ['label' => __('platform::search.title'), 'url' => route('search')]],
     ])
 

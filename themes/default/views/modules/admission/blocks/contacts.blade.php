@@ -3,9 +3,9 @@
     @foreach ($admission->contacts() as $group)
         <div>
             <h3 class="text-xl md:text-2xl font-semibold text-neutral-800">{{ $group['name'] }}</h3>
-            <ul class="mt-4 grid gap-4 sm:grid-cols-2" role="list">
+            <ul class="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2" role="list">
                 @foreach ($group['people'] as $person)
-                    <li class="flex gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+                    <li class="min-w-0 flex gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
                         @if ($person['photo'])
                             <img src="{{ $person['photo'] }}" alt="" loading="lazy" class="size-16 shrink-0 rounded-full object-cover">
                         @else
@@ -15,7 +15,7 @@
                             <p class="text-base font-semibold text-neutral-800">{{ $person['name'] }}</p>
                             @if ($person['designation'])<p>{{ $person['designation'] }}</p>@endif
                             @if ($person['phone'])<p class="flex items-center gap-1.5"><x-theme::icon name="phone" class="size-4 text-secondary" /><a href="tel:{{ $person['tel'] }}" class="hover:underline">{{ $person['phone'] }}</a>@if ($person['ext']) ({{ __('admission::admission.ext') }} {{ $person['ext'] }})@endif</p>@endif
-                            @if ($person['email'])<p class="flex items-center gap-1.5 min-w-0"><x-theme::icon name="mail" class="size-4 text-secondary shrink-0" /><a href="mailto:{{ $person['email'] }}" class="truncate hover:underline">{{ $person['email'] }}</a></p>@endif
+                            @if ($person['email'])<p class="flex items-center gap-1.5 min-w-0"><x-theme::icon name="mail" class="size-4 text-secondary shrink-0" /><a href="mailto:{{ $person['email'] }}" class="break-all hover:underline">{{ $person['email'] }}</a></p>@endif
                         </div>
                     </li>
                 @endforeach

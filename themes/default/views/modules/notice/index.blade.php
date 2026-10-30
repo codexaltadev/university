@@ -8,7 +8,7 @@
     @include('theme::partials.diu.hero', [
         'title' => settings('notice.board_title') ?: __('notice::notice.on_board'),
         'subtitle' => null,
-        'image' => media_url(settings('notice.board_image'), 'large') ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => media_url(settings('notice.board_image'), 'large') ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url($base ?: '/')], ['label' => settings('notice.board_title') ?: __('notice::notice.on_board'), 'url' => $page->boardUrl()]],
     ])
 

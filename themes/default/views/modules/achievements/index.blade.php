@@ -7,7 +7,7 @@
     @include('theme::partials.diu.hero', [
         'title' => __('achievements::achievements.plural'),
         'subtitle' => null,
-        'image' => theme_asset('images/faculty-banner.jpg'),
+        'image' => theme_asset('images/faculty-banner.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url($base ?: '/')], ['label' => __('achievements::achievements.plural'), 'url' => $page->listingUrl()]],
     ])
 

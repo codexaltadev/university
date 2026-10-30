@@ -9,7 +9,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $page->title(),
         'subtitle' => null,
-        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url('/')], ['label' => $page->title(), 'url' => $page->listingUrl()]],
     ])
 
@@ -18,7 +18,7 @@
             <div class="flex flex-col lg:flex-row gap-12">
                 @include('theme::partials.diu.browse-sidebar', ['items' => $page->sections(), 'quickLinks' => $page->quickLinks()])
 
-                <main class="flex-1 min-w-0">
+                <div class="flex-1 min-w-0">
                     @if ($intro = $page->intro())
                         <div class="prose max-w-none mb-6">{!! $intro !!}</div>
                     @endif
@@ -104,7 +104,7 @@
                             @endforeach
                         </div>
                     @endif
-                </main>
+                </div>
             </div>
         </div>
     </div>

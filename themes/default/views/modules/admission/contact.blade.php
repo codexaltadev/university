@@ -7,7 +7,7 @@
     @include('theme::partials.diu.hero', [
         'title' => __('admission::admission.contact_page.title'),
         'subtitle' => null,
-        'image' => theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs(__('admission::admission.contact_page.title')),
     ])
 
@@ -42,20 +42,20 @@
 
             @foreach ($page->contacts() as $group)
                 <h2 class="mt-16 mb-8 text-center text-3xl md:text-[34px] font-semibold text-neutral-900">{{ $group['name'] }}</h2>
-                <ul class="grid gap-8 md:grid-cols-2" role="list">
+                <ul class="grid grid-cols-1 gap-8 md:grid-cols-2" role="list">
                     @foreach ($group['people'] as $person)
-                        <li class="flex items-center gap-6 rounded-xl bg-slate-50 p-6 shadow-sm">
+                        <li class="min-w-0 flex items-center gap-4 sm:gap-6 rounded-xl bg-slate-50 p-4 sm:p-6 shadow-sm">
                             @if ($person['photo'])
-                                <img src="{{ $person['photo'] }}" alt="{{ $person['name'] }}" loading="lazy" class="w-24 h-24 shrink-0 rounded-md object-cover object-top">
+                                <img src="{{ $person['photo'] }}" alt="{{ $person['name'] }}" loading="lazy" class="w-16 h-16 sm:w-24 sm:h-24 shrink-0 rounded-md object-cover object-top">
                             @else
-                                <span class="grid place-items-center w-24 h-24 shrink-0 rounded-md bg-blue-50 text-primary"><x-theme::icon name="user" class="size-10" /></span>
+                                <span class="grid place-items-center w-16 h-16 sm:w-24 sm:h-24 shrink-0 rounded-md bg-blue-50 text-primary"><x-theme::icon name="user" class="size-10" /></span>
                             @endif
-                            <div class="min-w-0 space-y-1 text-lg text-slate-600">
+                            <div class="min-w-0 space-y-1 text-base sm:text-lg text-slate-600 wrap-break-word">
                                 <p class="text-xl font-medium text-neutral-900">{{ $person['name'] }}</p>
                                 @if ($person['designation'])<p>{{ $person['designation'] }}</p>@endif
                                 @if ($person['phone'])<p>{{ __('admission::admission.contact_page.cell') }}: <a href="tel:{{ $person['tel'] }}" class="text-secondary underline">{{ $person['phone'] }}</a></p>@endif
                                 @if ($person['ext'])<p>{{ __('admission::admission.ext') }}: {{ $person['ext'] }}</p>@endif
-                                @if ($person['email'])<p class="truncate"><a href="mailto:{{ $person['email'] }}" class="text-secondary underline">{{ $person['email'] }}</a></p>@endif
+                                @if ($person['email'])<p class="break-all"><a href="mailto:{{ $person['email'] }}" class="text-secondary underline">{{ $person['email'] }}</a></p>@endif
                             </div>
                         </li>
                     @endforeach

@@ -28,10 +28,13 @@ utility links on scroll and measures the header into `--header-h`.
 
 ## Build
 
-Sources are `resources/css/app.css` + `chrome.css` (Tailwind CSS 4.3.3, pinned in the root `package.json`),
-`resources/js/app.js` and `resources/fonts` (Mina, for the microsite name); the prebuilt result in
-`public/build` is committed (T-3: no build on the server). `public/images/footer-cta.jpg` is the default
-campus photo.
+Sources are `resources/css/app.css` + `chrome.css`, `sections.css`, `print.css` (Tailwind CSS 4.3.3, pinned
+in the root `package.json`), `resources/js/app.js` and `resources/fonts` (Manrope, Hind Siliguri and Mina —
+bundled, so the default fonts need no Google Fonts request); the prebuilt result in `public/build` is committed
+(T-3: no build on the server). `public/images/footer-cta.webp` is the default campus photo.
+
+Quality (Phase 4.8): `pest --testsuite=Browser` (journeys, axe, no sideways scrolling at 360–1440px in English
+and Bangla, reduced motion, print) and `npx lhci autorun` (`lighthouserc.cjs`, against a production-like server).
 
 ```bash
 npm run build:theme   # from the repository root (Node from .nvmrc)

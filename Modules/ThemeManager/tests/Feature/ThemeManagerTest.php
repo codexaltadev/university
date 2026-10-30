@@ -175,14 +175,16 @@ it('saves colours, fonts and options; warns on low contrast; resets (FR-THEME-04
     expect(app(DesignTokens::class)->overrides($theme))->toEqualCanonicalizing(['color-primary' => '#7A1F5C', 'font-heading' => 'Poppins'])
         ->and(theme_option('hero_height'))->toBe('medium');
 
-    $this->get('/')->assertSee('family=Poppins', false);                                       // the CSS is written on first use
+    $this->get('/')->assertSee('family=Poppins', false)                                         // the CSS is written on first use
+        ->assertDontSee('family=Manrope', false);                                              // the theme carries Manrope (theme.json "fonts", 4.8c)
     $css = Storage::disk('public')->get(Storage::disk('public')->files('theme')[0]);
     expect($css)->toContain('--color-primary: #7A1F5C;')->toContain('"Poppins"');
 
     Livewire::test(ManageDesign::class)->call('resetDesign')
         ->assertSchemaStateSet(['tokens.color-primary' => '#034EA2', 'tokens.font-heading' => 'Manrope']);
     expect(app(DesignTokens::class)->overrides($theme))->toBe([])
-        ->and(theme_option('hero_height'))->toBe('tall');
+        ->and(theme_option('hero_height'))->toBe('tall')
+        ->and(app(DesignTokens::class)->fontsUrl($theme))->toBeNull();                         // default fonts: no Google Fonts request at all
 });
 
 it('keeps website branding and copies it to the admin panel (FR-THEME-06, FR-SET-13)', function () {

@@ -16,7 +16,7 @@ use Tests\TestCase;
 */
 pest()->extend(TestCase::class)
     ->use(RefreshDatabase::class)
-    ->in('Feature', '../Modules/*/tests', 'Golden');
+    ->in('Feature', '../Modules/*/tests', 'Golden', 'Browser');
 
 /*
 | Module install / uninstall runs real migrations (DDL commits in MySQL),
@@ -25,6 +25,9 @@ pest()->extend(TestCase::class)
 pest()->extend(TestCase::class)->in('Lifecycle');
 
 pest()->extend(TestCase::class)->in('Architecture');
+
+// Browser tests (Phase 4.8): a page with many sections may take longer than the default 5 s on a busy machine
+pest()->browser()->timeout(15_000);
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 

@@ -32,7 +32,7 @@
                         @if ($answer['batch'])<p class="text-sm text-white/80">{{ $answer['batch'] }}</p>@endif
                     </div>
                     <span @class(['px-4 py-2 rounded-full border font-semibold',
-                                  'text-green-600 bg-green-50 border-green-200' => $answer['tone'] === 'success',
+                                  'text-green-700 bg-green-50 border-green-200' => $answer['tone'] === 'success',
                                   'text-yellow-600 bg-yellow-50 border-yellow-200' => $answer['tone'] === 'warning',
                                   'text-red-600 bg-red-50 border-red-200' => $answer['tone'] === 'danger',
                                   'text-primary bg-blue-50 border-blue-200' => $answer['tone'] === 'info'])>{{ $answer['label'] }}</span>

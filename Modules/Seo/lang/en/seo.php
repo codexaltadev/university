@@ -1,6 +1,9 @@
 <?php
 
 return [
+    'seed' => [
+        'description' => ':name — official website: admission, programs, faculties, tuition fees, scholarships, research, notices and news.',
+    ],
     'settings' => [
         'tab' => 'SEO',
         'title_pattern' => 'Page title pattern',

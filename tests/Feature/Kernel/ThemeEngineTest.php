@@ -71,6 +71,7 @@ it('rejects a theme with PHP logic or missing parts (FR-THEME-02, BRL-THEME-02)'
     $dir = campusTheme($this->runtime, files: [
         'views/partials/bad.blade.php' => '@php $x = 1; @endphp {{ App\\Models\\User::query()->count() }}',
         'helpers.php' => '<?php function evil() {}',
+        'views/partials/icon.blade.php' => '<x-theme::icon name="x" x-bind:class="open === @js($id)" />',   // Blade leaves it as text: a JavaScript error (4.8a)
     ]);
     File::delete("{$dir}/views/templates/landing.blade.php");
     File::delete("{$dir}/public/build/manifest.json");
@@ -79,6 +80,7 @@ it('rejects a theme with PHP logic or missing parts (FR-THEME-02, BRL-THEME-02)'
 
     expect($errors)->toContain('@php block')
         ->toContain('model call')
+        ->toContain('@js / @json in a component tag')
         ->toContain('PHP file not allowed in a theme: helpers.php')
         ->toContain('views/templates/landing.blade.php')
         ->toContain('public/build/manifest.json');

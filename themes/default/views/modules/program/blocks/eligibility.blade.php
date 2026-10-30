@@ -25,9 +25,9 @@
 
                 @foreach ($levels as $level)
                     <div x-show="level === @js($level['key'])" @if (! $loop->first) x-cloak @endif role="tabpanel" class="overflow-hidden rounded-xl bg-white">
-                        <div class="hidden md:grid grid-cols-12 px-4 py-3 border-b border-slate-200 text-xl font-semibold text-slate-600" role="row">
-                            <div class="col-span-9" role="columnheader">{{ __('program::program.eligibility_block.program_name') }}</div>
-                            <div class="col-span-3 text-right" role="columnheader">{{ __('program::program.eligibility_block.short') }}</div>
+                        <div class="hidden md:grid grid-cols-12 px-4 py-3 border-b border-slate-200 text-xl font-semibold text-slate-600" aria-hidden="true">{{-- column titles for the eye: each row is a button --}}
+                            <div class="col-span-9">{{ __('program::program.eligibility_block.program_name') }}</div>
+                            <div class="col-span-3 text-right">{{ __('program::program.eligibility_block.short') }}</div>
                         </div>
                         <ul class="divide-y divide-neutral-500" role="list">
                             @foreach ($level['programs'] as $program)

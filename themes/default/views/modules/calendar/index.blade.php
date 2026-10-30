@@ -8,7 +8,7 @@
     @include('theme::partials.diu.hero', [
         'title' => __('calendar::calendar.plural'),
         'subtitle' => e(__('calendar::calendar.page.subtitle')),
-        'image' => theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url($base ?: '/')], ['label' => __('calendar::calendar.plural'), 'url' => $page->listingUrl()]],
     ])
 

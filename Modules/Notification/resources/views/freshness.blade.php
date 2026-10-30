@@ -11,7 +11,7 @@
         </div>
 
         @php($matrix = $this->matrix())
-        <div style="overflow-x:auto">
+        <div tabindex="0" style="overflow-x:auto">
             <table style="width:100%;border-collapse:collapse;font-size:.875rem">
                 <thead>
                     <tr>

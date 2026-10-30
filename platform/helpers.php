@@ -27,7 +27,7 @@ if (! function_exists('theme_option')) {
 }
 
 if (! function_exists('theme_asset')) {
-    /** theme_asset('images/footer-cta.jpg') — a file in the shown theme's public/ folder (Theme Guide §12). */
+    /** theme_asset('images/footer-cta.webp') — a file in the shown theme's public/ folder (Theme Guide §12). */
     function theme_asset(string $path): string
     {
         return asset('themes/'.app(Themes::class)->current()->slug.'/'.ltrim($path, '/'));
@@ -36,7 +36,7 @@ if (! function_exists('theme_asset')) {
 
 if (! function_exists('theme_image')) {
     /**
-     * theme_image('footer_cta_image', 'images/footer-cta.jpg') — the picture an "image" theme
+     * theme_image('footer_cta_image', 'images/footer-cta.webp') — the picture an "image" theme
      * option points to (Media Library), else the theme's own default file, else null.
      */
     function theme_image(string $option, ?string $default = null): ?string
@@ -45,6 +45,25 @@ if (! function_exists('theme_image')) {
         $media = $id ? MediaItem::query()->where('is_active', true)->find(is_array($id) ? reset($id) : $id) : null;
 
         return $media?->url() ?? ($default !== null ? theme_asset($default) : null);
+    }
+}
+
+if (! function_exists('theme_image_small')) {
+    /**
+     * theme_image_small($image) — the phone copy ("-sm" beside it) of a theme's own picture, for a <picture>
+     * source on small screens (Phase 4.8c); null for any other address or when the theme has no such copy.
+     */
+    function theme_image_small(?string $url): ?string
+    {
+        $base = rtrim(theme_asset(''), '/').'/';
+        if ($url === null || ! str_starts_with($url, $base)) {
+            return null;
+        }
+
+        $small = preg_replace('/\.(webp|jpe?g|png)$/i', '-sm.webp', substr($url, strlen($base)));
+        $theme = app(Themes::class)->current();
+
+        return $small !== null && is_file($theme->path().'/public/'.$small) ? theme_asset($small) : null;
     }
 }
 

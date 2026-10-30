@@ -21,7 +21,7 @@
                     <h2>{{ $group['category']?->name ?? __('committee::committee.other') }}</h2>
                 @endif
                 @if ($layout === 'table')
-                    <div style="overflow-x:auto">
+                    <div tabindex="0" style="overflow-x:auto">
                         <table class="table" style="width:100%">
                             <thead><tr>
                                 <th scope="col">{{ __('committee::committee.fields.name') }}</th>

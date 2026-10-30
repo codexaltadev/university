@@ -52,7 +52,7 @@
                                 <div class="flex flex-col sm:flex-row gap-6">
                                     <div class="flex items-start gap-3 flex-1">
                                         <div class="w-10 h-10 rounded-lg bg-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
-                                            @if ($person->photoUrl())<img src="{{ $person->photoUrl() }}" alt="" class="w-full h-full object-cover">@else<x-theme::icon name="user" class="w-5 h-5 text-gray-600" />@endif
+                                            @if ($person->photoUrl())<img loading="lazy" decoding="async" src="{{ $person->photoUrl() }}" alt="" class="w-full h-full object-cover">@else<x-theme::icon name="user" class="w-5 h-5 text-gray-600" />@endif
                                         </div>
                                         <div class="min-w-0">
                                             <p class="font-semibold text-gray-900 text-base mb-0.5">{{ $person->name() }}</p>
@@ -115,7 +115,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     @foreach ($gallery as $image)
                         <div class="aspect-video rounded-lg overflow-hidden bg-gray-50 border border-gray-200">
-                            <img src="{{ $image['url'] }}" alt="{{ $image['caption'] ?? $lab->lab->name }}" loading="lazy" class="w-full h-full object-cover">
+                            <img decoding="async" src="{{ $image['url'] }}" alt="{{ $image['caption'] ?? $lab->lab->name }}" loading="lazy" class="w-full h-full object-cover">
                         </div>
                     @endforeach
                 </div>

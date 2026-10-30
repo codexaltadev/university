@@ -38,7 +38,7 @@
                 <h2 style="margin:0">{{ $month->translatedFormat('F Y') }}</h2>
                 <a href="{{ $query(['month' => $month->copy()->addMonth()->format('Y-m'), 'view' => 'calendar']) }}">{{ $month->copy()->addMonth()->translatedFormat('F') }} ›</a>
             </div>
-            <div style="overflow-x:auto;margin-top:var(--space-3, 12px)">
+            <div tabindex="0" style="overflow-x:auto;margin-top:var(--space-3, 12px)">
                 <table class="table events-calendar" style="width:100%;table-layout:fixed;min-width:640px">
                     <thead><tr>@foreach ($weeks[0] ?? [] as $cell)<th scope="col">{{ $cell['day']->translatedFormat('D') }}</th>@endforeach</tr></thead>
                     <tbody>

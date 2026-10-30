@@ -8,7 +8,7 @@
     @include('theme::partials.diu.hero', [
         'title' => settings('events.listing_title') ?: __('events::events.plural'),
         'subtitle' => e(settings('events.listing_text')),
-        'image' => media_url(settings('events.listing_image'), 'large') ?? theme_asset('images/faculty-banner.jpg'),
+        'image' => media_url(settings('events.listing_image'), 'large') ?? theme_asset('images/faculty-banner.webp'),
         'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url($base ?: '/')], ['label' => __('events::events.plural'), 'url' => $page->listingUrl()]],
     ])
 

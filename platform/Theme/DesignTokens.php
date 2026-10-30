@@ -188,13 +188,14 @@ class DesignTokens
         return $this->urls[$theme->slug] = $disk->url($file);
     }
 
-    /** Google Fonts stylesheet for the chosen families, or null (uploaded / system fonts only). */
+    /** Google Fonts stylesheet for the chosen families the theme does not carry itself, or null (uploaded / system / bundled fonts only). */
     public function fontsUrl(Theme $theme): ?string
     {
         $values = $this->values($theme);
+        $bundled = $theme->manifest()->fonts();
         $families = collect(self::FONTS)
             ->map(fn (string $token): string => $values[$token])
-            ->filter(fn (string $font): bool => in_array($font, self::GOOGLE_FONTS, true))
+            ->filter(fn (string $font): bool => in_array($font, self::GOOGLE_FONTS, true) && ! in_array($font, $bundled, true))
             ->unique()
             ->map(fn (string $font): string => 'family='.str_replace(' ', '+', $font).':wght@400;500;600;700')
             ->implode('&');
@@ -207,11 +208,12 @@ class DesignTokens
         $this->urls = [];
     }
 
+    /** "{font} Fallback" is a size-adjusted local face a theme may define, so text does not move when the web font arrives (CLS). */
     protected static function fontStack(string $font): string
     {
         $font = trim(str_replace(['"', "'", ';', '{', '}', '<', '>'], '', $font));
 
-        return "\"{$font}\", system-ui, -apple-system, \"Segoe UI\", sans-serif";
+        return "\"{$font}\", \"{$font} Fallback\", system-ui, -apple-system, \"Segoe UI\", sans-serif";
     }
 
     /** A stored value can never end the :root block. */

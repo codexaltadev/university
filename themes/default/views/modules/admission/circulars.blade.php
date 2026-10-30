@@ -6,7 +6,7 @@
     @include('theme::partials.diu.hero', [
         'title' => __('admission::admission.circular.plural'),
         'subtitle' => null,
-        'image' => theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs(__('admission::admission.circular.plural')),
     ])
 

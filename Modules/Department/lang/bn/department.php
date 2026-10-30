@@ -46,4 +46,10 @@ return [
     'actions' => [
         'view_site' => 'Microsite দেখুন',
     ],
+    'settings' => [
+        'listing' => 'Department পাতা (/departments)',
+        'listing_help' => 'ওপরের শিরোনাম, লেখা ও ছবি। খালি: theme-এর নিজের।',
+        'title' => 'শিরোনাম', 'text' => 'লেখা', 'image' => 'ছবি',
+        'quick_links' => 'Quick Links',
+    ],
 ];

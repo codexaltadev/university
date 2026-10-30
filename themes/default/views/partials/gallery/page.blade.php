@@ -7,7 +7,7 @@
 @include('theme::partials.diu.hero', [
     'title' => settings('gallery.title') ?: __('gallery::gallery.plural'),
     'subtitle' => e(settings('gallery.text')),
-    'image' => media_url(settings('gallery.image'), 'large') ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+    'image' => media_url(settings('gallery.image'), 'large') ?? theme_image('page_hero_image', 'images/page-hero.webp'),
     'breadcrumbs' => array_values(array_filter([
         ['label' => __('theme::theme.home'), 'url' => url($base ?: '/')],
         ['label' => settings('gallery.title') ?: __('gallery::gallery.plural'), 'url' => $page->listingUrl()],
@@ -86,7 +86,7 @@
             </div>
         @endif
 
-        <main class="flex-1 min-w-0 p-0 lg:p-6">
+        <div class="flex-1 min-w-0 p-0 lg:p-6">
             @if ($photos = $page->photos())
                 <div class="mb-8">
                     <h1 class="text-4xl font-bold text-secondary mb-2">{{ $page->heading() }}</h1>
@@ -172,6 +172,6 @@
                     </div>
                 </section>
             @endif
-        </main>
+        </div>
     </div>
 </div>

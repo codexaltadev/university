@@ -4,12 +4,12 @@
 --}}
 <div class="border border-gray-200 rounded-lg overflow-hidden">
     <button type="button" x-on:click="open = open === @js($item['id']) ? null : @js($item['id'])" x-bind:aria-expanded="open === @js($item['id'])"
-            class="w-full px-6 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors duration-200 flex items-center justify-between gap-4 cursor-pointer">
+            class="group w-full px-6 py-4 text-left bg-gray-50 hover:bg-gray-100 transition-colors duration-200 flex items-center justify-between gap-4 cursor-pointer">
         <span>
             <span class="block font-semibold text-gray-800 text-lg">{{ $item['title'] }}</span>
             @if ($item['calls'])<span class="block text-sm text-gray-500">{{ $item['calls'] }}</span>@endif
         </span>
-        <x-theme::icon name="chevron-down" class="w-5 h-5 shrink-0 text-gray-600 transition-transform duration-200" x-bind:class="open === @js($item['id']) && 'rotate-180'" />
+        <x-theme::icon name="chevron-down" class="w-5 h-5 shrink-0 text-gray-600 transition-transform duration-200 group-aria-expanded:rotate-180" />
     </button>
     <div x-show="open === @js($item['id'])" x-collapse x-cloak>
         <div class="px-6 py-4 bg-white border-t border-gray-200 space-y-3">

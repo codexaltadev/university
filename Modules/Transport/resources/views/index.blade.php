@@ -109,7 +109,7 @@
         @if ($page['fees'])
             <section style="margin-top:var(--space-10, 40px)">
                 <h2>{{ __('transport::transport.fees.title') }}</h2>
-                <div style="overflow-x:auto">
+                <div tabindex="0" style="overflow-x:auto">
                     <table style="border-collapse:collapse;min-width:420px">
                         <thead><tr style="border-bottom:2px solid var(--color-border);text-align:start">
                             <th style="padding:10px 16px">{{ __('transport::transport.fees.route') }}</th>

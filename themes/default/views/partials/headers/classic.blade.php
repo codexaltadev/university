@@ -9,11 +9,11 @@
     <div class="header-row px-4 pt-3">
         <div class="container mx-auto px-0 flex items-center justify-between">
             @include('theme::partials.header-parts.brand')
-            <div class="hidden lg:flex flex-col flex-1 ml-8">
+            <div class="hidden lg:flex flex-col flex-1 ml-6 xl:ml-8">
                 @unless ($context->isMicrosite())
                     @include('theme::partials.header-parts.utility')
                 @endunless
-                <div class="flex items-center justify-end space-x-8 relative">
+                <div class="flex items-center justify-end space-x-4 xl:space-x-8 relative">
                     <x-platform::menu location="primary" :depth="3" />
                     @include('theme::partials.header-parts.actions', ['search' => $config['show_search'] ?? true])
                 </div>

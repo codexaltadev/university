@@ -16,7 +16,7 @@
                     <div class="h-[2px] lg:h-[3px] opacity-65 bg-white w-40 sm:w-60 md:w-96 lg:w-[27rem]"></div>
                 </div>
                 @if (filled($section->content['button_url']))
-                    <x-theme::button :href="$section->content['button_url']" target="_blank" class="max-sm:hidden">{{ $section->content['button_label'] }}</x-theme::button>
+                    <x-theme::button :href="$section->content['button_url']" target="_blank" class="max-sm:hidden">{{ $section->content['button_label'] }}<span class="sr-only">: {{ $section->content['highlight'] }}</span></x-theme::button>
                 @endif
             </div>
         </x-theme::reveal>
@@ -80,7 +80,7 @@
         </div>
 
         @if (filled($section->content['button_url']))
-            <x-theme::button :href="$section->content['button_url']" target="_blank" class="flex sm:!hidden !w-full justify-center mt-6 mb-8">{{ $section->content['button_label'] }}</x-theme::button>
+            <x-theme::button :href="$section->content['button_url']" target="_blank" class="flex sm:!hidden !w-full justify-center mt-6 mb-8">{{ $section->content['button_label'] }}<span class="sr-only">: {{ $section->content['highlight'] }}</span></x-theme::button>
         @endif
 
         {{-- Rotating quotes (4 s), dots to pick one --}}

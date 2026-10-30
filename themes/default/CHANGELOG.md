@@ -1,6 +1,9 @@
 # Changelog
 
-## Unreleased (2.0.0, Phase 4)
+## 2.0.0 — 2026-10-30 (Phase 4)
+
+MAJOR: the theme becomes a copy of daffodilvarsity.edu.bd (4.2–4.4), a different look and markup
+throughout; check any copy of the theme or view override made from 1.0.0.
 
 - 4.1: Tailwind CSS 4.3.3 build (`vite.config.js`, `resources/`), tokens bound with
   `@theme inline reference`, default palette removed (T-2); styles for the module UI
@@ -136,6 +139,20 @@
 - 4.7g-2: newsletter — `modules/newsletter/index` (sign-up card, past issues) and `issue`.
 - 4.7h: `errors/404` (Page not found with search, Go Back, Home), `modules/settings/maintenance` (DIU's Under
   Maintenance with duration and help cards), component `bare` (a page without menus).
+- 4.8a–b: browser tests (Pest Browser, every module page and record on desktop / phone, English / Bangla)
+  and axe: one `<main>`, link names, contrast fixes.
+- 4.8c: Lighthouse budgets (`lighthouserc.cjs`): Manrope, Hind Siliguri and Mina bundled (theme.json
+  "fonts", no Google Fonts request), size-adjusted "Manrope Fallback" so text does not jump when the font
+  arrives (CLS), small hero pictures for phones (`*-sm.webp`), phones keep the hero poster instead of the video,
+  pictures in page text load lazily, `--header-h` defaults so heroes do not jump.
+- 4.8d: checklist — `resources/css/print.css` (content only, black on white, no header / footer / windows,
+  heroes without pictures, link addresses in text, counters at their number); reduced motion also stops the
+  hero video and smooth scrolling; the page never scrolls sideways (body clips sliding content; admission
+  contact cards, pagination on phones); logo and menu no longer overlap between 1024 and 1279px (narrower
+  menu links, the microsite name wraps and is 18px below 1536px); `screenshot.png` is the real homepage.
+- DIU `/departments` — `modules/department/listing/{grid,list,card}` through `partials/department/listing` (hero
+  "All Departments", Browse by Faculty with Browse ALL and Quick Links, the faculty's text and "Visit Faculty Page",
+  grey department cards; the Program Filters drawer on phones); text, picture and links from Settings › Departments.
 
 ## 1.0.0 — 2026-10-09
 

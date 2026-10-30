@@ -6,7 +6,7 @@
         @if ($programs->isEmpty())
             <p class="program-empty">{{ __('program::program.no_results') }}</p>
         @else
-            <div style="overflow-x:auto">
+            <div tabindex="0" style="overflow-x:auto">
                 <table class="program-table" style="width:100%;border-collapse:collapse">
                     <thead>
                         <tr style="text-align:left;border-bottom:2px solid var(--color-border)">

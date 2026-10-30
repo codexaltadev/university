@@ -4,11 +4,14 @@
  * from the tokens, the language switcher and the breadcrumb.
  */
 @layer components {
-    /* The header floats over the page (DIU); app.js measures it into --header-h */
-    body.site:has(.site-header.fixed) { padding-top: var(--header-h, 76px); }
+    /* The header floats over the page (DIU); app.js measures it into --header-h. Until then the
+       header's usual height, so the page and the heroes pulled under it (margin-top: -header-h)
+       do not jump when it is measured (Lighthouse CLS, Phase 4.8c) */
+    :root { --header-h: 68px; }
     @media (min-width: 1024px) {
-        body.site:has(.site-header.fixed) { padding-top: var(--header-h, 122px); }
+        :root { --header-h: 121px; }
     }
+    body.site:has(.site-header.fixed) { padding-top: var(--header-h); }
 
     /* Scrolled (DIU Navbar): utility links fold away, less top padding, denser glass, logo at 85% */
     .header-utility { max-height: 64px; opacity: 1; }

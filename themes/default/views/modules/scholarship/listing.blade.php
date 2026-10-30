@@ -7,7 +7,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $page->title(),
         'subtitle' => $page->text() ? e($page->text()) : null,
-        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs(),
     ])
 
@@ -16,7 +16,7 @@
             @if (($side = $page->sideLinks()) !== [] || $page->quickLinks() !== [])
                 @include('theme::partials.diu.browse-sidebar', ['items' => $side, 'quickLinks' => $page->quickLinks(), 'width' => 'lg:w-[420px]'])
             @endif
-            <main class="flex-1 min-w-0">
+            <div class="flex-1 min-w-0">
                 @if ($intro = $page->intro())<div class="mb-10">@include('theme::partials.page.body', ['body' => $intro])</div>@endif
 
                 <div class="space-y-8">
@@ -33,7 +33,7 @@
                 </div>
 
                 @if ($outro = $page->outro())<div class="mt-10">@include('theme::partials.page.body', ['body' => $outro])</div>@endif
-            </main>
+            </div>
         </div>
     </div>
 </x-theme::layout>

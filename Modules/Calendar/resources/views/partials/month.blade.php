@@ -3,7 +3,7 @@
 @forelse ($months as $month)
     <section class="calendar-month" style="margin-bottom:var(--space-8, 32px)">
         <h3>{{ $month['month']->translatedFormat('F Y') }}</h3>
-        <div style="overflow-x:auto">
+        <div tabindex="0" style="overflow-x:auto">
             <table class="table calendar-grid" style="width:100%;table-layout:fixed;min-width:640px">
                 <thead><tr>@foreach ($days as $day)<th scope="col">{{ $day }}</th>@endforeach</tr></thead>
                 <tbody>

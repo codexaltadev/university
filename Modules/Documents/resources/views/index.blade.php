@@ -38,7 +38,7 @@
         @if ($documents->isEmpty())
             <p style="margin-top:var(--space-8, 32px)">{{ __('documents::documents.none') }}</p>
         @elseif ($layout === 'table')
-            <div style="overflow-x:auto;margin-top:var(--space-6, 24px)">
+            <div tabindex="0" style="overflow-x:auto;margin-top:var(--space-6, 24px)">
                 <table class="documents-table" style="width:100%;border-collapse:collapse">
                     <thead><tr style="text-align:start;border-bottom:2px solid var(--color-border)">
                         <th style="padding:8px">{{ __('documents::documents.fields.title') }}</th><th style="padding:8px">{{ __('documents::documents.fields.type') }}</th>

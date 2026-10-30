@@ -41,7 +41,7 @@
         @if ($notices->isEmpty())
             <p style="margin-top:var(--space-8, 32px)">{{ __('notice::notice.none') }}</p>
         @elseif ($layout === 'table')
-            <div style="overflow-x:auto;margin-top:var(--space-6, 24px)">
+            <div tabindex="0" style="overflow-x:auto;margin-top:var(--space-6, 24px)">
                 <table class="table notice-table" style="width:100%">
                     <thead><tr>
                         <th scope="col">{{ __('notice::notice.fields.date') }}</th>

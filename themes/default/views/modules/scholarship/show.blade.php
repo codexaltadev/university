@@ -8,7 +8,7 @@
         @include('theme::partials.diu.hero', [
             'title' => $s['title'],
             'subtitle' => null,
-            'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+            'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.webp'),
             'breadcrumbs' => $page->breadcrumbs($s['title'], $s['parent']['title'] ?? null, $s['parent']['url'] ?? null),
         ])
 

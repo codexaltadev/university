@@ -1,7 +1,7 @@
 {
     "slug": "default",
     "name": "University Default",
-    "version": "1.0.0",
+    "version": "2.0.0",
     "requires_core": "^1.0",
     "author": { "name": "DIU Web Team", "email": "web@example.edu" },
     "license": "proprietary",
@@ -123,11 +123,11 @@
                 { "key": "partners", "type": "repeater", "label": "Partner logos", "fields": [{ "key": "logo", "type": "image", "label": "Logo" }, { "key": "name", "type": "text", "label": "Name" }],
                   "default": [
                       { "logo": "images/partners/logo-2.png", "name": "Microsoft" },
-                      { "logo": "images/partners/logo-3.jpg", "name": "IEEE" },
-                      { "logo": "images/partners/logo-4.jpg", "name": "World Health Organization" },
+                      { "logo": "images/partners/logo-3.webp", "name": "IEEE" },
+                      { "logo": "images/partners/logo-4.webp", "name": "World Health Organization" },
                       { "logo": "images/partners/logo-5.png", "name": "Google" },
-                      { "logo": "images/partners/logo-6.png", "name": "AWS" },
-                      { "logo": "images/partners/logo-1.png", "name": "Nestle" }
+                      { "logo": "images/partners/logo-6.webp", "name": "AWS" },
+                      { "logo": "images/partners/logo-1.webp", "name": "Nestle" }
                   ] },
                 { "key": "partners_button_label", "type": "text", "label": "Button text", "default": "Explore Researches and Their Work" },
                 { "key": "partners_button_url", "type": "url", "label": "Button link", "default": "https://research.daffodilvarsity.edu.bd/" }
@@ -260,10 +260,10 @@
             "fields": [
                 { "key": "cards", "type": "repeater", "label": "Cards when there are no labs", "fields": [{ "key": "image", "type": "image", "label": "Picture" }, { "key": "title", "type": "text", "label": "Title" }, { "key": "text", "type": "text", "label": "Text" }, { "key": "url", "type": "url", "label": "Link" }],
                   "default": [
-                      { "image": "images/services/es-3.jpg", "title": "Transport Service", "text": "25 AC buses covering Dhaka & nearby districts.", "url": "/transport" },
-                      { "image": "images/services/es-4.jpg", "title": "Hostel Facility", "text": "Safe, Smart residences five minutes from class.", "url": "https://hall.daffodilvarsity.edu.bd/" },
-                      { "image": "images/services/es-2.jpg", "title": "Scholarships & Waivers", "text": "Merit grants up to 100% + need-based aid calculator.", "url": "/scholarship" },
-                      { "image": "images/services/es-1.jpg", "title": "Student Life", "text": "60+ clubs, festivals, sports & volunteering.", "url": "/campus-life" }
+                      { "image": "images/services/es-3.webp", "title": "Transport Service", "text": "25 AC buses covering Dhaka & nearby districts.", "url": "/transport" },
+                      { "image": "images/services/es-4.webp", "title": "Hostel Facility", "text": "Safe, Smart residences five minutes from class.", "url": "https://hall.daffodilvarsity.edu.bd/" },
+                      { "image": "images/services/es-2.webp", "title": "Scholarships & Waivers", "text": "Merit grants up to 100% + need-based aid calculator.", "url": "/scholarship" },
+                      { "image": "images/services/es-1.webp", "title": "Student Life", "text": "60+ clubs, festivals, sports & volunteering.", "url": "/campus-life" }
                   ] }
             ]
         },
@@ -274,10 +274,10 @@
             "fields": [
                 { "key": "cards", "type": "repeater", "label": "Cards", "fields": [{ "key": "image", "type": "image", "label": "Picture" }, { "key": "title", "type": "text", "label": "Title" }, { "key": "text", "type": "text", "label": "Text" }, { "key": "url", "type": "url", "label": "Link" }],
                   "default": [
-                      { "image": "images/services/es-3.jpg", "title": "Transport Service", "text": "25 AC buses covering Dhaka & nearby districts.", "url": "/transport" },
-                      { "image": "images/services/es-4.jpg", "title": "Hostel Facility", "text": "Safe, Smart residences five minutes from class.", "url": "https://hall.daffodilvarsity.edu.bd/" },
-                      { "image": "images/services/es-2.jpg", "title": "Scholarships & Waivers", "text": "Merit grants up to 100% + need-based aid calculator.", "url": "/scholarship" },
-                      { "image": "images/services/es-1.jpg", "title": "Student Life", "text": "60+ clubs, festivals, sports & volunteering.", "url": "/campus-life" }
+                      { "image": "images/services/es-3.webp", "title": "Transport Service", "text": "25 AC buses covering Dhaka & nearby districts.", "url": "/transport" },
+                      { "image": "images/services/es-4.webp", "title": "Hostel Facility", "text": "Safe, Smart residences five minutes from class.", "url": "https://hall.daffodilvarsity.edu.bd/" },
+                      { "image": "images/services/es-2.webp", "title": "Scholarships & Waivers", "text": "Merit grants up to 100% + need-based aid calculator.", "url": "/scholarship" },
+                      { "image": "images/services/es-1.webp", "title": "Student Life", "text": "60+ clubs, festivals, sports & volunteering.", "url": "/campus-life" }
                   ] }
             ]
         },
@@ -289,12 +289,12 @@
                 { "key": "partners_title", "type": "text", "label": "Title", "default": "Research & Innovation Partners" },
                 { "key": "partners", "type": "repeater", "label": "Partner logos", "fields": [{ "key": "logo", "type": "image", "label": "Logo" }, { "key": "name", "type": "text", "label": "Name" }],
                   "default": [
-                      { "logo": "images/partners/logo-1.png", "name": "Nestle" },
+                      { "logo": "images/partners/logo-1.webp", "name": "Nestle" },
                       { "logo": "images/partners/logo-2.png", "name": "Microsoft" },
-                      { "logo": "images/partners/logo-3.jpg", "name": "IEEE" },
-                      { "logo": "images/partners/logo-4.jpg", "name": "World Health Organization" },
+                      { "logo": "images/partners/logo-3.webp", "name": "IEEE" },
+                      { "logo": "images/partners/logo-4.webp", "name": "World Health Organization" },
                       { "logo": "images/partners/logo-5.png", "name": "Google" },
-                      { "logo": "images/partners/logo-6.png", "name": "AWS" }
+                      { "logo": "images/partners/logo-6.webp", "name": "AWS" }
                   ] },
                 { "key": "partners_button_label", "type": "text", "label": "Button text", "default": "Explore Researches and Their Work" },
                 { "key": "partners_button_url", "type": "url", "label": "Button link", "default": "https://research.daffodilvarsity.edu.bd/" }
@@ -341,6 +341,7 @@
         }
     },
 
+    "fonts": ["Manrope", "Hind Siliguri", "Mina"],
     "tokens": {
         "color-primary": "#034EA2",
         "color-secondary": "#002652",

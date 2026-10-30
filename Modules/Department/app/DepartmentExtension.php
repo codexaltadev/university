@@ -7,6 +7,7 @@ use Modules\Department\Filament\Parts\FacultyDepartmentsPart;
 use Modules\Department\Metrics\DepartmentCount;
 use Modules\Department\Models\Department;
 use Modules\Department\Sections\DepartmentsSection;
+use Modules\Department\Settings\DepartmentSettings;
 use Modules\Faculty\Models\Faculty;
 use Platform\Contracts\ModuleExtension;
 use Platform\Registry\Registrar;
@@ -20,6 +21,7 @@ final class DepartmentExtension implements ModuleExtension
     public function register(Registrar $r): void
     {
         $r->websitePage('department.index', label: 'department::department.plural', path: '/departments');   // Menus › Module page
+        $r->settings(DepartmentSettings::class);                                    // /departments page text and Quick Links
         $r->filamentPlugin(DepartmentPlugin::class);
         $r->relationTarget(Department::class, parent: Faculty::class, parentKey: 'faculty_id');   // FR-DEPT-02
         $r->scopeable(Department::class);                         // Department users; Faculty users through the hierarchy

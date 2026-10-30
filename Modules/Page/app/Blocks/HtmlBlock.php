@@ -53,6 +53,7 @@ final class HtmlBlock extends PageBlock
         $config = (new HtmlSanitizerConfig)->allowSafeElements()
             ->allowLinkSchemes(['https', 'http', 'mailto', 'tel'])->allowMediaSchemes(['https', 'http'])
             ->allowRelativeLinks()->allowRelativeMedias()
+            ->forceAttribute('img', 'loading', 'lazy')->forceAttribute('img', 'decoding', 'async')   // load when scrolled to (Phase 4.8c)
             ->withMaxInputLength(2_000_000);
         foreach (self::ATTRIBUTES as $attribute) {
             $config = $config->allowAttribute($attribute, '*');

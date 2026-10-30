@@ -6,7 +6,7 @@
 @include('theme::partials.diu.hero', [
     'title' => $page->title,
     'subtitle' => $subtitle ?? null,
-    'image' => $page->firstMedia('featured_image')?->url('large') ?? theme_image('page_hero_image', $context->isMicrosite() ? 'images/faculty-banner.jpg' : 'images/page-hero.jpg'),
+    'image' => $page->firstMedia('featured_image')?->url('large') ?? theme_image('page_hero_image', $context->isMicrosite() ? 'images/faculty-banner.webp' : 'images/page-hero.webp'),
     'breadcrumbs' => [
         ...(\Platform\Context\Breadcrumbs::for($context) ?: [['label' => __('theme::theme.home'), 'url' => url('/')]]),
         ...array_map(fn ($parent) => ['label' => $parent->title, 'url' => url($parent->url())], $page->ancestors()),

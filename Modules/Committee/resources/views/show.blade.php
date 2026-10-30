@@ -31,7 +31,7 @@
             @if ($members->isEmpty())
                 <p>{{ __('committee::committee.no_members') }}</p>
             @else
-                <div style="overflow-x:auto">
+                <div tabindex="0" style="overflow-x:auto">
                     <table class="table" style="width:100%">
                         <thead><tr>
                             <th scope="col">#</th>

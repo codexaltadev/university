@@ -29,12 +29,13 @@ class DepartmentWebsite
         $layouts = app(LayoutResolver::class);
         $layout = $layouts->for('department.listing') ?? 'grid';
 
-        $faculties = Faculty::query()->frontendVisible()->ordered()->get(['id', 'name', 'short_name']);
+        $faculties = Faculty::query()->frontendVisible()->ordered()->get();
         $current = $faculties->first(fn (Faculty $f): bool => strcasecmp($f->short_name, (string) request()->query('faculty')) === 0);
 
-        $departments = Department::query()->listed()->with('faculty')
-            ->when($current, fn ($q) => $q->where('faculty_id', $current->id))
-            ->get();
+        $position = $faculties->pluck('id')->flip();   // by Faculty in its order, then the departments' own order
+        $listed = Department::query()->listed()->with('faculty')->get()
+            ->sortBy(fn (Department $department): int => $position[$department->faculty_id] ?? PHP_INT_MAX)->values();
+        $departments = $current ? $listed->where('faculty_id', $current->id) : $listed;
 
         app(Seo::class)->set(['title' => __('department::department.plural'), 'path' => '/'.self::LISTING]);
 
@@ -42,6 +43,7 @@ class DepartmentWebsite
             'groups' => $faculties->map(fn (Faculty $faculty): array => ['faculty' => $faculty, 'departments' => $departments->where('faculty_id', $faculty->id)->values()])
                 ->filter(fn (array $group): bool => $group['departments']->isNotEmpty())->values(),
             'faculties' => $faculties,
+            'listed' => $listed,
             'currentFaculty' => $current,
             'options' => $layouts->options('department.listing'),
         ]);

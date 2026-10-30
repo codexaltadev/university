@@ -7,7 +7,7 @@
     @include('theme::partials.diu.hero', [
         'title' => $page->text('conferences_title') ?? __('international::international.conferences'),
         'subtitle' => ($line = $page->text('conferences_text')) ? e($line) : null,
-        'image' => $page->image('conferences') ?? theme_image('page_hero_image', 'images/page-hero.jpg'),
+        'image' => $page->image('conferences') ?? theme_image('page_hero_image', 'images/page-hero.webp'),
         'breadcrumbs' => $page->breadcrumbs($page->text('conferences_title') ?? __('international::international.conferences'), 'conferences'),
     ])
 

@@ -11,7 +11,7 @@
                 <div class="shrink-0" :style="slideStyle">
                     <a href="{{ $facility->href() ?? '#' }}" @if ($facility->open_in_new_tab) target="_blank" rel="noopener" @endif draggable="false"
                        class="group relative isolate flex aspect-[16/9] sm:aspect-[4/5] md:aspect-[3/4] w-full overflow-hidden rounded-[20px] bg-black shadow-xl ring-1 ring-black/30 transition-transform hover:-translate-y-0.5 hover:no-underline focus:outline-none">
-                        <img src="{{ $facility->firstMedia('image')?->url('medium') ?? $facility->firstMedia('image')?->url() ?? theme_asset('images/program/facility.jpg') }}" alt="{{ $facility->title }}" loading="lazy" draggable="false"
+                        <img src="{{ $facility->firstMedia('image')?->url('medium') ?? $facility->firstMedia('image')?->url() ?? theme_asset('images/program/facility.webp') }}" alt="{{ $facility->title }}" loading="lazy" draggable="false"
                              class="absolute inset-0 h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-110">
                         <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/25 to-black/0"></div>
                         <div class="relative mt-auto z-10 flex w-full items-end justify-between p-5 md:p-5">
