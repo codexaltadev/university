@@ -1,13 +1,15 @@
 {{--
     DIU office page (DIUFronend app/(public)/office/[slug]): hero with the office name; "Browse by Section"
-    with Overview and the office's own menu pages, then Quick Links; beside it the Overview card with
-    the contact facts, the Office Team (first few, View Full Team → /team) and the FAQs (All FAQs → /faq).
+    with Overview and the office's own menu pages, then Quick Links; beside it the cover picture with the
+    overview under it (registrar-office) or the Overview card, the highlights cards (proctor-office: About
+    the Office then), the Quick Service tiles, the Office Team (first few, View Full Team → /team) and the
+    FAQs (All FAQs → /faq).
     Beyond DIU, what the office fills in Admin is not lost: the Head's message, Services and Sections.
     Contract: $entity (Office), $context, $page (OfficePage: the parts worked out)
 --}}
 @include('theme::partials.diu.hero', [
     'title' => $entity->name,
-    'subtitle' => e(__('office::office.page.site_suffix', ['name' => $entity->name, 'site' => settings('general.site_name')])),
+    'subtitle' => e($page->subtitle()),
     'image' => $page->image()?->url('large') ?? theme_image('page_hero_image', 'images/page-hero.webp'),
     'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url('/')], ['label' => $entity->name, 'url' => $page->url()]],
 ])
@@ -16,44 +18,71 @@
     <div class="container mx-auto px-6 py-12">
         <div class="flex flex-col lg:flex-row gap-12">
             @include('theme::partials.diu.browse-sidebar', [
-                'items' => [
-                    ['id' => 'overview', 'label' => __('office::office.page.overview'), 'url' => null],
-                    ...collect($page->menu())->map(fn ($link, $i) => ['id' => 'menu-'.$i, 'label' => $link['label'], 'url' => $link['url']])->all(),
-                ],
+                'items' => $page->sidebar($page->url()),
                 'quickLinks' => $page->quickLinks(),
                 'width' => 'lg:w-[300px] 2xl:w-[320px]',
             ])
 
             <div class="flex-1 min-w-0 space-y-10">
-                {{-- Overview and contact (none filled in, no card) --}}
-                @if ($page->overview() || $page->facts() !== [])
+                {{-- With a cover picture (DIU registrar-office): the picture, the overview under it, the contact facts --}}
+                @if ($cover = $page->image())
+                    <section aria-label="{{ __('office::office.page.overview') }}">
+                        <img src="{{ $cover->url('large') }}" alt="{{ $entity->name }}" class="rounded-xl w-full object-cover shadow h-[250px] md:h-[400px] xl:h-[500px]">
+                        @if ($overview = $page->overview())
+                            <div class="mt-8 text-gray-700 md:text-lg leading-relaxed">@include('theme::partials.page.body', ['body' => $overview])</div>
+                        @endif
+                        @if (($facts = $page->facts()) !== [])
+                            @include('theme::partials.office.facts', ['facts' => $facts])
+                        @endif
+                    </section>
+                @endif
+
+                {{-- Highlights (DIU proctor-office: Our Mission, Our Vision …) --}}
+                @if (($highlights = $page->highlights()) !== [])
+                    <section class="grid grid-cols-1 md:grid-cols-2 gap-6" aria-label="{{ __('office::office.fields.highlights') }}">
+                        @foreach ($highlights as $item)
+                            <div class="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                                <div class="flex items-start gap-4">
+                                    <span class="p-3 bg-primary/10 rounded-lg text-primary shrink-0"><x-theme::icon :name="$item['icon']" class="w-6 h-6" /></span>
+                                    <div class="min-w-0">
+                                        <h2 class="text-lg font-semibold text-gray-900 mb-2">{{ $item['title'] }}</h2>
+                                        @if ($item['text'])<p class="text-sm text-gray-500 leading-relaxed">{{ $item['text'] }}</p>@endif
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </section>
+                @endif
+
+                {{-- Without a cover picture: overview and contact in a card (none filled in, no card) --}}
+                @if (! $cover && ($page->overview() || $page->facts() !== []))
                 <section class="bg-white rounded-2xl border border-gray-200/80 shadow-xs p-6 sm:p-8" aria-labelledby="office-overview">
-                    <h2 id="office-overview" class="text-2xl sm:text-3xl font-bold text-secondary mb-6">{{ __('office::office.page.overview') }}</h2>
+                    <h2 id="office-overview" class="text-2xl sm:text-3xl font-bold text-secondary mb-6">{{ $highlights !== [] ? __('office::office.page.about') : __('office::office.page.overview') }}</h2>
                     @if ($overview = $page->overview())
                         @include('theme::partials.page.body', ['body' => $overview])
                     @endif
                     @if (($facts = $page->facts()) !== [])
-                        <div class="grid sm:grid-cols-2 xl:grid-cols-4 gap-4 pt-6 mt-6 border-t border-gray-200">
-                            @foreach ($facts as $key => $value)
-                                <div class="bg-gray-50/80 rounded-xl p-4 flex items-start gap-3 min-w-0">
-                                    <span class="w-9 h-9 shrink-0 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                                        <x-theme::icon :name="['location' => 'map-pin', 'phone' => 'phone', 'email' => 'mail', 'extension' => 'phone', 'hours' => 'clock'][$key]" class="w-4 h-4" />
-                                    </span>
-                                    <div class="min-w-0">
-                                        <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">{{ __('office::office.page.'.$key) }}</p>
-                                        @if ($key === 'email')
-                                            <a href="mailto:{{ $value }}" class="text-sm font-medium text-gray-800 break-all hover:text-primary">{{ $value }}</a>
-                                        @elseif ($key === 'phone')
-                                            <a href="tel:{{ $value }}" class="text-sm font-medium text-gray-800 hover:text-primary">{{ $value }}</a>
-                                        @else
-                                            <p class="text-sm font-medium text-gray-800 break-words">{{ $value }}</p>
-                                        @endif
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
+                        @include('theme::partials.office.facts', ['facts' => $facts])
                     @endif
                 </section>
+                @endif
+
+                {{-- Quick Service (DIU registrar-office): icon tiles --}}
+                @if (($quickServices = $page->quickServices()) !== [])
+                    <section aria-labelledby="office-quick-service">
+                        <h2 id="office-quick-service" class="font-semibold text-lg text-gray-900 mb-4">{{ __('office::office.page.quick_service') }}</h2>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-6">
+                            @foreach ($quickServices as $service)
+                                <a href="{{ $service['url'] }}" @if (! str_starts_with($service['url'], url('/'))) target="_blank" rel="noopener" @endif
+                                   class="group flex flex-col items-center gap-2 bg-gray-50 rounded-lg p-4 hover:shadow transition hover:no-underline">
+                                    <span class="w-14 h-14 bg-blue-900 group-hover:bg-blue-800 rounded-full flex items-center justify-center transition-colors mb-2">
+                                        <x-theme::icon :name="$service['icon']" class="w-7 h-7 text-white" />
+                                    </span>
+                                    <span class="text-sm font-medium text-gray-900 text-center">{{ $service['label'] }}</span>
+                                </a>
+                            @endforeach
+                        </div>
+                    </section>
                 @endif
 
                 {{-- The Head's message --}}

@@ -71,12 +71,39 @@ it('lists public categories in ladder order, filters, searches and switches layo
     expect(moduleView('Administration', 'directory', app(AdministrationWebsite::class)->respond('administration', SiteContext::site(), 'en')->getOriginalContent()->getData()))
         ->toContain('Prof. Rahman', 'Mr. Bari', 'Mr. Karim');                                        // the module's own view: every group
 
-    $this->get('/administration?category='.$this->director->id)->assertOk()
+    $this->get('/administration/director')->assertOk()
         ->assertSeeInOrder(['Mr. Bari', 'Ms. Akter'])->assertDontSee('Prof. Rahman')->assertDontSee('Mr. Karim');
     $this->get('/administration?group=officer')->assertOk()->assertSee('Mr. Karim')->assertDontSee('Prof. Rahman');
     $this->get('/administration?office='.$this->exam->id)->assertOk()->assertSee('Ms. Nahar')->assertDontSee('Mr. Karim');
     $this->get('/administration?q=registrar')->assertOk()->assertSee('Mr. Karim')->assertDontSee('Ms. Nahar');
-    $this->get('/administration?view=table&category='.$this->officer->id)->assertOk()->assertSee('<table', false)->assertSee('karim@example.edu');
+    $this->get('/administration/officer?view=table')->assertOk()->assertSee('<table', false)->assertSee('karim@example.edu');
+});
+
+it('gives each section its own address, /administration/{slug}, as DIU\'s /admin/joint-director; old ?category= links and slugs redirect', function () {
+    $joint = AdministrationCategory::query()->create(['name' => ['en' => 'Joint Director'], 'group' => 'management', 'sort_order' => 5, 'is_public' => true, 'is_active' => true]);
+    Member::factory()->in($joint)->create(['name' => ['en' => 'Mr. Joint']]);
+
+    expect($joint->url())->toBe('/administration/joint-director');
+    $html = $this->get('/administration/joint-director')->assertOk()->assertSee('Mr. Joint')->assertDontSee('Prof. Rahman')->getContent();
+    expect($html)->toMatch('#<a href="'.preg_quote(url('/administration/joint-director'), '#').'"[^>]*aria-current="page"#')        // marked in "Browse by Section"
+        ->and($html)->toContain('href="'.url('/administration/director').'"')
+        ->and($html)->not->toMatch('#href="'.preg_quote(url('/administration/director'), '#').'"\s+target="_blank"#');                 // the site's own links: same tab
+
+    $this->get('/administration?category='.$joint->id)->assertRedirect('/administration/joint-director')->assertStatus(301);
+    $this->get('/administration?category='.$joint->id.'&view=table')->assertRedirect('/administration/joint-director?view=table');
+    $this->get('/administration?category=joint-director')->assertRedirect('/administration/joint-director');
+
+    $joint->changeSlug('en', 'joint-directors');
+    $this->get('/administration/joint-director')->assertRedirect('/administration/joint-directors')->assertStatus(301);   // FR-GEN-32
+
+    // A section that is not public has no address; a person's profile stays at /administration/{slug}
+    $this->get($this->driver->url())->assertNotFound();
+    $this->get($this->deputy->url())->assertOk()->assertSee('Mr. Karim');
+
+    // A section and a person never share a slug
+    $person = Member::factory()->in($this->officer)->create(['name' => ['en' => 'Officer']]);
+    expect($person->slug('en'))->toBe('officer-2');
+    $this->get('/administration/officer')->assertOk()->assertSee('Mr. Karim');
 });
 
 it('shows one phone number on every place the person holds, and their roles on the profile (AC-ADMN-01, AC-ADMN-03)', function () {
@@ -102,7 +129,7 @@ it('hides contacts that are not public, everywhere (FR-ADMN-07)', function () {
 
     $person = app(AssignmentEngine::class)->people($this->registrar)->first();
     expect($person->phone())->toBeNull()->and($person->email())->toBe('karim@example.edu');
-    $this->get('/administration?category='.$this->officer->id)->assertOk()->assertDontSee('+880 1711 000000')->assertSee('karim@example.edu');
+    $this->get($this->officer->url())->assertOk()->assertDontSee('+880 1711 000000')->assertSee('karim@example.edu');
     $this->get($this->deputy->url())->assertOk()->assertDontSee('+880 1711 000000');
 });
 

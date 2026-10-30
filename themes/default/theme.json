@@ -1,7 +1,7 @@
 {
     "slug": "default",
     "name": "University Default",
-    "version": "2.0.0",
+    "version": "2.1.0",
     "requires_core": "^1.0",
     "author": { "name": "DIU Web Team", "email": "web@example.edu" },
     "license": "proprietary",

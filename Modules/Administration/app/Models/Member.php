@@ -19,6 +19,7 @@ use Platform\Contracts\PersonPresenter;
 use Platform\Contracts\PersonSource;
 use Platform\Contracts\Scopeable;
 use Platform\Models\BaseModel;
+use Platform\Slugs\Slug;
 use Spatie\Translatable\HasTranslations;
 
 /**
@@ -133,6 +134,15 @@ class Member extends BaseModel implements PersonSource, Scopeable
         return settings('administration.profile_pages', true)
             ? '/'.self::PATH.'/'.$this->slug($locale)
             : '/'.self::PATH.'?q='.rawurlencode((string) $this->getTranslation('name', $locale ?? app()->getLocale(), true));
+    }
+
+    /** /administration/{slug} is a person or a section: a section's slug is taken for a person too */
+    protected function slugTakenByOther(string $locale, string $slug): bool
+    {
+        return Slug::query()->where('locale', $locale)->where('slug', $slug)
+            ->where(fn (Builder $q) => $q->where('sluggable_type', (new AdministrationCategory)->getMorphClass())
+                ->orWhere(fn (Builder $own) => $own->where('sluggable_type', $this->getMorphClass())->where('sluggable_id', '!=', $this->getKey())))
+            ->exists();
     }
 
     protected function searchBodyAttributes(): array

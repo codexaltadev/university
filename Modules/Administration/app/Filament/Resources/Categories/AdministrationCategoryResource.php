@@ -19,7 +19,9 @@ use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Modules\Administration\Filament\Resources\Categories\Pages\ManageAdministrationCategories;
 use Modules\Administration\Models\AdministrationCategory;
+use Modules\Administration\Models\Member;
 use Platform\Filament\Components\TranslatableTabs;
+use Platform\Filament\Components\WebAddressField;
 use UnitEnum;
 
 /** People › Staff categories (FR-ADMN-02): the ladder from the top, drag to reorder; group and "in the directory". */
@@ -53,6 +55,7 @@ class AdministrationCategoryResource extends Resource
             TranslatableTabs::make()->columnSpanFull()->schema(fn (string $locale, bool $isDefault): array => [
                 TextInput::make("name.{$locale}")->label(__('administration::administration.fields.name'))->required($isDefault)->maxLength(100),
             ]),
+            WebAddressField::make(prefix: '/'.Member::PATH.'/')->columnSpanFull(),   // its section: /administration/joint-director
             Grid::make(3)->columnSpanFull()->schema([
                 Select::make('group')->label(__('administration::administration.fields.group'))->required()->live()
                     ->options(static::groups())->default('officer')

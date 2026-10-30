@@ -39,6 +39,7 @@
             "assignable": true,
             "dynamic_permissions": true,
             "searchable": true,
+            "page_blocks": true,
             "metrics": [
                 "office.count",
                 "office.services",

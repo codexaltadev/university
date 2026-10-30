@@ -54,7 +54,7 @@ class S11Administration extends Step
                 in_array(Str::lower($name), self::MANAGEMENT, true) ? 'management' : 'officer', true, ++$order, (bool) $row->publication_status)->id;
         }
         // DIU's /admin/{section} is not redirected: /admin is this system's admin panel
-        $this->report->review('DIU\'s /admin/{section} addresses are not redirected: /admin is the admin panel here. Its sections are /administration?category={id}.');
+        $this->report->review('DIU\'s /admin/{section} addresses are not redirected: /admin is the admin panel here. Its sections are /administration/{slug}.');
         $staffCategories = [];
         foreach ($this->rows('staff_categories', fn ($q) => $q->whereNull('deleted_at'))->sortBy('serial') as $row) {
             $staffCategories[$row->id] = $this->category('staff_categories', $row, Normalizer::text($row->category_name), 'support', false, ++$order, (bool) $row->publication_status)->id;

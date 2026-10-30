@@ -2,6 +2,7 @@
 
 namespace Modules\Calendar;
 
+use Modules\Calendar\Blocks\CalendarSessionsBlock;
 use Modules\Calendar\Blocks\UpcomingDatesBlock;
 use Modules\Calendar\Filament\CalendarPlugin;
 use Modules\Calendar\Models\Calendar;
@@ -29,6 +30,7 @@ final class CalendarExtension implements ModuleExtension
         $r->layouts('calendar.show', ['table', 'month', 'timeline']);                        // FR-CAL-04; first = default
         $r->homepageSection(UpcomingDatesSection::class);                                    // FR-CAL-07
         $r->pageBlock(UpcomingDatesBlock::class);                                            // the same on any page
+        $r->pageBlock(CalendarSessionsBlock::class);                                         // the calendar card on any page (DIU registrar-office)
 
         $program = 'Modules\\Program\\Models\\Program';
         if (class_exists($program)) {

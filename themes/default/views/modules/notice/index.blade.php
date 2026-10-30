@@ -2,8 +2,12 @@
     DIU Notice Board (DIUFronend app/(public)/noticeboard): hero; "All Departments" and a tab per faculty
     with its departments in a menu (on phones a list that opens); beyond DIU a search and the archive;
     then a card per notice — the date in a box, title, where it is from, category, date and time, views.
-    Contract: the module's (notices, categories, category, entities, entity, archive, layout, base), $page (NoticeBoardPage)
+    An office's own board opens in the office's frame (partials/office/notices).
+    Contract: the module's (notices, categories, category, entities, entity, archive, layout, base), $page (NoticeBoardPage), $office (OfficePage or null)
 --}}
+@if ($office ?? null)
+    @include('theme::partials.office.notices')
+@else
 <x-theme::layout :title="settings('notice.board_title') ?: __('notice::notice.on_board')">
     @include('theme::partials.diu.hero', [
         'title' => settings('notice.board_title') ?: __('notice::notice.on_board'),
@@ -161,3 +165,4 @@
         </div>
     </div>
 </x-theme::layout>
+@endif

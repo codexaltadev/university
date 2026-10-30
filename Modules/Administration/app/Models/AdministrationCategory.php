@@ -5,19 +5,26 @@ namespace Modules\Administration\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Validation\ValidationException;
+use Platform\Concerns\HasSlug;
 use Platform\Concerns\HasSortOrder;
 use Platform\Models\BaseModel;
+use Platform\Slugs\Slug;
 use Spatie\Translatable\HasTranslations;
 
 /**
  * One rung of the staff ladder (FR-ADMN-02, DB-04 §4.1): "Director", "Deputy Registrar",
  * "Driver" — ordered from the top, in a group (management / officer / support), shown in the
  * directory or not (support is not, by default). A category with members is not removed.
+ * Its section of the directory is /administration/{slug} (DIU /admin/joint-director); a slug never
+ * equals a person's there.
  */
 class AdministrationCategory extends BaseModel
 {
+    use HasSlug;
     use HasSortOrder;
     use HasTranslations;
+
+    protected string $slugSource = 'name';
 
     public const GROUPS = ['management', 'officer', 'support'];
 
@@ -52,6 +59,20 @@ class AdministrationCategory extends BaseModel
     public function members(): HasMany
     {
         return $this->hasMany(Member::class, 'category_id');
+    }
+
+    public function url(?string $locale = null): string
+    {
+        return '/'.Member::PATH.'/'.$this->slug($locale);
+    }
+
+    /** /administration/{slug} is a section or a person: a slug one of them has is taken for the other too */
+    protected function slugTakenByOther(string $locale, string $slug): bool
+    {
+        return Slug::query()->where('locale', $locale)->where('slug', $slug)
+            ->where(fn (Builder $q) => $q->where('sluggable_type', (new Member)->getMorphClass())
+                ->orWhere(fn (Builder $own) => $own->where('sluggable_type', $this->getMorphClass())->where('sluggable_id', '!=', $this->getKey())))
+            ->exists();
     }
 
     public function scopePublic(Builder $query): Builder

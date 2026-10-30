@@ -74,7 +74,8 @@ it('stores aliases, not class names, in polymorphic columns', function () {
 
     expect(MorphMap::alias(Faq::class))->toBe('faq.faq')
         ->and(ContentRelation::first()->content_type)->toBe('faq.faq')
-        ->and(Activity::where('subject_id', $faq->id)->value('subject_type'))->toBe('faq.faq')
+        ->and(Activity::where('subject_id', $faq->id)->where('subject_type', 'faq.faq')->exists())->toBeTrue()   // the user may share the id
+        ->and(Activity::where('subject_type', Faq::class)->exists())->toBeFalse()
         ->and(DB::table('model_has_roles')->value('model_type'))->toBe('core.user');
 });
 

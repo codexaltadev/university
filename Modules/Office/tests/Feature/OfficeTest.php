@@ -7,9 +7,13 @@
 */
 
 use Filament\Facades\Filament;
+use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 use Modules\Faq\Models\Faq;
 use Modules\Homepage\Support\Homepages;
+use Modules\Menu\Support\MenuEditor;
+use Modules\Menu\Support\MenuTree;
+use Modules\Notice\Models\Notice;
 use Modules\Office\Database\Seeders\OfficeDatabaseSeeder;
 use Modules\Office\Filament\Resources\Offices\OfficeResource;
 use Modules\Office\Filament\Resources\Offices\Pages\EditOffice;
@@ -19,9 +23,14 @@ use Modules\Office\Models\Office;
 use Modules\Office\Models\OfficeService;
 use Modules\Office\Models\OfficeSupportContact;
 use Modules\Office\Settings\OfficeSettings;
+use Modules\Office\Support\OfficePage;
+use Modules\Page\Blocks\PageBlocks;
+use Modules\Page\Models\Page;
+use Modules\Settings\Groups\GeneralSettings;
 use Platform\Assignments\AssignmentEngine;
 use Platform\Assignments\ManualPerson;
 use Platform\Assignments\RoleCatalog;
+use Platform\Context\SiteContext;
 use Platform\Modules\ModulePermissions;
 use Platform\Permissions\EntityPermissions;
 use Platform\Relations\RelationEngine;
@@ -71,6 +80,12 @@ it('opens an office microsite with overview, services, team and contact (FR-OFF-
         ->assertSeeInOrder(['Registrar Office', 'Browse by Section (01)', 'Overview', 'Quick Links', 'Records and certificates.', 'Building 1, Level 3',
             'registrar@example.edu', 'Sun–Thu 9am–5pm', 'Welcome to the Registrar Office.', 'Services', 'Transcript issue', 'Student ID card', '7 working days', 'Office Team', 'Ms. Akter'])
         ->assertSee('Registrar Office - ', false);
+
+    // Under the name: the university's full name (Settings › General), else the site name
+    settings()->saveFor(new GeneralSettings, ['site_name' => ['en' => 'DIU Website'], 'university_name' => ['en' => 'Daffodil International University']]);
+    $this->get($this->registrar->url())->assertSee('Registrar Office - Daffodil International University');
+    settings()->saveFor(new GeneralSettings, ['university_name' => null]);
+    $this->get($this->registrar->url())->assertSee('Registrar Office - DIU Website');
 });
 
 it('shows the whole team on /office/{slug}/team, the first few on the office page; none, no page (FR-OFF-05)', function () {
@@ -115,6 +130,94 @@ it('takes Quick Links from the office, else Settings › Offices; an empty homep
     // A homepage made in the builder but with no sections yet: the office page, not a blank one
     app(Homepages::class)->create($this->registrar->getMorphClass().':'.$this->registrar->id);
     $this->get($this->registrar->url())->assertOk()->assertSee('Records and certificates.');
+});
+
+it('shows highlights cards and Quick Service tiles entered with the office, and its own side menu (DIU registrar / proctor office)', function () {
+    $this->actingAs(superAdmin());
+    Livewire::test(EditOffice::class, ['record' => $this->registrar->getRouteKey()])
+        ->fillForm([
+            'highlights' => [['icon' => 'shield', 'title' => ['en' => 'Our Mission'], 'text' => ['en' => 'Fair and transparent procedures.']]],
+            'quick_services' => [['icon' => 'folder', 'label' => ['en' => 'File Processing'], 'url' => '/office/registrar-office/file-processing'], ['icon' => '', 'label' => ['en' => 'Employee Application'], 'url' => 'https://empapp.example.edu']],
+        ])
+        ->call('save')->assertHasNoFormErrors();
+
+    // The module's own page
+    expect(moduleView('Office', 'microsite.home', ['entity' => $this->registrar->refresh()]))
+        ->toContain('Our Mission')->toContain('Quick Service')->toContain('Employee Application');
+
+    // DIU's look: cards, "About the Office" (no cover picture), then the tiles; outside links open in a new tab
+    $html = $this->get($this->registrar->url())->assertOk()
+        ->assertSeeInOrder(['Our Mission', 'Fair and transparent procedures.', 'About the Office', 'Records and certificates.', 'Quick Service', 'File Processing', 'Employee Application'])
+        ->getContent();
+    expect($html)->toMatch('#href="https://empapp\.example\.edu"\s+target="_blank"#');
+
+    // A sidebar menu of its own is the side list; the header menu stays the primary one
+    $editor = app(MenuEditor::class);
+    $key = $this->registrar->getMorphClass().':'.$this->registrar->id;
+    $editor->save($editor->create($key, 'sidebar'), [['title' => ['en' => 'Honour Board'], 'type' => 'url', 'url' => '/honour-board', 'is_active' => true]]);
+    MenuTree::flush();
+    $this->get($this->registrar->url())->assertSeeInOrder(['Browse by Section (02)', 'Overview', 'Honour Board']);
+});
+
+it('opens the office\'s pages, team and notice board in the office\'s frame, the one shown marked (DIU /registrar-office/{slug})', function () {
+    $editor = app(MenuEditor::class);
+    $key = $this->registrar->getMorphClass().':'.$this->registrar->id;
+    $calendar = Page::factory()->ownedBy($this->registrar)->create(['title' => ['en' => 'Academic Calendar'], 'content' => ['en' => [['type' => 'html', 'data' => ['html' => '<p>Dates of the session.</p>']]]]]);
+    $employee = Page::factory()->ownedBy($this->registrar)->create(['title' => ['en' => 'Employee Service'], 'content' => ['en' => []]]);
+    Page::factory()->ownedBy($this->registrar)->create(['title' => ['en' => 'Recruitment'], 'parent_id' => $employee->id, 'excerpt' => ['en' => 'Jobs at the university.']]);
+    $editor->save($editor->create($key, 'sidebar'), [
+        ['title' => ['en' => 'Staff Directory'], 'type' => 'url', 'url' => $this->registrar->url().'/team', 'is_active' => true],
+        ['title' => ['en' => 'Academic Calendar'], 'type' => 'url', 'url' => $calendar->url(), 'is_active' => true],
+        ['title' => ['en' => 'Notice'], 'type' => 'url', 'url' => $this->registrar->url().'/notices', 'is_active' => true],
+        ['title' => ['en' => 'Employee Application'], 'type' => 'url', 'url' => 'https://empapp.example.edu', 'is_active' => true],
+    ]);
+    MenuTree::flush();
+    $current = fn (string $html): string => preg_match('#<a href="([^"]+)"[^>]*aria-current="page"#', $html, $m) ? $m[1] : '';
+
+    // A page: the office hero and side list, its text in the card, the page marked; links leaving the site in a new tab only
+    $html = $this->get($calendar->url())->assertOk()
+        ->assertSeeInOrder(['Registrar Office', 'Browse by Section (05)', 'Overview', 'Staff Directory', 'Academic Calendar', 'Quick Links', 'Dates of the session.'])
+        ->getContent();
+    expect($current($html))->toBe(url($calendar->url()))
+        ->and($html)->toMatch('#href="https://empapp\.example\.edu"\s+target="_blank"#')
+        ->and($html)->not->toMatch('#href="'.preg_quote(url($calendar->url()), '#').'"\s+target="_blank"#');
+
+    // A page with pages under it lists them as cards
+    $this->get($employee->url())->assertOk()->assertSeeInOrder(['Employee Service', 'Recruitment', 'Jobs at the university.']);
+
+    // The team and the notice board, marked in the same side list
+    expect($current($this->get($this->registrar->url().'/team')->assertOk()->assertSeeInOrder(['Browse by Section (05)', 'Office Team Members', 'Ms. Akter'])->getContent()))
+        ->toBe(url($this->registrar->url().'/team'));
+    app(ModulePermissions::class)->sync('Notice');
+    $notice = Notice::factory()->create(['title' => ['en' => 'Late registration for Fall 2026'], 'active_at' => now()->subDay()]);
+    app(RelationEngine::class)->sync($notice, [$key], mainSite: false, user: null);
+    expect($current($this->get($this->registrar->url().'/notices')->assertOk()->assertSeeInOrder(['Browse by Section (05)', 'Notices &amp; Announcements', 'Late registration for Fall 2026'], false)->getContent()))
+        ->toBe(url($this->registrar->url().'/notices'));
+
+    // The office page itself: Overview marked
+    expect($current($this->get($this->registrar->url())->getContent()))->toBe(url($this->registrar->url()));
+});
+
+it('shows the Honour Board — the head now, then former heads with their terms — and the Contact from the office (DIU registrar-office)', function () {
+    $head = ManualPerson::create(['name' => ['en' => 'Dr. Mostafa Kamal'], 'designation' => ['en' => 'Registrar'], 'is_active' => true]);
+    $engine = app(AssignmentEngine::class);
+    $engine->assign($head, $this->registrar, 'head', ['starts_on' => '2002-03-19', 'ends_on' => '2007-03-31', 'role_label' => ['en' => 'Registrar']]);
+    $akter = ManualPerson::query()->get()->first(fn ($p) => $p->name === 'Ms. Akter');
+    $engine->assign($akter, $this->registrar, 'head', ['starts_on' => '2022-10-15', 'role_label' => ['en' => 'Registrar (In charge)']]);
+
+    $board = Page::factory()->ownedBy($this->registrar)->create(['title' => ['en' => 'Honour Board'], 'content' => ['en' => [['type' => 'office-heads', 'data' => ['intro' => 'Registrars since 2002.']]]]]);
+    $this->get($board->url())->assertOk()
+        ->assertSeeInOrder(['Honour Board', 'Registrars since 2002.', 'Serving now', 'Ms. Akter', 'Registrar (In charge)', 'Since 15 Oct 2022', 'Former heads', 'MK', 'Dr. Mostafa Kamal', '19 Mar 2002 – 31 Mar 2007', '5 years']);
+    expect((new OfficePage($this->registrar))->team()->filter(fn ($p) => $p->name() === 'Ms. Akter'))->toHaveCount(1);   // head and team: once
+
+    $contact = Page::factory()->ownedBy($this->registrar)->create(['title' => ['en' => 'Contact'], 'content' => ['en' => [['type' => 'office-contact', 'data' => []]]]]);
+    $this->get($contact->url())->assertOk()
+        ->assertSeeInOrder(['Get in Touch', 'Building 1, Level 3', 'registrar@example.edu', 'Who to contact', 'ID card problem after admission', 'Room 301', 'Ms. Akter'])
+        ->assertSee('mailto:registrar@example.edu', false)->assertSee('tel:+8801847140000', false);
+
+    // Outside an office's site the blocks show nothing
+    View::share('context', SiteContext::site());
+    expect(PageBlocks::render([['type' => 'office-heads', 'data' => []], ['type' => 'office-contact', 'data' => []]], 'en')->toHtml())->not->toContain('Dr. Mostafa Kamal')->not->toContain('Get in Touch');
 });
 
 it('shows every office\'s services and who to contact (FR-OFF-06/07)', function () {

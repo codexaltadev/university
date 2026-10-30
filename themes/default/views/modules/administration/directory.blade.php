@@ -3,14 +3,14 @@
     "Browse by Section (NN)" — each section with its people, one chosen — and the Quick Links; on the right the
     search over everyone, then a table (photo, name, designation, contact) or, on phones, a card per person.
     Title, picture, text and links from Settings › Administration.
-    Contract: the module's (groups, categories, counts, search …), $page (AdministrationPage)
+    Contract: the module's (groups, categories, counts, search, category — the section of /administration/{slug} or null …), $page (AdministrationPage)
 --}}
 <x-theme::layout :title="$page->title()">
     @include('theme::partials.diu.hero', [
         'title' => $page->title(),
         'subtitle' => null,
         'image' => $page->image() ?? theme_image('page_hero_image', 'images/page-hero.webp'),
-        'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url('/')], ['label' => $page->title(), 'url' => $page->listingUrl()]],
+        'breadcrumbs' => [['label' => __('theme::theme.home'), 'url' => url('/')], ['label' => $page->title(), 'url' => $page->listingUrl()], ...($category ? [['label' => $category->name, 'url' => url($category->url())]] : [])],
     ])
 
     <div class="min-h-screen bg-white" x-data="{ more: false }">

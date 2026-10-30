@@ -31,6 +31,9 @@ return [
 
     'fields' => [
         'quick_links' => 'Quick Links',
+        'highlights' => 'মূল কথা',
+        'quick_services' => 'Quick Service',
+        'icon' => 'Icon',
         'name' => 'নাম',
         'short_name' => 'সংক্ষিপ্ত নাম',
         'type' => 'ধরন',
@@ -61,13 +64,20 @@ return [
     'help' => [
         'quick_links' => 'Office page-এ "Quick Links"-এ দেখায় (লেখা ও link, এই ক্রমে)। খালি থাকলে Settings › Offices-এর link।',
         'has_microsite' => 'বন্ধ থাকলে নিজস্ব website নেই — /offices-এ যোগাযোগ card হিসেবে দেখাবে।',
+        'highlights' => 'Office page-এর উপরের দিকের card — Mission, Vision, office কী নিয়ে কাজ করে (icon, শিরোনাম, ছোট লেখা)।',
+        'quick_services' => 'পরিচিতির নিচে icon-এর tile — মানুষ যে সেবার জন্য বেশি আসে (icon, লেখা, link)।',
+        'icon' => 'Icon-এর নাম, যেমন shield, users, file-text।',
     ],
+    'actions' => ['add_highlight' => 'Card যোগ করুন', 'add_quick_service' => 'Tile যোগ করুন'],
     'settings' => [
         'page_quick_links' => 'প্রতিটি Office page-এর Quick Links',
         'page_quick_links_help' => 'যে office-এর নিজের Quick Links নেই তার জন্য।',
     ],
     'page' => [
         'overview' => 'পরিচিতি',
+        'about' => 'অফিস সম্পর্কে',
+        'quick_service' => 'Quick Service',
+        'notices' => 'নোটিশ ও ঘোষণা',
         'site_suffix' => ':name - :site',
         'location' => 'অবস্থান', 'phone' => 'ফোন', 'email' => 'ইমেইল', 'extension' => 'এক্সটেনশন', 'hours' => 'অফিস সময়',
         'services_text' => 'এই অফিস আপনার জন্য কী করে এবং কীভাবে।', 'all_services' => 'সব সেবা',
@@ -75,5 +85,13 @@ return [
         'team_members' => 'অফিসের সকল সদস্য', 'team_members_text' => 'এই অফিসের কর্মকর্তা ও কর্মচারীদের সাথে পরিচিত হোন।',
         'no_team' => 'এই অফিসের কোনো সদস্যের তথ্য নেই।',
         'faqs' => 'সাধারণ প্রশ্নোত্তর', 'faqs_text' => 'প্রচলিত প্রশ্নের দ্রুত উত্তর।', 'all_faqs' => 'সব প্রশ্নোত্তর',
+        'serving' => 'বর্তমানে দায়িত্বে', 'since' => ':date থেকে', 'former_heads' => 'পূর্ববর্তী প্রধানগণ', 'no_heads' => 'এই অফিসের প্রধানদের তালিকা এখনো দেওয়া হয়নি।',
+        'get_in_touch' => 'যোগাযোগ করুন', 'find_us' => 'আমাদের অবস্থান', 'open_map' => 'Google Maps-এ খুলুন',
+    ],
+    'blocks' => [
+        'heads' => 'Honour Board (অফিস প্রধানগণ)', 'contact' => 'অফিসের যোগাযোগ',
+        'intro' => 'উপরের লেখা',
+        'heads_help' => 'প্রধানদের তথ্য অফিস থেকে আসে: Offices › People, role Head, মেয়াদসহ (শুরু / শেষ) আর "Registrar (In charge)"-এর মতো label।',
+        'contact_help' => 'অবস্থান, ফোন, ইমেইল ও সময় অফিস থেকে; ঠিকানা ও map আসে Settings › Contact (প্রথম campus) থেকে; "Who to contact" অফিসের তালিকা থেকে।',
     ],
 ];

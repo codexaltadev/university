@@ -41,5 +41,17 @@ class OfficeServiceProvider extends ModuleServiceProvider
 
         // An office page's parts for any theme's version of it (themes hold no PHP logic, T-1)
         View::composer(['office::microsite.home', 'office::team'], fn ($view) => $view->with('page', new OfficePage($view->getData()['entity'])));
+
+        // A page of an office's own site — and its notice board — opens in the office's frame (DIU /registrar-office/{slug}): $office
+        View::composer(['theme::templates.*', 'notice::index'], function ($view): void {
+            $entity = View::shared('context')?->entity;
+            $view->with('office', $entity instanceof Office && $entity->has_microsite ? new OfficePage($entity) : null);
+        });
+
+        // Honour Board and Contact blocks: the office whose site the page is on (none elsewhere: the block shows nothing)
+        View::composer('office::blocks.*', function ($view): void {
+            $entity = View::shared('context')?->entity;
+            $view->with('office', $entity instanceof Office ? new OfficePage($entity) : null);
+        });
     }
 }

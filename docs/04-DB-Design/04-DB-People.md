@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-04 |
-| Version | 1.6 — 2026-10-11 (v1.1): §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত); 2026-10-16 (v1.2): §4 Administration সরলীকরণ — contact visibility তিনটি column, campus ও user link পরে, Office scope, website গঠন; 2026-10-16 (v1.3): §6 Leadership — role holder / member, term-এর address, former, migration নেই; 2026-10-16 (v1.4): §7 Committee — is_active, Show in, PeopleManager note, website, term copy; 2026-10-16 (v1.5): §8 Alumni — is_active, contact switches, faculty member link পরে, Pride section, website; 2026-10-24 (v1.6, Phase 4.4h): §3.1 Office-এ `quick_links`, office page-এর default Quick Links Settings-এ (group `office`) |
+| Version | 1.7 — 2026-10-11 (v1.1): §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত); 2026-10-16 (v1.2): §4 Administration সরলীকরণ — contact visibility তিনটি column, campus ও user link পরে, Office scope, website গঠন; 2026-10-16 (v1.3): §6 Leadership — role holder / member, term-এর address, former, migration নেই; 2026-10-16 (v1.4): §7 Committee — is_active, Show in, PeopleManager note, website, term copy; 2026-10-16 (v1.5): §8 Alumni — is_active, contact switches, faculty member link পরে, Pride section, website; 2026-10-24 (v1.6, Phase 4.4h): §3.1 Office-এ `quick_links`, office page-এর default Quick Links Settings-এ (group `office`); 2026-10-30 (v1.7, DIU registrar/proctor office): §3.1 Office-এ `highlights` ও `quick_services`; Registrar ও Proctor-এর page ও sidebar menu migration step `S15O`; §4.1 category-র slug — section `/administration/{slug}` |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 3](../02-SRS/03-SRS-People.md), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -92,6 +92,8 @@ erDiagram
 | campus_id | BIGINT UNSIGNED | N, IX | | Campus optional |
 | office_hours | JSON | N, T | | |
 | quick_links | JSON | N | | *(v1.6)* Office page-এর "Quick Links": `[{label: {en, bn}, url}]`, ক্রমে; form-এই দেওয়া হয় (LinkListField); খালি = Settings › Offices-এর |
+| highlights | JSON | N | | *(v1.7)* Office page-এর উপরের card (DIU proctor-office: Our Mission, Our Vision …): `[{icon, title: {en, bn}, text: {en, bn}}]`, ক্রমে |
+| quick_services | JSON | N | | *(v1.7)* পরিচিতির নিচে icon tile (DIU registrar-office-এর Quick Service): `[{icon, label: {en, bn}, url}]`, ক্রমে |
 | has_microsite | TINYINT(1) | | 1 | বর্তমান `show_page` (FR-OFF-11) |
 | sort_order | INT UNSIGNED | | 0 | |
 | ⚙ | | | | |
@@ -121,7 +123,7 @@ IX (প্রতিটিতে): `(office_id, is_active, sort_order)`। `offic
 
 ### 4.1 `administration_categories` — B
 
-একটি ক্রমযুক্ত তালিকা (উচ্চ → নিম্ন)। Taxonomy-র বদলে নিজস্ব table, কারণ `group` ও `is_public` business নিয়ম।
+একটি ক্রমযুক্ত তালিকা (উচ্চ → নিম্ন)। Taxonomy-র বদলে নিজস্ব table, কারণ `group` ও `is_public` business নিয়ম। Web address `core_slugs`-এ (HasSlug): প্রতিটি public category-র নিজের section `/administration/{slug}` (DIU-র `/admin/joint-director`-এর মতো), পুরনো `?category={id}` → 301; একই ঠিকানায় member profile-ও থাকে, তাই category ও member-এর slug কখনো এক হয় না (মিললে `-2`)।
 
 | Column | Type | Key / N | Default | বর্ণনা |
 |---|---|---|---|---|

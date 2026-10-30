@@ -1,5 +1,5 @@
 {{--
-    An office's microsite home until it builds its own (FR-OFF-10): overview, statistics, Head's
+    An office's microsite home until it builds its own (FR-OFF-10): overview, highlights, Quick Service, statistics, Head's
     message, services, team, sections, contact. Notices and Documents come from those modules'
     homepage sections once the office builds its homepage.
     Contract: $entity (Office), $context
@@ -11,6 +11,9 @@
     $team = $entity->people('team');
     $services = $entity->services()->where('is_active', true)->get();
     $sections = $entity->sections()->where('is_active', true)->get();
+    $officePage = new \Modules\Office\Support\OfficePage($entity);
+    $highlights = $officePage->highlights();
+    $quickServices = $officePage->quickServices();
 @endphp
 <section class="home-section office-hero" @if ($cover) style="background:linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.45)), url('{{ $cover->url('large') }}') center/cover;color:#fff" @endif>
     <div class="container">
@@ -22,6 +25,26 @@
 @if (filled($entity->overview))
     <x-theme::section :section="new \Illuminate\Support\Fluent(['anchor' => 'overview', 'title' => __('office::office.fields.overview'), 'subheading' => null, 'style' => null])">
         <div class="prose">{!! \Illuminate\Support\Str::sanitizeHtml((string) $entity->overview) !!}</div>
+    </x-theme::section>
+@endif
+
+@if ($highlights !== [])
+    <x-theme::section :section="new \Illuminate\Support\Fluent(['anchor' => 'highlights', 'title' => null, 'subheading' => null, 'style' => 'alt'])">
+        <div style="display:grid;gap:var(--space-4, 16px);grid-template-columns:repeat(auto-fit, minmax(260px, 1fr))">
+            @foreach ($highlights as $item)
+                <div class="card"><strong>{{ $item['title'] }}</strong>@if ($item['text'])<p>{{ $item['text'] }}</p>@endif</div>
+            @endforeach
+        </div>
+    </x-theme::section>
+@endif
+
+@if ($quickServices !== [])
+    <x-theme::section :section="new \Illuminate\Support\Fluent(['anchor' => 'quick-service', 'title' => __('office::office.page.quick_service'), 'subheading' => null, 'style' => null])">
+        <ul style="list-style:none;padding:0;display:grid;gap:var(--space-4, 16px);grid-template-columns:repeat(auto-fill, minmax(150px, 1fr))">
+            @foreach ($quickServices as $service)
+                <li><a href="{{ $service['url'] }}" class="btn">{{ $service['label'] }}</a></li>
+            @endforeach
+        </ul>
     </x-theme::section>
 @endif
 

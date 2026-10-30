@@ -2,6 +2,8 @@
 
 namespace Modules\Office;
 
+use Modules\Office\Blocks\OfficeContactBlock;
+use Modules\Office\Blocks\OfficeHeadsBlock;
 use Modules\Office\Filament\OfficePlugin;
 use Modules\Office\Metrics\OfficeCount;
 use Modules\Office\Metrics\OfficeServiceCount;
@@ -37,5 +39,7 @@ final class OfficeExtension implements ModuleExtension
         $r->websitePage('office.services', label: 'office::office.services.plural', path: '/services');
         $r->websitePage('office.support', label: 'office::office.support.plural', path: '/support-contacts');
         $r->settings(OfficeSettings::class);                      // default Quick Links of office pages
+        $r->pageBlock(OfficeHeadsBlock::class);                   // Honour Board on an office's page (DIU registrar-office)
+        $r->pageBlock(OfficeContactBlock::class);                 // Contact on an office's page
     }
 }

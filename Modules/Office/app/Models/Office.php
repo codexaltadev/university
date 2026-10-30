@@ -44,7 +44,7 @@ class Office extends BaseModel implements HasEntityPermissions
 
     protected $fillable = [
         'parent_id', 'type_term_id', 'name', 'short_name', 'overview', 'head_message', 'email', 'phone', 'extension', 'quick_links',
-        'location', 'campus_id', 'office_hours', 'has_microsite', 'sort_order', 'is_active',
+        'highlights', 'quick_services', 'location', 'campus_id', 'office_hours', 'has_microsite', 'sort_order', 'is_active',
     ];
 
     public array $translatable = ['name', 'overview', 'head_message', 'location', 'office_hours'];
@@ -55,7 +55,7 @@ class Office extends BaseModel implements HasEntityPermissions
 
     protected function casts(): array
     {
-        return ['quick_links' => 'array', 'parent_id' => 'integer', 'type_term_id' => 'integer', 'campus_id' => 'integer', 'has_microsite' => 'boolean'];
+        return ['quick_links' => 'array', 'highlights' => 'array', 'quick_services' => 'array', 'parent_id' => 'integer', 'type_term_id' => 'integer', 'campus_id' => 'integer', 'has_microsite' => 'boolean'];
     }
 
     public static function entityPermissionSubject(): string

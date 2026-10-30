@@ -1,7 +1,8 @@
 {{--
     DIU's Academic Calendar card (Registrar office page): blue head with the title and the session to switch to,
     then Academic Year / Duration / Total Events and the dates with their type. Contract: $card (CalendarPage card),
-    $sessions (list of [title, url, current]), $partial + $partialData (optional: the module's month / timeline in place of the table)
+    $sessions (list of [title, url, current]), $partial + $partialData (optional: the module's month / timeline in place of the table),
+    $switch (optional: the sessions switch cards in place — an Alpine "shown" holding the index — instead of opening their page)
 --}}
 <section class="bg-white rounded-2xl border border-gray-200 overflow-hidden" aria-label="{{ $card['title'] }}">
     <div class="bg-gradient-to-r from-primary to-secondary text-white p-6 sm:p-8">
@@ -18,7 +19,11 @@
             @if (count($sessions) > 1)
                 <div x-show="open" x-cloak x-transition class="absolute z-20 left-0 mt-2 min-w-full max-h-72 overflow-y-auto bg-white text-gray-800 rounded-xl shadow-2xl border border-gray-100 py-2">
                     @foreach ($sessions as $session)
-                        <a href="{{ $session['url'] }}" @class(['block px-4 py-2 text-sm hover:bg-blue-50 hover:no-underline', 'font-semibold text-primary' => $session['title'] === $card['title'], 'text-gray-700' => $session['title'] !== $card['title']])>{{ $session['title'] }}</a>
+                        @if ($switch ?? false)
+                            <button type="button" @click="shown = {{ $loop->index }}; open = false" @class(['block w-full text-left px-4 py-2 text-sm hover:bg-blue-50 cursor-pointer', 'font-semibold text-primary' => $session['title'] === $card['title'], 'text-gray-700' => $session['title'] !== $card['title']])>{{ $session['title'] }}</button>
+                        @else
+                            <a href="{{ $session['url'] }}" @class(['block px-4 py-2 text-sm hover:bg-blue-50 hover:no-underline', 'font-semibold text-primary' => $session['title'] === $card['title'], 'text-gray-700' => $session['title'] !== $card['title']])>{{ $session['title'] }}</a>
+                        @endif
                     @endforeach
                 </div>
             @endif

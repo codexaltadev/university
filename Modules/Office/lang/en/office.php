@@ -10,7 +10,7 @@ return [
     'ext' => 'Ext.',
     'apply' => 'Apply',
     'handled_by' => 'Handled by',
-    'search_services' => 'Search the services…',
+    'search_services' => 'Search the servicesâ€¦',
     'search_support' => 'What do you need help with?',
     'no_services' => 'No services yet.',
 
@@ -31,6 +31,9 @@ return [
 
     'fields' => [
         'quick_links' => 'Quick Links',
+        'highlights' => 'Highlights',
+        'quick_services' => 'Quick Service',
+        'icon' => 'Icon',
         'name' => 'Name',
         'short_name' => 'Short name',
         'type' => 'Type',
@@ -59,15 +62,22 @@ return [
     ],
 
     'help' => [
-        'quick_links' => 'Shown on the office page under "Quick Links" (text and link, in order). Empty: Settings › Offices\' links.',
-        'has_microsite' => 'Off: no website of its own — shown on /offices as a contact card.',
+        'quick_links' => 'Shown on the office page under "Quick Links" (text and link, in order). Empty: Settings â€º Offices\' links.',
+        'has_microsite' => 'Off: no website of its own â€” shown on /offices as a contact card.',
+        'highlights' => 'Cards near the top of the office page â€” Mission, Vision, what the office stands for (icon, title, short text).',
+        'quick_services' => 'Icon tiles under the overview â€” the services people come for most (icon, text, link).',
+        'icon' => 'Name of an icon, e.g. shield, users, file-text.',
     ],
+    'actions' => ['add_highlight' => 'Add a card', 'add_quick_service' => 'Add a tile'],
     'settings' => [
         'page_quick_links' => 'Quick Links of an office page',
         'page_quick_links_help' => 'For offices without Quick Links of their own.',
     ],
     'page' => [
         'overview' => 'Overview',
+        'about' => 'About the Office',
+        'quick_service' => 'Quick Service',
+        'notices' => 'Notices & Announcements',
         'site_suffix' => ':name - :site',
         'location' => 'Location', 'phone' => 'Phone', 'email' => 'Email', 'extension' => 'Extension', 'hours' => 'Office Hours',
         'services_text' => 'What this office can do for you, and how.', 'all_services' => 'All Services',
@@ -75,5 +85,13 @@ return [
         'team_members' => 'Office Team Members', 'team_members_text' => 'Meet the dedicated officers and staff members of this office.',
         'no_team' => 'No team members found for this office.',
         'faqs' => 'Frequently Asked Questions', 'faqs_text' => 'Quick answers to common questions.', 'all_faqs' => 'All FAQs',
+        'serving' => 'Serving now', 'since' => 'Since :date', 'former_heads' => 'Former heads', 'no_heads' => 'No heads of this office are listed yet.',
+        'get_in_touch' => 'Get in Touch', 'find_us' => 'Find Us', 'open_map' => 'Open in Google Maps',
+    ],
+    'blocks' => [
+        'heads' => 'Honour Board (heads of the office)', 'contact' => 'Office contact',
+        'intro' => 'Text above it',
+        'heads_help' => 'The heads come from the office: Offices › People, role Head, with the term (starts / ends on) and a label such as "Registrar (In charge)".',
+        'contact_help' => 'Location, phone, email and hours come from the office; the address and map from Settings › Contact (first campus); "Who to contact" from the office\'s list.',
     ],
 ];

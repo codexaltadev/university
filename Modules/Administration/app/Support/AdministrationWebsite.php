@@ -17,8 +17,9 @@ use Platform\Theme\LayoutResolver;
 
 /**
  * /administration (FR-ADMN-04): members of public categories grouped by category in ladder
- * order; filters ?group=, ?category=, ?office=, search ?q= (name, designation); layout grid /
- * list / table. /administration/{slug} (FR-ADMN-05, when profile pages are on): photo,
+ * order; filters ?group=, ?office=, search ?q= (name, designation); layout grid /
+ * list / table. /administration/{slug}: a section (category; the old ?category={id} redirects there),
+ * else a person (FR-ADMN-05, when profile pages are on): photo,
  * designation, office, public contacts, biography and every current public assignment.
  */
 class AdministrationWebsite
@@ -35,13 +36,35 @@ class AdministrationWebsite
         }
 
         if ($rest === Member::PATH) {
+            // The old ?category={id} (and ?category={slug}) → the section's own address
+            if (filled($asked = request()->query('category')) && ($category = $this->category((string) $asked, $locale))) {
+                return redirect(Seo::localized($category->url($locale), $locale).$this->query(['category']), 301);
+            }
             app(Seo::class)->set(['title' => __('administration::administration.plural'), 'path' => '/'.Member::PATH]);
 
             return response()->view('administration::directory', $this->directory());
         }
 
         $slug = Str::after($rest, Member::PATH.'/');
-        if (! settings('administration.profile_pages', true) || str_contains($slug, '/') || ! ($found = Member::findBySlug($slug, $locale))) {
+        if (str_contains($slug, '/')) {
+            return null;
+        }
+
+        // A section: /administration/{category} (DIU /admin/joint-director)
+        if ($found = AdministrationCategory::findBySlug($slug, $locale)) {
+            [$category, $current] = $found;
+            if (! $category->is_public || ! $category->is_active) {
+                return null;
+            }
+            if (! $current) {
+                return redirect(Seo::localized($category->url($locale), $locale).$this->query(), 301);   // FR-GEN-32
+            }
+            app(Seo::class)->set(['title' => $category->name.' — '.__('administration::administration.plural'), 'path' => $category->url($locale)]);
+
+            return response()->view('administration::directory', $this->directory($category));
+        }
+
+        if (! settings('administration.profile_pages', true) || ! ($found = Member::findBySlug($slug, $locale))) {
             return null;
         }
         [$member, $current] = $found;
@@ -63,8 +86,24 @@ class AdministrationWebsite
         ]);
     }
 
+    /** A public category by id (old links) or slug */
+    protected function category(string $asked, string $locale): ?AdministrationCategory
+    {
+        $category = ctype_digit($asked) ? AdministrationCategory::query()->find((int) $asked) : (AdministrationCategory::findBySlug($asked, $locale)[0] ?? null);
+
+        return $category && $category->is_public && $category->is_active ? $category : null;
+    }
+
+    /** The rest of the query string, without some keys ("?q=…&view=…") */
+    protected function query(array $without = []): string
+    {
+        $rest = collect(request()->query())->except($without)->all();
+
+        return $rest ? '?'.http_build_query($rest) : '';
+    }
+
     /** @return array<string, mixed> */
-    protected function directory(): array
+    protected function directory(?AdministrationCategory $category = null): array
     {
         $request = request();
         $categories = AdministrationCategory::query()->public()->ordered()->get();
@@ -72,7 +111,7 @@ class AdministrationWebsite
 
         $members = Member::query()->frontendVisible()->with('category')
             ->when($request->filled('group'), fn (Builder $q) => $q->whereHas('category', fn ($c) => $c->where('group', (string) $request->query('group'))))
-            ->when($request->filled('category'), fn (Builder $q) => $q->where('category_id', (int) $request->query('category')))
+            ->when($category, fn (Builder $q) => $q->where('category_id', $category->id))
             ->when($request->filled('office'), fn (Builder $q) => $q->where('primary_office_id', (int) $request->query('office')))
             ->when(filled($search = trim((string) $request->query('q'))), fn (Builder $q) => $q->searchText($search))
             ->directoryOrder()->get();
@@ -91,6 +130,7 @@ class AdministrationWebsite
             'total' => $members->count(),
             'layout' => in_array($layout, self::VIEWS, true) ? $layout : 'grid',
             'intro' => filled($intro = settings('administration.intro')) ? (string) $intro : null,
+            'category' => $category,   // the section asked for (/administration/{slug}), or none
         ];
     }
 

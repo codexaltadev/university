@@ -1,5 +1,25 @@
 # Changelog
 
+## 2.1.0 — 2026-10-30
+
+- Office page as DIU's registrar-office / proctor-office: with a cover picture, the picture and
+  the overview under it; the office's highlights as cards (About the Office then); Quick Service
+  icon tiles; contact facts moved to `partials/office/facts`. Icons `folder`, `handshake`,
+  `target`, `scale` added.
+- An office's pages, team and notice board open in the office's frame as DIU's
+  /registrar-office/{slug}: `<x-theme::office-frame>` (office hero, "Browse by Section" with the
+  page shown marked, Quick Links); `partials/office/page` (title, text card, the pages under it
+  as cards) from the default page template; `partials/office/notices` (DIU's blue "Notices &
+  Announcements"). In the side list only links leaving the site open a new tab with ↗.
+- `modules/office/blocks/heads` (Honour Board: the head now in a blue card, former heads on a
+  timeline with their terms, initials without a photo) and `modules/office/blocks/contact`
+  (location / phone / email / hours cards, campus and map, who to contact).
+- `modules/calendar/blocks/sessions`: the Academic Calendar block in DIU's card, the session
+  dropdown switching calendars in place (`partials/calendar/card` gains `$switch`).
+- Administration: a section at its own address (`/administration/{slug}`) gets its name in the
+  breadcrumb. "Browse by Section" everywhere: a full address of this site opens in the same tab
+  without ↗ (before, every `http…` link opened a new tab).
+
 ## 2.0.0 — 2026-10-30 (Phase 4)
 
 MAJOR: the theme becomes a copy of daffodilvarsity.edu.bd (4.2–4.4), a different look and markup

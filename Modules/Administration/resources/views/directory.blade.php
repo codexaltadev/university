@@ -1,7 +1,7 @@
 {{--
     /administration (FR-ADMN-04). Contract: $groups (list of [category, members]), $categories (public, in order), $counts (category id => people, unfiltered), $search,
     $groupOptions (groups in use), $offices (Office list; empty without the Office module), $officeNames (id => name),
-    $total, $layout (grid / list / table), $intro (HTML or null)
+    $total, $layout (grid / list / table), $intro (HTML or null), $category (the section of /administration/{slug}, or null)
 --}}
 <x-theme::layout :title="__('administration::administration.plural')">
     <div class="container" style="padding-block:var(--space-10, 40px)">
@@ -10,7 +10,7 @@
             <div class="administration-intro prose">{!! \Illuminate\Support\Str::sanitizeHtml($intro) !!}</div>
         @endif
 
-        <form method="get" class="administration-filters" style="display:flex;flex-wrap:wrap;gap:var(--space-3, 12px);align-items:end;margin-top:var(--space-4, 16px)">
+        <form method="get" action="{{ url('/administration') }}" class="administration-filters" style="display:flex;flex-wrap:wrap;gap:var(--space-3, 12px);align-items:end;margin-top:var(--space-4, 16px)">
             <label>{{ __('administration::administration.search') }}
                 <input type="search" name="q" value="{{ request('q') }}" placeholder="{{ __('administration::administration.search_placeholder') }}">
             </label>
@@ -27,8 +27,8 @@
             <label>{{ __('administration::administration.category.singular') }}
                 <select name="category" onchange="this.form.submit()">
                     <option value="">{{ __('administration::administration.all') }}</option>
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" @selected((string) request('category') === (string) $category->id)>{{ $category->name }}</option>
+                    @foreach ($categories as $item)
+                        <option value="{{ $item->slug() }}" @selected($category?->is($item))>{{ $item->name }}</option>
                     @endforeach
                 </select>
             </label>

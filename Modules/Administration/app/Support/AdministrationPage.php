@@ -62,10 +62,10 @@ class AdministrationPage
         if ($this->searching()) {
             return null;
         }
-        $asked = (int) request()->query('category');
+        $asked = $this->data['category'] ?? null;
         $first = $this->groups()->first();
 
-        return $asked ?: ($first ? (int) $first['category']->id : null);
+        return $asked ? (int) $asked->id : ($first ? (int) $first['category']->id : null);
     }
 
     /** @return list<array{id: int, label: string, url: string, current: bool, arrow: bool}> sections with people, "Management (5)" */
@@ -78,9 +78,10 @@ class AdministrationPage
             ->map(fn ($c): array => [
                 'id' => (int) $c->id,
                 'label' => $c->name.' ('.$counts[$c->id].')',
-                'url' => $this->listingUrl(['category' => $c->id]),
+                'url' => url($c->url()),
                 'current' => $current === (int) $c->id,
                 'arrow' => false,
+                'external' => false,
             ])->values()->all();
     }
 
@@ -135,7 +136,9 @@ class AdministrationPage
 
     public function backUrl(): string
     {
-        return $this->listingUrl(($id = $this->currentId()) ? ['category' => $id] : []);
+        $category = collect($this->data['categories'] ?? [])->firstWhere('id', $this->currentId());
+
+        return $category ? url($category->url()) : $this->listingUrl();
     }
 
     protected function groups(): Collection

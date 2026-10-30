@@ -2,6 +2,7 @@
 
 namespace Modules\Office\Filament\Resources\Offices\Schemas;
 
+use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -42,6 +43,30 @@ class OfficeForm
                 ]),
                 Section::make(__('office::office.fields.quick_links'))->description(__('office::office.help.quick_links'))
                     ->columnSpan(2)->compact()->collapsible()->schema([LinkListField::make('quick_links')->hiddenLabel()]),
+                Section::make(__('office::office.fields.highlights'))->description(__('office::office.help.highlights'))
+                    ->columnSpan(2)->compact()->collapsible()->collapsed()->schema([
+                        Repeater::make('highlights')->hiddenLabel()->schema([
+                            self::icon(),
+                            ...TranslatableTabs::inline(fn (string $locale, bool $isDefault, string $language): array => [
+                                TextInput::make("title.{$locale}")->label(__('office::office.fields.title')." ({$language})")->required($isDefault)->maxLength(100),
+                                Textarea::make("text.{$locale}")->label(__('office::office.fields.description')." ({$language})")->rows(2)->maxLength(500),
+                            ]),
+                        ])->addActionLabel(__('office::office.actions.add_highlight'))->reorderable()->collapsible()->cloneable()->defaultItems(0)
+                            ->itemLabel(fn (array $state): ?string => collect($state['title'] ?? [])->first(fn ($v) => filled($v))),
+                    ]),
+                Section::make(__('office::office.fields.quick_services'))->description(__('office::office.help.quick_services'))
+                    ->columnSpan(2)->compact()->collapsible()->collapsed()->schema([
+                        LinkListField::make('quick_services')->hiddenLabel()->schema([
+                            Grid::make(3)->schema([
+                                self::icon(),
+                                ...TranslatableTabs::inline(fn (string $locale, bool $isDefault, string $language): array => [
+                                    TextInput::make("label.{$locale}")->label(__('platform::relations.link_text')." ({$language})")->required($isDefault)->maxLength(100),
+                                ]),
+                                TextInput::make('url')->label(__('platform::relations.link_url'))->helperText(__('platform::relations.link_url_help'))
+                                    ->required()->maxLength(2048)->regex('#^(https?://\S+|/\S*|mailto:\S+|tel:\S+)$#i'),
+                            ]),
+                        ])->addActionLabel(__('office::office.actions.add_quick_service')),
+                    ]),
                 Grid::make(1)->columnSpan(1)->schema([
                     Section::make(__('office::office.sections.office'))->compact()->schema([
                         Select::make('type_term_id')->label(__('office::office.fields.type'))
@@ -70,5 +95,12 @@ class OfficeForm
             ]),
             PeopleManager::make()->columnSpanFull(),   // Head, team (FR-OFF-05)
         ]);
+    }
+
+    /** Icon name the theme draws; the usual ones are suggested */
+    protected static function icon(): TextInput
+    {
+        return TextInput::make('icon')->label(__('office::office.fields.icon'))->helperText(__('office::office.help.icon'))->maxLength(50)
+            ->datalist(['award', 'graduation-cap', 'user', 'users', 'archive', 'file-text', 'shield', 'target', 'eye', 'scale', 'briefcase', 'clipboard', 'calendar', 'book-open', 'building', 'phone', 'mail']);
     }
 }

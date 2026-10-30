@@ -12,6 +12,7 @@ use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\ValidationException;
 use Livewire\Livewire;
+use Modules\Calendar\Blocks\CalendarSessionsBlock;
 use Modules\Calendar\Blocks\UpcomingDatesBlock;
 use Modules\Calendar\Database\Seeders\CalendarDatabaseSeeder;
 use Modules\Calendar\Filament\Resources\Calendars\Pages\CreateCalendar;
@@ -24,6 +25,7 @@ use Modules\Calendar\Support\EventImporter;
 use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
 use Modules\Menu\Support\MenuLinks;
+use Modules\Page\Blocks\PageBlocks;
 use Modules\Program\Database\Factories\ProgramFactory;
 use Modules\Program\Models\Program;
 use Platform\Modules\ModulePermissions;
@@ -183,6 +185,17 @@ it('lists upcoming dates on the homepage section and the block, only of homepage
 
     $this->tri->update(['show_on_home' => false]);
     expect(UpcomingDatesBlock::events([])->pluck('title')->all())->toBe([]);
+});
+
+it('puts the calendar card on any page: the running calendar first, the others to switch to in place (DIU registrar-office)', function () {
+    $cards = collect(CalendarSessionsBlock::page([])->cards());
+    expect($cards->pluck('title')->take(2)->sort()->values()->all())->toBe(['Spring 2026 (BI)', 'Spring 2026 (TRI)'])
+        ->and($cards->last()['title'])->toBe('Fall 2024')
+        ->and($cards->firstWhere('title', 'Spring 2026 (TRI)')['total'])->toBe(5)
+        ->and(CalendarSessionsBlock::page(['count' => 1])->cards())->toHaveCount(1);
+
+    $html = PageBlocks::render([['type' => 'calendar-sessions', 'data' => ['count' => 8]]], 'en')->toHtml();
+    expect($html)->toContain('Mid-Examination')->toContain('Fall 2024 Final')->toContain('shown === 2');
 });
 
 it('shows the faculty\'s calendar on its programs and microsite (FR-CAL-09)', function () {

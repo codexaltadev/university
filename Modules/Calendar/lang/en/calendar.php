@@ -29,6 +29,7 @@ return [
     ],
     'block' => [
         'count' => 'How many dates',
+        'sessions' => 'How many calendars to switch between',
     ],
     'sections' => [
         'calendar' => 'Calendar',

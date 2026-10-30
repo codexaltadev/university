@@ -13,7 +13,7 @@
                 @foreach ($items as $item)
                     <li>
                         @if ($item['url'])
-                            <a href="{{ $item['url'] }}" @if (str_starts_with($item['url'], 'http')) target="_blank" rel="noopener noreferrer" @endif @if ($item['current'] ?? false) aria-current="page" @endif
+                            <a href="{{ $item['url'] }}" @if ($item['external'] ?? (str_starts_with($item['url'], 'http') && ! str_starts_with($item['url'], url('/')))) target="_blank" rel="noopener noreferrer" @endif @if ($item['current'] ?? false) aria-current="page" @endif
                                @class(['group flex w-full text-[22px] font-medium items-center my-3 rounded-none p-[10px] text-left hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600',
                                        'border-l-3 border-primary bg-blue-50 text-slate-900' => $item['current'] ?? false, 'text-slate-700 hover:bg-blue-50' => ! ($item['current'] ?? false)])>
                                 <span class="truncate">{{ $item['label'] }}</span>
@@ -49,7 +49,7 @@
         </div>
         <div class="space-y-2 sm:space-y-3 ml-5 sm:ml-7 relative">
             @foreach ($items as $item)
-                <a href="{{ $item['url'] ?: '#' }}" @if (! $item['url']) @click.prevent="current = @js($item['id']); more = false" @elseif (str_starts_with($item['url'], 'http')) target="_blank" rel="noopener noreferrer" @endif
+                <a href="{{ $item['url'] ?: '#' }}" @if (! $item['url']) @click.prevent="current = @js($item['id']); more = false" @elseif ($item['external'] ?? (str_starts_with($item['url'], 'http') && ! str_starts_with($item['url'], url('/')))) target="_blank" rel="noopener noreferrer" @endif
                    @if ($loop->index >= 3) x-show="more" x-cloak @endif
                    class="flex items-center gap-5 text-lg sm:text-2xl font-medium transition-all duration-200 hover:no-underline"
                    :class="(more ? 'border-b py-2 border-neutral-200 ' : '') + (more || {{ $loop->index }} === 0 ? 'text-neutral-800' : 'text-gray-400 pointer-events-none') + (! more && {{ $loop->index }} === 2 ? ' opacity-0' : '')">

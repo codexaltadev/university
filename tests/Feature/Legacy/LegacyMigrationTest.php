@@ -30,6 +30,7 @@ use Modules\Program\Models\ProgramMajor;
 use Modules\Program\Models\ProgramMaterial;
 use Modules\Program\Models\ProgramVariant;
 use Modules\Seo\Models\Redirect;
+use Modules\Settings\Groups\GeneralSettings;
 use Modules\Testimonials\Models\Testimonial;
 use Modules\Tuition\Models\FeeCategory;
 use Modules\Tuition\Models\Tuition;
@@ -414,7 +415,7 @@ it('migrates administration into DIU\'s sections of /administration (S11)', func
     $this->artisan('legacy:migrate', ['--step' => ['S11'], '--no-report' => true])->assertSuccessful();
 
     $director = AdministrationCategory::query()->where('name->en', 'Director')->firstOrFail();
-    $this->get('/administration?category='.$director->id)->assertOk()->assertSee('Md. Director')->assertDontSee('Professor Dr. M. R. Kabir');
+    $this->get($director->url())->assertOk()->assertSee('Md. Director')->assertDontSee('Professor Dr. M. R. Kabir');
     $this->get('/administration')->assertOk()->assertSeeInOrder(['Management (1)', 'Director (1)', 'Professor Dr. M. R. Kabir', 'Vice Chancellor', 'vc@example.edu']);
 });
 
@@ -436,6 +437,16 @@ it('migrates testimonials onto their program and the main site, the first of eac
     expect($all)->toHaveCount(2)                                                                   // the MBA copy skipped
         ->and($all->every(fn ($t) => $engine->isOnMainSite($t)))->toBeTrue()
         ->and($engine->for('site:0')->content(Testimonial::class)->highlighted(10)->pluck('id')->all())->toBe([$first->id]);
+});
+
+it('names the site as the live one while it still has the installer\'s name, never over a name typed in Admin (S15S)', function () {
+    $this->artisan('legacy:migrate', ['--step' => ['S15S'], '--no-report' => true])->assertSuccessful();
+    expect(settings('general.site_name'))->toBe('Daffodil International University')
+        ->and(settings('general.university_name'))->toBe('Daffodil International University');
+
+    settings()->saveFor(new GeneralSettings, ['site_name' => ['en' => 'DIU']]);
+    $this->artisan('legacy:migrate', ['--step' => ['S15S'], '--no-report' => true])->assertSuccessful();
+    expect(settings('general.site_name'))->toBe('DIU');
 });
 
 it('refuses to run without a step and when the legacy database is missing', function () {

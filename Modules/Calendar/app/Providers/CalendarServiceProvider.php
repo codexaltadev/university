@@ -3,6 +3,7 @@
 namespace Modules\Calendar\Providers;
 
 use Illuminate\Support\Facades\View;
+use Modules\Calendar\Blocks\CalendarSessionsBlock;
 use Modules\Calendar\Support\CalendarPage;
 use Modules\Calendar\Support\CalendarWebsite;
 use Platform\Context\SiteContext;
@@ -31,5 +32,6 @@ class CalendarServiceProvider extends ModuleServiceProvider
 
         // The calendar pages' parts for any theme's version of them (themes hold no PHP logic, T-1)
         View::composer(['calendar::index', 'calendar::show'], fn ($view) => $view->with('page', new CalendarPage($view->getData())));
+        View::composer('calendar::blocks.sessions', fn ($view) => $view->with('calendars', CalendarSessionsBlock::page((array) ($view->getData()['data'] ?? []))));
     }
 }
