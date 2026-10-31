@@ -342,7 +342,7 @@ Event: date badge, time, venue map, speakers (person card), [ Add to calendar ] 
 | `theme.json` | slug, version, `requires_core`, supported layout তালিকা, menu location, header / footer variant, microsite template, design token default |
 | Base layout | `layouts/app.blade.php`, `layouts/microsite.blade.php` — নির্দিষ্ট **slot** সহ: `topbar`, `announcement`, `header`, `microsite-bar`, `breadcrumb`, `content`, `sidebar`, `footer`, `popup`; `@livewireStyles` / `@livewireScripts` বাধ্যতামূলক |
 | Livewire view override (ঐচ্ছিক) | Module-এর Livewire component (waiver calculator, filter, search, form)-এর শুধু Blade view theme বদলাতে পারে: `views/modules/{slug}/livewire/...`; logic module-এ (SAD Part B §8.6) |
-| Page template | `default`, `full-width`, `with-sidebar`, `landing` (FR-PAGE-04) |
+| Page template | `default` (sidebar ছাড়া), `full-width`, `with-sidebar` (বাম sidebar), `right-sidebar`, `landing` (FR-PAGE-04 v0.3) |
 | Header / footer variant | ন্যূনতম একটি করে |
 | Token ব্যবহার | Section 2-এর সব CSS variable ব্যবহার; hardcoded রং / font নিষেধ (CI lint) |
 | Module override (ঐচ্ছিক) | `views/modules/{slug}/...` — না দিলে module-এর default |

@@ -8,7 +8,7 @@ and measurements; other themes get their own designs. It follows the
 | Offers | |
 |---|---|
 | Layouts | `layouts/app`, `layouts/microsite` with every slot (no top bar and no microsite bar: DIU has neither) |
-| Page templates | default, full-width, with-sidebar, landing |
+| Page templates | default (no sidebar), full-width, with-sidebar (left sidebar), right-sidebar, landing |
 | Microsite templates | standard |
 | Header variants | classic (= DIU), centered, minimal |
 | Footer variants | columns (= DIU), compact |

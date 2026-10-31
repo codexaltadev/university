@@ -32,10 +32,11 @@ return [
         'style' => 'ধরন',
     ],
     'templates' => [
-        'default' => 'সাধারণ',
+        'default' => 'সাধারণ (sidebar ছাড়া)',
         'full-width' => 'পূর্ণ প্রস্থ',
-        'with-sidebar' => 'Sidebar সহ',
-        'landing' => 'Landing',
+        'with-sidebar' => 'বাম পাশে sidebar',
+        'right-sidebar' => 'ডান পাশে sidebar',
+        'landing' => 'Landing (শুধু block)',
     ],
     'blocks' => [
         'text' => 'লেখা',
@@ -53,7 +54,7 @@ return [
         'secondary' => 'সাধারণ',
     ],
     'help' => [
-        'sidebar_menu' => 'এই page ও এর ভেতরের page-গুলোর বাম পাশের menu। Appearance › Menus › নতুন free menu থেকে বানান।',
+        'sidebar_menu' => 'এই page ও এর ভেতরের page-গুলোর sidebar-এর menu। Appearance › Menus › নতুন free menu থেকে বানান।',
         'web_address' => 'শিরোনাম থেকে তৈরি; এখানে বদলানো যায়। পুরনো ঠিকানাও কাজ করবে।',
         'attachments' => 'Page-এর শেষে download তালিকায় দেখাবে।',
         'embed' => 'YouTube, Vimeo, Google Maps বা Facebook ভিডিওর link।',

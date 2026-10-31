@@ -295,7 +295,7 @@ Source module inactive হলে section লুকানো হয় render-এ
 | content | JSON | N, T | | ভাষা অনুযায়ী block array (FR-PAGE-01/02) |
 | template | VARCHAR(50) | | `default` | FR-PAGE-04 |
 | sidebar_menu_id | BIGINT UNSIGNED | N, IX (অন্য module-এর table — FK নয়, SAD Part A §6.6) | | *(v0.2)* এই page-এর বাম পাশের menu (একই owner-এর menu)। Null = parent page-এরটি, তাও না থাকলে owner-এর `sidebar` location-এর menu |
-| quick_links | JSON | N | | *(v0.3)* sidebar menu-র নিচে "Quick Links" — `[{label: {en, bn}, url}]` (LinkListField, `link_list()`); শুধু with-sidebar template |
+| quick_links | JSON | N | | *(v0.3)* sidebar menu-র নিচে "Quick Links" — `[{label: {en, bn}, url}]` (LinkListField, `link_list()`); শুধু sidebar template-এ (`with-sidebar` বাম, `right-sidebar` ডান) |
 | published_at, expires_at | TIMESTAMP | N | | |
 | sort_order | INT UNSIGNED | | 0 | |
 | ⚙ | | | | |

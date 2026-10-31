@@ -91,7 +91,8 @@ themes/campus/
 │   ├── templates/                  # page template
 │   │   ├── default.blade.php
 │   │   ├── full-width.blade.php
-│   │   ├── with-sidebar.blade.php
+│   │   ├── with-sidebar.blade.php   # left sidebar
+│   │   ├── right-sidebar.blade.php
 │   │   └── landing.blade.php
 │   ├── microsite-templates/
 │   │   └── standard.blade.php
@@ -151,7 +152,7 @@ php artisan uwms:theme:activate campus --preview     # শুধু আপনা
   "header_variants": ["centered", "classic"],
   "footer_variants": ["columns"],
 
-  "page_templates": ["default", "full-width", "with-sidebar", "landing"],
+  "page_templates": ["default", "full-width", "with-sidebar", "right-sidebar", "landing"],
   "microsite_templates": ["standard"],
 
   "tokens": {
@@ -178,7 +179,7 @@ php artisan uwms:theme:activate campus --preview     # শুধু আপনা
 | `slug` | একবার install হলে বদলায় না; view namespace `theme::` সবসময় **active** theme নির্দেশ করে, slug নয় |
 | `layouts` | এখানে যে layout ঘোষণা করবেন, `views/modules/{slug}/…`-এ তার view থাকতে হবে **অথবা** module-এর নিজের সেই layout থাকতে হবে। না থাকলে module-এর default (FR-THEME-11) |
 | `menu_locations` | Kernel-এর standard location (`primary`, `topbar`, `footer-*`, `quick-links-icon`, `sidebar`) ব্যবহার করুন; নতুন key দিলে অন্য theme-এ গেলে সেই menu দেখাবে না (FR-MENU-01) |
-| `page_templates` | চারটি standard template বাধ্যতামূলক (FR-PAGE-04); অতিরিক্ত যোগ করা যায়, কিন্তু theme বদলালে অচেনা template `default`-এ পড়ে |
+| `page_templates` | পাঁচটি standard template বাধ্যতামূলক (FR-PAGE-04 v0.3); অতিরিক্ত যোগ করা যায়, কিন্তু theme বদলালে অচেনা template `default`-এ পড়ে |
 | `tokens` | শুধু **default** — admin Theme settings-এ বদলালে সেটাই জয়ী (Section 6) |
 | `options` | Theme-নির্দিষ্ট ছোট setting; type: `toggle`, `select`, `text`, `number`, `color`, `image` (Section 11) |
 
@@ -198,7 +199,7 @@ Kernel প্রতিটি page-কে layout-এর **নির্দিষ�
 | `ticker` | Notice ticker | FR-HF-06 |
 | `breadcrumb` | Breadcrumb + JSON-LD | — |
 | `content` | Page template / module view | — |
-| `sidebar` | `with-sidebar` template-এ | — |
+| `sidebar` | `with-sidebar` (বাম) ও `right-sidebar` (ডান) template-এ | — |
 | `footer` | Footer (নির্বাচিত variant) | FR-HF-03 |
 | `popup` | Popup announcement | FR-ANW-04 |
 

@@ -383,7 +383,7 @@ themes/default/
 │                         # header/footer variants, microsite templates, design token defaults
 ├── views/
 │   ├── layouts/          # app.blade.php (base), microsite.blade.php
-│   ├── templates/        # page template: default, full-width, with-sidebar, landing
+│   ├── templates/        # page template: default, full-width, with-sidebar, right-sidebar, landing
 │   ├── partials/         # header variants, footer variants, breadcrumb ...
 │   └── modules/{slug}/   # module view override (ঐচ্ছিক)
 ├── assets/               # Tailwind / CSS / JS (CSS variable ব্যবহার)

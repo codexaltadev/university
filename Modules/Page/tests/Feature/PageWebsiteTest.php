@@ -45,6 +45,16 @@ it('shows a page and its child at their addresses through the theme (FR-PAGE-03/
     $this->get('/history')->assertNotFound();                                   // only under its parent
 });
 
+it('puts the sidebar on the left or the right as the page\'s layout says (FR-PAGE-04 v0.3)', function () {
+    $links = [['label' => ['en' => 'Apply Online'], 'url' => 'https://admission.example.edu']];
+    $this->history->update(['content' => ['en' => [['type' => 'text', 'data' => ['body' => '<p>Our story.</p>']]]], 'quick_links' => $links]);
+
+    $this->get('/about-us/history')->assertOk()->assertSee('page--with-sidebar', false)->assertSeeInOrder(['Apply Online', 'Our story.']);
+
+    $this->history->update(['template' => 'right-sidebar']);
+    $this->get('/about-us/history')->assertOk()->assertSee('page--right-sidebar', false)->assertSeeInOrder(['Our story.', 'Apply Online']);
+});
+
 it('keeps the classes and collapse attributes of an HTML block, without scripts or handlers', function () {
     $this->about->update(['content' => ['en' => [['type' => 'html', 'data' => ['html' => '<table class="table table-bordered" border="1"><tr><td>Name</td></tr></table>'
         .'<div class="accordion" id="a1"><button class="accordion-button collapsed" data-bs-toggle="collapse" data-bs-target="#c1">Spring</button>'

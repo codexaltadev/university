@@ -1,7 +1,7 @@
 {
     "slug": "default",
     "name": "University Default",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "requires_core": "^1.0",
     "author": { "name": "DIU Web Team", "email": "web@example.edu" },
     "license": "proprietary",
@@ -26,7 +26,7 @@
     "header_variants": ["classic", "centered", "minimal"],
     "footer_variants": ["columns", "compact"],
 
-    "page_templates": ["default", "full-width", "with-sidebar", "landing"],
+    "page_templates": ["default", "full-width", "with-sidebar", "right-sidebar", "landing"],
     "microsite_templates": ["standard"],
 
     "sections": {

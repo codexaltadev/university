@@ -32,10 +32,11 @@ return [
         'style' => 'Style',
     ],
     'templates' => [
-        'default' => 'Default',
+        'default' => 'Standard (no sidebar)',
         'full-width' => 'Full width',
-        'with-sidebar' => 'With sidebar',
-        'landing' => 'Landing',
+        'with-sidebar' => 'Left sidebar',
+        'right-sidebar' => 'Right sidebar',
+        'landing' => 'Landing (blocks only)',
     ],
     'blocks' => [
         'text' => 'Text',
@@ -53,7 +54,7 @@ return [
         'secondary' => 'Plain',
     ],
     'help' => [
-        'sidebar_menu' => 'The menu on the left of this page and of the pages inside it. Make one in Appearance › Menus › New free menu.',
+        'sidebar_menu' => 'The menu in the sidebar of this page and of the pages inside it. Make one in Appearance › Menus › New free menu.',
         'web_address' => 'Made from the title; change it here. The old address keeps working.',
         'attachments' => 'Listed for download at the end of the page.',
         'embed' => 'YouTube, Vimeo, Google Maps or Facebook video link.',

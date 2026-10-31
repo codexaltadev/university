@@ -15,7 +15,7 @@ use Throwable;
 final class ThemeManifest
 {
     /** FR-PAGE-04: every theme has these page templates. */
-    public const PAGE_TEMPLATES = ['default', 'full-width', 'with-sidebar', 'landing'];
+    public const PAGE_TEMPLATES = ['default', 'full-width', 'with-sidebar', 'right-sidebar', 'landing'];
 
     /** Layout views every theme must have (T-3). */
     public const REQUIRED_VIEWS = ['layouts/app.blade.php', 'layouts/microsite.blade.php'];

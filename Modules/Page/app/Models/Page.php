@@ -41,7 +41,11 @@ class Page extends BaseModel implements Scopeable
     use HasTranslations;
     use IsSearchable;       // website search (FR-SRCH-01)
 
-    public const TEMPLATES = ['default', 'full-width', 'with-sidebar', 'landing'];
+    /** FR-PAGE-04 v0.3: a page's layout; "with-sidebar" keeps its key but is the left sidebar. */
+    public const TEMPLATES = ['default', 'full-width', 'with-sidebar', 'right-sidebar', 'landing'];
+
+    /** The layouts with a sidebar (its menu and Quick Links). */
+    public const SIDEBAR_TEMPLATES = ['with-sidebar', 'right-sidebar'];
 
     public static string $titleAttribute = 'title';
 

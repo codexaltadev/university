@@ -57,15 +57,15 @@ class PageForm
                         Select::make('template')->label(__('page::page.fields.template'))
                             ->options(collect(Page::TEMPLATES)->mapWithKeys(fn (string $t): array => [$t => __("page::page.templates.{$t}")])->all())
                             ->default('default')->required()->selectablePlaceholder(false)->live(),
-                        // DB-02 v0.2 §8.1: a free menu of the same owner on the left (Admission, DLRC …); none = the parent's
+                        // DB-02 v0.2 §8.1: a free menu of the same owner in the sidebar, left or right (Admission, DLRC …); none = the parent's
                         Select::make('sidebar_menu_id')->label(__('page::page.fields.sidebar_menu'))
                             ->options(fn (Get $get): array => filled($get('owner_key')) ? (array) app(SiteData::class)->get('free-menus', $get('owner_key')) : [])
                             ->placeholder(__('page::page.sidebar_inherit'))
                             ->helperText(__('page::page.help.sidebar_menu'))
-                            ->visible(fn (Get $get): bool => $get('template') === 'with-sidebar' && app(SiteData::class)->has('free-menus')),
+                            ->visible(fn (Get $get): bool => in_array($get('template'), Page::SIDEBAR_TEMPLATES, true) && app(SiteData::class)->has('free-menus')),
                         // DB-02 v0.3: "Quick Links" under the sidebar menu (DIU's /admission)
                         LinkListField::make('quick_links')->label(__('page::page.fields.quick_links'))
-                            ->visible(fn (Get $get): bool => $get('template') === 'with-sidebar'),
+                            ->visible(fn (Get $get): bool => in_array($get('template'), Page::SIDEBAR_TEMPLATES, true)),
                         WebAddressField::make(prefix: fn (Get $get, ?Page $record): string => static::addressPrefix($get, $record))
                             ->rules([fn (Get $get, ?Page $record): Closure => function (string $attribute, mixed $value, Closure $fail) use ($get, $record): void {
                                 // FR-GEN-35: a top-level page's address may not be an entity's under the same owner

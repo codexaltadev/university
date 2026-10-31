@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.0 — 2026-10-31
+
+- Page template `right-sidebar` (FR-PAGE-04 v0.3): the blocks, then the sidebar on the right ("Browse by Section" from the
+  page's sidebar menu, Quick Links); under the blocks on a phone. The sidebar of both sidebar templates is now
+  `partials/page/sidebar`; `with-sidebar` is the left sidebar.
+
 ## 2.1.0 — 2026-10-30
 
 - Office page as DIU's registrar-office / proctor-office: with a cover picture, the picture and

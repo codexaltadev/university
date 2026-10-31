@@ -1,5 +1,5 @@
 {{--
-    Page template "default" (FR-PAGE-04), DIU's article page: hero, then the text on grey. A page of an office's site opens in
+    Page template "default" (FR-PAGE-04), a general page without a sidebar: hero, then the text on grey. A page of an office's site opens in
     the office's frame instead (DIU /registrar-office/{slug}). Contract: $page (title), $body (rendered blocks, sanitised by
     the kernel), $office (OfficePage or null)
 --}}
