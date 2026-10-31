@@ -24,6 +24,7 @@ use Modules\Office\Models\OfficeService;
 use Modules\Office\Models\OfficeSupportContact;
 use Modules\Office\Settings\OfficeSettings;
 use Modules\Office\Support\OfficePage;
+use Modules\Office\Support\SupportDirectory;
 use Modules\Page\Blocks\PageBlocks;
 use Modules\Page\Models\Page;
 use Modules\Settings\Groups\GeneralSettings;
@@ -222,7 +223,31 @@ it('shows the Honour Board — the head now, then former heads with their terms 
 
 it('shows every office\'s services and who to contact (FR-OFF-06/07)', function () {
     $this->get('/services')->assertOk()->assertSeeInOrder(['Registrar Office', 'Transcript issue', '500.00', 'Ms. Akter']);
-    $this->get('/support-contacts')->assertOk()->assertSeeInOrder(['ID card problem after admission', 'Registrar Office', 'Room 301', 'Ms. Akter']);
+    $this->get('/support-contacts')->assertOk()->assertSeeInOrder(['Ms. Akter', 'Officer', 'Registrar Office', 'Room 301', 'ID card problem after admission']);
+});
+
+it('shows the support contacts as DIU\'s directory: a card per person, filters by purpose and office (FR-OFF-07)', function () {
+    // A purpose without people is a card of its office, with the office's phone and emails
+    $this->transport->update(['email' => 'transport@example.edu, bus@example.edu']);
+    OfficeSupportContact::create(['office_id' => $this->transport->id, 'purpose' => ['en' => 'Bus pass'], 'sort_order' => 1]);
+
+    $this->get('/support-contacts')->assertOk()
+        ->assertSeeInOrder(['Support Contact Directory', 'Connect with support staff', 'All Purposes', 'ID card problem after admission', 'Bus pass', 'All Offices', 'Registrar Office', 'Transport'])
+        ->assertSeeInOrder(['Ms. Akter', 'tel:+8801700000001', 'ID card problem after admission', 'Transport', 'tel:+8801700000000', 'mailto:transport@example.edu', 'mailto:bus@example.edu', 'Bus pass'], false);
+
+    // ?purpose / ?office open it filtered; unknown values are dropped
+    $page = fn (array $query) => (new SupportDirectory(OfficeSupportContact::query()->with('office')->get(), $query))->filters();
+    expect($page(['purpose' => 'Bus pass', 'office' => (string) $this->transport->id]))->toBe(['q' => '', 'purpose' => 'Bus pass', 'office' => (string) $this->transport->id])
+        ->and($page(['purpose' => 'Nope', 'office' => '999', 'q' => ' id ']))->toBe(['q' => 'id', 'purpose' => '', 'office' => '']);
+
+    // The module's own page (any theme without its version)
+    $contacts = OfficeSupportContact::query()->with('office')->get();
+    expect(moduleView('Office', 'support-contacts', ['contacts' => $contacts, 'page' => new SupportDirectory($contacts)]))
+        ->toContain('Ms. Akter')->toContain('mailto:bus@example.edu')->toContain('Bus pass');
+
+    // Title and text from Settings › Offices
+    settings()->saveFor(new OfficeSettings, ['support_title' => ['en' => 'Who can help'], 'support_subtitle' => ['en' => 'Find the right person.']]);
+    $this->get('/support-contacts')->assertOk()->assertSeeInOrder(['Who can help', 'Find the right person.'])->assertSee('<title>Who can help', false);
 });
 
 it('gives a new office its own counters: services and team (FR-OFF-14)', function () {

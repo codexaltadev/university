@@ -84,12 +84,13 @@ class OfficeWebsite
 
     protected function support(): Response
     {
-        app(Seo::class)->set(['title' => __('office::office.support.plural'), 'path' => '/'.self::SUPPORT]);
         $contacts = OfficeSupportContact::query()->where('is_active', true)->ordered()
             ->whereHas('office', fn ($q) => $q->frontendVisible())->with('office')->get()
             ->sortBy(fn (OfficeSupportContact $c): string => sprintf('%05d-%05d', $c->office->sort_order, $c->sort_order))->values();
+        $page = new SupportDirectory($contacts, request()->only(['q', 'purpose', 'office']));
+        app(Seo::class)->set(['title' => $page->title(), 'description' => $page->subtitle(), 'path' => '/'.self::SUPPORT]);
 
-        return response()->view('office::support-contacts', ['contacts' => $contacts]);
+        return response()->view('office::support-contacts', ['contacts' => $contacts, 'page' => $page]);
     }
 
     /**

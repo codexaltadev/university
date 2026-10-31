@@ -5,6 +5,10 @@
 - Page template `right-sidebar` (FR-PAGE-04 v0.3): the blocks, then the sidebar on the right ("Browse by Section" from the
   page's sidebar menu, Quick Links); under the blocks on a phone. The sidebar of both sidebar templates is now
   `partials/page/sidebar`; `with-sidebar` is the left sidebar.
+- `modules/office/support-contacts` as DIU's /support-contact: hero "Support Contact Directory" (title, text and picture
+  from Settings › Offices), the search and Purpose / Office filters in a white box (chips for what is on, filters folded
+  on phones), a card per person (name, designation, office, where, phone, emails, extension, purpose); filtering in place,
+  `?q`, `?purpose`, `?office` open it filtered.
 
 ## 2.1.0 — 2026-10-30
 

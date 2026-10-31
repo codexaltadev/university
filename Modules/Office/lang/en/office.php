@@ -10,7 +10,7 @@ return [
     'ext' => 'Ext.',
     'apply' => 'Apply',
     'handled_by' => 'Handled by',
-    'search_services' => 'Search the servicesâ€¦',
+    'search_services' => 'Search the services…',
     'search_support' => 'What do you need help with?',
     'no_services' => 'No services yet.',
 
@@ -62,16 +62,27 @@ return [
     ],
 
     'help' => [
-        'quick_links' => 'Shown on the office page under "Quick Links" (text and link, in order). Empty: Settings â€º Offices\' links.',
-        'has_microsite' => 'Off: no website of its own â€” shown on /offices as a contact card.',
-        'highlights' => 'Cards near the top of the office page â€” Mission, Vision, what the office stands for (icon, title, short text).',
-        'quick_services' => 'Icon tiles under the overview â€” the services people come for most (icon, text, link).',
+        'quick_links' => 'Shown on the office page under "Quick Links" (text and link, in order). Empty: Settings › Offices\' links.',
+        'has_microsite' => 'Off: no website of its own — shown on /offices as a contact card.',
+        'highlights' => 'Cards near the top of the office page — Mission, Vision, what the office stands for (icon, title, short text).',
+        'quick_services' => 'Icon tiles under the overview — the services people come for most (icon, text, link).',
         'icon' => 'Name of an icon, e.g. shield, users, file-text.',
     ],
     'actions' => ['add_highlight' => 'Add a card', 'add_quick_service' => 'Add a tile'],
     'settings' => [
         'page_quick_links' => 'Quick Links of an office page',
         'page_quick_links_help' => 'For offices without Quick Links of their own.',
+        'support' => 'Support contacts page (/support-contacts)',
+        'support_help' => 'The heading of the page; the contacts come from each office\'s "Who to contact" list.',
+        'support_title' => 'Title', 'support_subtitle' => 'Text under the title', 'support_image' => 'Picture behind the title',
+    ],
+    'directory' => [
+        'search' => 'Search contacts by name, designation, or office…',
+        'purpose' => 'Filter by Purpose', 'all_purposes' => 'All Purposes',
+        'office' => 'Filter by Office', 'all_offices' => 'All Offices',
+        'show_filters' => 'Show Filters', 'hide_filters' => 'Hide Filters',
+        'searching' => 'Search', 'clear' => 'Clear',
+        'heading' => 'Support Contacts', 'none' => 'No Contacts Found', 'none_text' => 'Try adjusting your search terms or filters to find contacts.',
     ],
     'page' => [
         'overview' => 'Overview',

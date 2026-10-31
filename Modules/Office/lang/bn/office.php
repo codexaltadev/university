@@ -72,6 +72,17 @@ return [
     'settings' => [
         'page_quick_links' => 'প্রতিটি Office page-এর Quick Links',
         'page_quick_links_help' => 'যে office-এর নিজের Quick Links নেই তার জন্য।',
+        'support' => 'Support contacts page (/support-contacts)',
+        'support_help' => 'Page-এর শিরোনাম অংশ; যোগাযোগের তথ্য আসে প্রতিটি office-এর "Who to contact" তালিকা থেকে।',
+        'support_title' => 'শিরোনাম', 'support_subtitle' => 'শিরোনামের নিচের লেখা', 'support_image' => 'শিরোনামের পেছনের ছবি',
+    ],
+    'directory' => [
+        'search' => 'নাম, পদবি বা অফিস দিয়ে খুঁজুন…',
+        'purpose' => 'উদ্দেশ্য অনুযায়ী', 'all_purposes' => 'সব উদ্দেশ্য',
+        'office' => 'অফিস অনুযায়ী', 'all_offices' => 'সব অফিস',
+        'show_filters' => 'Filter দেখান', 'hide_filters' => 'Filter লুকান',
+        'searching' => 'খোঁজ', 'clear' => 'মুছুন',
+        'heading' => 'সাপোর্ট যোগাযোগ', 'none' => 'কোনো যোগাযোগ পাওয়া যায়নি', 'none_text' => 'অন্য শব্দ বা filter দিয়ে আবার চেষ্টা করুন।',
     ],
     'page' => [
         'overview' => 'পরিচিতি',
