@@ -20,6 +20,8 @@ class AdmissionWebsite
 
     public const CONTACT = 'admission/contact';
 
+    public const SEATS = 'admission/seat-plan';
+
     public function respond(string $rest, SiteContext $context, string $locale): Response|RedirectResponse|null
     {
         $rest = trim($rest, '/');
@@ -33,6 +35,12 @@ class AdmissionWebsite
             return response()->view('admission::result', [
                 'intro' => filled($intro = settings('admission.result_page_intro')) ? (string) $intro : null,
             ]);
+        }
+
+        if ($rest === self::SEATS) {   // DIU's /seat-plan (FR-ADM-17)
+            app(Seo::class)->set(['title' => __('admission::admission.seats.page_title'), 'path' => '/'.self::SEATS]);
+
+            return response()->view('admission::seat-plan', ['page' => new AdmissionPage]);
         }
 
         if ($rest === self::CONTACT) {   // DIU's /admission-contact

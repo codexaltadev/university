@@ -139,6 +139,7 @@ class S17Gallery extends Step
             $album = $this->upsert('lecture_series@album', (object) ['id' => 1], Album::class, [
                 'title' => ['en' => 'Lecture Series'], 'series_type' => 'lecture_series', 'is_active' => true,
             ], after: fn (Album $album) => $this->show($album, null, main: true));
+            $this->oldAddress('/lecture-series', $album);   // DIU's new site
             foreach ($this->rows('lecture_series') as $row) {
                 $video = $this->video('lecture_series', $row, $album, $row->video_link, null, (int) $row->lecture_no ?: null, (bool) $row->publication_status, (int) $row->serial);
                 if ($video && filled($row->name)) {

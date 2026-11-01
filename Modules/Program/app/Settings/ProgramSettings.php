@@ -43,7 +43,7 @@ class ProgramSettings extends ModuleSettings
                 ['label' => ['en' => 'Intl. Tuition Fees', 'bn' => 'আন্তর্জাতিক টিউশন ফি'], 'url' => '/tuition-fees?category=international-tuition'],
                 ['label' => ['en' => 'Intl. Scholarship', 'bn' => 'আন্তর্জাতিক স্কলারশিপ'], 'url' => '/scholarships'],
                 ['label' => ['en' => 'Admission Notice', 'bn' => 'ভর্তি বিজ্ঞপ্তি'], 'url' => '/admission'],
-                ['label' => ['en' => 'Rules and Regulation', 'bn' => 'নিয়মকানুন'], 'url' => '/article/rules-and-regulation'],
+                ['label' => ['en' => 'Rules and Regulation', 'bn' => 'নিয়মকানুন'], 'url' => '/rules-and-regulation'],
             ],
             'page_quick_links' => [
                 ['label' => ['en' => 'Notice', 'bn' => 'নোটিশ'], 'url' => '/notices'],

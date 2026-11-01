@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Livewire\Livewire;
 use Modules\Admission\Livewire\ResultLookup;
+use Modules\Admission\Livewire\SeatLookup;
 use Modules\Admission\Livewire\SubscribeForm;
 use Modules\Admission\Support\AdmissionBlocks;
 use Modules\Admission\Support\AdmissionPage;
@@ -33,6 +34,7 @@ class AdmissionServiceProvider extends ModuleServiceProvider
 
         Livewire::component('admission.result-lookup', ResultLookup::class);   // FR-ADM-06
         Livewire::component('admission.subscribe', SubscribeForm::class);       // FR-ADM-09
+        Livewire::component('admission.seat-lookup', SeatLookup::class);        // FR-ADM-17
 
         // What themes show (T-1): the blocks' circulars, links, cards, steps and contacts
         View::composer('admission::blocks.*', fn ($view) => $view->with('admission', new AdmissionBlocks($view->getData())));

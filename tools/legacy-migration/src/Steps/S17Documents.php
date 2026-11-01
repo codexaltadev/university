@@ -57,9 +57,12 @@ class S17Documents extends Step
                     'show_as_flipbook' => true,
                     'sort_order' => (int) $row->serial,
                     'is_active' => (bool) $row->publication_status,
-                ], file: null, thumbnail: $row->thumb, places: [], main: true, category: $category, slug: $row->slug);
+                ], file: Normalizer::flipbookPdf($row->file_name), thumbnail: $row->thumb, places: [], main: true, category: $category, slug: $row->slug);
             }
-            $this->report->review('The 16 flipbooks were ZIP books: put their original PDF on each under Content › Documents (migration plan 7.7) — the flipbook then works by itself.');
+            foreach ($categories as $category) {   // DIU's new site: /flipbook/brochure → the documents of that category
+                $this->oldAddress('/flipbook/'.$category->slug, '/'.Document::PATH.'?category='.Str::slug((string) Normalizer::text($category->title)));
+            }
+            $this->report->review('Flipbooks: their original PDF ({folder}/PDF.pdf on webbackend) comes with S03 group documents, then S17D again — a PDF above the Media Library limit (Settings › Media) is refused: raise it, or put the PDF on the document by hand.');
         }
 
         if (Schema::connection('legacy')->hasTable('prospectuses')) {
@@ -119,13 +122,16 @@ class S17Documents extends Step
             return;
         }
 
-        $this->upsert($table, $row, Document::class, $attributes, after: function (Document $document, bool $created) use ($file, $thumbnail, $places, $main, $category, $slug): void {
+        $this->upsert($table, $row, Document::class, $attributes, after: function (Document $document, bool $created) use ($table, $file, $thumbnail, $places, $main, $category, $slug): void {
             app(RelationEngine::class)->sync($document, array_map(fn (Model $p): string => $p->getMorphClass().':'.$p->getKey(), $places), mainSite: $main, user: null);
             if ($category) {
                 $document->syncTerms(Document::CATEGORY, array_filter([$this->term($category)]));
             }
             if ($slug) {
                 $this->keepSlug($document, Str::slug($slug), $created);
+                if ($category && $table === 'flipbooks') {
+                    $this->oldAddress('/flipbook/'.Str::slug($category).'/'.$slug, $document);   // DIU's new site (flipbook/{category}/[slug])
+                }
             }
             foreach (['file' => $file, 'thumbnail' => $thumbnail] as $field => $path) {
                 if (blank($path)) {

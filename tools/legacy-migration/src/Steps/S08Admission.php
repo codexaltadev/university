@@ -15,6 +15,7 @@ use Modules\Admission\Models\Circular;
 use Modules\Admission\Models\ResultBatch;
 use Modules\Admission\Settings\AdmissionSettings;
 use Modules\Admission\Support\ResultImporter;
+use Modules\Admission\Support\SeatImporter;
 use Platform\Assignments\Assignment;
 use Platform\Assignments\RoleCatalog;
 use Platform\Taxonomy\Term;
@@ -36,6 +37,8 @@ class S08Admission extends Step
         '/scholarship' => '/scholarships',
         '/tuition-fee-calculator' => '/waiver-calculator',
         '/admission-contact' => '/admission/contact',
+        '/admission-test-result' => '/admission/result',   // DIU's new site
+        '/seat-plan' => '/admission/seat-plan',
     ];
 
     public static function key(): string
@@ -74,6 +77,7 @@ class S08Admission extends Step
         $this->highlights();
         $this->contacts();
         $this->results();
+        $this->seats();
         $this->subscribers();
     }
 
@@ -82,16 +86,16 @@ class S08Admission extends Step
         'excerpt' => 'Browse 51 undergraduate and graduate programs across six DIU faculties—complete with admissions requirements, scholarship and financial-aid details, plus executive certificates and online courses for lifelong learners.',
         'sections' => [
             ['Admission Information', '/admission', false],
-            ['Admission Schedule', '/article/admission-test-schedule', false],
+            ['Admission Schedule', '/admission-test-schedule', false],
             ['Admission Eligibility', null, false],   // a heading over a page per faculty (eligibilityPages)
             ['International Student Admission', 'https://daffodilvarsity.edu.bd/photos/international/Booklet-for-Int-Students.pdf', true],
             ['Tuition Fees', '/tuition-fees', true],
             ['Campus Life & Institutes', '/campus-life', true],
-            ['Guideline for Guardian', '/article/guidelines-for-guardians', true],
+            ['Guideline for Guardian', '/guidelines-for-guardians', true],
         ],
         'quick_links' => [
             ['Waiver Calculator', '/waiver-calculator'],
-            ['Transfer Credits', '/article/credit-transfer'],
+            ['Transfer Credits', '/credit-transfer'],
             ['Waiver & Scholarship', '/scholarships'],
             ['Photo Frame', 'https://photoframe.daffodilvarsity.edu.bd/admission-photo-frame'],
         ],
@@ -197,7 +201,7 @@ class S08Admission extends Step
             ['Programs', '/programs'],
             ['Admission Contact', '/admission/contact'],
             ['Hall Facilities', 'https://hall.daffodilvarsity.edu.bd/'],
-            ['Admission Guidelines', '/article/admission-guidelines'],
+            ['Admission Guidelines', '/admission-guidelines'],
             ['Fees and Funding', '/tuition-fees'],
         ],
     ];
@@ -362,6 +366,30 @@ class S08Admission extends Step
         if ($unknown !== []) {
             $this->report->review('Program names in the results without a matching program (kept as text): '.implode('; ', array_keys($unknown)).'.');
         }
+    }
+
+    /** The admission test's seat plan (DIU's /seat-plan, FR-ADM-17): seat_plans → the seat plan, replaced on every run */
+    protected function seats(): void
+    {
+        if (! Schema::connection('legacy')->hasTable('seat_plans')) {
+            return;
+        }
+        $programs = app(ResultImporter::class)->programs();
+        $rows = [];
+        foreach ($this->rows('seat_plans') as $row) {
+            $serial = (string) Normalizer::text($row->application_serial);
+            if ($serial === '' || blank($row->building) || blank($row->room_name) || isset($rows[mb_strtolower($serial)])) {
+                $this->report->skipped('seat_plans', 'no serial, building or room, or the serial twice');
+
+                continue;
+            }
+            $rows[mb_strtolower($serial)] = SeatImporter::row($serial, (string) Normalizer::text($row->student_name), Normalizer::text($row->program_name),
+                (string) Normalizer::text($row->building), (string) Normalizer::text($row->room_name), Normalizer::text($row->level), $programs);
+            $this->report->saved('seat_plans', true);
+        }
+
+        $saved = app(SeatImporter::class)->save(array_values($rows));
+        $this->report->review("{$saved} seats in the seat plan (Admission › Seat plan); add the buildings' pictures in Website Settings › Admission.");
     }
 
     protected function subscribers(): void

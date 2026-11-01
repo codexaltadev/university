@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 2: Academic Modules |
-| Version | 0.4 — 2026-10-10: M-10 তিনটি module — `tuition`, `waiver`, `scholarship` (DB-03 v1.4); 2026-10-11: M-09 Admission website গঠন, FR-ADM-13 থেকে 16 (DB-03 v1.5); v0.4 2026-10-16: M-11 Calendar — Faculty সম্পর্ক, audience event-এ, তারিখ ঐচ্ছিক, website গঠন (DB-03 v1.6); v0.5 2026-10-17: M-07 Faculty Member — data আলাদা faculty site-এর, এখানে read-only copy, source JSON (এখন dummy) / API (FR-FM-08 Must, FR-FM-11/12; CRUD ও import বাদ; DB-03 v1.7) |
+| Version | 0.4 — 2026-10-10: M-10 তিনটি module — `tuition`, `waiver`, `scholarship` (DB-03 v1.4); 2026-10-11: M-09 Admission website গঠন, FR-ADM-13 থেকে 16 (DB-03 v1.5); v0.4 2026-10-16: M-11 Calendar — Faculty সম্পর্ক, audience event-এ, তারিখ ঐচ্ছিক, website গঠন (DB-03 v1.6); v0.5 2026-10-17: M-07 Faculty Member — data আলাদা faculty site-এর, এখানে read-only copy, source JSON (এখন dummy) / API (FR-FM-08 Must, FR-FM-11/12; CRUD ও import বাদ; DB-03 v1.7); v0.6 2026-11-01: FR-ADM-17 seat plan (DB-03 v1.12), FR-DEPT-10 coordination officers |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md), [SRS Part 1](01-SRS-Core.md), `project_diu` analysis |
@@ -99,6 +99,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 | FR-DEPT-07 | Microsite default section: About, **Statistics**, Head-এর বার্তা, Programs, Faculty Members, News, Events, Notices, Achievements | BR-MS-07, BR-STAT-01 | Must |
 | FR-DEPT-08 | Department অন্য Faculty-তে স্থানান্তর (শুধু Admin); স্থানান্তরের পর scope ও menu fallback নতুন Faculty অনুযায়ী হবে | — | Should |
 | FR-DEPT-09 | Listing layout: Grid, List, Card; Homepage section: "Departments" | BR-THM-02 | Must |
+| FR-DEPT-10 | *(v0.6, 2026-11-01)* Coordination officer তালিকা `/coordination-officers` (DIU-র /coordination-officer): প্রতিটি Department ও তার Program-এর "Coordinator" ভূমিকার মানুষ, Faculty অনুযায়ী — ছবি, নাম (program / department), পদবি, email, ফোন, extension; শিরোনাম Settings › Departments থেকে | FR-REL-10 | Must |
 
 ### Business Rules
 
@@ -380,6 +381,7 @@ Faculty ──< Department ──< Program ──< Curriculum ──< Course
 | FR-ADM-14 | *(v0.3)* Section page-এর বাম পাশের menu: page-এ "Sidebar menu" বাছা যায় (free menu, FR-MENU), child page সেটি পায় | Q-16 | Must |
 | FR-ADM-15 | *(v0.3)* Page block: Circulars (important dates / countdown), Highlights, Steps, Contacts, Subscribe, Result lookup, Apply / Request for Information — যেকোনো page-এ বসানো যায় | FR-PAGE-02 | Must |
 | FR-ADM-16 | *(v0.3)* Module page: `/admission/circulars/{slug}`, `/admission/result`; menu-র "Module page" তালিকায় | FR-MENU-03 | Must |
+| FR-ADM-17 | *(v0.6, 2026-11-01)* ভর্তি পরীক্ষার আসন বিন্যাস (DIU-র /seat-plan): Admission Office Excel/CSV upload করে (আগে যাচাই, save করলে পুরো তালিকা বদলায়) বা একটি করে ঠিক করে; `/admission/seat-plan`-এ application serial দিলে নাম, program, ভবন, কক্ষ ও তলা — আর কিছু নয়; Settings › Admission-এর ভবনের ছবি, applicant-এর ভবন চিহ্নিত; result lookup-এর মতো সীমা ও bot ফাঁদ | FR-ADM-07 | Must |
 
 ### Business Rules
 

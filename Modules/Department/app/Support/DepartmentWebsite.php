@@ -22,6 +22,12 @@ class DepartmentWebsite
 
     public function respond(string $rest, SiteContext $context, string $locale): ?Response
     {
+        if (! $context->isMicrosite() && trim($rest, '/') === CoordinatorsPage::PATH) {   // DIU's /coordination-officer
+            $page = new CoordinatorsPage;
+            app(Seo::class)->set(['title' => $page->title(), 'description' => $page->subtitle(), 'path' => '/'.CoordinatorsPage::PATH]);
+
+            return response()->view('department::coordinators', ['page' => $page]);
+        }
         if ($context->isMicrosite() || trim($rest, '/') !== self::LISTING) {
             return null;
         }

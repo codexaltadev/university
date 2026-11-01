@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 1: Core Modules |
-| Version | 0.2 — FR-REL-09/10 (Person Source, Assignment), FR-HOME-11 (section source mode), C-20 Statistics যোগ; v0.3 (2026-10-31): FR-PAGE-04 Right sidebar layout, sidebar menu দুই পাশেই |
+| Version | 0.2 — FR-REL-09/10 (Person Source, Assignment), FR-HOME-11 (section source mode), C-20 Statistics যোগ; v0.3 (2026-10-31): FR-PAGE-04 Right sidebar layout, sidebar menu দুই পাশেই; FR-PAGE-02 নতুন block (2026-11-01) |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md) |
@@ -464,7 +464,7 @@
 | ID | Requirement | BRD Ref | Priority |
 |---|---|---|---|
 | FR-PAGE-01 | Page create / edit, rich text editor (heading, list, table, image, video embed, file link, button) | BR-THM-05 | Must |
-| FR-PAGE-02 | Block-based content (Filament Builder): text, image gallery, accordion, tabs, people card, file list, embed | BR-THM-05 | Should |
+| FR-PAGE-02 | Block-based content (Filament Builder): text, image gallery, accordion, tabs, people card, file list, embed; *(v0.3, 2026-11-01)* link card (DIU-র /students, /teachers — tile বা box), location (Settings › Contact-এর campus ও map), চাকরির তালিকা (skill.jobs থেকে সরাসরি, কিছু জমা রাখা হয় না, কিছুক্ষণ cache) | BR-THM-05 | Should |
 | FR-PAGE-03 | Parent-child hierarchy (breadcrumb ও URL-এ প্রতিফলিত) | — | Must |
 | FR-PAGE-04 | Page layout select (theme থেকে, WordPress-এর মতো): Standard (sidebar ছাড়া, `default`), Full width, Left sidebar (`with-sidebar`), Right sidebar (`right-sidebar`), Landing (শুধু block)। দুই sidebar layout-এ sidebar menu ও Quick Links page থেকে বেছে নেওয়া যায় *(v0.3, 2026-10-31)* | BR-THM-02 | Must |
 | FR-PAGE-05 | Owner entity: Main site, অথবা Faculty / Department / Program / Office / Lab। Entity-র page তার microsite URL-এ থাকবে (যেমন `/fsit/cse/about`) | BR-MS-01 | Must |

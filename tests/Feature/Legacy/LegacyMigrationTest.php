@@ -12,6 +12,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
 use Legacy\Migration\Support\IdMap;
@@ -30,11 +31,13 @@ use Modules\Program\Models\ProgramMajor;
 use Modules\Program\Models\ProgramMaterial;
 use Modules\Program\Models\ProgramVariant;
 use Modules\Seo\Models\Redirect;
+use Modules\Settings\Groups\ContactSettings;
 use Modules\Settings\Groups\GeneralSettings;
 use Modules\Testimonials\Models\Testimonial;
 use Modules\Tuition\Models\FeeCategory;
 use Modules\Tuition\Models\Tuition;
 use Modules\Tuition\Models\TuitionLine;
+use Platform\Assignments\Assignment;
 use Platform\Assignments\RoleCatalog;
 use Platform\Media\MediaItem;
 use Platform\Media\MediaLibrary;
@@ -71,6 +74,8 @@ function legacySchema(): void
         'notices' => fn (Blueprint $t) => [$t->string('title')->nullable(), $t->string('slug')->nullable(), $t->longText('content')->nullable(), $t->unsignedBigInteger('department_id')->nullable(), $t->unsignedBigInteger('notice_category_id')->nullable(), $t->string('is_home')->default('0'), $t->integer('view_counter')->default(0), $t->tinyInteger('publication_status')->default(1), $t->timestamp('created_at')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'notice_files' => fn (Blueprint $t) => [$t->unsignedBigInteger('notice_id'), $t->string('file_title')->nullable(), $t->string('file_name')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'articles' => fn (Blueprint $t) => [$t->string('article_title')->nullable(), $t->string('article_slug')->nullable(), $t->longText('article_content')->nullable(), $t->tinyInteger('publication_status')->default(1)],
+        'coordination_officers' => fn (Blueprint $t) => [$t->unsignedBigInteger('department_id'), $t->string('department_program_name')->nullable(), $t->unsignedBigInteger('admin_id')->nullable(), $t->string('name')->nullable(), $t->string('designation')->nullable(), $t->string('phone')->nullable(), $t->string('email')->nullable(), $t->string('extension')->nullable(), $t->integer('serial')->default(0), $t->tinyInteger('publication_status')->default(1)],
+        'flipbooks' => fn (Blueprint $t) => [$t->string('title'), $t->string('slug'), $t->string('thumb')->nullable(), $t->unsignedBigInteger('flipbook_category_id')->nullable(), $t->string('file_name')->nullable(), $t->integer('serial')->default(0), $t->tinyInteger('publication_status')->default(1)],
         'program_major_categories' => fn (Blueprint $t) => [$t->string('title'), $t->text('description')->nullable()],
         'program_types' => fn (Blueprint $t) => [$t->integer('parent_id'), $t->string('program_name'), $t->tinyInteger('publication_status')->default(1), $t->timestamp('deleted_at')->nullable()],
         'department_program_type' => fn (Blueprint $t) => [$t->string('full_program_name'), $t->string('subtitle')->nullable(), $t->string('program_image')->nullable(), $t->string('video_url')->nullable(), $t->string('short_name')->nullable(), $t->string('slug'), $t->unsignedBigInteger('department_id'), $t->unsignedBigInteger('program_type_id'), $t->integer('program_type_parent_id'), $t->longText('summary')->nullable(), $t->longText('program_objective')->nullable(), $t->integer('approved_alumni_number')->nullable(), $t->integer('teachers_count')->nullable(), $t->date('next_semester_date')->nullable(), $t->json('section_intros')->nullable(), $t->longText('program_credit_duration')->nullable(), $t->longText('ai_summary')->nullable(), $t->text('ai_short_summary')->nullable(), $t->tinyInteger('is_home')->default(0), $t->integer('serial')->nullable(), $t->tinyInteger('show_program')->default(1), $t->tinyInteger('publication_status')->default(1), $t->timestamp('created_at')->nullable()],
@@ -341,24 +346,98 @@ it('puts each legacy file into the Media Library once and into its records, from
     File::deleteDirectory($cache);
 });
 
-it('migrates main-site articles under /article, keeping their address and Bootstrap markup (S15A)', function () {
+it('migrates main-site articles as general pages at their own address, with Bootstrap markup and DIU\'s old addresses (S15A)', function () {
     DB::connection('legacy')->table('articles')->insert([
         ['id' => 1, 'article_title' => 'International Adviser of DIU', 'article_slug' => 'international-adviser', 'publication_status' => 1,
             'article_content' => '<table class="table" border="1"><tr><td><img src="/storage/photos/walter.jpg"></td><td><a href="/photos/cv.pdf">CV</a> <a href="/article/visiting-professors">More</a></td></tr></table>'],
         ['id' => 2, 'article_title' => 'Old Draft', 'article_slug' => 'old-draft', 'publication_status' => 0, 'article_content' => '<p>x</p>'],
+        ['id' => 3, 'article_title' => 'Lost and Found', 'article_slug' => 'safetyandsecurity', 'publication_status' => 1, 'article_content' => '<p>Lost something?</p>'],
+        ['id' => 4, 'article_title' => 'Safety and Security Management', 'article_slug' => 'safety-measures-of-daffodil-international-university', 'publication_status' => 1, 'article_content' => '<p>Guards.</p>'],
+        ['id' => 5, 'article_title' => 'International Alumni', 'article_slug' => 'international-alumni', 'publication_status' => 1, 'article_content' => '<p>Alumni abroad.</p>'],
     ]);
+    // Before 2026-10-31 they hung under a page "article": it goes, they move up
+    $old = Page::factory()->create(['title' => ['en' => 'Articles']]);
+    $old->changeSlug('en', 'article');
 
     $this->artisan('legacy:migrate', ['--step' => ['S15A'], '--no-report' => true])->assertSuccessful();
     $this->artisan('legacy:migrate', ['--step' => ['S15A'], '--no-report' => true])->assertSuccessful();   // again: no copies
 
-    expect(Page::query()->withoutGlobalScopes()->count())->toBe(3);   // "article" + 2
-    $this->get('/article/international-adviser')->assertOk()
+    expect(Page::query()->withoutGlobalScopes()->whereNull('deleted_at')->count())->toBe(5)   // the five, without "article"
+        ->and(Page::query()->withoutGlobalScopes()->whereNotNull('parent_id')->count())->toBe(0)
+        ->and($old->fresh()->trashed())->toBeTrue();
+    $this->get('/international-adviser')->assertOk()
         ->assertSee('International Adviser of DIU')
         ->assertSee('class="table" border="1"', false)
         ->assertSee('src="https://webbackend.daffodilvarsity.edu.bd/storage/photos/walter.jpg"', false)   // the old site's files from webbackend
         ->assertSee('href="https://webbackend.daffodilvarsity.edu.bd/photos/cv.pdf"', false)
-        ->assertSee('href="/article/visiting-professors"', false);                                       // page links stay
-    $this->get('/article/old-draft')->assertNotFound();
+        ->assertSee('href="/visiting-professors"', false);                                                // page links follow
+    $this->get('/old-draft')->assertNotFound();
+
+    // Old addresses: /article/{slug}, DIU's new site's (/international/{slug}, /safetyandsecurity → another article)
+    $this->get('/article/international-adviser')->assertRedirect('/international-adviser')->assertStatus(301);
+    $this->get('/article')->assertRedirect('/');
+    $this->get('/international/international-alumni')->assertRedirect('/international-alumni');
+    $this->get('/safetyandsecurity')->assertRedirect('/safety-measures-of-daffodil-international-university');
+    $this->get('/article/safetyandsecurity')->assertRedirect('/lost-and-found');
+    $this->get('/lost-and-found')->assertOk()->assertSee('Lost something?');
+});
+
+it('makes the pages DIU\'s new site keeps in code — Student Access Center, Teachers, Location — and its campus (S15P)', function () {
+    DB::connection('legacy')->table('articles')->insert(['id' => 1, 'article_title' => 'Students', 'article_slug' => 'students', 'publication_status' => 1, 'article_content' => '<p>Old students text.</p>']);
+
+    $this->artisan('legacy:migrate', ['--step' => ['S15A', 'S15P'], '--no-report' => true])->assertSuccessful();
+    Http::fake(['studio.skill.jobs/*' => Http::response(['results' => [
+        ['slug' => 'coordination-officer-X', 'title' => 'Coordination Officer', 'type' => 'Full Time', 'isExpired' => false],
+    ]])]);
+
+    $this->get('/career')->assertOk()
+        ->assertSeeInOrder(['Career at DIU', 'Culture in DIU', 'DIU Values', 'Ethics', 'Ownership &amp; Responsibility', 'Available Job Listings', 'Coordination Officer'], false);
+    $this->get('/students')->assertOk()
+        ->assertSeeInOrder(['Student Access Center', 'Academic Essentials', 'Student Portal', 'Learning Resources', 'Support &amp; Coordination', 'Support Contact'], false)
+        ->assertSeeInOrder(['href="https://studentportal.diu.edu.bd/"', 'target="_blank"', 'href="/office/registrar-office/academic-calendar"'], false)->assertDontSee('Old students text.');
+    $this->get('/article/students')->assertRedirect('/students');
+    $this->get('/teachers')->assertOk()->assertSeeInOrder(['Teachers Directory', 'Deans &amp; Heads', 'Faculty Members'], false);
+    $this->get('/location')->assertOk()
+        ->assertSeeInOrder(['Daffodil International University', 'Birulia, Savar', 'Admission Help Line: 09617901212', 'admission@daffodilvarsity.edu.bd', 'https://maps.app.goo.gl/istRkPfCLxi9WqAn9'])
+        ->assertSee('tel:09617901212', false)->assertSee('https://www.google.com/maps/embed?', false);
+
+    // Once made, Admin's: running again leaves a changed page and a typed campus alone
+    Page::query()->withoutGlobalScopes()->get()->first(fn ($p) => $p->slug('en') === 'teachers')->update(['title' => ['en' => 'Our Teachers']]);
+    settings()->saveFor(new ContactSettings, ['campuses' => [['name' => ['en' => 'Main Campus']]]]);
+    $this->artisan('legacy:migrate', ['--step' => ['S15A', 'S15P'], '--no-report' => true])->assertSuccessful();
+    $this->get('/teachers')->assertSee('Our Teachers');
+    $this->get('/location')->assertSee('Main Campus')->assertDontSee('Birulia');
+});
+
+it('gives departments their coordination officers, the program text as label, and sends DIU\'s address to the directory (S11C)', function () {
+    DB::connection('legacy')->table('coordination_officers')->insert([
+        ['id' => 1, 'department_id' => 1, 'department_program_name' => 'CSE', 'admin_id' => null, 'name' => 'Mr. Md. Sorower Mal', 'designation' => 'Coordination Officer',
+            'phone' => '+8801847140040', 'email' => 'cseoffice5@example.edu', 'extension' => '15114', 'serial' => 1, 'publication_status' => 1],
+        ['id' => 2, 'department_id' => 2, 'department_program_name' => 'MSc in SWE', 'admin_id' => null, 'name' => 'Md. Alauddin', 'designation' => 'Coordination Officer',
+            'phone' => null, 'email' => null, 'extension' => '35111', 'serial' => 1, 'publication_status' => 1],
+        ['id' => 3, 'department_id' => 999, 'department_program_name' => 'X', 'admin_id' => null, 'name' => 'Nowhere', 'designation' => null, 'phone' => null, 'email' => null, 'extension' => null, 'serial' => 1, 'publication_status' => 1],
+    ]);
+
+    $this->artisan('legacy:migrate', ['--step' => ['S04', 'S11C'], '--no-report' => true])->assertSuccessful();
+    $this->artisan('legacy:migrate', ['--step' => ['S11C'], '--no-report' => true])->assertSuccessful();   // again: no copies
+
+    expect(Assignment::query()->where('role_key', 'coordinator')->count())->toBe(2);
+    $this->get('/coordination-officer')->assertRedirect('/coordination-officers')->assertStatus(301);
+    $this->get('/coordination-officers')->assertOk()
+        ->assertSeeInOrder(['Science and Information Technology', 'Mr. Md. Sorower Mal', '(CSE)', 'cseoffice5@example.edu', 'Ext: 15114', 'Md. Alauddin', '(MSc in SWE)', 'Ext: 35111'])
+        ->assertDontSee('Nowhere');
+});
+
+it('builds the main menus from the live snapshot, a flipbook on webbackend opening its document here and articles at their own address (S15M)', function () {
+    DB::connection('legacy')->table('flipbooks')->insert(['id' => 7, 'title' => 'Handbook for Academic', 'slug' => 'handbook-for-academic', 'flipbook_category_id' => 3,
+        'file_name' => 'academic/academic-handbook', 'thumb' => 'images/flipbook/thumb/x.webp', 'serial' => 1, 'publication_status' => 1]);
+
+    $this->artisan('legacy:migrate', ['--step' => ['S15M'], '--no-report' => true])->assertSuccessful();
+
+    $urls = DB::table('menu_items')->pluck('url');
+    expect($urls)->toContain('/downloads/handbook-for-academic')->toContain('/credit-transfer')
+        ->not->toContain('https://webbackend.daffodilvarsity.edu.bd/academic/academic-handbook/')->not->toContain('/article/credit-transfer')
+        ->and(Normalizer::flipbookPdf('/academic/academic-handbook/'))->toBe('academic/academic-handbook/PDF.pdf');
 });
 
 it('migrates events and sends DIU\'s /events-detail/{id} to the event\'s page (S16E)', function () {

@@ -5,6 +5,7 @@ namespace Modules\Admission\Support;
 use Illuminate\Support\Str;
 use Modules\Admission\Models\Circular;
 use Modules\Admission\Settings\AdmissionSettings;
+use Platform\Media\MediaItem;
 
 /**
  * What the module's own pages show, ready for a theme (`$page` in admission::result, ::contact, ::circulars, ::circular):
@@ -40,6 +41,29 @@ class AdmissionPage
     public function resultImage(): ?string
     {
         return media_url(settings('admission.result_image'), 'large');
+    }
+
+    /** The seat plan page's line under the title (Settings › Admission), safe HTML, or null for the theme's own */
+    public function seatIntro(): ?string
+    {
+        return filled($intro = settings('admission.seat_page_intro')) ? Str::sanitizeHtml((string) $intro) : null;
+    }
+
+    /**
+     * The examination buildings (Settings › Admission: pictures, each titled with its building's name in the Media
+     * Library), the applicant's marked.
+     *
+     * @return list<array{name: string, image: string, mine: bool}>
+     */
+    public function seatBuildings(?string $mine = null): array
+    {
+        $key = fn (?string $name): string => (string) preg_replace('/[^a-z0-9]+/', '', mb_strtolower((string) $name));
+        $ids = array_values(array_filter((array) settings('admission.seat_buildings')));
+        $items = MediaItem::query()->whereKey($ids)->get()->keyBy('id');
+
+        return collect($ids)->map(fn ($id): ?array => ($item = $items->get($id)) && ($image = media_url($id, 'large'))
+            ? ['name' => (string) $item->title, 'image' => $image, 'mine' => $mine !== null && $key($item->title) === $key($mine)] : null)
+            ->filter()->values()->all();
     }
 
     public function applyUrl(): ?string

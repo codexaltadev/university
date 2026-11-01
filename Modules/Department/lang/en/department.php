@@ -51,5 +51,12 @@ return [
         'listing_help' => 'Title, text and picture on top. Empty: the theme\'s own.',
         'title' => 'Title', 'text' => 'Text', 'image' => 'Picture',
         'quick_links' => 'Quick Links',
+        'coordinators' => 'Coordination officers page (/coordination-officers)',
+        'coordinators_help' => 'Its heading. The officers are each department\'s and program\'s people in the role Coordinator.',
+    ],
+    'coordinators' => [
+        'title' => 'Coordination officers',
+        'cell' => 'Cell:', 'ext' => 'Ext:',
+        'none' => 'No coordination officers found', 'none_text' => 'No coordination officers are currently available in the directory.',
     ],
 ];

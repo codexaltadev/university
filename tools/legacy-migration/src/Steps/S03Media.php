@@ -73,6 +73,7 @@ class S03Media extends Step
         ],
         'documents' => [   // only into the library: S17D gives each document its file and thumbnail
             ['documents', 'flipbooks', 'thumb', null, null],
+            ['documents', 'flipbooks', 'file_name', null, null],   // the flipbook's folder → its original PDF (Normalizer::flipbookPdf)
             ['documents', 'prospectuses', 'prospectus_file', null, null],
             ['documents', 'prospectuses', 'prospectus_thumbs', null, null],
             ['documents', 'charter_guidebooks', 'file_name', null, null],
@@ -136,7 +137,7 @@ class S03Media extends Step
                 $rows = $this->rows($table, fn ($q) => $q->select($columns)->whereNotNull($column)->where($column, '<>', '')
                     ->when($legacy->hasColumn($table, 'deleted_at'), fn ($q) => $q->whereNull('deleted_at')));
                 foreach ($rows as $row) {
-                    $path = Normalizer::filePath($row->{$column});
+                    $path = "{$table}.{$column}" === 'flipbooks.file_name' ? Normalizer::flipbookPdf($row->{$column}) : Normalizer::filePath($row->{$column});
                     if ($path === null || ! preg_match('/\.[a-z0-9]{2,5}$/i', $path)) {
                         $this->report->skipped($table, "{$column}: not a file (font icon, other site …)");
 

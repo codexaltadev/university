@@ -35,7 +35,7 @@ class AdmissionSettings extends ModuleSettings
     public function defaults(): array
     {
         return [
-            'apply_url' => null, 'info_request_url' => null, 'whatsapp_group_url' => null, 'result_page_intro' => null,
+            'apply_url' => null, 'info_request_url' => null, 'whatsapp_group_url' => null, 'result_page_intro' => null, 'seat_page_intro' => null, 'seat_buildings' => [],
             'office_name' => ['en' => 'Daffodil International University', 'bn' => 'ড্যাফোডিল ইন্টারন্যাশনাল ইউনিভার্সিটি'],
             'office_address' => ['en' => 'Daffodil Smart City, Birulia, Savar, Dhaka-1216', 'bn' => 'ড্যাফোডিল স্মার্ট সিটি, বিরুলিয়া, সাভার, ঢাকা-১২১৬'],
             'helpline' => null,
@@ -53,12 +53,12 @@ class AdmissionSettings extends ModuleSettings
 
     public function translatable(): array
     {
-        return ['result_page_intro', 'office_name', 'office_address'];
+        return ['result_page_intro', 'seat_page_intro', 'office_name', 'office_address'];
     }
 
     public function media(): array
     {
-        return ['result_image'];
+        return ['result_image', 'seat_buildings'];
     }
 
     public function schema(): array
@@ -85,6 +85,13 @@ class AdmissionSettings extends ModuleSettings
                 ]),
                 LinkListField::make('result_links')->label(__('admission::admission.settings.result_links')),
                 MediaPicker::make('result_image')->label(__('admission::admission.settings.result_image'))->image()->storeIds(),
+            ]),
+            Section::make(__('admission::admission.seats.page_title'))->compact()->schema([   // FR-ADM-17
+                TranslatableTabs::make()->schema(fn (string $locale): array => [
+                    RichEditor::make("seat_page_intro.{$locale}")->label(__('admission::admission.settings.seat_page_intro'))->fileAttachments(false),
+                ]),
+                MediaPicker::make('seat_buildings')->label(__('admission::admission.settings.seat_buildings'))->image()->multiple()->storeIds()
+                    ->helperText(__('admission::admission.settings.seat_buildings_help')),
             ]),
         ];
     }

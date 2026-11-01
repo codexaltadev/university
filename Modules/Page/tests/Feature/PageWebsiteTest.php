@@ -8,6 +8,8 @@
 
 use Filament\Facades\Filament;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Modules\Office\Models\Office;
@@ -53,6 +55,25 @@ it('puts the sidebar on the left or the right as the page\'s layout says (FR-PAG
 
     $this->history->update(['template' => 'right-sidebar']);
     $this->get('/about-us/history')->assertOk()->assertSee('page--right-sidebar', false)->assertSeeInOrder(['Our story.', 'Apply Online']);
+});
+
+it('lists the openings from skill.jobs in the Jobs block, open ones first visible, and says so when it cannot reach them', function () {
+    $source = 'https://studio.skill.jobs/api/company-specific-jobs/x/?company_slug=diu&limit=1000';
+    Http::fake(['studio.skill.jobs/*' => Http::sequence()->push(['results' => [
+        ['id' => 1, 'slug' => 'assistant-officer-AB', 'title' => 'Assistant Officer', 'type' => 'Full Time', 'level' => 'Beginner', 'location' => 'Savar', 'workplace' => 'Work From Office',
+            'no_of_vacancy' => 2, 'end_date' => 'Nov 01, 2026', 'isExpired' => false, 'company_info' => ['name' => 'DIU', 'logo' => '/media/logo/diu.png']],
+        ['id' => 2, 'slug' => 'old-post-CD', 'title' => 'Old Post', 'type' => 'Internship', 'level' => 'Mid Level', 'isExpired' => true, 'company_info' => ['name' => 'DIU']],
+    ]])->push('down', 503)]);
+    $this->about->update(['content' => ['en' => [['type' => 'jobs', 'data' => ['heading' => 'Available Job Listings', 'source' => $source]]]]]);
+
+    $this->get('/about-us')->assertOk()
+        ->assertSeeInOrder(['Available Job Listings', 'Full Time', 'Internship', 'Beginner', 'Mid Level', 'Show expired jobs', 'Assistant Officer', '2 vacancies', 'Deadline: Nov 01, 2026', 'Old Post', 'Expired'])
+        ->assertSee('https://skill.jobs/jobs/assistant-officer-AB', false)->assertSee('https://studio.skill.jobs/media/logo/diu.png', false);
+    $this->get('/about-us')->assertOk();
+    Http::assertSentCount(1);   // remembered, not asked on every visit
+
+    Cache::flush();   // the next visit asks again: SkillJobs is down
+    $this->get('/about-us')->assertOk()->assertSee('The job listings could not be loaded just now.');
 });
 
 it('keeps the classes and collapse attributes of an HTML block, without scripts or handlers', function () {

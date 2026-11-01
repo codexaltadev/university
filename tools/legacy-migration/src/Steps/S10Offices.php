@@ -21,6 +21,9 @@ use Platform\Assignments\RoleCatalog;
 class S10Offices extends Step
 {
     /** Legacy office-"department" short name → the office it is (null = a new office). */
+    /** DIU's new site gives these offices a page of their own at another address (DIUFronend office/[slug]): legacy slug => its slug there */
+    public const DIU_PAGES = ['exam-office' => 'exam'];
+
     public const DEPARTMENT_OFFICES = [
         'accounts' => 'accounts-office', 'admission' => 'admission-office', 'cdc' => 'cdc-office', 'exam' => 'exam-office',
         'registrar' => 'registrar-office', 'transport' => 'transport', 'hall' => 'hall-office', 'hrdi' => 'hrdi-office',
@@ -70,13 +73,17 @@ class S10Offices extends Step
             $name = Normalizer::text($row->title);
             $office = $this->upsert('offices', $row, Office::class, [
                 'name' => Normalizer::en($name),
-                'has_microsite' => (bool) $row->show_page,
+                'has_microsite' => (bool) $row->show_page || isset(self::DIU_PAGES[$row->slug]),
                 'sort_order' => max(0, (int) $row->serial),
                 'is_active' => (bool) $row->publication_status,
             ], after: fn (Office $o, bool $created) => $this->keepSlug($o, $row->slug, $created),
                 existing: $this->same(Office::class, ['name->en' => $name]));
             $bySlug[$row->slug] = $office;
+            if (isset(self::DIU_PAGES[$row->slug])) {
+                $this->oldAddress('/office/'.self::DIU_PAGES[$row->slug], $office);
+            }
         }
+        $this->report->review("DIU's new site has /office/tto (Technology Transfer Office), which is not in the legacy database: add the office in People › Offices if wanted.");
 
         $this->report->review('Office types are new: give each office its type in People › Offices (Administration, Academic Support, Student Services …).');
 

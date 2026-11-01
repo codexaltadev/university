@@ -19,7 +19,11 @@ class PageBlocks
     public const CORE = [
         TextBlock::class, ImageBlock::class, GalleryBlock::class, AccordionBlock::class,
         TabsBlock::class, FilesBlock::class, EmbedBlock::class, ButtonBlock::class, HtmlBlock::class,
+        LinksBlock::class, LocationBlock::class, JobsBlock::class,
     ];
+
+    /** Core blocks with a look of their own (cards, a map): the theme shows them as a module's block, not as page text */
+    public const DESIGNED = [LinksBlock::class, LocationBlock::class, JobsBlock::class];
 
     /** @return array<string, class-string<PageBlock>> name => block */
     public static function all(): array
@@ -69,7 +73,7 @@ class PageBlocks
 
             if ($class && view()->exists($class::view())) {
                 $one = view($class::view(), ['data' => (array) ($block['data'] ?? []), 'locale' => $locale])->render();
-                $html .= $wrapper ? view(self::WRAPPER, ['type' => $class::name(), 'core' => in_array($class, self::CORE, true), 'html' => new HtmlString($one)])->render() : $one;
+                $html .= $wrapper ? view(self::WRAPPER, ['type' => $class::name(), 'core' => in_array($class, self::CORE, true) && ! in_array($class, self::DESIGNED, true), 'html' => new HtmlString($one)])->render() : $one;
             }
         }
 

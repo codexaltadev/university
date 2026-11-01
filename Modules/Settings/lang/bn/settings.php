@@ -31,6 +31,7 @@ return [
         'phones' => 'ফোন',
         'emails' => 'Email',
         'map_embed' => 'Google Map embed link',
+        'map_link' => 'Google Maps link (map খোলার জন্য)',
         'platform' => 'Platform',
         'other' => 'অন্যান্য',
         'label' => 'নাম',

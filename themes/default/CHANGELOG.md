@@ -5,6 +5,14 @@
 - Page template `right-sidebar` (FR-PAGE-04 v0.3): the blocks, then the sidebar on the right ("Browse by Section" from the
   page's sidebar menu, Quick Links); under the blocks on a phone. The sidebar of both sidebar templates is now
   `partials/page/sidebar`; `with-sidebar` is the left sidebar.
+- Page blocks as DIU: `modules/page/blocks/links` (/students tiles, /career value boxes), `location` (/location card
+  and map), `jobs` (/career "Available Job Listings": Type / Level buttons, expired jobs on request, View Details on
+  skill.jobs). The default template shows the page's excerpt under the title. Icons `credit-card`, `bell`, `monitor`,
+  `headphones`, `printer`, `map`, `lightbulb`, `heart`.
+- `modules/department/coordinators` as DIU's /coordination-officer (faculty icon tiles, staff cards with photo or initials,
+  the program in capitals, Cell / Ext).
+- `modules/admission/seat-plan` and `livewire/seat-lookup` as DIU's /seat-plan (search card, the allocated seat,
+  examination buildings with the applicant's marked, help bar).
 - `modules/office/support-contacts` as DIU's /support-contact: hero "Support Contact Directory" (title, text and picture
   from Settings › Offices), the search and Purpose / Office filters in a white box (chips for what is on, filters folded
   on phones), a card per person (name, designation, office, where, phone, emails, extension, purpose); filtering in place,

@@ -19,19 +19,24 @@ use Modules\Admission\Filament\Resources\Highlights\AdmissionHighlightResource;
 use Modules\Admission\Filament\Resources\ResultBatches\Pages\EditResultBatch;
 use Modules\Admission\Filament\Resources\ResultBatches\RelationManagers\ResultsRelationManager;
 use Modules\Admission\Filament\Resources\ResultBatches\ResultBatchResource;
+use Modules\Admission\Filament\Resources\Seats\AdmissionSeatResource;
 use Modules\Admission\Filament\Resources\Steps\AdmissionStepResource;
 use Modules\Admission\Filament\Resources\Subscribers\AdmissionSubscriberResource;
 use Modules\Admission\Livewire\ResultLookup;
+use Modules\Admission\Livewire\SeatLookup;
 use Modules\Admission\Livewire\SubscribeForm;
 use Modules\Admission\Models\AdmissionContactGroup;
 use Modules\Admission\Models\AdmissionHighlight;
 use Modules\Admission\Models\AdmissionResult;
+use Modules\Admission\Models\AdmissionSeat;
 use Modules\Admission\Models\AdmissionStep;
 use Modules\Admission\Models\AdmissionSubscriber;
 use Modules\Admission\Models\Circular;
 use Modules\Admission\Models\ResultBatch;
 use Modules\Admission\Notifications\ConfirmSubscription;
+use Modules\Admission\Support\AdmissionPage;
 use Modules\Admission\Support\ResultImporter;
+use Modules\Admission\Support\SeatImporter;
 use Modules\Menu\Models\Menu;
 use Modules\Menu\Support\MenuEditor;
 use Modules\Menu\Support\MenuLinks;
@@ -219,12 +224,46 @@ it('offers its pages to menus, keeps them from child pages and lists circulars i
         ->and($this->fall->toSearchDocument('en'))->toMatchArray(['title' => 'Fall 2026 (Tri Semester)']);
 });
 
+it('checks a seat plan file and puts it in place of the old seat plan (FR-ADM-17)', function () {
+    AdmissionSeat::create(['application_serial' => 'OLD1', 'student_name' => 'Old', 'building' => 'Old Hall', 'room' => '1']);
+    $file = resultFile([
+        ['Application Serial', 'Student Name', 'Program', 'Building', 'Room', 'Level'],
+        ['26200N11157', 'Asiya Akter Riya', 'BBA in Marketing', 'Knowledge Tower', '606', 'Level-6'],
+        ['26200N10917', 'Tazim Islam', '', 'Inspiration Building', '301', ''],
+        ['26200N10918', 'No Room', 'BBA', 'Knowledge Tower', '', 'Level-3'],
+        ['26200N11157', 'Twice', 'BBA', 'Knowledge Tower', '607', 'Level-6'],
+    ]);
+
+    $checked = app(SeatImporter::class)->check($file);
+    expect($checked['total'])->toBe(4)->and($checked['rows'])->toHaveCount(2)->and($checked['errors'])->toHaveCount(2)
+        ->and($checked['errors'][0])->toContain('Line 4')->and($checked['errors'][1])->toContain('also on line 2');
+
+    expect(app(SeatImporter::class)->save($checked['rows']))->toBe(2)
+        ->and(AdmissionSeat::query()->pluck('application_serial')->sort()->values()->all())->toBe(['26200N10917', '26200N11157']);
+    expect(app(SeatImporter::class)->check(resultFile([['Serial', 'Name'], ['1', 'x']]))['errors'][0])->toContain('first row');
+});
+
+it('shows an applicant their seat by serial with the buildings, theirs marked (FR-ADM-17)', function () {
+    AdmissionSeat::create(['application_serial' => '26200N11157', 'student_name' => 'Asiya Akter Riya', 'program_label' => 'BBA in Marketing', 'building' => 'Knowledge Tower', 'room' => '606', 'floor' => 'Level-6']);
+
+    $this->get('/admission/seat-plan')->assertOk()->assertSee('Admission Test Seat Plan')->assertSee('Search Seat');
+    $this->get('/seat-plan')->assertNotFound();   // DIU's address comes from the migration (S08)
+
+    Livewire::test(SeatLookup::class)->set('serial', ' 26200N11157 ')->call('lookup')
+        ->assertSet('answer.status', 'found')->assertSet('answer.room', '606')
+        ->assertSeeInOrder(['Seat Plan Allocated', 'Asiya Akter Riya', '26200N11157', 'BBA in Marketing', 'Knowledge Tower', '606', 'Level-6']);
+    Livewire::test(SeatLookup::class)->set('serial', 'NOPE')->call('lookup')->assertSet('answer.status', 'not_found')->assertSee('Seat Plan Not Found');
+    Livewire::test(SeatLookup::class)->set('serial', '26200N11157')->set('website', 'spam')->call('lookup')->assertSet('answer.status', 'not_found');
+
+    expect((new AdmissionPage)->seatBuildings('Knowledge Tower'))->toBe([]);   // no pictures in Settings yet: no buildings shown
+});
+
 it('opens every admin screen of Academic › Admission', function () {
     $this->actingAs(superAdmin());
     AdmissionContactGroup::create(['name' => ['en' => 'Local Admission']]);
     AdmissionResult::create(['batch_id' => $this->batch->id, 'application_serial' => 'A100', 'student_name' => 'Ayesha', 'result' => 'waiting']);
 
-    foreach ([CircularResource::class, AdmissionHighlightResource::class, AdmissionStepResource::class, AdmissionContactGroupResource::class, ResultBatchResource::class, AdmissionSubscriberResource::class] as $resource) {
+    foreach ([CircularResource::class, AdmissionHighlightResource::class, AdmissionStepResource::class, AdmissionContactGroupResource::class, ResultBatchResource::class, AdmissionSeatResource::class, AdmissionSubscriberResource::class] as $resource) {
         $this->get($resource::getUrl('index'))->assertOk();
     }
     $this->get(CircularResource::getUrl('edit', ['record' => $this->fall]))->assertOk();

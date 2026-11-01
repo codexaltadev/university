@@ -64,6 +64,7 @@ class ContactSettings extends ModuleSettings
                     TagsInput::make('emails')->label(__('settings::settings.fields.emails')),
                     TextInput::make('map_embed')->label(__('settings::settings.fields.map_embed'))
                         ->url()->maxLength(2000)->helperText(__('settings::settings.help.map_embed'))->columnSpanFull(),
+                    TextInput::make('map_link')->label(__('settings::settings.fields.map_link'))->url()->maxLength(500)->columnSpanFull(),
                 ])
                 ->columns(2)
                 ->itemLabel(fn (array $state): ?string => app(Settings::class)->translate($state['name'] ?? null))

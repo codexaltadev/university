@@ -36,12 +36,12 @@ class FacultySettings extends ModuleSettings
             'listing_image' => null,
             'side_links' => [
                 ['label' => ['en' => 'Faculty Members', 'bn' => 'শিক্ষকমণ্ডলী'], 'url' => '/faculty-members'],
-                ['label' => ['en' => 'International Advisor', 'bn' => 'আন্তর্জাতিক উপদেষ্টা'], 'url' => '/article/international-adviser'],
-                ['label' => ['en' => 'Visiting Professors', 'bn' => 'ভিজিটিং প্রফেসর'], 'url' => '/article/visiting-professors'],
+                ['label' => ['en' => 'International Advisor', 'bn' => 'আন্তর্জাতিক উপদেষ্টা'], 'url' => '/international-adviser'],
+                ['label' => ['en' => 'Visiting Professors', 'bn' => 'ভিজিটিং প্রফেসর'], 'url' => '/visiting-professors'],
             ],
             'quick_links' => [
                 ['label' => ['en' => 'Admission Requirements', 'bn' => 'ভর্তির শর্ত'], 'url' => 'https://webbackend.daffodilvarsity.edu.bd/photos/pdf/payment-guidelines.pdf'],
-                ['label' => ['en' => 'Transfer Credits', 'bn' => 'ক্রেডিট ট্রান্সফার'], 'url' => '/article/credit-transfer'],
+                ['label' => ['en' => 'Transfer Credits', 'bn' => 'ক্রেডিট ট্রান্সফার'], 'url' => '/credit-transfer'],
                 ['label' => ['en' => 'Waiver & Scholarship', 'bn' => 'ওয়েভার ও স্কলারশিপ'], 'url' => '/scholarships'],
             ],
         ];

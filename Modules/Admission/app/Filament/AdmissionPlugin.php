@@ -9,6 +9,7 @@ use Modules\Admission\Filament\Resources\Circulars\CircularResource;
 use Modules\Admission\Filament\Resources\ContactGroups\AdmissionContactGroupResource;
 use Modules\Admission\Filament\Resources\Highlights\AdmissionHighlightResource;
 use Modules\Admission\Filament\Resources\ResultBatches\ResultBatchResource;
+use Modules\Admission\Filament\Resources\Seats\AdmissionSeatResource;
 use Modules\Admission\Filament\Resources\Steps\AdmissionStepResource;
 use Modules\Admission\Filament\Resources\Subscribers\AdmissionSubscriberResource;
 
@@ -30,7 +31,7 @@ class AdmissionPlugin implements Plugin
         $panel->pages([AdmissionCluster::class]);
         $panel->resources([
             CircularResource::class, AdmissionHighlightResource::class, AdmissionStepResource::class,
-            AdmissionContactGroupResource::class, ResultBatchResource::class, AdmissionSubscriberResource::class,
+            AdmissionContactGroupResource::class, ResultBatchResource::class, AdmissionSeatResource::class, AdmissionSubscriberResource::class,
         ]);
     }
 

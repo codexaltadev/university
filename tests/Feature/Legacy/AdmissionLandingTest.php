@@ -22,7 +22,7 @@ it('arranges the installed /admission page as DIU\'s and keeps an editor\'s chan
     $page->refresh();
 
     expect($page->getTranslation('excerpt', 'en'))->toStartWith('Browse 51 undergraduate')
-        ->and(array_column($page->quick_links, 'url'))->toBe(['/waiver-calculator', '/article/credit-transfer', '/scholarships', 'https://photoframe.daffodilvarsity.edu.bd/admission-photo-frame'])
+        ->and(array_column($page->quick_links, 'url'))->toBe(['/waiver-calculator', '/credit-transfer', '/scholarships', 'https://photoframe.daffodilvarsity.edu.bd/admission-photo-frame'])
         ->and(array_column($page->getTranslation('content', 'en'), 'type'))->toBe(['admission-apply', 'admission-circulars', 'admission-subscribe', 'admission-highlights', 'admission-steps', 'admission-contacts'])
         ->and($page->getTranslation('content', 'en')[0]['data']['heading'])->toBe('Admission Information')
         ->and(MenuItem::query()->where('menu_id', $page->sidebar_menu_id)->orderBy('sort_order')->get()->map(fn ($i) => $i->title)->all())

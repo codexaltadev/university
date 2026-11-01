@@ -38,11 +38,11 @@ class S15OfficeSites extends Step
     public const OFFICES = [
         'registrar' => [
             'office' => 'registrar-office', 'table' => 'registrar_offices', 'categories' => 'registrar_office_categories',
-            'category' => 'registrar_office_category_id', 'main' => 6, 'others' => 'quick_services', 'old' => '/registrar-office',
+            'category' => 'registrar_office_category_id', 'main' => 6, 'others' => 'quick_services', 'old' => '/registrar-office', 'home' => 'office-of-the-registrar',
         ],
         'proctor' => [
             'office' => 'proctorial-office', 'table' => 'proctor_offices', 'categories' => 'proctor_office_categories',
-            'category' => 'proctor_office_category_id', 'main' => 1, 'others' => 'menu', 'old' => '/proctor-office',
+            'category' => 'proctor_office_category_id', 'main' => 1, 'others' => 'menu', 'old' => '/proctor-office', 'home' => 'proctor-office',
         ],
     ];
 
@@ -117,6 +117,7 @@ class S15OfficeSites extends Step
         }
         $office->forceFill($updates)->save();
         $this->oldAddress($config['old'], $office);
+        $this->oldAddress($config['old'].'/'.$config['home'], $office);   // DIU's new site: the office's own home
 
         // Every row with text is a page; a row with a link only stays a link
         $pages = [];

@@ -18,9 +18,11 @@ use Modules\Department\Filament\Resources\Departments\Pages\EditDepartment;
 use Modules\Department\Models\Department;
 use Modules\Department\Sections\DepartmentsSection;
 use Modules\Department\Settings\DepartmentSettings;
+use Modules\Department\Support\CoordinatorsPage;
 use Modules\Faculty\Models\Faculty;
 use Modules\Menu\Support\MenuEditor;
 use Modules\Menu\Support\MenuTree;
+use Platform\Assignments\AssignmentEngine;
 use Platform\Assignments\ManualPerson;
 use Platform\Assignments\RoleCatalog;
 use Platform\Context\SiteContext;
@@ -305,4 +307,22 @@ it('lets only permitted users into the department screens', function () {
 
     $this->actingAs(superAdmin());
     $this->get(DepartmentResource::getUrl())->assertOk()->assertSee('CSE')->assertSee('FSIT');
+});
+
+it('lists the coordination officers of departments and programs by faculty, as DIU\'s directory', function () {
+    app(RoleCatalog::class)->sync();
+    $engine = app(AssignmentEngine::class);
+    $sorower = ManualPerson::create(['name' => ['en' => 'Mr. Md. Sorower Mal'], 'designation' => ['en' => 'Coordination Officer'], 'email' => 'cseoffice5@example.edu', 'phone' => '+8801847140040', 'is_active' => true]);
+    $engine->assign($sorower, $this->cse, 'coordinator', ['overrides' => ['extension' => '15114']]);
+    $afrina = ManualPerson::create(['name' => ['en' => 'Ms. Afrina Sultana'], 'designation' => ['en' => 'Assistant Coordination Officer'], 'is_active' => true]);
+    $engine->assign($afrina, $this->cse, 'coordinator', ['role_label' => ['en' => 'MSc in CSE']]);
+    $engine->assign(ManualPerson::create(['name' => ['en' => 'Hidden One'], 'is_active' => true]), $this->cse, 'coordinator', ['is_public' => false]);
+
+    $this->get('/coordination-officers')->assertOk()
+        ->assertSeeInOrder(['Coordination Officer Directory', 'Connect with faculty coordination officers', 'Faculty of Science and Information Technology',
+            'Mr. Md. Sorower Mal', '(CSE)', 'Coordination Officer', 'cseoffice5@example.edu', 'Cell: +8801847140040', 'Ext: 15114', 'Ms. Afrina Sultana', '(MSc in CSE)'])
+        ->assertSee('tel:+8801847140040', false)->assertSee('>AS<', false)
+        ->assertDontSee('Hidden One')->assertDontSee('Faculty of Engineering');
+
+    expect(moduleView('Department', 'coordinators', ['page' => new CoordinatorsPage]))->toContain('Mr. Md. Sorower Mal')->toContain('(MSc in CSE)');
 });

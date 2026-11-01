@@ -34,7 +34,8 @@
             "admission.contact-group": "Modules\\Admission\\Models\\AdmissionContactGroup",
             "admission.result-batch": "Modules\\Admission\\Models\\ResultBatch",
             "admission.result": "Modules\\Admission\\Models\\AdmissionResult",
-            "admission.subscriber": "Modules\\Admission\\Models\\AdmissionSubscriber"
+            "admission.subscriber": "Modules\\Admission\\Models\\AdmissionSubscriber",
+            "admission.seat": "Modules\\Admission\\Models\\AdmissionSeat"
         },
         "custom_permissions": [],
         "provides": {

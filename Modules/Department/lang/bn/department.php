@@ -51,5 +51,12 @@ return [
         'listing_help' => 'ওপরের শিরোনাম, লেখা ও ছবি। খালি: theme-এর নিজের।',
         'title' => 'শিরোনাম', 'text' => 'লেখা', 'image' => 'ছবি',
         'quick_links' => 'Quick Links',
+        'coordinators' => 'কো-অর্ডিনেশন অফিসার page (/coordination-officers)',
+        'coordinators_help' => 'শিরোনাম অংশ। অফিসার হলেন প্রতিটি বিভাগ ও program-এর Coordinator ভূমিকার মানুষ।',
+    ],
+    'coordinators' => [
+        'title' => 'কো-অর্ডিনেশন অফিসার',
+        'cell' => 'মোবাইল:', 'ext' => 'Ext:',
+        'none' => 'কোনো কো-অর্ডিনেশন অফিসার পাওয়া যায়নি', 'none_text' => 'এই মুহূর্তে তালিকায় কোনো কো-অর্ডিনেশন অফিসার নেই।',
     ],
 ];

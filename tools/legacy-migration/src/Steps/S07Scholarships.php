@@ -33,7 +33,7 @@ class S07Scholarships extends Step
         return ['scholarship'];
     }
 
-    /** DIU's /scholarship sidebar (DIUFronend scholarship/layout): the named scholarships are articles here (/article/{slug}) */
+    /** DIU's /scholarship sidebar (DIUFronend scholarship/layout): the named scholarships are pages here (/{slug}, S15A) */
     public const SIDE = [
         'chairman-endowment-fund-scholarship' => 'Chairman Endowment Fund Scholarship',
         'lutfar-rahman-scholarship' => 'Lutfar Rahman Scholarship',
@@ -67,8 +67,10 @@ class S07Scholarships extends Step
                 'details' => Normalizer::en(Normalizer::html($row->detail)),
                 'sort_order' => (int) $row->serial,
                 'is_active' => (bool) $row->publication_status,
-            ], after: fn (Scholarship $s, bool $created) => $this->keepSlug($s, $row->slug, $created),
-                existing: $this->same(Scholarship::class, ['parent_id' => null, 'title->en' => $title]));
+            ], after: function (Scholarship $s, bool $created) use ($row): void {
+                $this->keepSlug($s, $row->slug, $created);
+                $this->oldAddress('/int-scholarship/'.$row->slug, $s);   // DIU's new site (int-scholarship/[slug])
+            }, existing: $this->same(Scholarship::class, ['parent_id' => null, 'title->en' => $title]));
 
             if ((int) $row->parent_category_id !== 0) {
                 $this->report->review("Scholarship \"{$title}\" had a parent category ({$row->parent_category_id}); kept as a scholarship of its own.");
@@ -155,7 +157,7 @@ class S07Scholarships extends Step
 
         settings()->save('scholarship', array_filter([
             'side_links' => blank($now['side_links'] ?? null) ? $links([
-                ...array_map(fn (string $slug, string $name): array => [$name, '/article/'.$slug], array_keys(self::SIDE), self::SIDE),
+                ...array_map(fn (string $slug, string $name): array => [$name, '/'.$slug], array_keys(self::SIDE), self::SIDE),
                 ['Waiver and Scholarship FAQ', S17Faqs::WAIVER_FAQ],
             ]) : null,
             'quick_links' => ($now['quick_links'] ?? null) === $installed['quick_links'] ? $links(self::QUICK) : null,
@@ -163,7 +165,7 @@ class S07Scholarships extends Step
 
         $this->oldAddress('/scholarship/diu-scholarship', '/'.Scholarship::PATH);
         foreach (array_keys(self::SIDE) as $slug) {
-            $this->oldAddress('/scholarship/'.$slug, '/article/'.$slug);
+            $this->oldAddress('/scholarship/'.$slug, '/'.$slug);
         }
     }
 }

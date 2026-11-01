@@ -3,6 +3,9 @@
 namespace Legacy\Migration\Steps;
 
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Str;
+use Legacy\Migration\Support\Normalizer;
 use Modules\HeaderFooter\Support\Regions;
 use Modules\Menu\Support\MenuEditor;
 use Platform\Context\FallbackResolver;
@@ -40,6 +43,7 @@ class S15MainSiteMenus extends Step
     protected function handle(): void
     {
         $data = json_decode(File::get(self::SNAPSHOT), true);
+        $this->flipbooks = $this->flipbooks();
         $this->report->source('diu-site-menus.json', count($data['primary']) + count($data['topbar']) + count($data['services']) + count($data['footer_columns']));
 
         $this->menu('primary', $data['primary'], 'mega');
@@ -70,6 +74,20 @@ class S15MainSiteMenus extends Step
         $this->report->saved('menu_menus', $created);
     }
 
+    /** @var array<string, string> a flipbook's address on webbackend (lower case, no "/" at the end) → its document here */
+    protected array $flipbooks = [];
+
+    /** DIU's menus open a flipbook on webbackend (…/academic/academic-handbook/): here the document's page reads it (S17D) */
+    protected function flipbooks(): array
+    {
+        if (! Schema::connection('legacy')->hasTable('flipbooks')) {
+            return [];
+        }
+
+        return $this->rows('flipbooks')->filter(fn ($row): bool => filled($row->file_name) && filled($row->slug))
+            ->mapWithKeys(fn ($row): array => [strtolower(Normalizer::FILE_BASE.trim((string) $row->file_name, '/')) => '/downloads/'.Str::slug((string) $row->slug)])->all();
+    }
+
     /** @param array<string, mixed> $item */
     protected function item(array $item, int $depth): array
     {
@@ -77,7 +95,7 @@ class S15MainSiteMenus extends Step
 
         return [
             'type' => $url === null ? 'heading' : 'url',
-            'url' => $url,
+            'url' => $this->flipbooks[rtrim(strtolower((string) $url), '/')] ?? Normalizer::pagePath($url),
             'title' => ['en' => (string) $item['title']],
             'icon' => $item['icon'] ?? null,
             'open_in_new_tab' => (bool) ($item['new_tab'] ?? false),

@@ -52,10 +52,24 @@ class Normalizer
     /** Paths of the old site's own files inside its texts (DIU RichHtmlContent: these go to webbackend) */
     public const FILE_PATHS = ['/photos', '/images', '/storage', '/brochure', '/labGallery', '/admin'];
 
+    /** A legacy flipbook's folder on webbackend ("academic/academic-handbook") → the original PDF its viewer reads (PDF Flip: source="PDF.pdf") */
+    public static function flipbookPdf(?string $folder): ?string
+    {
+        $folder = static::filePath($folder);
+
+        return $folder === null ? null : rtrim($folder, '/').'/PDF.pdf';
+    }
+
+    /** DIU's article address → the page's here: /article/{slug} → /{slug} (S15A: articles are general pages); others unchanged */
+    public static function pagePath(?string $url): ?string
+    {
+        return $url === null ? null : (preg_replace('~^(?:https?://(?:www\.)?daffodilvarsity\.edu\.bd)?/article/([^/?#]+)~i', '/$1', $url) ?? $url);
+    }
+
     /**
      * Rich text of the old site with its relative pictures (and links to its files) pointing at
-     * webbackend, as DIU's frontend shows them; page links (/article/…) stay. S03 later swaps them
-     * for Media Library addresses.
+     * webbackend, as DIU's frontend shows them; page links /article/{slug} become /{slug} (pagePath).
+     * S03 later swaps the files for Media Library addresses.
      */
     public static function legacyHtml(?string $value): ?string
     {
@@ -66,6 +80,9 @@ class Normalizer
 
         $html = preg_replace_callback('~(<img\b[^>]*?\ssrc\s*=\s*)(["\'])(?!https?:|//|data:)([^"\']+)\2~i',
             fn (array $m): string => $m[1].$m[2].self::FILE_BASE.ltrim($m[3], '/').$m[2], $html);
+
+        $html = preg_replace_callback('~(<a\b[^>]*?\shref\s*=\s*)(["\'])((?:https?://(?:www\.)?daffodilvarsity\.edu\.bd)?/article/[^"\']*)\2~i',
+            fn (array $m): string => $m[1].$m[2].static::pagePath($m[3]).$m[2], $html);
 
         return preg_replace_callback('~(<a\b[^>]*?\shref\s*=\s*)(["\'])(/[^"\']*)\2~i',
             fn (array $m): string => collect(self::FILE_PATHS)->contains(fn (string $p): bool => str_starts_with($m[3], $p.'/'))

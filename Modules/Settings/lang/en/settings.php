@@ -31,6 +31,7 @@ return [
         'phones' => 'Phones',
         'emails' => 'Emails',
         'map_embed' => 'Google Map embed link',
+        'map_link' => 'Google Maps link (to open the map)',
         'platform' => 'Platform',
         'other' => 'Other',
         'label' => 'Name',

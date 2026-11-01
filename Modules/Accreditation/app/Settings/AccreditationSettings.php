@@ -40,7 +40,7 @@ class AccreditationSettings extends ModuleSettings
             'image' => null,
             'quick_links' => [
                 ['label' => ['en' => 'Tuition Fees', 'bn' => 'টিউশন ফি'], 'url' => '/tuition-fees'],
-                ['label' => ['en' => 'Transfer Credits', 'bn' => 'ক্রেডিট ট্রান্সফার'], 'url' => '/article/credit-transfer'],
+                ['label' => ['en' => 'Transfer Credits', 'bn' => 'ক্রেডিট ট্রান্সফার'], 'url' => '/credit-transfer'],
                 ['label' => ['en' => 'Waiver & Scholarship', 'bn' => 'ওয়েভার ও স্কলারশিপ'], 'url' => '/scholarships'],
             ],
         ];
