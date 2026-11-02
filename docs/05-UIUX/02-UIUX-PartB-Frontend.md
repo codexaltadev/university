@@ -429,3 +429,91 @@ Test: blank theme তৈরি ও (build-এর পরে) ThemeChecker pass, �
 | Notice / News / Event | `NoticeBoardPage`, `NoticePage`, `NewsPage`, `EventPage` presenter | listing + detail override |
 | Admission / Fee / Waiver | Admission circular, `TuitionPage`, Waiver Livewire (`WaiverCalculatorForm`) | পাতার frame; calculator-এর হিসাব ও `wire:` contract অপরিবর্তিত |
 | Search | kernel `theme::search` + `instant-search` Livewire | override |
+
+---
+
+## 12. Modern theme — design (ধাপ ২, 2026-11-02)
+
+**University Modern** (`themes/modern`): যেকোনো university-র জন্য modern, minimal theme — সাদা জায়গা, শান্ত রং, বড় পরিষ্কার
+typography, card grid, হালকা animation। কোনো university-র নাম, link, ছবি বা রং theme-এ নয়; লেখা, logo, রং Admin থেকে।
+Static mockup (desktop 1280 + phone 390, "Example University" demo লেখা): [`mockups/modern/index.html`](mockups/modern/index.html)
+— home, program listing, program page, microsite home, notice board, notice, news & events, detail, admission + tuition + waiver,
+search, 404। Owner-এর reference link দেওয়া হয়নি; ভাব নেওয়া হয়েছে সাধারণ আধুনিক university / SaaS site-এর ধরন থেকে (কপি নয়)।
+
+### 12.1 Design token (theme.json default — Admin › Themes › Design থেকে বদলায়)
+
+| Token | Default | ব্যবহার |
+|---|---|---|
+| `color-primary` | `#1D4ED8` (নীল, সাদায় 6.7:1) | link, primary button, active tab, eyebrow |
+| `color-secondary` | `#0F172A` (প্রায় কালো slate) | footer, microsite bar, CTA band, active chip |
+| `color-accent` | `#F59E0B` (amber) | গাঢ় background-এ eyebrow / highlight — সাদায় ছোট text নয় |
+| `color-bg` / `color-surface` | `#FFFFFF` / `#F5F7FA` | page / বিকল্প section, page hero |
+| `color-text` / `color-text-muted` | `#111827` / `#4B5563` | body / সহায়ক text (দুটোই AA) |
+| `color-border` | `#E5E7EB` | card, divider, input |
+| `radius-sm / md / lg` | 8 / 12 / 20px | input / badge-box / card; button ও chip pill (999px) |
+| `shadow-card` | `0 1px 2px rgba(15,23,42,.06), 0 8px 24px -12px rgba(15,23,42,.12)` | card |
+| `container-max` | 1240px | সব section-এর প্রস্থ, পাশে 20px gutter |
+| Spacing | kernel `--space-*` (4px ভিত্তি); section 80px (phone 56px) | — |
+
+রং শুধু token থেকে — theme-এর view / CSS-এ hex নেই (T-2); Tailwind palette (`gray-*`, `blue-*`) ব্যবহার হয় না, শুধু token utility
+(`bg-primary`, `text-muted`, `border-border`, `bg-surface` …), যাতে Admin-এর রং পুরো site-এ চলে।
+
+### 12.2 Typography (সব font bundled, কোনো external CDN নয়)
+
+| | English | বাংলা |
+|---|---|---|
+| Font | **Inter** variable (400–800, OFL, `@fontsource-variable/inter`) heading ও body | **Noto Sans Bengali** variable (OFL) |
+| Body | 16px / 1.65 | 16px / 1.85 (`:lang(bn)`, যুক্তাক্ষর) |
+| Scale | 14 · 16 · 18 · 20 · 24 · 30 · 40 · 52 · 64 (fluid `clamp()`) | একই; heading-এ letter-spacing 0 |
+| Heading | 700, letter-spacing −0.02em (display −0.035em) | 700, letter-spacing 0 |
+
+`theme.json "fonts": ["Inter", "Noto Sans Bengali"]` — kernel Google Fonts চাইবে না; Admin অন্য font বাছলে তবেই।
+
+### 12.3 Component
+
+| Component | চেহারা |
+|---|---|
+| Button | pill, 44px উঁচু; `btn--primary` ভরা primary, `btn` সাদা + border, `btn--secondary` secondary ভরা, `btn--outline` স্বচ্ছ |
+| Card | সাদা, 1px border, radius-lg, হালকা shadow; hover-এ 2px উপরে + border primary-র আভা; media card = উপরে 16:10 ছবি |
+| Badge | ছোট pill, primary-র 10% আভা; success / warning / danger / muted রূপ |
+| Chip (filter) | pill border; চালু = secondary ভরা |
+| Tab | নিচে রেখা, চালু tab-এ primary রেখা; phone-এ পাশে scroll |
+| Accordion | border-এর তালিকা, `+` → `−`, খোলা item-এর শিরোনাম primary |
+| Table | header ছোট uppercase muted, সারির মাঝে রেখা, phone-এ পাশে scroll |
+| Form | 48px input, radius-md, focus-এ primary ring |
+| Pagination | গোল বোতাম, চালু = secondary |
+| Breadcrumb | page hero-র উপরে ছোট muted, link primary |
+| Hero | বাম লেখা (eyebrow, বড় heading, text, দুই button), ডানে radius-lg ছবি; phone-এ ছবি উপরে |
+| Empty state | মাঝখানে muted লেখা, surface box |
+| Date box | 56px box: দিন বড়, মাস ছোট — notice / event তালিকায় |
+
+### 12.4 Layout
+
+* **Header** (`modern`, একমাত্র variant + `minimal`): উপরে পাতলা utility row (topbar menu + ভাষা, ছোট muted); মূল row 72px —
+  logo (+ microsite-এ entity নাম), মাঝে primary menu (submenu থাকলে **mega panel**: পুরো প্রস্থে column ধরে), ডানে search ও
+  CTA button (theme option, খালি = নেই); scroll-এ সাদা blur sticky। 1024px-এর নিচে logo + search + ☰, menu ডান দিক থেকে drawer।
+* **Microsite bar**: header-এর নিচে secondary রঙের পাতলা bar — entity নাম, parent link।
+* **Footer** (`columns`, `simple`): secondary background; প্রথম column logo + tagline + social, তারপর Admin-এর footer column
+  (না থাকলে footer-1..3 menu), নিচে copyright (region-এর, না থাকলে site name)।
+* **Page template**: `default` (page hero + 760px লেখা), `full-width`, `with-sidebar` (বাম 300px), `right-sidebar`, `landing`
+  (hero ছাড়া, block-গুলো পুরো প্রস্থে)। Page hero = surface background, breadcrumb, শিরোনাম, excerpt।
+* **Microsite template** `standard`: microsite bar + homepage builder-এর section।
+
+### 12.5 পাতা
+
+| পাতা | গঠন (mockup অনুযায়ী) |
+|---|---|
+| Home | hero (core.hero / slider) → program finder (search + level chip) → statistics → notice + event দুই column → faculties grid → news card → admission CTA band → testimonials → gallery → partners / recognition logo। ক্রম ও চালু-বন্ধ Admin-এর homepage builder-এ |
+| Program listing | page hero + search / level / faculty filter → media card grid (level badge, মেয়াদ, credit) → pagination |
+| Program page | microsite bar → hero (badge, নাম, summary, Apply / brochure) → মূল তথ্যের stat row → tab (overview, eligibility, curriculum, fees, careers) + ডানে key facts / quick links |
+| Microsite home | microsite bar → page-hero section (নাম, about, ছবি) → programs → notices + head |
+| Notice board / notice | page hero + on-board / archive chip + filter → date-box তালিকা (urgent badge) → pagination; notice: hero, লেখা, attachment card, পাশে আরও notice |
+| News / event | featured বড় card + 3-column grid, category chip; detail: 720px লেখা, বড় ছবি, event-এ তারিখ / সময় / স্থান box |
+| Admission / tuition / waiver | ধাপের card, fee table tab সহ, calculator card (বামে form, ডানে ফল) — হিসাব module-এর, শুধু frame |
+| Search | বড় search box, ধরন অনুযায়ী chip, ফলাফল তালিকা |
+| 404 / 503 | বড় সংখ্যা, এক লাইন ব্যাখ্যা, search + home button |
+
+### 12.6 Motion ও accessibility
+
+Card hover 150ms, section-এ fade-up একবার (IntersectionObserver, `prefers-reduced-motion`-এ বন্ধ); focus ring 2px primary;
+touch target ≥ 44px; skip link; সব রং-জোড়া AA; 360px-এ পাশে scroll নেই।

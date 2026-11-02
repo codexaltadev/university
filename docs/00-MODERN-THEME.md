@@ -138,6 +138,7 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | ধাপ | অবস্থা | কোথায় |
 |---|---|---|
 | ১ Audit | ✔ | UI/UX Part B §11 |
+| ২ Design + mockup | ✔ | UI/UX Part B §12, `docs/05-UIUX/mockups/modern/index.html` |
 
 ## Decisions
 
@@ -146,3 +147,5 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | D-1 | সব ধাপ এক branch `theme/modern`-এ (ধাপভিত্তিক `theme/modern-m{n}` নয়) | Owner-এর এই কাজের নির্দেশ |
 | D-2 | Cloud machine-এ PHP 8.4 পাওয়া যায়নি (ondrej PPA network policy-তে বন্ধ) — PHP 8.3 + `composer install --ignore-platform-req=php` দিয়ে test | Project code-এ 8.4-only syntax নেই; owner-এর machine-এ 8.4-এ আবার চালানো উচিত |
 | D-3 | Module Settings-এর DIU default লেখা (§11.1) এই কাজে বদলানো হবে না | Default বদলালে DIU live site-এর লেখা বদলে যেতে পারে (scope: default theme-এর চেহারা অপরিবর্তিত); আলাদা ধাপ সুপারিশ |
+| D-4 | Design: Inter + Noto Sans Bengali (bundled, npm `@fontsource-variable`), primary `#1D4ED8`, secondary `#0F172A`, accent `#F59E0B`, pill button, radius 8/12/20 | Modern, শান্ত, generic; owner reference link দেননি — নিজের সুপারিশ |
+| D-5 | Mockup = static HTML (`docs/05-UIUX/mockups/modern/`), header / footer একটি ছোট JS দিয়ে সব পাতায় | পর্যালোচনার জন্য যথেষ্ট, theme code নয় |
