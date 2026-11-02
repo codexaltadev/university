@@ -1,0 +1,129 @@
+# Modern theme — কাজ দেওয়ার ধাপ
+
+নতুন theme **University Modern** (`themes/modern`): modern ও minimal, যেকোনো university ব্যবহার করতে পারবে,
+ভবিষ্যতে এই CMS-এর default theme। DIU-র হুবহু কপি বর্তমান `themes/default` যেমন আছে থাকবে।
+
+প্রতিটি ধাপ = একটি cloud session (claude.ai/code, [00-CLOUD-SESSION.md](00-CLOUD-SESSION.md)) = একটি branch / Pull Request।
+নিচের prompt হুবহু কপি করে দিন। প্রতিটি ধাপ শেষে Claude থামবে; "যাচাই করুন" তালিকা দেখে "oky" / "push" বলুন,
+PR merge করুন, তারপর পরের ধাপ।
+
+## মূল সিদ্ধান্ত (সব ধাপে প্রযোজ্য)
+
+| বিষয় | সিদ্ধান্ত |
+|---|---|
+| নাম | slug `modern`, নাম "University Modern" |
+| কার জন্য | যেকোনো university — theme-এ কোনো DIU নাম, link, লেখা, ছবি বা রঙ নয়; logo, রঙ, লেখা সব Admin থেকে |
+| চেহারা | modern, minimal: সাদা জায়গা, শান্ত রঙ, বড় পরিষ্কার typography, card grid, হালকা animation |
+| মান | WCAG AA, mobile-first, Lighthouse mobile ≥ 90, বাংলা ও English দুটোতেই সুন্দর |
+| Content | আমাদের বিদ্যমান module data দিয়েই — নতুন content field নয়; থাকলে ফাঁক জানাবে |
+| নিয়ম | default theme-এর মতো: no `@php`, রঙ শুধু token, logic module presenter-এ, ThemeChecker pass |
+| Default হওয়া | শেষ ধাপে `config/platform.php` → `themes.default` বদলে; DIU site `default` theme-ই চালাবে |
+| Branch | `theme/modern-m{n}` — `main`-এ সরাসরি নয় |
+
+## ধাপ ০ — প্রস্তুতি (নিজে করবেন)
+
+1. এই file push করা আছে কিনা দেখুন (cloud session GitHub থেকে পড়ে)।
+2. claude.ai/code-এ environment তৈরি (setup script `bash scripts/cloud-setup.sh`)।
+3. পছন্দের ২–৩টি modern university / CMS site-এর link রাখুন (ভাব নেওয়ার জন্য, কপি নয়) — ধাপ ১-এ দেবেন।
+
+## ধাপ ১ — যাচাই: theme-এর পথে বাধা কোথায় (code বদল নয়)
+
+```
+docs/00-MODERN-THEME.md পড়ো — নতুন theme "modern"-এর ধাপ ১।
+Theme Guide (docs/07-DevGuide/02-Theme-Development-Guide.md), SAD Part B §6/§8, UI/UX Part B পড়ো,
+themes/default কী কী override করে দেখো। তারপর একটা audit লিখো docs/05-UIUX/02-UIUX-PartB-Frontend.md-এর
+নতুন অংশে ("Modern theme — audit"):
+- কোন module / kernel জায়গায় DIU-নির্দিষ্ট লেখা, link, ছবি বা ধারণা আছে যা অন্য university-র theme-কে বাধা দেবে
+  (presenter, settings-এর default, theme.json section default, lang file)
+- theme override না করলে কোন module পাতা কেমন দেখায় (module-এর নিজের view) — কোনগুলো ভাঙা / অসুন্দর
+- Theme Guide-এর `uwms:theme:make` command code-এ নেই — কী লাগবে
+- কোন content দেখানোর মতো data আছে (home, program, microsite, notice, event, admission, fee/waiver ...)
+কিছু বদলাবে না; তালিকা ও সুপারিশ দিয়ে থামো।
+```
+
+**যাচাই করুন:** বাধার তালিকা বোধগম্য কিনা; কোনগুলো আগে ঠিক করা হবে বলে দিন (দরকার হলে "ধাপ ১ক: এগুলো ঠিক করো")।
+
+## ধাপ ২ — Design (doc + mockup)
+
+```
+docs/00-MODERN-THEME.md-এর ধাপ ২। ধাপ ১-এর audit ধরে "modern" theme-এর design লিখো UI/UX Part B-এর
+নতুন অংশে: design token (রঙ — Admin থেকে বদলানো যায় এমন primary/secondary/accent/surface, spacing,
+radius, shadow), typography scale (English + বাংলা font, সব bundled, কোনো external font CDN নয়),
+component (button, card, badge, tab, accordion, table, form, pagination, breadcrumb, hero, empty state),
+layout (header + mega menu, footer, page templates, microsite template) আর পাতাগুলো: home, program listing +
+program page, faculty / department microsite home, notice board + notice, news / event, admission + tuition +
+waiver calculator, search, 404। Reference ভাব: <আপনার link>। প্রতিটি পাতার static HTML mockup দাও
+(desktop + phone), DIU-র নাম নয় — "Example University" demo লেখা। শেষে আমার "oky"-এর জন্য থামো।
+```
+
+**যাচাই করুন:** mockup দেখে রঙ, font, ঘনত্ব, home-এর section ক্রম পছন্দ কিনা। মন্তব্য দিয়ে সংশোধন করান, তারপর "oky"।
+
+## ধাপ ৩ — কাঠামো: scaffold command + theme চালু
+
+```
+docs/00-MODERN-THEME.md-এর ধাপ ৩। (১) Theme Guide §3-এর `php artisan uwms:theme:make {slug} [--from=] [--blank]`
+command বানাও (platform/Console/Commands, test সহ)। (২) `uwms:theme:make modern --blank` দিয়ে themes/modern:
+theme.json (generic — কোনো DIU default নয়), layouts (main + microsite), token থেকে Tailwind 4.3.3, bundled font,
+header (mega menu, menu locations), footer, logo / identity Admin থেকে, 404 / 503। override না করা পাতা module-এর
+view-এ চলবে। ThemeChecker / ThemeEngineTest pass, default theme-এর কোনো test ভাঙবে না। Admin থেকে theme বদলে
+দুটোই চলে দেখাও। থামো।
+```
+
+**যাচাই করুন:** নিজের machine-এ branch এনে Admin › Themes-এ modern চালু করে site ঘুরে দেখুন; আবার default-এ ফিরলে DIU site অক্ষত কিনা।
+
+## ধাপ ৪ — Homepage section
+
+```
+docs/00-MODERN-THEME.md-এর ধাপ ৪। ধাপ ২-এর design অনুযায়ী modern theme-এর homepage section: hero,
+program finder, notice + event, news, faculties, admission / fee call-to-action, rankings / achievements,
+testimonials, gallery, partners। প্রতিটি Admin-এর homepage builder থেকে চালু-বন্ধ ও লেখা বদলানো যায়, data module
+source থেকে, কোনো hard-coded লেখা নয়। বাংলা ও phone-এ দেখাও। থামো।
+```
+
+## ধাপ ৫ — মূল পাতা (module view override)
+
+একবারে বড় না করে দুই ভাগে:
+
+```
+docs/00-MODERN-THEME.md-এর ধাপ ৫ক। modern theme-এ override: program listing + program page, faculty /
+department / program microsite home, notice board + notice, news ও event (listing + detail), search। Presenter
+(Support\*Page) পুনর্ব্যবহার করো; কিছু কম পড়লে presenter-এ যোগ করো, theme-এ logic নয়। থামো।
+```
+
+```
+ধাপ ৫খ। admission, tuition fees + fee calculator, waiver calculator ও scholarship, documents (flipbook),
+gallery, office microsite, administration / people, FAQ, contact। Calculator-এর হিসাব বদলাবে না। থামো।
+```
+
+## ধাপ ৬ — বাকি module ও page template
+
+```
+docs/00-MODERN-THEME.md-এর ধাপ ৬। বাকি সব module-এর পাতা modern design-এ (অথবা module view যথেষ্ট ভালো হলে
+তালিকা দিয়ে রেখে দাও), page templates (standard, full width, left / right sidebar, landing), HTML block-এর
+editor_css। থামো।
+```
+
+## ধাপ ৭ — মান যাচাই
+
+```
+docs/00-MODERN-THEME.md-এর ধাপ ৭। modern theme-এর জন্য Browser test (JS error / ভাঙা ছবি নেই, desktop /
+phone / বাংলা), axe (critical / serious শূন্য), Lighthouse mobile ≥ 90, 360–1440px-এ পাশে scroll নেই,
+print.css, reduced motion, screenshot.png, version 1.0.0। default theme-এর test-ও pass। ফল জানিয়ে থামো।
+```
+
+**যাচাই করুন:** এখানে full Browser suite চলবে — এটা আপনি নিজে অনুমতি দিচ্ছেন (সময় লাগে)।
+
+## ধাপ ৮ — Default করা ও doc
+
+```
+docs/00-MODERN-THEME.md-এর ধাপ ৮। নতুন install-এ modern = default theme (config platform.themes.default,
+BRL-THEME-01), বর্তমান DIU install `default` theme-এই থাকবে — দুটো পথই test করো। Theme Guide-এ modern-কে
+উদাহরণ করো, User Manual-এ theme বদলানো ও রঙ / logo Admin থেকে বদলানোর অংশ, HANDOFF আপডেট। থামো।
+```
+
+## মনে রাখবেন
+
+- একসাথে দুটো session-এ একই theme-এ কাজ দেবেন না — conflict হবে।
+- প্রতিটি ধাপ merge হওয়ার পরেই পরের session শুরু করুন (নতুন session `main` থেকে শুরু হয়)।
+- DIU-এর live চেহারা (default theme) এই কাজে বদলাবে না; বদলালে সেটা ভুল — Claude-কে জানান।
+- Credit বাঁচাতে: ধাপ ১–৩ ছোট ও দ্রুত; ধাপ ৫–৭ বড়।
