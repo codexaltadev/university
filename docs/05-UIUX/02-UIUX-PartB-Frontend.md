@@ -375,3 +375,57 @@ Default theme-এর test (`tests/Feature/Theme/DefaultThemeAssetsTest.php`) য
 |---|---|---|
 | UXQ-03 *(✔ সমাধান, সংশোধিত)* | Default theme-এর রং ও style? | **DIU live site (daffodilvarsity.edu.bd, ২০২৬)** থেকে: Primary `#034EA2`, Navy `#002652`, Green `#39B54A`, Surface `#F3F4F9`; font Montserrat + Manrope; blue→navy gradient button। (প্রথমে পুরনো `diu` project-এর template রং নেওয়া হয়েছিল — সেটি বর্তমান branding নয়, বাদ।) Style: বড় photo hero, quick-link tile, story-ভিত্তিক section, প্রচুর whitespace। BRAC University site (bracu.ac.bd) Cloudflare-এর কারণে স্বয়ংক্রিয়ভাবে দেখা যায়নি |
 | UXQ-04 *(✔ সমাধান)* | Clickable HTML prototype development-এর আগে? | হ্যাঁ — প্রথম সংস্করণ তৈরি: [University Website Prototype](https://claude.ai/artifact/LYk8PswwPuktGYkXwFHLh5) (Main Homepage, CSE Microsite, BSc in CSE Program page, Admin Notice form — link দিয়ে যুক্ত; Admin form-এ Admin / Department user দৃশ্য বদলানো যায়)। Team ও stakeholder review-এর পর Filament / Blade-এ বাস্তবায়ন |
+
+---
+
+## 11. Modern theme — audit (ধাপ ১, 2026-11-02)
+
+নতুন theme **University Modern** (`themes/modern`, [00-MODERN-THEME.md](../00-MODERN-THEME.md))-এর পথে বাধা কোথায় — code পড়ে তালিকা।
+ফলাফল: theme engine (slot, fallback resolver, token, section, override) অন্য theme-এর জন্য প্রস্তুত; বাধা মূলত **DIU-র লেখা
+module Settings-এর default-এ** আর **core homepage section-এর view না থাকায়**।
+
+### 11.1 DIU-নির্দিষ্ট লেখা / link / ছবি (অন্য university-কে বাধা দেয়)
+
+| জায়গা | কী | প্রভাব | সুপারিশ |
+|---|---|---|---|
+| `Modules/*/app/Settings/*Settings.php` default (News, Events, Faq, Gallery, Scholarship, Testimonials, Tuition, Facilities, Partners, Transport, Newsletter, International, Admission `office_name/address`, Alumni `portal_url`, Faculty quick-link PDF) | "Daffodil International University", "DIU", "Daffodil Smart City", `daffodilvarsity.edu.bd` link | Admin কিছু না লিখলে নতুন install-এ পাতার intro-তে DIU দেখায় — theme যাই হোক | Default-গুলো generic করা ও DIU-র লেখা DIU-র install-এ seed / legacy step-এ রাখা — **আলাদা ধাপ** (DIU live site-এর লেখা বদলে যাওয়ার ঝুঁকি, তাই এই কাজে নয়; Decisions D-3) |
+| `FacultyMemberSettings` placeholder / fallback `https://faculty.daffodilvarsity.edu.bd` | FMS host | অন্য university-র profile link DIU-তে যায় | `.env` / setting-এ host, fallback খালি — আলাদা ধাপ |
+| `themes/default/theme.json` section default (hero video `daffodilvarsity.edu.bd/hero.mp4`, header CTA admission link, footer band virtual tour) ও section label "DIU — …" | শুধু default theme | modern-এ প্রভাব নেই (theme-এর নিজস্ব theme.json) | কিছু নয় |
+| `DesignTokens::DEFAULTS` (DIU blue / navy / green, Montserrat + Manrope) | kernel fallback | theme token না দিলে DIU রং | Modern theme.json-এ সব token নিজের দেয় — kernel বদল লাগে না |
+| `MakeModuleCommand` author "DIU Web Team" | scaffold | — | কিছু নয় (theme নয়) |
+| `MicrositeResolver` "/department/bba/program/…" | শুধু comment | — | কিছু নয় |
+| Lang file (`Modules/*/lang`) | কয়েকটি বাক্যে "DIU" (News, Events, Faq, Scholarship) | কিছু label-এ DIU | Settings-এর সাথে একই আলাদা ধাপে |
+
+### 11.2 Theme override না করলে module পাতা কেমন দেখায়
+
+Module-এর নিজের view **token + UI class contract (§9.1)** দিয়ে লেখা, inline style-এ token (`var(--space-*)`, `var(--color-*)`) — তাই
+contract class (`btn`, `card`, `badge`, `table`, `prose`, `accordion__*`, `home-section*`, `container`) ভালোভাবে style করলে
+পাতাগুলো ব্যবহারযোগ্য ও পরিষ্কার দেখায়। Contract-এর বাইরে যা module view ব্যবহার করে, কিন্তু §9.1-এ নেই:
+`chip`, `chip-active` (notice), `tabs`, `tabs__list`, `tabs__tab`, `tabs__panel` (gallery / faq tab), `badge-primary` — modern theme
+এগুলোও style করবে (§9.1-এ যোগের সুপারিশ)।
+
+| অবস্থা | পাতা |
+|---|---|
+| **ভাঙা** (view নেই) | Core homepage section — `core.hero`, `core.statistics`, `core.cta`, `core.rich-text`, `core.image-text`, `core.html`, `core.spacer`: `Modules/Homepage/resources/views/` খালি, তাই theme না দিলে `sections/generic`-এর সাদা তালিকা। Theme-কে `sections/core-*.blade.php` দিতেই হবে |
+| **অসুন্দর** (চলে, কিন্তু সাধারণ) | Notice board / notice, news / event listing ও detail, program listing / program page, faculty / department / program microsite home, admission, tuition, waiver calculator, scholarship, gallery, FAQ, office microsite, search — module view-এ hero, breadcrumb-এর চেহারা, card grid নেই |
+| **যথেষ্ট** | Documents, links, committee, calendar, transport, CSR, achievements, alumni, partners, testimonials, international — সাধারণ list / card; contract style হলেই চলে |
+
+### 11.3 `uwms:theme:make` command
+
+Theme Guide §3-এ আছে, code-এ নেই (`platform/Console/Commands`-এ শুধু `ThemeActivate`, `ThemeCheck`, `ThemeSync`)। যা লাগবে:
+`php artisan uwms:theme:make {slug} [--from=] [--blank] [--name=]` — slug যাচাই (manifest-এর একই regex), folder আগে থেকে থাকলে বাতিল;
+`--from=default` = সেই theme-এর folder কপি (`public/build`, `node_modules` বাদ, theme.json-এ slug / name / version 1.0.0 বদল);
+`--blank` (default) = validator-এর ন্যূনতম: theme.json, `layouts/app` + `layouts/microsite`, ৫টি page template, একটি header ও footer,
+404, lang en / bn, `resources/css/app.css` + `js/app.js`, `vite.config.js`, README, CHANGELOG; শেষে `theme:sync` চালানোর পরামর্শ ও build command দেখানো।
+Test: blank theme তৈরি ও (build-এর পরে) ThemeChecker pass, অবৈধ slug / বিদ্যমান folder বাতিল, `--from` কপি।
+
+### 11.4 দেখানোর মতো data
+
+| এলাকা | Data উৎস (module) | Modern theme-এ |
+|---|---|---|
+| Home | Homepage builder: core section + module section (notice board, upcoming / past events, latest / featured news, our faculties, featured programs, programs by level, testimonials, photo / video gallery, partners, recognition, achievements, leadership message, statistics, slider) | সব module section-এর modern view override + core section view |
+| Program | `ProgramPage` presenter (tabs, overview, eligibility, fees, facts, stats, careers, materials) | listing + program microsite home override |
+| Microsite | Faculty / Department / Program / Office / Lab — `$context->identity()`, homepage builder (kind-এর shared layout) | microsite layout + microsite-bar |
+| Notice / News / Event | `NoticeBoardPage`, `NoticePage`, `NewsPage`, `EventPage` presenter | listing + detail override |
+| Admission / Fee / Waiver | Admission circular, `TuitionPage`, Waiver Livewire (`WaiverCalculatorForm`) | পাতার frame; calculator-এর হিসাব ও `wire:` contract অপরিবর্তিত |
+| Search | kernel `theme::search` + `instant-search` Livewire | override |

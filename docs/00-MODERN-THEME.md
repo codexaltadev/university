@@ -127,3 +127,22 @@ BRL-THEME-01), বর্তমান DIU install `default` theme-এই থা�
 - প্রতিটি ধাপ merge হওয়ার পরেই পরের session শুরু করুন (নতুন session `main` থেকে শুরু হয়)।
 - DIU-এর live চেহারা (default theme) এই কাজে বদলাবে না; বদলালে সেটা ভুল — Claude-কে জানান।
 - Credit বাঁচাতে: ধাপ ১–৩ ছোট ও দ্রুত; ধাপ ৫–৭ বড়।
+
+---
+
+## অগ্রগতি — একটানা session (branch `theme/modern`, 2026-11-02)
+
+Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session-এ, প্রশ্ন ও অনুমোদনের বিরতি ছাড়া; প্রতিটি ধাপ শেষে commit ও `theme/modern` push।
+সিদ্ধান্তগুলো নিচের "Decisions" তালিকায়।
+
+| ধাপ | অবস্থা | কোথায় |
+|---|---|---|
+| ১ Audit | ✔ | UI/UX Part B §11 |
+
+## Decisions
+
+| # | সিদ্ধান্ত | কারণ |
+|---|---|---|
+| D-1 | সব ধাপ এক branch `theme/modern`-এ (ধাপভিত্তিক `theme/modern-m{n}` নয়) | Owner-এর এই কাজের নির্দেশ |
+| D-2 | Cloud machine-এ PHP 8.4 পাওয়া যায়নি (ondrej PPA network policy-তে বন্ধ) — PHP 8.3 + `composer install --ignore-platform-req=php` দিয়ে test | Project code-এ 8.4-only syntax নেই; owner-এর machine-এ 8.4-এ আবার চালানো উচিত |
+| D-3 | Module Settings-এর DIU default লেখা (§11.1) এই কাজে বদলানো হবে না | Default বদলালে DIU live site-এর লেখা বদলে যেতে পারে (scope: default theme-এর চেহারা অপরিবর্তিত); আলাদা ধাপ সুপারিশ |
