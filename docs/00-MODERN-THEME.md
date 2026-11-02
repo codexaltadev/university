@@ -142,6 +142,7 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | ৩ Scaffold command + theme চালু | ✔ | `uwms:theme:make` (`platform/Console/Commands/ThemeMakeCommand.php`, `tests/Feature/Kernel/ThemeMakeTest.php`), `themes/modern` chrome, `tests/Feature/Theme/ModernThemeTest.php`, `npm run build:theme:modern` |
 | ৪ Homepage section | ✔ | theme.json-এ ১৩টি section (hero, program-finder, notices, events, news, faculties, programs, stats, achievements, admission-cta, testimonials, gallery, partners) + core section-এর view (`sections/core-*`) |
 | ৫ক মূল পাতা | ✔ | override: notice board + notice, news listing + post, event, program card / listing (card layout) / program page, search (`views/modules/*`, `views/search.blade.php`) |
+| ৫খ fee / বাকি মূল পাতা | ✔ (আংশিক) | override: waiver calculator পাতার frame (Livewire অপরিবর্তিত), tuition fee (grouped); বাকি (admission circular, scholarship, documents, gallery, FAQ, office, administration, contact) module view + modern CSS (`sections.css`-এর "module pages" অংশ) |
 
 ## Decisions
 
@@ -160,3 +161,4 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | D-11 | Screenshot-এর জন্য আলাদা throwaway DB `university_demo` (`.env.demo`, git-এ নয়) — dev DB-তে demo row নয় | CLAUDE.md: dev DB-তে demo data নিষেধ |
 | D-12 | Events listing (calendar / timeline layout সহ), faculty / department microsite home, program listing-এর list / table / detailed layout override হয়নি — module view + modern-এর card ও contract style দিয়ে চলে | Module view গোছানো; calendar layout জটিল, ঝুঁকি কম রাখা |
 | D-13 | Office composer-এর `$office` (office-এর নিজস্ব frame) modern-এ আলাদা frame পায় না — সাধারণ page hero দিয়ে দেখায় | Office microsite frame পরে (ধাপ ৫খ-এর বাকি) |
+| D-14 | ধাপ ৫খ-এর বেশিরভাগ পাতা আলাদা override না করে CSS দিয়ে (module view-এর `container > h1`, form, section h2) modern চেহারা | Module view contract class ব্যবহার করে; কম file, module বদলালেও theme ভাঙে না; সময় |

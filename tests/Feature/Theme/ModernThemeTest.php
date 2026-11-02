@@ -239,3 +239,11 @@ it('draws the main module pages in its own design (step 5a)', function () {
         ->assertSee('BSc in Data Science');
     $this->get('/search?q=robotics')->assertOk()->assertSee('page-hero__title', false);
 });
+
+it('frames the fee pages and leaves the waiver calculator itself untouched (step 5b)', function () {
+    useModernTheme();
+
+    $this->get('/waiver-calculator')->assertOk()->assertSee('page-hero__title', false)->assertSee('wire:', false);
+    $this->get('/tuition-fees')->assertOk()->assertSee('page-hero__title', false);
+    $this->get('/faq')->assertOk()->assertSee('site-header--modern', false);
+});

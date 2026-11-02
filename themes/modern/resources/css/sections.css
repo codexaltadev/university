@@ -162,3 +162,16 @@
     .home-section--theme-program-finder { padding-block: 0 24px; }
     .home-section--core-spacer { padding-block: 0; }
 }
+
+/*
+ * Module pages this theme does not redraw (their own views: a container with an h1, forms, lists) get the
+ * modern type and spacing from here, so every page of an active module looks part of the site.
+ */
+@layer components {
+    #main > .container:first-child { padding-block: 48px 88px !important; }
+    #main > .container:first-child > h1:first-of-type, #main > .container:first-child > .breadcrumb + h1 { margin: 8px 0 20px; font-size: clamp(2rem, 4.2vw, 3rem); letter-spacing: -0.03em; }
+    #main > .container:first-child h2 { letter-spacing: -0.02em; }
+    #main > .container:first-child > section > h2, #main > .container:first-child > h2 { margin: 40px 0 16px; font-size: var(--text-2xl); }
+    #main > .container:first-child form label { display: inline-flex; flex-direction: column; gap: 6px; }
+    #main .breadcrumb { margin-bottom: 8px; }
+}
