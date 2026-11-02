@@ -145,6 +145,28 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | ৫খ fee / বাকি মূল পাতা | ✔ (আংশিক) | override: waiver calculator পাতার frame (Livewire অপরিবর্তিত), tuition fee (grouped); বাকি (admission circular, scholarship, documents, gallery, FAQ, office, administration, contact) module view + modern CSS (`sections.css`-এর "module pages" অংশ) |
 | ৬ বাকি module ও page template | ✔ | UI/UX Part B §12.7 (কোন পাতা override, কোনটা module view), ৫টি page template-এর test, `public/css/editor.css` (editor_css) |
 | ৭ মান যাচাই | ✔ | নিচে "ধাপ ৭-এর ফল"; `screenshot.png` (1200×900), version 1.0.0 |
+| ৮ Default করা ও doc | ✔ | `config/platform.php` `themes.default` = `env('UWMS_THEME_DEFAULT', 'modern')`, `.env.example`, phpunit.xml (`default` — test-গুলো DIU install হিসেবে), দুই পথের test; Theme Guide (modern উদাহরণ), User Manual Part C §4.1, HANDOFF, theme README / CHANGELOG |
+
+## Admin থেকে theme বদলানো
+
+1. **Appearance › Themes** → University Modern → **Preview** (শুধু আপনার browser-এ) → **Activate** (সবার জন্য)।
+2. **Appearance › Design** — modern-এর রং, font, logo ও option (header বোতাম, sticky header, footer লেখা, animation); প্রতিটি theme-এর আলাদা।
+3. **Homepage** builder-এ "Modern — …" section যোগ / সাজানো।
+4. ফিরতে: University Default → **Activate** — DIU-র চেহারা অক্ষত।
+
+Command-line: `php artisan uwms:theme:activate modern` / `php artisan uwms:theme:activate default`। নতুন install `UWMS_THEME_DEFAULT`
+(`.env`, default `modern`) অনুযায়ী শুরু হয়; **DIU-র `.env`-এ `UWMS_THEME_DEFAULT=default` রাখুন** (DB-তে default আগে থেকেই active, তাই বর্তমান site বদলায় না)।
+
+## যা বাকি (পরের কাজ)
+
+| # | কাজ |
+|---|---|
+| L-1 | Module Settings ও lang-এর DIU default লেখা generic করা, DIU-র লেখা DIU-র seed-এ (audit §11.1, D-3) — না হলে নতুন install-এ কিছু পাতার intro-তে DIU-র নাম দেখায় |
+| L-2 | আরও override: events listing (calendar সহ), office microsite frame (`$office`), admission circular, gallery album, faculty / department microsite home (UI/UX §12.7) |
+| L-3 | Slider module-এর hero-র modern view (এখন module-এর নিজের) |
+| L-4 | Owner-এর machine-এ: PHP 8.4-এ test, পূর্ণ Pest Browser suite, আসল data দিয়ে Lighthouse (`npm run lighthouse`, `LHCI_PAGES`) |
+| L-5 | `scripts/cloud-setup.sh`-এর ছোট ভুল (root-এ `$SUDO` খালি থাকলে `DEBIAN_FRONTEND=… apt-get` চলে না; nvm `set -u`-এ থামে; PHP 8.3 গ্রহণ করে অথচ dependency-র 8.4 লাগে) — এই কাজের scope-এর বাইরে, ঠিক করা হয়নি |
+| L-6 | Branch `theme/modern` → owner review → PR / merge (এই session-এ PR খোলা হয়নি) |
 
 ## ধাপ ৭-এর ফল (2026-11-02, demo DB, Playwright Chromium)
 
@@ -177,3 +199,6 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | D-13 | Office composer-এর `$office` (office-এর নিজস্ব frame) modern-এ আলাদা frame পায় না — সাধারণ page hero দিয়ে দেখায় | Office microsite frame পরে (ধাপ ৫খ-এর বাকি) |
 | D-14 | ধাপ ৫খ-এর বেশিরভাগ পাতা আলাদা override না করে CSS দিয়ে (module view-এর `container > h1`, form, section h2) modern চেহারা | Module view contract class ব্যবহার করে; কম file, module বদলালেও theme ভাঙে না; সময় |
 | D-15 | Lighthouse মাপা হয়েছে Node-এর ছোট gzip proxy দিয়ে (production-এর nginx gzip-এর মতো), পূর্ণ Pest Browser suite চালানো হয়নি | lighthouserc.cjs-এর নির্দেশ; CLAUDE.md: full suite শুধু owner বললে |
+| D-16 | নতুন install-এর default = `env('UWMS_THEME_DEFAULT', 'modern')`; phpunit.xml-এ `default` | বিদ্যমান DIU test-গুলো DIU install বোঝায়; নতুন install-এর পথ ModernThemeTest-এ আলাদা test |
+| D-17 | `ThemeManagerTest`-এর bundled theme তালিকায় `modern` যোগ | Modern এখন দ্বিতীয় bundled theme — test-এর প্রত্যাশা, behaviour নয় |
+| D-18 | Cloud dev DB-তে active theme আবার `default` করে রাখা হয়েছে | Owner-এর data / চেহারা অপরিবর্তিত |

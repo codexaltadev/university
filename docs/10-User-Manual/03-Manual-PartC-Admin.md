@@ -107,6 +107,22 @@ Department / Office-এর content শুধু তাদের microsite-এ �
 * **Reset** — theme-এর মূল রঙে ফেরা।
 * Theme বদলালে content-এ কোনো পরিবর্তন হয় না।
 
+### 4.1 Theme বদলানো (যেমন University Modern) ও রং / logo
+
+দুটি theme সাথে আসে: **University Default** (DIU-র বর্তমান চেহারা) ও **University Modern** (যেকোনো university-র জন্য আধুনিক,
+minimal চেহারা — নতুন install এটা দিয়েই শুরু হয়)।
+
+1. **Appearance › Themes** → University Modern-এর কার্ডে **Preview** — শুধু আপনার browser-এ site নতুন চেহারায় খোলে; ঘুরে দেখুন।
+2. পছন্দ হলে **Activate** — সবার জন্য সাথে সাথে। Content, menu, homepage-এর section যেমন ছিল থাকে।
+3. ফিরতে চাইলে University Default-এ আবার **Activate** — আগের চেহারা অক্ষত।
+4. **Appearance › Design** — রং (Primary, Secondary, Accent …), font ও logo প্রতিটি theme-এর জন্য আলাদা রাখা হয়;
+   Modern-এর রং বদলালে Default-এর রং বদলায় না। **Reset** = theme-এর নিজের রং।
+5. Modern-এর **Theme options** (Design পাতায়): header-এর বোতাম (লেখা ও link; খালি = বোতাম নেই), header স্থির থাকবে কিনা,
+   footer-এর লেখা (খালি = site-এর tagline), section-এর হালকা animation।
+6. Homepage: **Homepage** builder-এ "Modern — …" নামের section যোগ করুন (hero, program finder, notices, events, news, faculties,
+   programs, figures, achievements, call-to-action, testimonials, gallery, partners)। প্রতিটির লেখা, বোতাম ও ছবি সেখানেই;
+   data (notice, event, news …) module থেকে আসে। অন্য theme-এর নিজস্ব section ("DIU — …") Modern-এ দেখায় না, Default-এ ফিরলে আবার দেখায়।
+
 ---
 
 ## 5. Layouts
@@ -347,7 +363,7 @@ Website: `/transport` (stop দিয়ে খোঁজা সহ); homepage-�
 * **Install from ZIP** → যাচাই → install।
 * **Preview** — শুধু আপনার browser-এ নতুন theme দেখুন, visitor পুরনোটাই দেখেন।
 * **Activate** — সবার জন্য; content অপরিবর্তিত।
-* Active theme ও default theme uninstall করা যায় না।
+* Active theme ও সাথে আসা (bundled) theme — University Default, University Modern — uninstall করা যায় না।
 * রং / font / logo — Admin-ও পারেন (§4)।
 
 ---

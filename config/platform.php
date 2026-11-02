@@ -83,7 +83,10 @@ return [
     ],
 
     'themes' => [
-        'default' => 'default',                 // BRL-THEME-01: never uninstalled
+        // BRL-THEME-01: the theme a new install starts with, and the fallback when the active one is missing.
+        // A new university gets "modern" (University Modern); DIU's install sets UWMS_THEME_DEFAULT=default
+        // (its database already has the default theme active, so nothing changes there).
+        'default' => env('UWMS_THEME_DEFAULT', 'modern'),
 
         'runtime_path' => (static function (): string {
             $path = env('UWMS_THEME_RUNTIME_PATH');

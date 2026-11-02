@@ -19,6 +19,7 @@ use Modules\Page\Models\Page;
 use Modules\Program\Models\Program;
 use Platform\Context\SiteContext;
 use Platform\Relations\RelationEngine;
+use Platform\Theme\Theme;
 use Platform\Theme\ThemeChecker;
 use Platform\Theme\Themes;
 use Symfony\Component\Finder\SplFileInfo;
@@ -264,3 +265,21 @@ it('draws every page template and offers its editor stylesheet (step 6, FR-PAGE-
     ['default', 'page--default'], ['full-width', 'page--full-width'], ['with-sidebar', 'page--with-sidebar'],
     ['right-sidebar', 'page--right-sidebar'], ['landing', 'page--landing'],
 ]);
+
+it('is the theme a new install starts with, while an install with a theme keeps it (step 8, BRL-THEME-01)', function () {
+    config(['platform.themes.default' => 'modern']);
+    $themes = app(Themes::class);
+
+    // A new install: no theme recorded yet → University Modern
+    Theme::query()->delete();
+    $themes->sync();
+    expect($themes->active()->slug)->toBe('modern');
+
+    // DIU's install: the default theme is active and stays so
+    $themes->activate('default');
+    $themes->sync();
+    expect($themes->active()->slug)->toBe('default');
+
+    // The configured fallback when the active theme's folder is gone
+    expect(Themes::defaultSlug())->toBe('modern');
+});

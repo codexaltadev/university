@@ -141,7 +141,7 @@ it('activates, previews and uninstalls from the Themes screen (FR-THEME-01/03, B
     // The active theme and a bundled theme stay
     Livewire::test(ManageThemes::class)->callAction('uninstall', arguments: ['slug' => 'harbor']);
     Livewire::test(ManageThemes::class)->callAction('uninstall', arguments: ['slug' => 'default']);
-    expect(Theme::query()->pluck('slug')->sort()->values()->all())->toBe(['default', 'harbor']);
+    expect(Theme::query()->pluck('slug')->sort()->values()->all())->toBe(['default', 'harbor', 'modern']);   // modern: the second bundled theme
 
     Livewire::test(ManageThemes::class)->callAction('activate', arguments: ['slug' => 'default']);
     Livewire::test(ManageThemes::class)->callAction('uninstall', arguments: ['slug' => 'harbor'])->assertNotified();

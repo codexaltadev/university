@@ -50,6 +50,7 @@
         <env name="MAIL_MAILER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="UWMS_BACKUP_BEFORE_CHANGE" value="false"/>
+        <env name="UWMS_THEME_DEFAULT" value="default"/>  <!-- tests run as DIU's install; ModernThemeTest checks a new one -->
         <env name="SESSION_DRIVER" value="array"/>
         <env name="PULSE_ENABLED" value="false"/>
         <env name="TELESCOPE_ENABLED" value="false"/>

@@ -50,6 +50,11 @@
 
 Admin Panel (Filament) theme-এর আওতায় নয়; তার branding আলাদা setting (FR-SET-13)।
 
+**বাস্তব উদাহরণ — `themes/modern` (University Modern, 2026-11):** `uwms:theme:make modern --blank` দিয়ে শুরু করে বানানো, নতুন install-এর default
+theme। নতুন theme লেখার সময় এটা পড়ুন: token-only Tailwind (palette বন্ধ, §6.2), header + mega menu + drawer (§7), ১৩টি theme section যারা module section-কে
+`source` করে (§8.4), presenter দিয়ে module view override (`views/modules/{notice,news,events,program,waiver,tuition}`, §9), page template ও `editor_css`,
+`tests/Feature/Theme/ModernThemeTest.php` (§13)। Design: UI/UX Part B §12; ধাপগুলো: `docs/00-MODERN-THEME.md`।
+
 **উদাহরণ theme:** এই guide জুড়ে আমরা **`campus`** theme বানাব — default theme-এর একটি বিকল্প, যেখানে header-এ centered logo, বড় photo hero ও "magazine" listing layout।
 
 ---
@@ -76,6 +81,11 @@ php artisan uwms:theme:make campus --from=default     # default theme কপি 
 # অথবা
 php artisan uwms:theme:make campus --blank            # শুধু প্রয়োজনীয় file
 ```
+
+> `uwms:theme:make` (2026-11) — `--name="…"` display name; `--from` build output (`public/build`), `node_modules`, hot file কপি করে না; command build চালায় না,
+> শেষে দেখায়: `npx vite build --config themes/{slug}/vite.config.js`, `php artisan uwms:theme:sync`, `php artisan uwms:theme:check {slug}`।
+> Bundled theme-এর build script root `package.json`-এ (`build:theme`, `build:theme:modern`)। নতুন install-এর theme: `config/platform.php` →
+> `themes.default` = `env('UWMS_THEME_DEFAULT', 'modern')`।
 
 যা তৈরি হয় (SAD Part B §8.1):
 
