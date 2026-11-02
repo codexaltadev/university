@@ -22,6 +22,7 @@
         @if ($posts->isEmpty())
             <p class="empty-state">{{ __('news::news.none') }}</p>
         @else
+            <h2 class="sr-only">{{ $page->title() }}</h2>
             @if ($latest = $page->latest())
                 <div class="grid-cards grid-cards--lg mb-6">
                     @foreach ($latest as $card)

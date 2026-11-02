@@ -144,6 +144,19 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | ৫ক মূল পাতা | ✔ | override: notice board + notice, news listing + post, event, program card / listing (card layout) / program page, search (`views/modules/*`, `views/search.blade.php`) |
 | ৫খ fee / বাকি মূল পাতা | ✔ (আংশিক) | override: waiver calculator পাতার frame (Livewire অপরিবর্তিত), tuition fee (grouped); বাকি (admission circular, scholarship, documents, gallery, FAQ, office, administration, contact) module view + modern CSS (`sections.css`-এর "module pages" অংশ) |
 | ৬ বাকি module ও page template | ✔ | UI/UX Part B §12.7 (কোন পাতা override, কোনটা module view), ৫টি page template-এর test, `public/css/editor.css` (editor_css) |
+| ৭ মান যাচাই | ✔ | নিচে "ধাপ ৭-এর ফল"; `screenshot.png` (1200×900), version 1.0.0 |
+
+## ধাপ ৭-এর ফল (2026-11-02, demo DB, Playwright Chromium)
+
+| যাচাই | ফল |
+|---|---|
+| ১৩টি পাতা (home en / bn, notice board, notice, news, post, event, programs, program page, search, waiver, tuition, 404) × ৬ প্রস্থ (360, 390, 768, 1024, 1280, 1440) | JS error ০, ভাঙা ছবি ০, পাশে scroll ০ (390px-এ লম্বা link-এর জন্য ৬–১২px ছিল — `overflow-wrap` দিয়ে ঠিক) |
+| axe (390 ও 1280-এ, critical / serious) | ০ |
+| Lighthouse mobile, gzip proxy + `APP_DEBUG=false` (lighthouserc.cjs-এর নির্দেশ মতো) | home, notices, programs, waiver calculator, program page: Performance **100**, Accessibility 100 (programs-এ heading ক্রম ঠিক করার আগে 98), Best practices 100, SEO 100, CLS 0 |
+| `php artisan serve` (gzip ছাড়া, debug Livewire) | Livewire থাকা পাতায় Performance ~68–70 — production-এ এটা হয় না (lighthouserc.cjs-এর নোট) |
+| Print / reduced motion | `print.css` (শুধু লেখা, link-এর ঠিকানা), reveal ও hero slide reduced motion-এ বন্ধ, video থামে |
+| Theme ও default theme test | `tests/Feature/Theme` (Default + Modern), ThemeEngine, ThemeMake — ১০৩ pass |
+| পূর্ণ Browser suite (Pest Browser) | চালানো হয়নি — owner-এর অনুমতির পরে (CLAUDE.md: full suite শুধু owner বললে) |
 
 ## Decisions
 
@@ -163,3 +176,4 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | D-12 | Events listing (calendar / timeline layout সহ), faculty / department microsite home, program listing-এর list / table / detailed layout override হয়নি — module view + modern-এর card ও contract style দিয়ে চলে | Module view গোছানো; calendar layout জটিল, ঝুঁকি কম রাখা |
 | D-13 | Office composer-এর `$office` (office-এর নিজস্ব frame) modern-এ আলাদা frame পায় না — সাধারণ page hero দিয়ে দেখায় | Office microsite frame পরে (ধাপ ৫খ-এর বাকি) |
 | D-14 | ধাপ ৫খ-এর বেশিরভাগ পাতা আলাদা override না করে CSS দিয়ে (module view-এর `container > h1`, form, section h2) modern চেহারা | Module view contract class ব্যবহার করে; কম file, module বদলালেও theme ভাঙে না; সময় |
+| D-15 | Lighthouse মাপা হয়েছে Node-এর ছোট gzip proxy দিয়ে (production-এর nginx gzip-এর মতো), পূর্ণ Pest Browser suite চালানো হয়নি | lighthouserc.cjs-এর নির্দেশ; CLAUDE.md: full suite শুধু owner বললে |

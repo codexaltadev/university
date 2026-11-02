@@ -7,6 +7,7 @@
         @if ($programs->isEmpty())
             <p class="empty-state">{{ __('program::program.no_results') }}</p>
         @else
+            <h2 class="sr-only">{{ __('program::program.plural') }}</h2>
             <div class="grid-cards">
                 @foreach ($programs as $program)
                     @include('program::partials.card', ['program' => $program, 'style' => 'card'])

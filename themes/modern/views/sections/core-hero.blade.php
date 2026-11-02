@@ -5,7 +5,7 @@
 @if (collect($items ?? [])->isNotEmpty())
     <div class="hero hero-slides" x-data="heroSlides({{ count($items) }})" @mouseenter="stop()" @mouseleave="play()" @focusin="stop()">
         @foreach ($items as $slide)
-            <div class="container hero__grid" @if (! $loop->first) x-cloak @endif x-show="current === {{ $loop->index }}" x-transition.opacity.duration.400ms
+            <div class="container hero__grid hero__grid--media" @if (! $loop->first) x-cloak @endif x-show="current === {{ $loop->index }}" x-transition.opacity.duration.400ms
                  role="group" aria-roledescription="slide" aria-label="{{ __('theme::theme.slide', ['number' => $loop->iteration]) }}">
                 <div>
                     @if ($loop->first)

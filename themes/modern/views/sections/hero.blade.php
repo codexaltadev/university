@@ -4,7 +4,7 @@
     button2_label, button2_url, image [url, alt])
 --}}
 <div class="hero">
-    <div class="container hero__grid">
+    <div @class(['container hero__grid', 'hero__grid--media' => $section->content['image']['url'] ?? null])>
         <div>
             @if ($section->content['eyebrow'] ?? null)<span class="eyebrow">{{ $section->content['eyebrow'] }}</span>@endif
             <h1 class="hero__title">{{ $section->title ?: settings('general.site_name') }}</h1>
