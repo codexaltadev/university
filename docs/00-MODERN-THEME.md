@@ -141,6 +141,7 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | ২ Design + mockup | ✔ | UI/UX Part B §12, `docs/05-UIUX/mockups/modern/index.html` |
 | ৩ Scaffold command + theme চালু | ✔ | `uwms:theme:make` (`platform/Console/Commands/ThemeMakeCommand.php`, `tests/Feature/Kernel/ThemeMakeTest.php`), `themes/modern` chrome, `tests/Feature/Theme/ModernThemeTest.php`, `npm run build:theme:modern` |
 | ৪ Homepage section | ✔ | theme.json-এ ১৩টি section (hero, program-finder, notices, events, news, faculties, programs, stats, achievements, admission-cta, testimonials, gallery, partners) + core section-এর view (`sections/core-*`) |
+| ৫ক মূল পাতা | ✔ | override: notice board + notice, news listing + post, event, program card / listing (card layout) / program page, search (`views/modules/*`, `views/search.blade.php`) |
 
 ## Decisions
 
@@ -157,3 +158,5 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | D-9 | Homepage section = theme.json section, module section-কে `source` করে (data module থেকে, লেখা / link builder-এর field থেকে); শিরোনাম খালি থাকলে theme-এর lang (en / bn) থেকে; "View all" link default `{base}/notices` ইত্যাদি (microsite-এ নিজের ঠিকানা) | Theme-এ PHP / `Modules\` নিষেধ, তাই URL module-এর `url()` বা builder-এর field থেকে; দুই ভাষাতেই শিরোনাম |
 | D-10 | Slider module-এর hero view override করা হয়নি — module-এর নিজের view token দিয়ে চলে; modern-এর নিজের `theme.hero` ও core `core.hero` আছে | সময়; module view ভাঙা নয় |
 | D-11 | Screenshot-এর জন্য আলাদা throwaway DB `university_demo` (`.env.demo`, git-এ নয়) — dev DB-তে demo row নয় | CLAUDE.md: dev DB-তে demo data নিষেধ |
+| D-12 | Events listing (calendar / timeline layout সহ), faculty / department microsite home, program listing-এর list / table / detailed layout override হয়নি — module view + modern-এর card ও contract style দিয়ে চলে | Module view গোছানো; calendar layout জটিল, ঝুঁকি কম রাখা |
+| D-13 | Office composer-এর `$office` (office-এর নিজস্ব frame) modern-এ আলাদা frame পায় না — সাধারণ page hero দিয়ে দেখায় | Office microsite frame পরে (ধাপ ৫খ-এর বাকি) |

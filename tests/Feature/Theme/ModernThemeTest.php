@@ -11,8 +11,11 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Modules\Events\Models\Event;
 use Modules\Homepage\Support\Homepages;
+use Modules\News\Models\Post;
 use Modules\Notice\Models\Notice;
+use Modules\Program\Models\Program;
 use Platform\Context\SiteContext;
 use Platform\Relations\RelationEngine;
 use Platform\Theme\ThemeChecker;
@@ -213,4 +216,26 @@ it('labels its sections in Bangla when the page is Bangla', function () {
     modernHomepage([['theme.notices', [], null]]);
 
     $this->get('/bn')->assertOk()->assertSee('সর্বশেষ নোটিশ')->assertSee('এখনো কিছু নেই।');
+});
+
+it('draws the main module pages in its own design (step 5a)', function () {
+    useModernTheme();
+    $engine = app(RelationEngine::class);
+    $notice = Notice::factory()->create(['title' => ['en' => 'Library hours changed']]);
+    $post = Post::factory()->create(['title' => ['en' => 'Students win a robotics prize']]);
+    $event = Event::factory()->create(['title' => ['en' => 'Open day'], 'starts_at' => now()->addWeek(), 'ends_at' => now()->addWeek()->addHours(3)]);
+    foreach ([$notice, $post, $event] as $content) {
+        $engine->sync($content, [], mainSite: true, user: null);
+    }
+    $program = Program::factory()->create(['name' => ['en' => 'BSc in Data Science']]);
+
+    $this->get('/notices')->assertOk()->assertSee('page-hero', false)->assertSee('row-list', false)->assertSee('Library hours changed');
+    $this->get(url($notice->url()))->assertOk()->assertSee('page-hero__title', false)->assertSee('Library hours changed');
+    $this->get('/news')->assertOk()->assertSee('card--media', false)->assertSee('Students win a robotics prize');
+    $this->get(url($post->url()))->assertOk()->assertSee('article--center', false);
+    $this->get(url($event->url()))->assertOk()->assertSee('fact-list', false)->assertSee('Open day');
+    $this->get('/programs')->assertOk()->assertSee('page-hero', false)->assertSee('BSc in Data Science');
+    $this->get(url($program->url()))->assertOk()->assertSee('microsite-bar', false)->assertSee('stat-row', false)
+        ->assertSee('BSc in Data Science');
+    $this->get('/search?q=robotics')->assertOk()->assertSee('page-hero__title', false);
 });

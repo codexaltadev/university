@@ -25,6 +25,7 @@ return [
     'next' => 'পরের',
     'slide' => 'স্লাইড :number',
     'part_of' => ':name-এর অংশ',
+    'program_facts' => ['credits' => 'ক্রেডিট', 'semesters' => 'সেমিস্টার', 'duration' => 'মেয়াদ', 'total_fees' => 'মোট ফি', 'next_start' => 'পরবর্তী শুরু'],
     'sections' => [
         'find_program' => 'প্রোগ্রাম খুঁজুন',
         'search_programs' => 'প্রোগ্রাম খুঁজুন — যেমন কম্পিউটার সায়েন্স',

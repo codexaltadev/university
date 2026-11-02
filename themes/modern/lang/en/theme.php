@@ -25,6 +25,7 @@ return [
     'next' => 'Next',
     'slide' => 'Slide :number',
     'part_of' => 'Part of :name',
+    'program_facts' => ['credits' => 'Credits', 'semesters' => 'Semesters', 'duration' => 'Duration', 'total_fees' => 'Total fees', 'next_start' => 'Next start'],
     'sections' => [
         'find_program' => 'Find a program',
         'search_programs' => 'Search programs — e.g. Computer Science',
