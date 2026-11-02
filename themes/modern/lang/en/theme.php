@@ -25,4 +25,18 @@ return [
     'next' => 'Next',
     'slide' => 'Slide :number',
     'part_of' => 'Part of :name',
+    'sections' => [
+        'find_program' => 'Find a program',
+        'search_programs' => 'Search programs — e.g. Computer Science',
+        'notices' => 'Latest notices',
+        'events' => 'Upcoming events',
+        'news' => 'News and stories',
+        'faculties' => 'Faculties',
+        'programs' => 'Featured programs',
+        'achievements' => 'Rankings and achievements',
+        'testimonials' => 'What our community says',
+        'gallery' => 'Life on campus',
+        'nothing_yet' => 'Nothing here yet.',
+        'urgent' => 'Urgent',
+    ],
 ];

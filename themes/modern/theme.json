@@ -3,13 +3,14 @@
     "name": "University Modern",
     "version": "1.0.0",
     "requires_core": "^1.0",
-    "author": { "name": "UWMS", "email": "" },
+    "author": {
+        "name": "UWMS",
+        "email": ""
+    },
     "license": "proprietary",
     "description": "A modern, minimal theme for any university: calm colours, large clear type, card grids and light motion. Logo, colours and every text come from Admin.",
     "screenshot": "screenshot.png",
-
     "layouts": {},
-
     "menu_locations": {
         "primary": "Primary (header)",
         "topbar": "Utility links (above the header)",
@@ -18,17 +19,338 @@
         "footer-3": "Footer column 3",
         "sidebar": "Sidebar"
     },
-
-    "header_variants": ["modern", "minimal"],
-    "footer_variants": ["columns", "simple"],
-
-    "page_templates": ["default", "full-width", "with-sidebar", "right-sidebar", "landing"],
-    "microsite_templates": ["standard"],
-
-    "sections": {},
-
-    "fonts": ["Inter", "Noto Sans Bengali"],
-
+    "header_variants": [
+        "modern",
+        "minimal"
+    ],
+    "footer_variants": [
+        "columns",
+        "simple"
+    ],
+    "page_templates": [
+        "default",
+        "full-width",
+        "with-sidebar",
+        "right-sidebar",
+        "landing"
+    ],
+    "microsite_templates": [
+        "standard"
+    ],
+    "sections": {
+        "hero": {
+            "label": "Modern — Hero: heading, text, two buttons and a picture (heading / subheading = the builder's)",
+            "fields": [
+                {
+                    "key": "eyebrow",
+                    "type": "text",
+                    "label": "Small line above the heading (empty = none)"
+                },
+                {
+                    "key": "button_label",
+                    "type": "text",
+                    "label": "First button text"
+                },
+                {
+                    "key": "button_url",
+                    "type": "url",
+                    "label": "First button link"
+                },
+                {
+                    "key": "button2_label",
+                    "type": "text",
+                    "label": "Second button text"
+                },
+                {
+                    "key": "button2_url",
+                    "type": "url",
+                    "label": "Second button link"
+                },
+                {
+                    "key": "image",
+                    "type": "image",
+                    "label": "Picture on the right"
+                }
+            ]
+        },
+        "program-finder": {
+            "label": "Modern — Program finder: a search box and level shortcuts (heading = the builder's)",
+            "fields": [
+                {
+                    "key": "placeholder",
+                    "type": "text",
+                    "label": "Text in the search box (empty = Search programs)"
+                },
+                {
+                    "key": "action_url",
+                    "type": "url",
+                    "label": "Program listing address the search goes to",
+                    "default": "{base}/programs"
+                },
+                {
+                    "key": "links",
+                    "type": "repeater",
+                    "label": "Shortcuts beside the search (levels, faculties …)",
+                    "max": 6,
+                    "fields": [
+                        {
+                            "key": "label",
+                            "type": "text",
+                            "label": "Text"
+                        },
+                        {
+                            "key": "url",
+                            "type": "url",
+                            "label": "Link"
+                        }
+                    ]
+                }
+            ]
+        },
+        "notices": {
+            "label": "Modern — Notice board: the latest notices with dates",
+            "source": "notice.board",
+            "fields": [
+                {
+                    "key": "eyebrow",
+                    "type": "text",
+                    "label": "Small line above the heading (empty = none)"
+                },
+                {
+                    "key": "button_label",
+                    "type": "text",
+                    "label": "\"View all\" button text (empty = View all)"
+                },
+                {
+                    "key": "button_url",
+                    "type": "url",
+                    "label": "\"View all\" button link (empty = the module's own page)",
+                    "default": "{base}/notices"
+                }
+            ]
+        },
+        "events": {
+            "label": "Modern — Upcoming events as date cards",
+            "source": "events.upcoming",
+            "fields": [
+                {
+                    "key": "eyebrow",
+                    "type": "text",
+                    "label": "Small line above the heading (empty = none)"
+                },
+                {
+                    "key": "button_label",
+                    "type": "text",
+                    "label": "\"View all\" button text (empty = View all)"
+                },
+                {
+                    "key": "button_url",
+                    "type": "url",
+                    "label": "\"View all\" button link (empty = the module's own page)",
+                    "default": "{base}/events"
+                }
+            ]
+        },
+        "news": {
+            "label": "Modern — News cards with pictures",
+            "source": "news.latest",
+            "fields": [
+                {
+                    "key": "eyebrow",
+                    "type": "text",
+                    "label": "Small line above the heading (empty = none)"
+                },
+                {
+                    "key": "button_label",
+                    "type": "text",
+                    "label": "\"View all\" button text (empty = View all)"
+                },
+                {
+                    "key": "button_url",
+                    "type": "url",
+                    "label": "\"View all\" button link (empty = the module's own page)",
+                    "default": "{base}/news"
+                }
+            ]
+        },
+        "faculties": {
+            "label": "Modern — Faculties as tiles",
+            "source": "faculty.list",
+            "fields": [
+                {
+                    "key": "eyebrow",
+                    "type": "text",
+                    "label": "Small line above the heading (empty = none)"
+                },
+                {
+                    "key": "button_label",
+                    "type": "text",
+                    "label": "\"View all\" button text (empty = View all)"
+                },
+                {
+                    "key": "button_url",
+                    "type": "url",
+                    "label": "\"View all\" button link (empty = the module's own page)",
+                    "default": "/faculties"
+                }
+            ]
+        },
+        "programs": {
+            "label": "Modern — Featured programs as cards",
+            "source": "program.featured",
+            "fields": [
+                {
+                    "key": "eyebrow",
+                    "type": "text",
+                    "label": "Small line above the heading (empty = none)"
+                },
+                {
+                    "key": "button_label",
+                    "type": "text",
+                    "label": "\"View all\" button text (empty = View all)"
+                },
+                {
+                    "key": "button_url",
+                    "type": "url",
+                    "label": "\"View all\" button link (empty = the module's own page)",
+                    "default": "{base}/programs"
+                }
+            ]
+        },
+        "stats": {
+            "label": "Modern — Figures (a statistics set of the place)",
+            "source": "core.statistics",
+            "fields": [
+                {
+                    "key": "eyebrow",
+                    "type": "text",
+                    "label": "Small line above the heading (empty = none)"
+                }
+            ]
+        },
+        "achievements": {
+            "label": "Modern — Rankings and achievements as cards",
+            "source": "achievements.recent",
+            "fields": [
+                {
+                    "key": "eyebrow",
+                    "type": "text",
+                    "label": "Small line above the heading (empty = none)"
+                },
+                {
+                    "key": "button_label",
+                    "type": "text",
+                    "label": "\"View all\" button text (empty = View all)"
+                },
+                {
+                    "key": "button_url",
+                    "type": "url",
+                    "label": "\"View all\" button link (empty = the module's own page)",
+                    "default": "{base}/achievements"
+                }
+            ]
+        },
+        "admission-cta": {
+            "label": "Modern — Call to action band (admission, fees …; heading / subheading = the builder's)",
+            "fields": [
+                {
+                    "key": "eyebrow",
+                    "type": "text",
+                    "label": "Small line above the heading (empty = none)"
+                },
+                {
+                    "key": "button_label",
+                    "type": "text",
+                    "label": "First button text"
+                },
+                {
+                    "key": "button_url",
+                    "type": "url",
+                    "label": "First button link"
+                },
+                {
+                    "key": "button2_label",
+                    "type": "text",
+                    "label": "Second button text"
+                },
+                {
+                    "key": "button2_url",
+                    "type": "url",
+                    "label": "Second button link"
+                }
+            ]
+        },
+        "testimonials": {
+            "label": "Modern — Testimonials as quote cards",
+            "source": "testimonials.list",
+            "fields": [
+                {
+                    "key": "eyebrow",
+                    "type": "text",
+                    "label": "Small line above the heading (empty = none)"
+                },
+                {
+                    "key": "button_label",
+                    "type": "text",
+                    "label": "\"View all\" button text (empty = View all)"
+                },
+                {
+                    "key": "button_url",
+                    "type": "url",
+                    "label": "\"View all\" button link (empty = the module's own page)",
+                    "default": "{base}/testimonials"
+                }
+            ]
+        },
+        "gallery": {
+            "label": "Modern — Photo gallery as a mosaic",
+            "source": "gallery.photos",
+            "fields": [
+                {
+                    "key": "eyebrow",
+                    "type": "text",
+                    "label": "Small line above the heading (empty = none)"
+                },
+                {
+                    "key": "button_label",
+                    "type": "text",
+                    "label": "\"View all\" button text (empty = View all)"
+                },
+                {
+                    "key": "button_url",
+                    "type": "url",
+                    "label": "\"View all\" button link (empty = the module's own page)",
+                    "default": "{base}/gallery"
+                }
+            ]
+        },
+        "partners": {
+            "label": "Modern — Partner and recognition logos",
+            "source": "partners.list",
+            "fields": [
+                {
+                    "key": "eyebrow",
+                    "type": "text",
+                    "label": "Small line above the heading (empty = none)"
+                },
+                {
+                    "key": "button_label",
+                    "type": "text",
+                    "label": "\"View all\" button text (empty = View all)"
+                },
+                {
+                    "key": "button_url",
+                    "type": "url",
+                    "label": "\"View all\" button link (empty = the module's own page)",
+                    "default": ""
+                }
+            ]
+        }
+    },
+    "fonts": [
+        "Inter",
+        "Noto Sans Bengali"
+    ],
     "tokens": {
         "color-primary": "#1D4ED8",
         "color-secondary": "#0F172A",
@@ -52,12 +374,36 @@
         "container-max": "1240px",
         "shadow-card": "0 1px 2px rgba(15, 23, 42, .06), 0 8px 24px -12px rgba(15, 23, 42, .12)"
     },
-
     "options": [
-        { "key": "sticky_header", "type": "toggle", "label": "Header stays on top while scrolling", "default": true },
-        { "key": "header_cta_label", "type": "text", "label": "Header button text (empty = no button)", "default": "" },
-        { "key": "header_cta_url", "type": "text", "label": "Header button link", "default": "" },
-        { "key": "footer_tagline", "type": "text", "label": "Footer text under the logo (empty = the site tagline)", "default": "" },
-        { "key": "animations", "type": "toggle", "label": "Sections fade in while scrolling", "default": true }
+        {
+            "key": "sticky_header",
+            "type": "toggle",
+            "label": "Header stays on top while scrolling",
+            "default": true
+        },
+        {
+            "key": "header_cta_label",
+            "type": "text",
+            "label": "Header button text (empty = no button)",
+            "default": ""
+        },
+        {
+            "key": "header_cta_url",
+            "type": "text",
+            "label": "Header button link",
+            "default": ""
+        },
+        {
+            "key": "footer_tagline",
+            "type": "text",
+            "label": "Footer text under the logo (empty = the site tagline)",
+            "default": ""
+        },
+        {
+            "key": "animations",
+            "type": "toggle",
+            "label": "Sections fade in while scrolling",
+            "default": true
+        }
     ]
 }

@@ -11,7 +11,10 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
+use Modules\Homepage\Support\Homepages;
+use Modules\Notice\Models\Notice;
 use Platform\Context\SiteContext;
+use Platform\Relations\RelationEngine;
 use Platform\Theme\ThemeChecker;
 use Platform\Theme\Themes;
 use Symfony\Component\Finder\SplFileInfo;
@@ -162,4 +165,52 @@ it('keeps one main landmark: only the layouts open <main>', function () {
         ->map->getRelativePathname()->values()->all();
 
     expect($nested)->toBe([]);
+});
+
+/** The main site's homepage with these sections: [type, settings, heading] */
+function modernHomepage(array $sections): void
+{
+    $homepages = app(Homepages::class);
+    $layout = $homepages->own('site:0') ?? $homepages->create('site:0');
+    $layout->sections()->delete();
+
+    foreach ($sections as $i => [$type, $settings, $heading]) {
+        $layout->sections()->create(['section_type' => $type, 'settings' => $settings, 'heading' => $heading ? ['en' => $heading] : [], 'sort_order' => $i, 'is_active' => true]);
+    }
+
+    Homepages::flush();
+}
+
+it('offers its homepage sections in the builder and draws them from module data (step 4)', function () {
+    useModernTheme();
+    $notice = Notice::factory()->create(['title' => ['en' => 'Exam schedule published'], 'is_urgent' => true]);
+    app(RelationEngine::class)->sync($notice, [], mainSite: true, user: null);
+
+    $catalogue = app(Homepages::class)->catalogue();
+    expect($catalogue)->toHaveKeys(['theme.hero', 'theme.program-finder', 'theme.notices', 'theme.events', 'theme.news', 'theme.faculties',
+        'theme.programs', 'theme.stats', 'theme.achievements', 'theme.admission-cta', 'theme.testimonials', 'theme.gallery', 'theme.partners']);
+
+    modernHomepage([
+        ['theme.hero', ['content' => ['eyebrow' => ['en' => 'Admission open'], 'button_label' => ['en' => 'Find a program'], 'button_url' => '/programs']], 'Learn boldly'],
+        ['theme.program-finder', ['content' => ['links' => [['label' => ['en' => 'Postgraduate'], 'url' => '/programs/postgraduate']]]], null],
+        ['theme.notices', ['count' => 5], null],
+        ['theme.admission-cta', ['content' => ['button_label' => ['en' => 'Apply now'], 'button_url' => '/admission']], 'Ready to start?'],
+        ['core.cta', ['button_label' => ['en' => 'Contact us'], 'button_url' => '/contact'], 'Questions?'],
+    ]);
+
+    $this->get('/')->assertOk()
+        ->assertSee('Admission open')->assertSee('Learn boldly')->assertSee('href="/programs"', false)
+        ->assertSee('/programs/postgraduate', false)->assertSee('name="q"', false)
+        ->assertSee(__('theme::theme.sections.notices'))->assertSee('Exam schedule published')->assertSee('badge--danger', false)
+        ->assertSee('href="/notices"', false)                                  // the default "View all" link ({base} = main site)
+        ->assertSee('Ready to start?')->assertSee('/admission', false)
+        ->assertSee('Questions?')->assertSee('/contact', false)
+        ->assertSee('home-section--theme-hero', false);
+});
+
+it('labels its sections in Bangla when the page is Bangla', function () {
+    useModernTheme();
+    modernHomepage([['theme.notices', [], null]]);
+
+    $this->get('/bn')->assertOk()->assertSee('সর্বশেষ নোটিশ')->assertSee('এখনো কিছু নেই।');
 });

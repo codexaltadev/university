@@ -140,6 +140,7 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | ১ Audit | ✔ | UI/UX Part B §11 |
 | ২ Design + mockup | ✔ | UI/UX Part B §12, `docs/05-UIUX/mockups/modern/index.html` |
 | ৩ Scaffold command + theme চালু | ✔ | `uwms:theme:make` (`platform/Console/Commands/ThemeMakeCommand.php`, `tests/Feature/Kernel/ThemeMakeTest.php`), `themes/modern` chrome, `tests/Feature/Theme/ModernThemeTest.php`, `npm run build:theme:modern` |
+| ৪ Homepage section | ✔ | theme.json-এ ১৩টি section (hero, program-finder, notices, events, news, faculties, programs, stats, achievements, admission-cta, testimonials, gallery, partners) + core section-এর view (`sections/core-*`) |
 
 ## Decisions
 
@@ -153,3 +154,6 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | D-6 | `uwms:theme:make` blank = validator-এর ন্যূনতম file + Tailwind source + Vite config; `--from` কপি করে build output বাদ দিয়ে; build নিজে চালায় না (`npx vite build --config themes/{slug}/vite.config.js` দেখায়) | Command-এ Node চালানো platform-এর কাজ নয় (server-এ npm চলে না, T-6) |
 | D-7 | Modern theme-এ Tailwind palette বন্ধ (`--color-*: initial`) — শুধু token রং; package.json-এ `build:theme:modern` / `dev:theme:modern` | Admin-এর রং পুরো site-এ নিশ্চিত; ভুল করে `gray-500` লিখলে build-এ আসে না |
 | D-8 | Header variant `modern` (utility row + mega panel) ও `minimal`; footer `columns` ও `simple`; header button ও footer লেখা theme option, default খালি | Generic: কোনো university-র link default-এ নয় |
+| D-9 | Homepage section = theme.json section, module section-কে `source` করে (data module থেকে, লেখা / link builder-এর field থেকে); শিরোনাম খালি থাকলে theme-এর lang (en / bn) থেকে; "View all" link default `{base}/notices` ইত্যাদি (microsite-এ নিজের ঠিকানা) | Theme-এ PHP / `Modules\` নিষেধ, তাই URL module-এর `url()` বা builder-এর field থেকে; দুই ভাষাতেই শিরোনাম |
+| D-10 | Slider module-এর hero view override করা হয়নি — module-এর নিজের view token দিয়ে চলে; modern-এর নিজের `theme.hero` ও core `core.hero` আছে | সময়; module view ভাঙা নয় |
+| D-11 | Screenshot-এর জন্য আলাদা throwaway DB `university_demo` (`.env.demo`, git-এ নয়) — dev DB-তে demo row নয় | CLAUDE.md: dev DB-তে demo data নিষেধ |
