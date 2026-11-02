@@ -74,7 +74,7 @@ it('passes the theme checks and declares what the platform needs (FR-THEME-02, T
 
     expect($manifest['slug'])->toBe('modern')
         ->and($manifest['name'])->toBe('University Modern')
-        ->and($manifest['fonts'])->toBe(['Inter', 'Noto Sans Bengali'])
+        ->and($manifest['fonts'])->toBe(['Plus Jakarta Sans', 'Inter', 'Noto Sans Bengali'])
         ->and(array_keys($manifest['menu_locations']))->toContain('primary', 'topbar', 'footer-1', 'sidebar');
 });
 

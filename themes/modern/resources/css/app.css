@@ -1,5 +1,5 @@
 /*
- * University Modern (UI/UX Part B §12; Theme Guide §6, §12). Tailwind CSS 4.3.3, CSS-first.
+ * University Modern 1.1 — bold and photographic (UI/UX Part B §12; Theme Guide §6, §12). Tailwind CSS 4.3.3, CSS-first.
  * Every colour is a kernel design token (:root from Platform\Theme\DesignTokens, defaults in
  * theme.json, changed in Admin › Themes › Design): Tailwind's own palette is switched off, so
  * bg-primary / text-muted / border-border are the only colours there are. No hex here (T-2).
@@ -17,7 +17,9 @@
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("../fonts/inter-latin-wght-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 @font-face { font-family: "Inter"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("../fonts/inter-latin-ext-wght-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
 @font-face { font-family: "Noto Sans Bengali"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("../fonts/noto-sans-bengali-bengali-wght-normal.woff2") format("woff2"); unicode-range: U+0951-0952, U+0964-0965, U+0980-09FE, U+1CD0, U+1CD2, U+1CD5-1CD6, U+1CD8, U+1CE1, U+1CEA, U+1CED, U+1CF2, U+1CF5-1CF7, U+200C-200D, U+20B9, U+25CC, U+A8F1; }
+@font-face { font-family: "Plus Jakarta Sans"; font-style: normal; font-weight: 200 800; font-display: swap; src: url("../fonts/plus-jakarta-sans-latin-wght-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
 /* Until Inter arrives: Arial sized like Inter, so lines do not move (CLS); the kernel's stack names "Inter Fallback" */
+@font-face { font-family: "Plus Jakarta Sans Fallback"; src: local("Arial"), local("ArialMT"), local("Liberation Sans"); size-adjust: 106%; ascent-override: 98%; descent-override: 21%; line-gap-override: 0%; }
 @font-face { font-family: "Inter Fallback"; src: local("Arial"), local("ArialMT"), local("Liberation Sans"); size-adjust: 107.12%; ascent-override: 90.44%; descent-override: 22.52%; line-gap-override: 0%; }
 
 /* Tailwind's palette off: only the tokens (and white / black / transparent / current) */
@@ -86,7 +88,7 @@
     }
     :lang(bn) { letter-spacing: 0 !important; }
 
-    h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; color: var(--color-text); }
+    h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); font-weight: 800; line-height: 1.12; letter-spacing: -0.025em; color: var(--color-text); }
     a { color: inherit; text-decoration: none; }
     a:hover { color: var(--color-primary); }
     img, video { max-width: 100%; height: auto; }
@@ -128,7 +130,7 @@
         display: inline-flex; align-items: center; justify-content: center; gap: 8px;
         min-height: 44px; padding: 10px 22px; border: 1px solid var(--color-border); border-radius: 999px;
         background: var(--color-bg); color: var(--color-text);
-        font: 600 var(--text-sm)/1.3 var(--font-heading); text-decoration: none; cursor: pointer; white-space: nowrap;
+        font: 700 var(--text-sm)/1.3 var(--font-heading); text-decoration: none; cursor: pointer; white-space: nowrap;
         transition: background-color .15s, color .15s, border-color .15s, box-shadow .15s, transform .15s;
     }
     .btn:hover { border-color: var(--color-text); color: var(--color-text); }
@@ -139,6 +141,11 @@
     .btn--secondary { background: var(--color-secondary); border-color: transparent; color: var(--color-secondary-contrast); }
     .btn--secondary:hover { background: color-mix(in srgb, var(--color-secondary) 85%, white); border-color: transparent; color: var(--color-secondary-contrast); }
     .btn--outline { background: transparent; border-color: currentColor; }
+    .btn--accent { background: var(--color-accent); border-color: transparent; color: var(--color-accent-contrast); box-shadow: 0 10px 24px -12px color-mix(in srgb, var(--color-accent) 80%, black); }
+    .btn--accent:hover { background: color-mix(in srgb, var(--color-accent) 88%, white); border-color: transparent; color: var(--color-accent-contrast); transform: translateY(-1px); }
+    .btn--on-dark { background: color-mix(in srgb, white 8%, transparent); color: white; border-color: color-mix(in srgb, white 40%, transparent); backdrop-filter: blur(6px); }
+    .btn--on-dark:hover { background: color-mix(in srgb, white 16%, transparent); color: white; border-color: white; }
+    .btn--lg { min-height: 54px; padding: 14px 30px; font-size: var(--text-base); }
     .btn--sm { min-height: 36px; padding: 6px 14px; font-size: var(--text-xs); }
 
     /* Badges */
@@ -159,9 +166,10 @@
     .chip-active:hover { color: var(--color-secondary-contrast); }
 
     /* Cards */
-    .card { position: relative; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 24px; }
+    .card { position: relative; background: var(--color-bg); border: 1px solid color-mix(in srgb, var(--color-border) 70%, transparent); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 26px; }
     a.card, .card--link { transition: transform .2s, border-color .2s, box-shadow .2s; }
-    a.card:hover, .card--link:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--color-primary) 35%, var(--color-border)); color: inherit; }
+    a.card:hover, .card--link:hover { transform: translateY(-4px); box-shadow: 0 2px 4px color-mix(in srgb, var(--color-secondary) 6%, transparent), 0 24px 48px -20px color-mix(in srgb, var(--color-primary) 35%, transparent); color: inherit; }
+    .card--link:hover .card__title, .card--link:hover .tile__title { color: var(--color-primary); }
 
     .lead { font-size: var(--text-lg); color: var(--color-text-muted); }
     .empty-state { padding: 56px 20px; text-align: center; color: var(--color-text-muted); background: var(--color-surface); border-radius: var(--radius-lg); }
@@ -216,12 +224,12 @@
     .page-grid { display: grid; gap: 48px; }
     @media (min-width: 1024px) { .page-grid { grid-template-columns: minmax(0, 1fr) 300px; } }
 
-    .home-section { padding-block: 80px; }
+    .home-section { padding-block: 96px; }
     .home-section--alt { background: var(--color-surface); }
     .home-section--dark { background: var(--color-secondary); color: var(--color-secondary-contrast); }
     .home-section--dark h2, .home-section--dark h3 { color: inherit; }
     .home-section__head { margin-bottom: 36px; max-width: 720px; }
-    .home-section__title { font-size: clamp(1.75rem, 3.2vw, 2.5rem); letter-spacing: -0.03em; margin: 0; }
+    .home-section__title { font-size: clamp(1.9rem, 3.6vw, 2.9rem); letter-spacing: -0.035em; margin: 0; }
     .home-section__sub { color: var(--color-text-muted); margin: 10px 0 0; font-size: var(--text-lg); }
     .home-section--dark .home-section__sub { color: inherit; opacity: .75; }
     @media (max-width: 767px) { .home-section { padding-block: 56px; } }

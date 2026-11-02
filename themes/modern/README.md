@@ -12,10 +12,10 @@ php artisan test tests/Feature/Theme/ModernThemeTest.php
 
 ## Design
 
-- Tokens (theme.json, changed in Admin › Appearance › Design): primary `#1D4ED8`, secondary `#0F172A`, accent `#F59E0B`, surface
-  `#F5F7FA`, radius 8 / 12 / 20px, container 1240px. Tailwind's palette is switched off — only token colours exist (`bg-primary`,
+- Tokens (theme.json, changed in Admin › Appearance › Design): primary `#163C9E`, secondary `#0B1B3F`, accent `#F5B700`, surface
+  `#F3F5FA`, radius 10 / 14 / 24px, container 1240px (v1.1, UI/UX Part B §12.8). Tailwind's palette is switched off — only token colours exist (`bg-primary`,
   `text-muted`, `border-border` …).
-- Fonts bundled (OFL, `resources/fonts`): Inter (Latin), Noto Sans Bengali; `theme.json "fonts"` keeps the kernel from Google Fonts.
+- Fonts bundled (OFL, `resources/fonts`): Plus Jakarta Sans (headings), Inter (body), Noto Sans Bengali; `theme.json "fonts"` keeps the kernel from Google Fonts.
 - Header variants `modern` (utility row, mega panels, search, drawer) and `minimal`; footer variants `columns` and `simple`.
 - Options: `sticky_header`, `header_cta_label` / `header_cta_url` (empty = no button), `footer_tagline`, `animations`.
 

@@ -24,6 +24,7 @@ return [
     'previous' => 'Previous',
     'next' => 'Next',
     'slide' => 'Slide :number',
+    'call' => 'Call',
     'part_of' => 'Part of :name',
     'program_facts' => ['credits' => 'Credits', 'semesters' => 'Semesters', 'duration' => 'Duration', 'total_fees' => 'Total fees', 'next_start' => 'Next start'],
     'sections' => [

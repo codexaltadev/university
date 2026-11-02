@@ -1,14 +1,14 @@
 {
     "slug": "modern",
     "name": "University Modern",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "requires_core": "^1.0",
     "author": {
         "name": "UWMS",
         "email": ""
     },
     "license": "proprietary",
-    "description": "A modern, minimal theme for any university: calm colours, large clear type, card grids and light motion. Logo, colours and every text come from Admin.",
+    "description": "A bold, photographic theme for any university: royal blue, midnight navy and gold, full-width picture heroes, strong admission calls. Logo, colours and every text come from Admin.",
     "screenshot": "screenshot.png",
     "layouts": {},
     "menu_locations": {
@@ -39,7 +39,7 @@
     ],
     "sections": {
         "hero": {
-            "label": "Modern — Hero: heading, text, two buttons and a picture (heading / subheading = the builder's)",
+            "label": "Modern — Hero: full-width picture (or brand colours), heading, text, two buttons (heading / subheading = the builder's)",
             "fields": [
                 {
                     "key": "eyebrow",
@@ -69,7 +69,7 @@
                 {
                     "key": "image",
                     "type": "image",
-                    "label": "Picture on the right"
+                    "label": "Picture behind the heading (empty = brand colours)"
                 }
             ]
         },
@@ -348,6 +348,7 @@
         }
     },
     "fonts": [
+        "Plus Jakarta Sans",
         "Inter",
         "Noto Sans Bengali"
     ],
@@ -355,27 +356,27 @@
         "css/editor.css"
     ],
     "tokens": {
-        "color-primary": "#1D4ED8",
-        "color-secondary": "#0F172A",
-        "color-accent": "#F59E0B",
+        "color-primary": "#163C9E",
+        "color-secondary": "#0B1B3F",
+        "color-accent": "#F5B700",
         "color-bg": "#FFFFFF",
-        "color-surface": "#F5F7FA",
-        "color-text": "#111827",
-        "color-text-muted": "#4B5563",
-        "color-border": "#E5E7EB",
+        "color-surface": "#F3F5FA",
+        "color-text": "#0F172A",
+        "color-text-muted": "#475569",
+        "color-border": "#E2E8F0",
         "color-success": "#15803D",
         "color-warning": "#B45309",
         "color-danger": "#B91C1C",
-        "font-heading": "Inter",
+        "font-heading": "Plus Jakarta Sans",
         "font-body": "Inter",
         "font-bn": "Noto Sans Bengali",
         "line-height-body": "1.65",
         "line-height-body-bn": "1.85",
-        "radius-sm": "8px",
-        "radius-md": "12px",
-        "radius-lg": "20px",
+        "radius-sm": "10px",
+        "radius-md": "14px",
+        "radius-lg": "24px",
         "container-max": "1240px",
-        "shadow-card": "0 1px 2px rgba(15, 23, 42, .06), 0 8px 24px -12px rgba(15, 23, 42, .12)"
+        "shadow-card": "0 1px 2px rgba(11, 27, 63, .05), 0 12px 32px -16px rgba(11, 27, 63, .18)"
     },
     "options": [
         {

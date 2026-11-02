@@ -8,7 +8,7 @@
         </div>
         <div class="cta-band__actions">
             @if (filled($section->content['button_url'] ?? null) && filled($section->content['button_label'] ?? null))
-                <a href="{{ $section->content['button_url'] }}" class="btn btn--primary">{{ $section->content['button_label'] }}</a>
+                <a href="{{ $section->content['button_url'] }}" class="btn btn--accent">{{ $section->content['button_label'] }}</a>
             @endif
             @if (filled($section->content['button2_url'] ?? null) && filled($section->content['button2_label'] ?? null))
                 <a href="{{ $section->content['button2_url'] }}" class="btn btn--on-dark">{{ $section->content['button2_label'] }}</a>

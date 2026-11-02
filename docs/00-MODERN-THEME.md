@@ -147,6 +147,12 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | ৭ মান যাচাই | ✔ | নিচে "ধাপ ৭-এর ফল"; `screenshot.png` (1200×900), version 1.0.0 |
 | ৮ Default করা ও doc | ✔ | `config/platform.php` `themes.default` = `env('UWMS_THEME_DEFAULT', 'modern')`, `.env.example`, phpunit.xml (`default` — test-গুলো DIU install হিসেবে), দুই পথের test; Theme Guide (modern উদাহরণ), User Manual Part C §4.1, HANDOFF, theme README / CHANGELOG |
 
+## সংশোধন v1.1 (owner-এর মন্তব্যের পরে)
+
+Owner: v1.0-এর UI ভালো নয়। রং ও branding নিজের মতো করতে বলেছেন, content যেমন আছে তেমন রেখে। করা হয়েছে UI/UX Part B §12.8 অনুযায়ী
+"Bold & Photographic" চেহারা (royal blue, midnight navy, gold, Plus Jakarta Sans)। ফল: axe পরিষ্কার, JS error ও পাশে scroll নেই, Lighthouse mobile
+(gzip): home 93, programs 94, accessibility / best practices / SEO 100, CLS 0। Theme version 1.1.0।
+
 ## Admin থেকে theme বদলানো
 
 1. **Appearance › Themes** → University Modern → **Preview** (শুধু আপনার browser-এ) → **Activate** (সবার জন্য)।
@@ -202,3 +208,4 @@ Command-line: `php artisan uwms:theme:activate modern` / `php artisan uwms:theme
 | D-16 | নতুন install-এর default = `env('UWMS_THEME_DEFAULT', 'modern')`; phpunit.xml-এ `default` | বিদ্যমান DIU test-গুলো DIU install বোঝায়; নতুন install-এর পথ ModernThemeTest-এ আলাদা test |
 | D-17 | `ThemeManagerTest`-এর bundled theme তালিকায় `modern` যোগ | Modern এখন দ্বিতীয় bundled theme — test-এর প্রত্যাশা, behaviour নয় |
 | D-18 | Cloud dev DB-তে active theme আবার `default` করে রাখা হয়েছে | Owner-এর data / চেহারা অপরিবর্তিত |
+| D-19 | v1.1: নতুন content field নয় — শুধু token, CSS ও view-এর markup; phone-এর Apply / Call bar বিদ্যমান option (header বোতাম) ও Settings › Contact-এর ফোন থেকে | Owner: "content যেমন আছে তেমন থাকুক" |

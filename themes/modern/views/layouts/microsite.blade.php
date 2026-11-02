@@ -24,6 +24,7 @@
 
     <x-platform::slot name="footer" />
     <x-platform::slot name="popup" />
+    @include('theme::partials.mobile-actions')
 
     @livewireScripts
     {!! settings('code.footer_code') !!}

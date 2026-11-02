@@ -24,6 +24,7 @@ return [
     'previous' => 'আগের',
     'next' => 'পরের',
     'slide' => 'স্লাইড :number',
+    'call' => 'কল করুন',
     'part_of' => ':name-এর অংশ',
     'program_facts' => ['credits' => 'ক্রেডিট', 'semesters' => 'সেমিস্টার', 'duration' => 'মেয়াদ', 'total_fees' => 'মোট ফি', 'next_start' => 'পরবর্তী শুরু'],
     'sections' => [

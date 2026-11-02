@@ -528,3 +528,21 @@ touch target ≥ 44px; skip link; সব রং-জোড়া AA; 360px-এ �
 | HTML block editor | `editor_css: ["css/editor.css"]` — Jodit-এ website-এর মতো font, heading, table |
 
 পরে আলাদা override লাগলে অগ্রাধিকার: events listing, office microsite frame, admission circular, gallery album।
+
+### 12.8 সংশোধন v1.1 — Bold & Photographic (owner 2026-11-02)
+
+Owner-এর মন্তব্য: v1.0 অতি সাদামাটা, SaaS-এর মতো। Owner বলেছেন রং ও branding আমার মতো করে বানাতে, content ও data যেমন আছে তেমন রেখে। ফলে নতুন চেহারা:
+
+| বিষয় | v1.1 |
+|---|---|
+| রং (theme.json default) | primary royal blue `#163C9E`, secondary midnight navy `#0B1B3F`, accent gold `#F5B700`, surface `#F3F5FA`, text `#0F172A` |
+| Font | heading **Plus Jakarta Sans** 800 (bundled), body Inter, বাংলা Noto Sans Bengali |
+| Hero | পুরো প্রস্থে ছবি, উপরে গাঢ় navy overlay; ছবি না থাকলে brand gradient + হালকা grid ও আলো; সাদা বড় heading, সোনালি eyebrow pill, সোনালি প্রধান বোতাম |
+| Header | navy utility bar, বড় logo, bold menu, সোনালি Apply বোতাম; mega panel-এর উপরে নীল রেখা, column শিরোনামের নিচে সোনালি রেখা |
+| Section | eyebrow-এর আগে সোনালি দাগ, বড় navy শিরোনাম; notice তালিকা card-এর ভেতরে, নীল date box (জরুরি হলে লাল); figures নীল gradient band-এ; testimonials navy পটভূমিতে; CTA band gradient + আলো |
+| Card | border প্রায় নেই, নরম বড় shadow, hover-এ উপরে ওঠে, শিরোনাম নীল হয়; ছবি না থাকলে brand gradient |
+| ভেতরের পাতা | page hero = navy→নীল gradient, সাদা শিরোনাম, filter chip সাদা-স্বচ্ছ, চালু chip সোনালি |
+| Phone | নিচে স্থির bar: **Call** (Settings › Contact-এর ফোন) + **Apply** (header বোতামের option) — দুটোই খালি হলে bar নেই |
+| Footer | উপরে সোনালি রেখা, navy, column শিরোনামের নিচে সোনালি দাগ, social hover সোনালি |
+
+নতুন কোনো content field যোগ হয়নি। Hero-র image field-এর অর্থ এখন "heading-এর পেছনের ছবি", আর বিদ্যমান option ও setting ব্যবহার হয় (header বোতাম, contact phone)।
