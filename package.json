@@ -7,6 +7,8 @@
         "dev": "vite",
         "build:theme": "vite build --config themes/default/vite.config.js",
         "dev:theme": "vite --config themes/default/vite.config.js",
+        "build:theme:modern": "vite build --config themes/modern/vite.config.js",
+        "dev:theme:modern": "vite --config themes/modern/vite.config.js",
         "lighthouse": "lhci autorun"
     },
     "devDependencies": {

@@ -150,6 +150,7 @@ class PlatformServiceProvider extends ServiceProvider
                 Commands\ThemeSyncCommand::class,
                 Commands\ThemeActivateCommand::class,
                 Commands\ThemeCheckCommand::class,
+                Commands\ThemeMakeCommand::class,
                 Commands\SearchRebuildCommand::class,
                 Commands\SearchScheduledCommand::class,
                 Commands\FlushViewCountsCommand::class,

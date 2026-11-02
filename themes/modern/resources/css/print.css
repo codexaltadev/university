@@ -1,0 +1,9 @@
+/* Paper (UI/UX Part B §8): the page's content only, black on white, links spelled out */
+@media print {
+    .site-header, .site-utility, .site-footer, .microsite-bar, .drawer, .search-panel, .back-to-top, .no-print, .filters, nav[role="navigation"] { display: none !important; }
+    body.site { background: white; color: black; font-size: 11pt; }
+    .page-hero { background: none; border: 0; padding-block: 0 12pt; }
+    .card { box-shadow: none; break-inside: avoid; }
+    .prose a[href^="http"]::after { content: " (" attr(href) ")"; font-size: 9pt; }
+    .reveal { opacity: 1 !important; transform: none !important; }
+}

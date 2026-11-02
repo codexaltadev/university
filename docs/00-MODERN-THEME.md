@@ -139,6 +139,7 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 |---|---|---|
 | ১ Audit | ✔ | UI/UX Part B §11 |
 | ২ Design + mockup | ✔ | UI/UX Part B §12, `docs/05-UIUX/mockups/modern/index.html` |
+| ৩ Scaffold command + theme চালু | ✔ | `uwms:theme:make` (`platform/Console/Commands/ThemeMakeCommand.php`, `tests/Feature/Kernel/ThemeMakeTest.php`), `themes/modern` chrome, `tests/Feature/Theme/ModernThemeTest.php`, `npm run build:theme:modern` |
 
 ## Decisions
 
@@ -149,3 +150,6 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | D-3 | Module Settings-এর DIU default লেখা (§11.1) এই কাজে বদলানো হবে না | Default বদলালে DIU live site-এর লেখা বদলে যেতে পারে (scope: default theme-এর চেহারা অপরিবর্তিত); আলাদা ধাপ সুপারিশ |
 | D-4 | Design: Inter + Noto Sans Bengali (bundled, npm `@fontsource-variable`), primary `#1D4ED8`, secondary `#0F172A`, accent `#F59E0B`, pill button, radius 8/12/20 | Modern, শান্ত, generic; owner reference link দেননি — নিজের সুপারিশ |
 | D-5 | Mockup = static HTML (`docs/05-UIUX/mockups/modern/`), header / footer একটি ছোট JS দিয়ে সব পাতায় | পর্যালোচনার জন্য যথেষ্ট, theme code নয় |
+| D-6 | `uwms:theme:make` blank = validator-এর ন্যূনতম file + Tailwind source + Vite config; `--from` কপি করে build output বাদ দিয়ে; build নিজে চালায় না (`npx vite build --config themes/{slug}/vite.config.js` দেখায়) | Command-এ Node চালানো platform-এর কাজ নয় (server-এ npm চলে না, T-6) |
+| D-7 | Modern theme-এ Tailwind palette বন্ধ (`--color-*: initial`) — শুধু token রং; package.json-এ `build:theme:modern` / `dev:theme:modern` | Admin-এর রং পুরো site-এ নিশ্চিত; ভুল করে `gray-500` লিখলে build-এ আসে না |
+| D-8 | Header variant `modern` (utility row + mega panel) ও `minimal`; footer `columns` ও `simple`; header button ও footer লেখা theme option, default খালি | Generic: কোনো university-র link default-এ নয় |

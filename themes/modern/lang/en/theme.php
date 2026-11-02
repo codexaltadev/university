@@ -1,0 +1,28 @@
+<?php
+
+return [
+    'skip_to_content' => 'Skip to content',
+    'home' => 'Home',
+    'menu' => 'Menu',
+    'close' => 'Close',
+    'search' => 'Search',
+    'search_placeholder' => 'Search the website',
+    'primary_nav' => 'Main menu',
+    'utility_nav' => 'Quick links',
+    'breadcrumb' => 'Breadcrumb',
+    'languages' => 'Languages',
+    'back_to_top' => 'Back to top',
+    'view_all' => 'View all',
+    'read_more' => 'Read more',
+    'not_found' => 'This page is not here',
+    'not_found_text' => 'It may have moved or been taken down. Try the search, or start again from the home page.',
+    'go_home' => 'Go to the home page',
+    'maintenance' => 'We will be back soon',
+    'maintenance_text' => 'The website is being updated. Please try again in a few minutes.',
+    'copyright' => '© :year :name. All rights reserved.',
+    'follow_us' => 'Follow us',
+    'previous' => 'Previous',
+    'next' => 'Next',
+    'slide' => 'Slide :number',
+    'part_of' => 'Part of :name',
+];

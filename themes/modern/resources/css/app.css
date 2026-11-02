@@ -1,0 +1,241 @@
+/*
+ * University Modern (UI/UX Part B §12; Theme Guide §6, §12). Tailwind CSS 4.3.3, CSS-first.
+ * Every colour is a kernel design token (:root from Platform\Theme\DesignTokens, defaults in
+ * theme.json, changed in Admin › Themes › Design): Tailwind's own palette is switched off, so
+ * bg-primary / text-muted / border-border are the only colours there are. No hex here (T-2).
+ */
+@import "tailwindcss";
+@import "./chrome.css";     /* header, mega menu, drawer, footer, microsite bar */
+@import "./sections.css";   /* homepage sections and page parts */
+@import "./print.css";      /* paper: the content only */
+
+@source "../../views";
+@source "../../../../Modules/*/resources/views";
+@source "../../../../platform/resources/views";
+
+/* Bundled fonts (OFL, @fontsource-variable): no request to a font CDN; theme.json "fonts" tells the kernel */
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("../fonts/inter-latin-wght-normal.woff2") format("woff2"); unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD; }
+@font-face { font-family: "Inter"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("../fonts/inter-latin-ext-wght-normal.woff2") format("woff2"); unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF; }
+@font-face { font-family: "Noto Sans Bengali"; font-style: normal; font-weight: 100 900; font-display: swap; src: url("../fonts/noto-sans-bengali-bengali-wght-normal.woff2") format("woff2"); unicode-range: U+0951-0952, U+0964-0965, U+0980-09FE, U+1CD0, U+1CD2, U+1CD5-1CD6, U+1CD8, U+1CE1, U+1CEA, U+1CED, U+1CF2, U+1CF5-1CF7, U+200C-200D, U+20B9, U+25CC, U+A8F1; }
+/* Until Inter arrives: Arial sized like Inter, so lines do not move (CLS); the kernel's stack names "Inter Fallback" */
+@font-face { font-family: "Inter Fallback"; src: local("Arial"), local("ArialMT"), local("Liberation Sans"); size-adjust: 107.12%; ascent-override: 90.44%; descent-override: 22.52%; line-gap-override: 0%; }
+
+/* Tailwind's palette off: only the tokens (and white / black / transparent / current) */
+@theme {
+    --color-*: initial;
+    --color-white: white;
+    --color-black: black;
+}
+
+@theme inline reference {
+    --color-primary: var(--color-primary);
+    --color-primary-contrast: var(--color-primary-contrast);
+    --color-secondary: var(--color-secondary);
+    --color-secondary-contrast: var(--color-secondary-contrast);
+    --color-accent: var(--color-accent);
+    --color-accent-contrast: var(--color-accent-contrast);
+    --color-bg: var(--color-bg);
+    --color-surface: var(--color-surface);
+    --color-text: var(--color-text);
+    --color-muted: var(--color-text-muted);
+    --color-border: var(--color-border);
+    --color-success: var(--color-success);
+    --color-warning: var(--color-warning);
+    --color-danger: var(--color-danger);
+
+    --font-sans: var(--font-body);
+    --font-heading: var(--font-heading);
+    --font-body: var(--font-body);
+
+    --radius-sm: var(--radius-sm);
+    --radius-md: var(--radius-md);
+    --radius-lg: var(--radius-lg);
+    --shadow-card: var(--shadow-card);
+    --container-site: var(--container-max);
+}
+
+/* The modern type scale (UI/UX Part B §12.2); values inline so the kernel's --text-* do not override them */
+@theme inline {
+    --text-xs: 0.8125rem;  --text-xs--line-height: 1.5;
+    --text-sm: 0.875rem;   --text-sm--line-height: 1.55;
+    --text-base: 1rem;     --text-base--line-height: 1.65;
+    --text-lg: 1.125rem;   --text-lg--line-height: 1.6;
+    --text-xl: 1.25rem;    --text-xl--line-height: 1.45;
+    --text-2xl: 1.5rem;    --text-2xl--line-height: 1.3;
+    --text-3xl: 1.875rem;  --text-3xl--line-height: 1.2;
+    --text-4xl: 2.5rem;    --text-4xl--line-height: 1.1;
+    --text-5xl: 3.25rem;   --text-5xl--line-height: 1.05;
+    --text-6xl: 4rem;      --text-6xl--line-height: 1.02;
+}
+
+/* ─── Base ──────────────────────────────────────────────────────────────── */
+@layer base {
+    [x-cloak] { display: none !important; }
+
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body.site {
+        margin: 0;
+        background: var(--color-bg);
+        color: var(--color-text);
+        font-family: var(--font-body);
+        font-size: var(--font-size-base, 16px);
+        line-height: var(--line-height-body);
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
+        overflow-x: clip;
+    }
+    :lang(bn) { letter-spacing: 0 !important; }
+
+    h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); font-weight: 700; line-height: 1.15; letter-spacing: -0.02em; color: var(--color-text); }
+    a { color: inherit; text-decoration: none; }
+    a:hover { color: var(--color-primary); }
+    img, video { max-width: 100%; height: auto; }
+    :focus-visible { outline: 2px solid var(--color-primary); outline-offset: 2px; border-radius: 4px; }
+    ::selection { background: color-mix(in srgb, var(--color-primary) 18%, transparent); }
+
+    input:not([type="checkbox"], [type="radio"], [type="range"], [type="file"], [type="submit"], [type="button"]), select, textarea {
+        width: 100%;
+        min-height: 48px;
+        padding: 10px 14px;
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-md);
+        background: var(--color-bg);
+        color: var(--color-text);
+        font: inherit;
+        transition: border-color .15s, box-shadow .15s;
+    }
+    textarea { min-height: 120px; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--color-primary); box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 18%, transparent); }
+    label { font-weight: 600; font-size: var(--text-sm); }
+    label > input, label > select, label > textarea { margin-top: 6px; font-weight: 400; }
+
+    @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+    }
+}
+
+/*
+ * ─── Module UI contract (UI/UX Part B §9.1) ──────────────────────────────
+ * Module views use these classes and token utilities only; this is how they look here.
+ */
+@layer components {
+    .container { width: 100%; max-width: var(--container-max); margin-inline: auto; padding-inline: 20px; }
+    .skip-link { position: absolute; left: -9999px; top: 8px; z-index: 100; padding: 10px 16px; border-radius: 999px; background: var(--color-primary); color: var(--color-primary-contrast); }
+    .skip-link:focus { left: 8px; }
+
+    /* Buttons: pill, 44px */
+    .btn {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        min-height: 44px; padding: 10px 22px; border: 1px solid var(--color-border); border-radius: 999px;
+        background: var(--color-bg); color: var(--color-text);
+        font: 600 var(--text-sm)/1.3 var(--font-heading); text-decoration: none; cursor: pointer; white-space: nowrap;
+        transition: background-color .15s, color .15s, border-color .15s, box-shadow .15s, transform .15s;
+    }
+    .btn:hover { border-color: var(--color-text); color: var(--color-text); }
+    .btn:active { transform: translateY(1px); }
+    .btn:disabled, .btn[aria-disabled="true"] { opacity: .5; cursor: not-allowed; }
+    .btn--primary { background: var(--color-primary); border-color: transparent; color: var(--color-primary-contrast); }
+    .btn--primary:hover { background: color-mix(in srgb, var(--color-primary) 86%, black); border-color: transparent; color: var(--color-primary-contrast); box-shadow: 0 6px 18px -8px var(--color-primary); }
+    .btn--secondary { background: var(--color-secondary); border-color: transparent; color: var(--color-secondary-contrast); }
+    .btn--secondary:hover { background: color-mix(in srgb, var(--color-secondary) 85%, white); border-color: transparent; color: var(--color-secondary-contrast); }
+    .btn--outline { background: transparent; border-color: currentColor; }
+    .btn--sm { min-height: 36px; padding: 6px 14px; font-size: var(--text-xs); }
+
+    /* Badges */
+    .badge, .badge-primary {
+        display: inline-flex; align-items: center; gap: 4px; padding: 2px 10px; border-radius: 999px;
+        background: color-mix(in srgb, var(--color-primary) 10%, var(--color-bg)); color: var(--color-primary);
+        font: 600 var(--text-xs)/1.6 var(--font-heading); vertical-align: middle; white-space: nowrap;
+    }
+    .badge--success { background: color-mix(in srgb, var(--color-success) 12%, var(--color-bg)); color: var(--color-success); }
+    .badge--muted { background: var(--color-surface); color: var(--color-text-muted); }
+    .badge--warning { background: color-mix(in srgb, var(--color-warning) 12%, var(--color-bg)); color: var(--color-warning); }
+    .badge--danger { background: color-mix(in srgb, var(--color-danger) 12%, var(--color-bg)); color: var(--color-danger); }
+
+    /* Filter chips (module views: chip / chip-active) */
+    .chip { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 8px 16px; border: 1px solid var(--color-border); border-radius: 999px; background: var(--color-bg); font-size: var(--text-sm); font-weight: 500; white-space: nowrap; }
+    .chip:hover { border-color: var(--color-text); color: var(--color-text); }
+    .chip-active, .chip[aria-current="page"], .chip[aria-pressed="true"] { background: var(--color-secondary); border-color: transparent; color: var(--color-secondary-contrast); }
+    .chip-active:hover { color: var(--color-secondary-contrast); }
+
+    /* Cards */
+    .card { position: relative; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: var(--shadow-card); padding: 24px; }
+    a.card, .card--link { transition: transform .2s, border-color .2s, box-shadow .2s; }
+    a.card:hover, .card--link:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--color-primary) 35%, var(--color-border)); color: inherit; }
+
+    .lead { font-size: var(--text-lg); color: var(--color-text-muted); }
+    .empty-state { padding: 56px 20px; text-align: center; color: var(--color-text-muted); background: var(--color-surface); border-radius: var(--radius-lg); }
+    .form-error { color: var(--color-danger); font-size: var(--text-xs); margin-top: 4px; }
+
+    /* Rich text from the editor */
+    .prose { max-width: 72ch; font-size: 1.0625rem; }
+    .prose > * + * { margin-top: 1em; }
+    .prose h2 { font-size: var(--text-3xl); margin-top: 1.6em; }
+    .prose h3 { font-size: var(--text-2xl); margin-top: 1.4em; }
+    .prose h4 { font-size: var(--text-xl); margin-top: 1.2em; }
+    .prose a { color: var(--color-primary); text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+    .prose ul { list-style: disc; padding-inline-start: 1.4em; }
+    .prose ol { list-style: decimal; padding-inline-start: 1.4em; }
+    .prose li + li { margin-top: .35em; }
+    .prose li::marker { color: var(--color-text-muted); }
+    .prose blockquote { border-inline-start: 3px solid var(--color-primary); padding-inline-start: 1em; color: var(--color-text-muted); font-size: var(--text-lg); }
+    .prose img { border-radius: var(--radius-md); }
+    .prose hr { border: 0; border-top: 1px solid var(--color-border); margin-block: 2em; }
+    .prose table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); display: block; overflow-x: auto; }
+    .prose th, .prose td { border-bottom: 1px solid var(--color-border); padding: 10px 12px; text-align: start; vertical-align: top; }
+    .prose th { color: var(--color-text-muted); font-weight: 600; }
+
+    .table { width: 100%; border-collapse: collapse; font-size: var(--text-sm); }
+    .table th { color: var(--color-text-muted); font: 600 var(--text-xs)/1.4 var(--font-heading); text-transform: uppercase; letter-spacing: .05em; background: transparent; }
+    .table th, .table td { padding: 14px 12px; border-bottom: 1px solid var(--color-border); text-align: start; vertical-align: top; }
+    .table tbody tr:hover { background: var(--color-surface); }
+    .table a { color: var(--color-text); font-weight: 600; }
+    .table a:hover { color: var(--color-primary); }
+
+    /* Accordion */
+    .accordion { display: grid; gap: 10px; }
+    .accordion__item { border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-bg); overflow: hidden; }
+    .accordion__item + .accordion__item { margin-top: 10px; }
+    .accordion .accordion__item + .accordion__item { margin-top: 0; }
+    .accordion__title { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 20px; background: none; border: 0; font: 600 var(--text-base)/1.4 var(--font-heading); color: var(--color-text); text-align: start; cursor: pointer; list-style: none; }
+    .accordion__title::-webkit-details-marker { display: none; }
+    .accordion__title::after { content: "+"; flex: none; font-size: 1.4em; font-weight: 400; line-height: 1; color: var(--color-text-muted); }
+    .accordion__item[open] > .accordion__title, .accordion__title[aria-expanded="true"] { color: var(--color-primary); }
+    .accordion__item[open] > .accordion__title::after, .accordion__title[aria-expanded="true"]::after { content: "−"; }
+    .accordion__body { padding: 0 20px 20px; color: var(--color-text-muted); }
+
+    /* Tabs (module views: tabs / tabs__list / tabs__tab / tabs__panel) */
+    .tabs__list { display: flex; gap: 4px; border-bottom: 1px solid var(--color-border); overflow-x: auto; scrollbar-width: none; margin-bottom: 24px; }
+    .tabs__tab { padding: 12px 16px; border: 0; border-bottom: 2px solid transparent; background: none; color: var(--color-text-muted); font: 500 var(--text-sm)/1.3 var(--font-heading); white-space: nowrap; cursor: pointer; }
+    .tabs__tab:hover { color: var(--color-text); }
+    .tabs__tab[aria-selected="true"], .tabs__tab.is-active, .tabs__tab[aria-current="page"] { color: var(--color-text); border-bottom-color: var(--color-primary); }
+
+    /* Page and homepage section frames */
+    .page { padding-block: 48px 80px; }
+    .page__title { font-size: clamp(2rem, 4vw, 3rem); letter-spacing: -0.03em; margin-bottom: 16px; }
+    .page-grid { display: grid; gap: 48px; }
+    @media (min-width: 1024px) { .page-grid { grid-template-columns: minmax(0, 1fr) 300px; } }
+
+    .home-section { padding-block: 80px; }
+    .home-section--alt { background: var(--color-surface); }
+    .home-section--dark { background: var(--color-secondary); color: var(--color-secondary-contrast); }
+    .home-section--dark h2, .home-section--dark h3 { color: inherit; }
+    .home-section__head { margin-bottom: 36px; max-width: 720px; }
+    .home-section__title { font-size: clamp(1.75rem, 3.2vw, 2.5rem); letter-spacing: -0.03em; margin: 0; }
+    .home-section__sub { color: var(--color-text-muted); margin: 10px 0 0; font-size: var(--text-lg); }
+    .home-section--dark .home-section__sub { color: inherit; opacity: .75; }
+    @media (max-width: 767px) { .home-section { padding-block: 56px; } }
+
+    /* Laravel / Livewire pagination: round buttons */
+    nav[role="navigation"] { margin-top: 32px; }
+    nav[role="navigation"] a, nav[role="navigation"] span[aria-current] > span, nav[role="navigation"] span[aria-disabled] > span {
+        display: inline-flex; min-width: 40px; height: 40px; align-items: center; justify-content: center; padding-inline: 12px;
+        border: 1px solid var(--color-border); border-radius: 999px; font-size: var(--text-sm); background: var(--color-bg);
+    }
+    nav[role="navigation"] span[aria-current] > span { background: var(--color-secondary); color: var(--color-secondary-contrast); border-color: transparent; }
+    nav[role="navigation"] span[aria-disabled] > span { opacity: .45; }
+}
+
+@utility sr-only {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border-width: 0;
+}

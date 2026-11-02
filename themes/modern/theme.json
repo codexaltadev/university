@@ -1,0 +1,63 @@
+{
+    "slug": "modern",
+    "name": "University Modern",
+    "version": "1.0.0",
+    "requires_core": "^1.0",
+    "author": { "name": "UWMS", "email": "" },
+    "license": "proprietary",
+    "description": "A modern, minimal theme for any university: calm colours, large clear type, card grids and light motion. Logo, colours and every text come from Admin.",
+    "screenshot": "screenshot.png",
+
+    "layouts": {},
+
+    "menu_locations": {
+        "primary": "Primary (header)",
+        "topbar": "Utility links (above the header)",
+        "footer-1": "Footer column 1",
+        "footer-2": "Footer column 2",
+        "footer-3": "Footer column 3",
+        "sidebar": "Sidebar"
+    },
+
+    "header_variants": ["modern", "minimal"],
+    "footer_variants": ["columns", "simple"],
+
+    "page_templates": ["default", "full-width", "with-sidebar", "right-sidebar", "landing"],
+    "microsite_templates": ["standard"],
+
+    "sections": {},
+
+    "fonts": ["Inter", "Noto Sans Bengali"],
+
+    "tokens": {
+        "color-primary": "#1D4ED8",
+        "color-secondary": "#0F172A",
+        "color-accent": "#F59E0B",
+        "color-bg": "#FFFFFF",
+        "color-surface": "#F5F7FA",
+        "color-text": "#111827",
+        "color-text-muted": "#4B5563",
+        "color-border": "#E5E7EB",
+        "color-success": "#15803D",
+        "color-warning": "#B45309",
+        "color-danger": "#B91C1C",
+        "font-heading": "Inter",
+        "font-body": "Inter",
+        "font-bn": "Noto Sans Bengali",
+        "line-height-body": "1.65",
+        "line-height-body-bn": "1.85",
+        "radius-sm": "8px",
+        "radius-md": "12px",
+        "radius-lg": "20px",
+        "container-max": "1240px",
+        "shadow-card": "0 1px 2px rgba(15, 23, 42, .06), 0 8px 24px -12px rgba(15, 23, 42, .12)"
+    },
+
+    "options": [
+        { "key": "sticky_header", "type": "toggle", "label": "Header stays on top while scrolling", "default": true },
+        { "key": "header_cta_label", "type": "text", "label": "Header button text (empty = no button)", "default": "" },
+        { "key": "header_cta_url", "type": "text", "label": "Header button link", "default": "" },
+        { "key": "footer_tagline", "type": "text", "label": "Footer text under the logo (empty = the site tagline)", "default": "" },
+        { "key": "animations", "type": "toggle", "label": "Sections fade in while scrolling", "default": true }
+    ]
+}
