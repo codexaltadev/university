@@ -9,6 +9,7 @@ use Filament\Facades\Filament;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
+use Modules\Events\Models\Event;
 use Modules\Media\Filament\Resources\MediaItems\MediaActions;
 use Modules\Media\Filament\Resources\MediaItems\MediaItemResource;
 use Modules\Media\Filament\Resources\MediaItems\Pages\EditMediaItem;
@@ -174,6 +175,50 @@ it('serves private files only through a signed link (BRL-MEDIA-02)', function ()
     expect($item->file()->disk)->toBe('local');
     $this->get(route('media.file', ['item' => $item->id]))->assertForbidden();
     $this->get($item->url())->assertOk();
+});
+
+it('withholds a file while everything using it is off, back at the same address once one is on (owner 2026-11-02)', function () {
+    $this->actingAs(superAdmin());
+    $item = library()->store(photo());
+    $path = $item->file()->getPathRelativeToRoot();   // "{id}/campus-photo.jpg"
+    $address = $item->url();
+    $exam = Office::create(['name' => ['en' => 'Exam Office']]);
+    $registrar = Office::create(['name' => ['en' => 'Registrar Office']]);
+    $exam->syncMedia('cover', [$item->id]);
+    $registrar->syncMedia('cover', [$item->id]);
+    $unused = library()->store(photo('Library only.jpg'));   // nobody uses it (rich text, perhaps): left alone
+
+    $exam->update(['is_active' => false]);
+    Storage::disk('public')->assertExists($path);                                          // the registrar still shows it
+
+    $registrar->delete();
+    Storage::disk('public')->assertMissing($path);
+    Storage::disk('public')->assertMissing(dirname($path).'/conversions');                 // its sizes too
+    Storage::disk('local')->assertExists($path);
+    expect($item->fresh()->isWithheld())->toBeTrue()
+        ->and($item->fresh()->url())->toContain('signature=');                              // the admin still sees it
+    $this->get('/media/'.$item->id.'/campus-photo.jpg')->assertForbidden();               // no public way round
+    $this->get($item->fresh()->url())->assertOk();
+    Storage::disk('public')->assertExists($unused->file()->getPathRelativeToRoot());
+
+    $registrar->restore();
+    Storage::disk('public')->assertExists($path);
+    expect($item->fresh()->url())->toBe($address);                                         // the same address
+
+    // The item itself switched off; a record whose active_at is still to come
+    $item->update(['is_active' => false]);
+    Storage::disk('public')->assertMissing($path);
+    $item->update(['is_active' => true]);
+    Storage::disk('public')->assertExists($path);
+
+    $later = library()->store(photo('Open day.jpg'));
+    $event = Event::factory()->create(['active_at' => now()->addMinutes(3), 'is_active' => true]);
+    $event->syncMedia('featured_image', [$later->id]);
+    Storage::disk('public')->assertMissing($later->file()->getPathRelativeToRoot());
+
+    $this->travel(5)->minutes();
+    $this->artisan('uwms:media:visibility', ['--minutes' => 10])->assertSuccessful();      // scheduled: active_at reached
+    Storage::disk('public')->assertExists($later->fresh()->file()->getPathRelativeToRoot());
 });
 
 it('lists, uploads and filters on screen (FR-MEDIA-01/03/05/15)', function () {

@@ -46,7 +46,11 @@ class S03Media extends Step
             ['program', 'program_professional_memberships', 'image', 'Modules\\Program\\Models\\ProgramMembership', 'logo'],
             ['program', 'program_variants', 'image', 'Modules\\Program\\Models\\ProgramVariant', 'image'],
         ],
-        'facilities' => [['facilities', 'facilities', 'facility_icon', 'Modules\\Facilities\\Models\\Facility', 'image']],
+        'facilities' => [
+            ['facilities', 'facilities', 'facility_icon', 'Modules\\Facilities\\Models\\Facility', 'image'],
+            ['facilities', 'facilities', 'image', 'Modules\\Facilities\\Models\\Facility', 'image'],   // newer dumps: a picture where the icon is a font name
+        ],
+        'offices' => [['office', 'office_sites', 'banner_photo', 'Modules\\Office\\Models\\Office', 'cover']],   // S15T
         'accreditation' => [
             ['accreditation', 'accreditations', 'logo', 'Modules\\Accreditation\\Models\\Accreditation', 'logo'],
             ['accreditation', 'rankings', 'logo', 'Modules\\Accreditation\\Models\\Ranking', 'logo'],
@@ -81,6 +85,11 @@ class S03Media extends Step
             ['documents', 'policies', 'icon', null, null],
         ],
     ];
+
+    /** Files of DIU's new site (pictures written in its code, not in project_diu): cached under this folder, fetched from FRONTEND_BASE */
+    public const FRONTEND = 'frontend/';
+
+    public const FRONTEND_BASE = 'https://daffodilvarsity.edu.bd/';
 
     /** Plan §3: at most 4 downloads at once, 3 tries */
     public const PARALLEL = 4;
@@ -205,7 +214,43 @@ class S03Media extends Step
             }
         }
 
+        if (($only === [] || in_array('admission', $only, true)) && $modules->isActive('admission')) {
+            $this->seatBuildings();
+        }
+
         $this->report->review('Image sizes are made by the queue: run php artisan queue:work --stop-when-empty (until then pages show the original).');
+    }
+
+    /**
+     * DIU's examination buildings (S08Admission::SEAT_BUILDINGS, pictures from DIU's new site — cached under "frontend/"):
+     * each picture titled with its building into the Media Library, the list into Settings › Admission when it is
+     * still empty (pictures chosen by hand stay).
+     */
+    protected function seatBuildings(): void
+    {
+        $paths = array_map(fn (string $p): string => self::FRONTEND.$p, S08Admission::SEAT_BUILDINGS);
+        $missing = array_values(array_filter($paths, fn (string $p): bool => ! is_file($this->cached($p))));
+        if ($missing !== [] && config('legacy.download_files')) {
+            foreach ($this->download($missing) as $path => $why) {
+                $this->report->review("Not downloaded ({$why}): {$path}");
+            }
+        }
+
+        $ids = [];
+        foreach ($paths as $name => $path) {
+            $item = $this->item($path, 'seat_buildings');
+            if ($item === null) {
+                $this->report->skipped('seat_buildings → library', 'file missing or refused');
+
+                continue;
+            }
+            $item->update(['title' => ['en' => $name]]);   // the page matches the applicant's building by this title
+            $ids[] = $item->id;
+        }
+        if ($ids !== [] && array_filter((array) settings('admission.seat_buildings')) === []) {
+            settings()->save('admission', ['seat_buildings' => $ids]);
+            $this->report->saved('seat_buildings → settings', true);
+        }
     }
 
     /** The Media Library item for a legacy file: from the map, else one with the same content, else a new one. */
@@ -286,9 +331,13 @@ class S03Media extends Step
         return self::cachePath().'/'.$path;
     }
 
-    /** The old app served some files at their path ("images/…") and its upload disk under "storage/" */
+    /** The old app served some files at their path ("images/…") and its upload disk under "storage/"; "frontend/…" is DIU's new site's */
     protected static function url(string $path, bool $storage = false): string
     {
+        if (str_starts_with($path, self::FRONTEND)) {
+            return self::FRONTEND_BASE.implode('/', array_map('rawurlencode', explode('/', substr($path, strlen(self::FRONTEND)))));
+        }
+
         return Normalizer::FILE_BASE.($storage ? 'storage/' : '').implode('/', array_map('rawurlencode', explode('/', $path)));
     }
 

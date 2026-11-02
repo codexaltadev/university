@@ -64,7 +64,7 @@ return [
     ],
     'help' => [
         'totals' => 'Worked out from the fees: tuition = per year + per semester × semesters + per credit × credits; total = tuition + admission + other. The waiver applies to the tuition only.',
-        'code' => 'Used in the address, e.g. /tuition-fees?category=local',
+        'code' => 'Used in the address, e.g. /tuition-fees/local',
     ],
     'page' => [
         'all_programs' => 'All Programs',

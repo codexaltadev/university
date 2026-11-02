@@ -31,6 +31,8 @@ class MediaPicker extends Select
 
     protected bool $storesIds = false;
 
+    protected bool $onlyPublic = false;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -96,6 +98,14 @@ class MediaPicker extends Select
         return $this;
     }
 
+    /** Only files anyone may open (no private ones): for links and pictures written into page text. */
+    public function publicOnly(bool $condition = true): static
+    {
+        $this->onlyPublic = $condition;
+
+        return $this;
+    }
+
     /** Keep the chosen ids in the form data (Settings), instead of saving usage on a record. */
     public function storeIds(bool $condition = true): static
     {
@@ -122,7 +132,7 @@ class MediaPicker extends Select
      */
     public function recentOptions(): array
     {
-        $key = 'media-picker.recent.'.($this->onlyImages ? 'images' : 'all');
+        $key = 'media-picker.recent.'.($this->onlyImages ? 'images' : 'all').($this->onlyPublic ? '.public' : '');
         $cached = request()->attributes->get($key);
 
         if (! is_array($cached)) {
@@ -139,6 +149,7 @@ class MediaPicker extends Select
             ->visibleTo(auth()->user())
             ->where('is_active', true)
             ->when($this->onlyImages, fn (Builder $q) => $q->where('kind', 'image'))
+            ->when($this->onlyPublic, fn (Builder $q) => $q->where('is_private', false))
             ->with('media');
     }
 

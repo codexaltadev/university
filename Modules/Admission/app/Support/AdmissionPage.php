@@ -51,18 +51,19 @@ class AdmissionPage
 
     /**
      * The examination buildings (Settings › Admission: pictures, each titled with its building's name in the Media
-     * Library), the applicant's marked.
+     * Library), the applicant's marked: one name holds the other, as DIU's ("Inspiration Building (IB)" is "Inspiration Building").
      *
      * @return list<array{name: string, image: string, mine: bool}>
      */
     public function seatBuildings(?string $mine = null): array
     {
         $key = fn (?string $name): string => (string) preg_replace('/[^a-z0-9]+/', '', mb_strtolower((string) $name));
+        $same = fn (string $a, string $b): bool => $a !== '' && $b !== '' && (str_contains($a, $b) || str_contains($b, $a));
         $ids = array_values(array_filter((array) settings('admission.seat_buildings')));
         $items = MediaItem::query()->whereKey($ids)->get()->keyBy('id');
 
         return collect($ids)->map(fn ($id): ?array => ($item = $items->get($id)) && ($image = media_url($id, 'large'))
-            ? ['name' => (string) $item->title, 'image' => $image, 'mine' => $mine !== null && $key($item->title) === $key($mine)] : null)
+            ? ['name' => (string) $item->title, 'image' => $image, 'mine' => $mine !== null && $same($key($item->title), $key($mine))] : null)
             ->filter()->values()->all();
     }
 

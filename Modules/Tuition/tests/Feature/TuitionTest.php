@@ -132,7 +132,13 @@ it('lists /tuition-fees by category, grouped by faculty, with filters (FR-FEE-03
         ->assertSeeInOrder(['Science and Information Technology', 'B. Sc. in Software Engineering', '৳ 952,500', 'Business &amp; Entrepreneurship', '৳ 189,025 – ৳ 315,000'], false)
         ->assertDontSee('$ 9,726');
 
-    $this->get('/tuition-fees?category=international')->assertOk()->assertSee('$ 9,726')->assertDontSee('৳ 952,500');
+    // A category is its own address, the filters are the query (owner 2026-11-02); the old ?category= leads there
+    $this->get('/tuition-fees/international')->assertOk()->assertSee('$ 9,726')->assertDontSee('৳ 952,500')
+        ->assertSee('<link rel="canonical" href="'.url('/tuition-fees/international').'"', false);
+    $this->get('/tuition-fees/local')->assertOk()->assertSee('৳ 952,500')->assertSee('href="'.url('/tuition-fees/international').'"', false);
+    $this->get('/tuition-fees?category=international&faculty=fsit')->assertRedirect('/tuition-fees/international?faculty=fsit')->assertStatus(301);
+    $this->get('/tuition-fees/nowhere')->assertNotFound();
+    $this->get('/tuition-fees/local?faculty=fsit')->assertSee('B. Sc. in Software Engineering')->assertDontSee('Master of Business Administration');
     $this->get('/tuition-fees?level=graduate')->assertSee('Master of Business Administration')->assertDontSee('B. Sc. in Software Engineering');
     $this->get('/tuition-fees?faculty=fsit')->assertSee('B. Sc. in Software Engineering')->assertDontSee('Master of Business Administration');
 
@@ -155,7 +161,7 @@ it('shows the yearly international fees as DIU does: a column per year and other
         [TuitionLine::OTHER, 'Other fees', 2181, null],
     ]);
 
-    $this->get('/tuition-fees?category=international')->assertOk()
+    $this->get('/tuition-fees/international')->assertOk()
         ->assertSeeInOrder(['Payable During Admission', '1st Year', '2nd Year', 'Other Fees *', 'Total Tuition Fees', '$ 1,514', '$ 2,664', '$ 2,300', '$ 2,181'])
         ->assertDontSee('Average Semester Fees')->assertDontSee('>Majors<', false);
 });

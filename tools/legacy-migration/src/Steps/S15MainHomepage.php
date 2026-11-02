@@ -47,6 +47,7 @@ class S15MainHomepage extends Step
 
     protected function handle(): void
     {
+        $this->oldAddress('/home', '/');   // DIU's new site has its homepage at /home too
         $homepages = app(Homepages::class);
         $layout = $homepages->own(RelationEngine::SITE_KEY) ?? $homepages->create(RelationEngine::SITE_KEY);
         $created = $layout->wasRecentlyCreated;

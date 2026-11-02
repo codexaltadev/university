@@ -2,30 +2,17 @@
     Admission result lookup as DIU's /admission-test-result: a white card with "Application Serial Number" and Search Result;
     found — the result card (blue head with the result as a coloured badge, Student Information, Official Message, help);
     not found / not published / too many tries — a red or blue note.
-    Contract (Admission module): wire:model serial, website (honeypot); wire:submit lookup; $answer (status, name, serial, program, result, tone, label, message — sanitised HTML, batch)
+    The card is the seat plan's (x-theme::lookup-form): every lookup looks the same.
+    Contract (Admission module): wire:model serial, website (honeypot); wire:submit lookup; wire:click clear; $answer (status, name, serial, program, result, tone, label, message — sanitised HTML, batch)
 --}}
 <div>
-    <div class="bg-white rounded-2xl p-6 md:p-8 my-8">
-        <form wire:submit="lookup" class="flex flex-col md:flex-row gap-4 md:items-end">
-            <div class="flex-1">
-                <label for="admission-serial" class="block text-sm font-semibold text-gray-700 mb-2">{{ __('admission::admission.result_view.serial') }}</label>
-                <input id="admission-serial" type="text" wire:model="serial" required maxlength="50" autocomplete="off"
-                       placeholder="{{ __('admission::admission.result_page.placeholder') }}"
-                       class="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg">
-                @error('serial') <p class="mt-2 text-sm text-red-600" role="alert">{{ $message }}</p> @enderror
-            </div>
-            <input type="text" wire:model="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="absolute -left-[9999px]">
-            <button type="submit" wire:loading.attr="disabled" wire:target="lookup"
-                    class="bg-primary text-white px-8 py-3 rounded-lg font-semibold hover:bg-secondary transition-colors duration-200 disabled:opacity-50 cursor-pointer">
-                <span wire:loading.remove wire:target="lookup">{{ __('admission::admission.result_page.search') }}</span>
-                <span wire:loading wire:target="lookup">…</span>
-            </button>
-        </form>
-    </div>
+    <x-theme::lookup-form id="admission-serial" :label="__('admission::admission.result_view.serial')" :placeholder="__('admission::admission.result_page.placeholder')"
+        :button="__('admission::admission.result_page.search')" :busy="__('admission::admission.seats.searching')" :error="$errors->first('serial')"
+        :clear="(bool) $answer" :clear-label="__('admission::admission.seats.reset')" />
 
     <div aria-live="polite">
         @if ($answer && $answer['status'] === 'found')
-            <div class="bg-white rounded-2xl overflow-hidden mb-8">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200/80 overflow-hidden mb-8">
                 <div class="bg-gradient-to-r from-primary to-secondary text-white p-6 flex flex-wrap items-center justify-between gap-3">
                     <div>
                         <h2 class="text-2xl font-bold">{{ __('admission::admission.result_view.heading') }}</h2>
@@ -55,7 +42,7 @@
                 @endif
             </div>
         @elseif ($answer)
-            <div @class(['rounded-2xl p-6 mb-8 border flex items-start gap-3',
+            <div role="alert" @class(['rounded-2xl p-5 mb-8 border flex items-start gap-3',
                          'bg-red-50 border-red-200 text-red-700' => $answer['status'] === 'not_found',
                          'bg-blue-50 border-blue-200 text-primary' => $answer['status'] !== 'not_found'])>
                 <x-theme::icon name="alert-circle" class="size-5 shrink-0 mt-0.5" />

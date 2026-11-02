@@ -2,6 +2,7 @@
 
 namespace Modules\Page\Filament\Resources\Pages\Tables;
 
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -9,6 +10,7 @@ use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\ReplicateAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Enums\FiltersLayout;
@@ -55,6 +57,7 @@ class PagesTable
             ->filtersFormColumns(4)
             ->recordActions([
                 EditAction::make(),
+                static::viewOnSite()->iconButton(),
                 static::duplicate(),
                 RestoreAction::make(),
             ])
@@ -65,6 +68,18 @@ class PagesTable
                     ForceDeleteBulkAction::make(),
                 ]),
             ]);
+    }
+
+    /** The page on the website, in a new tab — only while the website shows it (active, published, not expired). */
+    public static function viewOnSite(): Action
+    {
+        return Action::make('view_on_site')
+            ->label(__('page::page.actions.view_on_site'))
+            ->icon(Heroicon::OutlinedArrowTopRightOnSquare)
+            ->color('gray')
+            ->url(fn (Page $record): string => url($record->url()))
+            ->openUrlInNewTab()
+            ->visible(fn (Page $record): bool => $record->isFrontendVisible());
     }
 
     /** FR-PAGE-08: a copy, inactive, "(copy)" in every title, same files. */

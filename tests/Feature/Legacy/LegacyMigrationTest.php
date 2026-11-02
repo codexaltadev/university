@@ -15,13 +15,20 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Storage;
+use Legacy\Migration\Steps\S08Admission;
+use Legacy\Migration\Steps\S19People;
 use Legacy\Migration\Support\IdMap;
 use Legacy\Migration\Support\Normalizer;
 use Modules\Administration\Models\AdministrationCategory;
+use Modules\Administration\Models\Member;
+use Modules\Admission\Support\AdmissionPage;
 use Modules\Department\Models\Department;
 use Modules\Events\Models\Event;
+use Modules\Facilities\Models\Facility;
 use Modules\Faculty\Models\Faculty;
+use Modules\Menu\Models\Menu;
 use Modules\Notice\Models\Notice;
+use Modules\Office\Models\Office;
 use Modules\Page\Models\Page;
 use Modules\Program\Database\Seeders\ProgramDatabaseSeeder;
 use Modules\Program\Models\Program;
@@ -38,11 +45,13 @@ use Modules\Tuition\Models\FeeCategory;
 use Modules\Tuition\Models\Tuition;
 use Modules\Tuition\Models\TuitionLine;
 use Platform\Assignments\Assignment;
+use Platform\Assignments\ManualPerson;
 use Platform\Assignments\RoleCatalog;
 use Platform\Media\MediaItem;
 use Platform\Media\MediaLibrary;
 use Platform\Relations\RelationEngine;
 use Platform\Statistics\Statistics;
+use Platform\Statistics\StatSet;
 use Platform\Taxonomy\Term;
 use Platform\Taxonomy\Vocabularies;
 
@@ -61,7 +70,8 @@ function legacySchema(): void
     DB::purge('legacy');
 
     $tables = [
-        'faculties' => fn (Blueprint $t) => [$t->string('faculty_name'), $t->string('faculty_short_name'), $t->string('faculty_photo')->nullable(), $t->integer('faculty_serial')->nullable(), $t->text('faculty_content')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->tinyInteger('is_optional')->default(0), $t->tinyInteger('show_list')->nullable(), $t->timestamp('deleted_at')->nullable()],
+        'faculties' => fn (Blueprint $t) => [$t->string('faculty_name'), $t->string('faculty_short_name'), $t->string('faculty_photo')->nullable(), $t->integer('faculty_serial')->nullable(), $t->text('faculty_content')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->tinyInteger('is_optional')->default(0), $t->tinyInteger('show_list')->nullable(), $t->timestamp('deleted_at')->nullable(),
+            ...collect(['publication_title', 'publication', 'partner_title', 'active_partner', 'research_title', 'research_lab', 'phd_faculty_title', 'phd_faculty'])->map(fn (string $c) => $t->string($c)->nullable())],
         'departments' => fn (Blueprint $t) => [$t->unsignedBigInteger('faculty_id'), $t->string('department_name'), $t->string('short_name'), $t->string('department_photo')->nullable(), $t->string('department_cover')->nullable(), $t->string('department_link')->nullable(), $t->integer('department_serial')->nullable(), $t->string('about_title')->nullable(), $t->text('department_content')->nullable(), $t->tinyInteger('publication_status')->default(1), $t->timestamp('deleted_at')->nullable()],
         'events' => fn (Blueprint $t) => [$t->string('title')->nullable(), $t->longText('content')->nullable(), $t->date('event_date')->nullable(), $t->string('event_time')->nullable(), $t->string('location')->nullable(), $t->string('url')->nullable(), $t->string('photo')->nullable(), $t->unsignedBigInteger('department_id')->nullable(), $t->unsignedBigInteger('lab_facility_id')->nullable(), $t->unsignedBigInteger('event_category_id')->nullable(), $t->string('is_home')->default('0'), $t->tinyInteger('publication_status')->default(1), $t->timestamp('created_at')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'testimonials' => fn (Blueprint $t) => [$t->string('name'), $t->string('designation')->nullable(), $t->string('organization')->nullable(), $t->text('quote')->nullable(), $t->string('photo')->nullable(), $t->integer('sort_order')->default(0), $t->string('testimonialable_type')->nullable(), $t->unsignedBigInteger('testimonialable_id')->nullable()],
@@ -74,6 +84,19 @@ function legacySchema(): void
         'notices' => fn (Blueprint $t) => [$t->string('title')->nullable(), $t->string('slug')->nullable(), $t->longText('content')->nullable(), $t->unsignedBigInteger('department_id')->nullable(), $t->unsignedBigInteger('notice_category_id')->nullable(), $t->string('is_home')->default('0'), $t->integer('view_counter')->default(0), $t->tinyInteger('publication_status')->default(1), $t->timestamp('created_at')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'notice_files' => fn (Blueprint $t) => [$t->unsignedBigInteger('notice_id'), $t->string('file_title')->nullable(), $t->string('file_name')->nullable(), $t->timestamp('deleted_at')->nullable()],
         'articles' => fn (Blueprint $t) => [$t->string('article_title')->nullable(), $t->string('article_slug')->nullable(), $t->longText('article_content')->nullable(), $t->tinyInteger('publication_status')->default(1)],
+        'offices' => fn (Blueprint $t) => [$t->string('title'), $t->string('slug'), $t->tinyInteger('show_page')->default(0), $t->integer('serial')->default(0), $t->tinyInteger('publication_status')->default(1)],
+        'sections' => fn (Blueprint $t) => [$t->unsignedBigInteger('office_id'), $t->string('section_name')],
+        'section_employees' => fn (Blueprint $t) => [$t->unsignedBigInteger('section_id'), $t->unsignedBigInteger('admin_id')->nullable(), $t->integer('serial')->default(0)],
+        'office_admins' => fn (Blueprint $t) => [$t->unsignedBigInteger('office_id'), $t->unsignedBigInteger('admin_id')->nullable(), $t->integer('admin_serial')->default(0)],
+        'support_contacts' => fn (Blueprint $t) => [$t->unsignedBigInteger('office_id'), $t->unsignedBigInteger('admin_id')->nullable(), $t->string('purpose')->nullable(), $t->string('phone')->nullable(), $t->string('extension')->nullable(), $t->string('office_location')->nullable(), $t->integer('serial')->default(0), $t->tinyInteger('publication_status')->default(1)],
+        'side_menu_categories' => fn (Blueprint $t) => [$t->string('title'), $t->string('slug'), $t->string('menu_position')->nullable(), $t->tinyInteger('is_department')->default(0), $t->tinyInteger('status')->default(1)],
+        'side_menus' => fn (Blueprint $t) => [$t->string('title'), $t->string('link_type')->nullable(), $t->string('link')->nullable(), $t->integer('serial')->default(0), $t->unsignedBigInteger('side_menu_category_id'), $t->tinyInteger('status')->default(1)],
+        'office_sites' => fn (Blueprint $t) => [$t->string('title'), $t->string('slug'), $t->string('banner_photo')->nullable(), $t->string('banner_title')->nullable(), $t->text('description')->nullable(), $t->string('location')->nullable(), $t->string('extension')->nullable(), $t->string('phone')->nullable(), $t->string('email')->nullable(), $t->integer('sort_order')->default(0), $t->tinyInteger('is_active')->default(1)],
+        'office_site_articles' => fn (Blueprint $t) => [$t->string('title'), $t->string('slug'), $t->longText('content')->nullable(), $t->unsignedBigInteger('office_site_id'), $t->tinyInteger('is_active')->default(1)],
+        'office_site_menus' => fn (Blueprint $t) => [$t->string('title'), $t->string('link_type'), $t->string('article_link')->nullable(), $t->string('module_link')->nullable(), $t->string('external_link')->nullable(), $t->string('file')->nullable(), $t->unsignedBigInteger('office_site_id'), $t->string('target')->nullable(), $t->integer('sort_order')->default(0), $t->tinyInteger('is_active')->default(1)],
+        'office_site_faqs' => fn (Blueprint $t) => [$t->text('question'), $t->text('answer')->nullable(), $t->integer('sort_order')->default(0), $t->unsignedBigInteger('office_site_id'), $t->tinyInteger('is_active')->default(1)],
+        'office_site_teams' => fn (Blueprint $t) => [$t->string('name'), $t->string('designation')->nullable(), $t->string('phone')->nullable(), $t->string('photo')->nullable(), $t->string('email')->nullable(), $t->string('extension')->nullable(), $t->integer('serial')->default(0), $t->unsignedBigInteger('office_site_id'), $t->tinyInteger('is_active')->default(1)],
+        'facilities' => fn (Blueprint $t) => [$t->unsignedBigInteger('reference_id')->nullable(), $t->unsignedBigInteger('facilityable_id')->nullable(), $t->string('facilityable_type')->nullable(), $t->string('facility_title')->nullable(), $t->string('facility_slug')->nullable(), $t->text('facility_content')->nullable(), $t->string('facility_icon')->nullable(), $t->string('facility_link')->nullable(), $t->string('image')->nullable(), $t->string('target')->nullable(), $t->integer('serial')->default(0), $t->tinyInteger('publication_status')->default(1), $t->tinyInteger('is_home')->default(0), $t->timestamp('deleted_at')->nullable()],
         'coordination_officers' => fn (Blueprint $t) => [$t->unsignedBigInteger('department_id'), $t->string('department_program_name')->nullable(), $t->unsignedBigInteger('admin_id')->nullable(), $t->string('name')->nullable(), $t->string('designation')->nullable(), $t->string('phone')->nullable(), $t->string('email')->nullable(), $t->string('extension')->nullable(), $t->integer('serial')->default(0), $t->tinyInteger('publication_status')->default(1)],
         'flipbooks' => fn (Blueprint $t) => [$t->string('title'), $t->string('slug'), $t->string('thumb')->nullable(), $t->unsignedBigInteger('flipbook_category_id')->nullable(), $t->string('file_name')->nullable(), $t->integer('serial')->default(0), $t->tinyInteger('publication_status')->default(1)],
         'program_major_categories' => fn (Blueprint $t) => [$t->string('title'), $t->text('description')->nullable()],
@@ -346,6 +369,33 @@ it('puts each legacy file into the Media Library once and into its records, from
     File::deleteDirectory($cache);
 });
 
+it('gives the seat plan DIU\'s examination buildings, named pictures in Settings › Admission, the applicant\'s marked (S03 admission)', function () {
+    Storage::fake('public');
+    $cache = storage_path('framework/testing/legacy-files');
+    config(['database.connections.legacy.files_path' => $cache]);
+    File::ensureDirectoryExists("{$cache}/frontend/images/set-plan");
+    foreach (array_values(S08Admission::SEAT_BUILDINGS) as $i => $path) {
+        $picture = imagecreatetruecolor(40 + $i, 30);   // three different pictures, each in its own format
+        str_ends_with($path, '.webp') ? imagewebp($picture, "{$cache}/frontend/{$path}") : imagejpeg($picture, "{$cache}/frontend/{$path}");
+    }
+
+    $this->artisan('legacy:migrate', ['--step' => ['S03'], '--only' => ['admission'], '--no-report' => true])->assertSuccessful();
+    $this->artisan('legacy:migrate', ['--step' => ['S03'], '--only' => ['admission'], '--no-report' => true])->assertSuccessful();   // again: no copies
+
+    $ids = settings('admission.seat_buildings');
+    expect($ids)->toHaveCount(3)->and(MediaItem::query()->count())->toBe(3)
+        ->and(collect((new AdmissionPage)->seatBuildings('Inspiration Building (IB)'))->map(fn (array $b): string => $b['name'].($b['mine'] ? ' *' : ''))->all())
+        ->toBe(['Inspiration Building *', 'Knowledge Tower', "Scholar's Home"]);   // "(IB)" aside, as DIU's
+    $this->get('/admission/seat-plan')->assertOk()->assertSeeInOrder(['Inspiration Building', 'Knowledge Tower', 'Scholar&#039;s Home'], false);
+
+    // Pictures chosen in Settings stay
+    settings()->save('admission', ['seat_buildings' => [$ids[1]]]);
+    $this->artisan('legacy:migrate', ['--step' => ['S03'], '--only' => ['admission'], '--no-report' => true])->assertSuccessful();
+    expect(settings('admission.seat_buildings'))->toBe([$ids[1]]);
+
+    File::deleteDirectory($cache);
+});
+
 it('migrates main-site articles as general pages at their own address, with Bootstrap markup and DIU\'s old addresses (S15A)', function () {
     DB::connection('legacy')->table('articles')->insert([
         ['id' => 1, 'article_title' => 'International Adviser of DIU', 'article_slug' => 'international-adviser', 'publication_status' => 1,
@@ -354,16 +404,28 @@ it('migrates main-site articles as general pages at their own address, with Boot
         ['id' => 3, 'article_title' => 'Lost and Found', 'article_slug' => 'safetyandsecurity', 'publication_status' => 1, 'article_content' => '<p>Lost something?</p>'],
         ['id' => 4, 'article_title' => 'Safety and Security Management', 'article_slug' => 'safety-measures-of-daffodil-international-university', 'publication_status' => 1, 'article_content' => '<p>Guards.</p>'],
         ['id' => 5, 'article_title' => 'International Alumni', 'article_slug' => 'international-alumni', 'publication_status' => 1, 'article_content' => '<p>Alumni abroad.</p>'],
+        ['id' => 6, 'article_title' => 'Faculty and Programs', 'article_slug' => 'programs', 'publication_status' => 1, 'article_content' => '<p>Program list as text.</p>'],   // /programs is the program list
+        ['id' => 7, 'article_title' => 'FAQ', 'article_slug' => 'faq', 'publication_status' => 1, 'article_content' => '<p>Questions as text.</p>'],
+        ['id' => 8, 'article_title' => 'Admission Test Schedule', 'article_slug' => 'admission-test-schedule', 'publication_status' => 1, 'article_content' => '<p>Test on 26 December.</p>'],
     ]);
     // Before 2026-10-31 they hung under a page "article": it goes, they move up
     $old = Page::factory()->create(['title' => ['en' => 'Articles']]);
     $old->changeSlug('en', 'article');
+    // The schedule goes under /admission, in its frame (its Browse by Section, its Quick Links)
+    $admission = Page::factory()->create(['title' => ['en' => 'Admission'], 'quick_links' => [['label' => ['en' => 'Waiver Calculator'], 'url' => '/waiver-calculator']]]);
+    $admission->changeSlug('en', 'admission');
+    Redirect::query()->create(['source_path' => '/admission/schedule', 'destination_url' => '/admission-test-schedule', 'status_code' => 301, 'is_active' => true]);   // before 2026-11-02
 
     $this->artisan('legacy:migrate', ['--step' => ['S15A'], '--no-report' => true])->assertSuccessful();
     $this->artisan('legacy:migrate', ['--step' => ['S15A'], '--no-report' => true])->assertSuccessful();   // again: no copies
 
-    expect(Page::query()->withoutGlobalScopes()->whereNull('deleted_at')->count())->toBe(5)   // the five, without "article"
-        ->and(Page::query()->withoutGlobalScopes()->whereNotNull('parent_id')->count())->toBe(0)
+    expect(Page::query()->withoutGlobalScopes()->whereNull('deleted_at')->count())->toBe(9)   // the eight and /admission, without "article"
+        ->and(Page::query()->withoutGlobalScopes()->whereNotNull('parent_id')->pluck('parent_id')->all())->toBe([$admission->id])
+        ->and($old->fresh()->trashed())->toBeTrue();
+    $this->get('/admission/schedule')->assertOk()->assertSee('Test on 26 December.')->assertSee('Waiver Calculator');
+    $this->get('/admission-test-schedule')->assertRedirect('/admission/schedule');
+    $this->get('/article/admission-test-schedule')->assertRedirect('/admission/schedule');
+    expect(Page::query()->withoutGlobalScopes()->whereNotNull('parent_id')->sole()->template)->toBe('with-sidebar')
         ->and($old->fresh()->trashed())->toBeTrue();
     $this->get('/international-adviser')->assertOk()
         ->assertSee('International Adviser of DIU')
@@ -380,6 +442,54 @@ it('migrates main-site articles as general pages at their own address, with Boot
     $this->get('/safetyandsecurity')->assertRedirect('/safety-measures-of-daffodil-international-university');
     $this->get('/article/safetyandsecurity')->assertRedirect('/lost-and-found');
     $this->get('/lost-and-found')->assertOk()->assertSee('Lost something?');
+
+    // A module's own page keeps its address: the article takes its title's, or that with "-page"
+    $this->get('/article/programs')->assertRedirect('/faculty-and-programs');
+    $this->get('/faculty-and-programs')->assertOk()->assertSee('Program list as text.');
+    $this->get('/programs')->assertDontSee('Program list as text.');
+    $this->get('/article/faq')->assertRedirect('/faq-page');
+    $this->get('/faq')->assertDontSee('Questions as text.');
+});
+
+it('groups DIU\'s article sections under a sidebar list, with its addresses (S15X)', function () {
+    DB::connection('legacy')->table('articles')->insert([
+        ['id' => 1, 'article_title' => 'BSCIC Industrial Support Centre', 'article_slug' => 'bscic-diu', 'publication_status' => 1, 'article_content' => '<p>BSCIC intro.</p>'],
+        ['id' => 2, 'article_title' => 'Contact BSCIC', 'article_slug' => 'contact-bscic', 'publication_status' => 1, 'article_content' => '<p>Call us.</p>'],
+        ['id' => 3, 'article_title' => 'DIU Medical Center', 'article_slug' => 'diu-medical-center', 'publication_status' => 1, 'article_content' => '<p>Care.</p>'],
+        ['id' => 4, 'article_title' => 'Available Medical Personnel', 'article_slug' => 'medical-personnel', 'publication_status' => 1, 'article_content' => '<p>Doctors.</p>'],
+        ['id' => 5, 'article_title' => 'DIU Delegates 2018', 'article_slug' => 'diu-delegates-2018', 'publication_status' => 1, 'article_content' => '<p>2018.</p>'],
+        ['id' => 6, 'article_title' => 'DIU Delegates 2019', 'article_slug' => 'diu-delegates-2019', 'publication_status' => 1, 'article_content' => '<p>2019.</p>'],
+    ]);
+    DB::connection('legacy')->table('side_menu_categories')->insert(['id' => 2, 'title' => 'Medical', 'slug' => 'medical', 'menu_position' => 'left', 'is_department' => 0, 'status' => 1]);
+    DB::connection('legacy')->table('side_menus')->insert([
+        ['id' => 1, 'title' => 'DIU Medical Center', 'link_type' => 'article', 'link' => 'introduction', 'serial' => 1, 'side_menu_category_id' => 2],   // names the wrong article (LINK_FIXES)
+        ['id' => 2, 'title' => 'Medical Personnel', 'link_type' => 'article', 'link' => 'medical-personnel', 'serial' => 2, 'side_menu_category_id' => 2],
+    ]);
+
+    $this->artisan('legacy:migrate', ['--step' => ['S15A', 'S15X'], '--no-report' => true])->assertSuccessful();
+    $this->artisan('legacy:migrate', ['--step' => ['S15A', 'S15X'], '--no-report' => true])->assertSuccessful();   // again: no copies
+
+    $page = fn (string $slug): Page => Page::query()->withoutGlobalScopes()->get()->first(fn (Page $p): bool => $p->slug('en') === $slug);
+    $bscic = Menu::query()->withoutGlobalScopes()->where('name', 'BSCIC Industrial Support Centre')->sole();
+    $medical = Menu::query()->withoutGlobalScopes()->where('name', 'Medical')->sole();
+    expect($bscic->location)->toBeNull()
+        ->and($bscic->items()->orderBy('sort_order')->get()->map(fn ($i) => $i->getTranslation('title', 'en'))->all())->toBe(['Introduction', 'Contact'])
+        ->and($page('bscic-diu'))->template->toBe('with-sidebar')->sidebar_menu_id->toBe($bscic->id)
+        ->and($page('bscic-diu')->getTranslation('excerpt', 'en'))->toBe('Bridging Academia and Industry for Innovation and Excellence')
+        ->and($page('bscic-diu')->quick_links)->toHaveCount(4)
+        ->and($medical->items()->orderBy('sort_order')->pluck('linkable_id')->all())->toBe([$page('diu-medical-center')->id, $page('medical-personnel')->id])
+        ->and($page('medical-personnel'))->template->toBe('right-sidebar')->sidebar_menu_id->toBe($medical->id)
+        ->and(Menu::query()->withoutGlobalScopes()->where('name', 'DIU Delegates')->sole()->items()->orderBy('sort_order')->get()->map(fn ($i) => $i->getTranslation('title', 'en'))->all())->toBe(['DIU Delegates 2019', 'DIU Delegates 2018']);   // newest first
+
+    $this->get('/contact-bscic')->assertOk()->assertSee('Browse by Section')->assertSee('Introduction')->assertSee('Waiver Calculator');
+    $this->get('/bscic/contact-bscic')->assertRedirect('/contact-bscic')->assertStatus(301);
+    $this->get('/medical/introduction')->assertRedirect('/diu-medical-center');
+    $this->get('/delegates/diu-delegates-2018')->assertRedirect('/diu-delegates-2018');
+
+    // A layout Admin chose stays
+    $page('contact-bscic')->forceFill(['template' => 'full-width', 'sidebar_menu_id' => null])->save();
+    $this->artisan('legacy:migrate', ['--step' => ['S15X'], '--no-report' => true])->assertSuccessful();
+    expect($page('contact-bscic')->template)->toBe('full-width');
 });
 
 it('makes the pages DIU\'s new site keeps in code — Student Access Center, Teachers, Location — and its campus (S15P)', function () {
@@ -407,6 +517,137 @@ it('makes the pages DIU\'s new site keeps in code — Student Access Center, Tea
     $this->artisan('legacy:migrate', ['--step' => ['S15A', 'S15P'], '--no-report' => true])->assertSuccessful();
     $this->get('/teachers')->assertSee('Our Teachers');
     $this->get('/location')->assertSee('Main Campus')->assertDontSee('Birulia');
+});
+
+it('keeps an office page that was turned on later, and sends DIU\'s office addresses here (S10)', function () {
+    DB::connection('legacy')->table('offices')->insert([
+        ['id' => 2, 'title' => 'Exam Office', 'slug' => 'exam-office', 'show_page' => 0],
+        ['id' => 9, 'title' => 'Proctorial Office', 'slug' => 'proctorial-office', 'show_page' => 0],
+    ]);
+    $this->artisan('legacy:migrate', ['--step' => ['S10'], '--no-report' => true])->assertSuccessful();
+    $proctor = Office::query()->withoutGlobalScopes()->where('name->en', 'Proctorial Office')->sole();
+    $proctor->update(['has_microsite' => true]);   // as S15O or Admin does
+
+    $this->artisan('legacy:migrate', ['--step' => ['S10'], '--no-report' => true])->assertSuccessful();
+
+    expect($proctor->fresh()->has_microsite)->toBeTrue();
+    $this->get('/office/exam')->assertRedirect('/office/exam-office');
+    $this->get('/office/exam/faqs')->assertRedirect('/office/exam-office/faq');
+    $this->get('/support-contact')->assertRedirect('/support-contacts');
+});
+
+it('fills DIU\'s office sites into their office, a new one for TTO, with pages, menu, FAQs, team and facilities (S15T, S18F)', function () {
+    $l = DB::connection('legacy');
+    $l->table('offices')->insert([['id' => 2, 'title' => 'Exam Office', 'slug' => 'exam-office', 'show_page' => 0]]);
+    $l->table('office_sites')->insert([
+        ['id' => 1, 'title' => 'Exam', 'slug' => 'exam', 'banner_title' => 'Office of the Examinations', 'description' => '<p>Runs all examinations.</p>', 'location' => 'Daffodil Smart City', 'extension' => '90071', 'phone' => '09617901212', 'email' => 'exam@example.edu', 'sort_order' => 1],
+        ['id' => 2, 'title' => 'Technology Transfer Office', 'slug' => 'tto', 'banner_title' => null, 'description' => '<p>Industry and academia.</p>', 'location' => null, 'extension' => '126', 'phone' => null, 'email' => 'tto@example.edu', 'sort_order' => 2],
+    ]);
+    $l->table('office_site_articles')->insert([
+        ['id' => 2, 'title' => 'Service Standards', 'slug' => 'service-standards-9hsg', 'content' => '<p>Service to students.</p>', 'office_site_id' => 1],
+        ['id' => 10, 'title' => 'Project Objectives', 'slug' => 'project-objectives-21fn', 'content' => '<p>Commercialise research.</p>', 'office_site_id' => 2],
+    ]);
+    $l->table('office_site_menus')->insert([
+        ['id' => 2, 'title' => 'Service Standards', 'link_type' => 'article', 'article_link' => 'service-standards-9hsg', 'file' => null, 'office_site_id' => 1, 'target' => '_self', 'sort_order' => 1],
+        ['id' => 12, 'title' => 'Exam Rules for Students', 'link_type' => 'file', 'article_link' => null, 'file' => 'images/office-site/menus/rules.pdf', 'office_site_id' => 1, 'target' => '_blank', 'sort_order' => 9],
+    ]);
+    $l->table('office_site_faqs')->insert([['id' => 4, 'question' => 'How do I see my result?', 'answer' => 'On the Student Portal.', 'office_site_id' => 1]]);
+    $l->table('office_site_teams')->insert([
+        ['id' => 1, 'name' => 'Mr. Mominul Haque Majumder', 'designation' => 'Controller of Examinations', 'phone' => '+8801713493005', 'email' => 'controller@example.edu', 'extension' => '65114', 'office_site_id' => 1, 'serial' => 0],
+        ['id' => 2, 'name' => 'Ms. Kanij Fatema', 'designation' => 'Assistant Exam Officer', 'phone' => null, 'email' => 'controller@example.edu', 'extension' => null, 'office_site_id' => 1, 'serial' => 1],   // the office's shared mailbox
+        ['id' => 3, 'name' => 'Md. Rafiqul Islam Anik', 'designation' => 'Assistant Coordination Officer', 'phone' => null, 'email' => null, 'extension' => null, 'office_site_id' => 1, 'serial' => 2],   // Administration: "Mr. Rafiqul Islam"
+    ]);
+    $l->table('facilities')->insert([['id' => 454, 'facilityable_id' => 2, 'facilityable_type' => 'App\\Models\\OfficeSite', 'facility_title' => 'AI-Based Systems', 'facility_icon' => 'fa-building', 'image' => 'images/office-site/facilities/a.jpg']]);
+
+    $this->artisan('legacy:migrate', ['--step' => ['S10', 'S15T', 'S18F'], '--no-report' => true])->assertSuccessful();
+    $this->artisan('legacy:migrate', ['--step' => ['S15T'], '--no-report' => true])->assertSuccessful();   // again: no copies
+
+    $exam = Office::query()->withoutGlobalScopes()->where('name->en', 'Exam Office')->sole();
+    expect($exam->email)->toBe('exam@example.edu')->and($exam->extension)->toBe('90071')->and($exam->has_microsite)->toBeTrue();
+    $tto = Office::query()->withoutGlobalScopes()->where('name->en', 'Technology Transfer Office')->sole();
+    expect($tto->url('en'))->toBe('/office/tto')
+        ->and(app(RelationEngine::class)->targetsOf(Facility::query()->withoutGlobalScopes()->sole()))->toBe([$tto->getMorphClass().':'.$tto->getKey()]);
+
+    $this->get('/office/exam-office')->assertOk()->assertSee('Runs all examinations.')->assertSee('Daffodil Smart City');
+    $this->get('/office/exam/service-standards-9hsg')->assertRedirect('/office/exam-office/service-standards');
+    $this->get('/office/exam-office/service-standards')->assertOk()->assertSee('Service to students.');
+    $this->get('/office/exam-office/faq')->assertOk()->assertSee('How do I see my result?');
+    $this->get('/office/exam-office/team')->assertOk()->assertSee('Mr. Mominul Haque Majumder');
+    $this->get('/office/tto')->assertOk()->assertSee('Industry and academia.');
+    $menu = Menu::query()->withoutGlobalScopes()->ownedBy($exam->getMorphClass().':'.$exam->getKey())->where('location', 'sidebar')->sole();
+    expect($menu->items()->orderBy('sort_order')->get()->map(fn ($i) => $i->getTranslation('title', 'en'))->all())->toBe(['Service Standards', 'Exam Rules for Students'])
+        ->and(Assignment::query()->where('role_key', 'team')->pluck('person_type')->unique()->all())->toBe([(new ManualPerson)->getMorphClass()]);   // no member yet
+
+    // Once Administration has the person (same email), the office team is tagged to the member, not a copy
+    $l->table('admin_categories')->insert([['id' => 1, 'category_name' => 'Management', 'category_slug' => 'management', 'serial' => 1],
+        ['id' => 2, 'category_name' => 'Assistant Officer', 'category_slug' => 'assistant-officer', 'serial' => 2]]);
+    $l->table('admins')->insert([['id' => 527, 'admin_category_id' => 1, 'name' => 'Mominul Haque Majumder', 'designation' => 'Controller of Examinations', 'email' => 'CONTROLLER@example.edu', 'serial' => 1, 'unique_id' => 'mominul'],
+        ['id' => 528, 'admin_category_id' => 2, 'name' => 'Mr. Rafiqul Islam', 'designation' => 'Assistant Coordination Officer', 'email' => null, 'serial' => 1, 'unique_id' => 'rafiqul']]);
+    $this->artisan('legacy:migrate', ['--step' => ['S11', 'S19P'], '--no-report' => true])->assertSuccessful();
+    $this->artisan('legacy:migrate', ['--step' => ['S15T'], '--no-report' => true])->assertSuccessful();
+
+    $member = Member::query()->withoutGlobalScopes()->where('email', 'CONTROLLER@example.edu')->where('employment_type', 'regular')->sole();
+    $team = Assignment::query()->where('role_key', 'team')->orderBy('sort_order')->get();
+    expect($team->map(fn ($a) => $a->person_type)->unique()->all())->toBe([$member->getMorphClass()])
+        ->and($team[0]->person_id)->toBe($member->getKey())
+        ->and(ManualPerson::query()->withoutGlobalScopes()->where('name->en', 'like', '%Mominul%')->orWhere('name->en', 'like', '%Kanij%')->exists())->toBeFalse();
+
+    // A fuller name of one active member is that member (owner 2026-11-01: if they are in Administration, tag them)
+    $rafiqul = Member::query()->withoutGlobalScopes()->where('name->en', 'Mr. Rafiqul Islam')->sole();
+    expect($team[2]->person_id)->toBe($rafiqul->getKey());
+
+    // The same mailbox, another name: not that member — someone Administration lacks, so contractual for now,
+    // in the category of the designation ("Assistant Exam Officer" → Assistant Officer)
+    $kanij = Member::query()->withoutGlobalScopes()->findOrFail($team[1]->person_id);
+    expect($kanij->getTranslation('name', 'en'))->toBe('Ms. Kanij Fatema')
+        ->and($kanij->employment_type)->toBe('contractual')
+        ->and($kanij->category->getTranslation('name', 'en'))->toBe('Assistant Officer')
+        ->and($kanij->isFrontendVisible())->toBeFalse();
+    $this->get('/office/exam-office/team')->assertOk()->assertSee('Ms. Kanij Fatema')->assertSee('Mr. Rafiqul Islam');
+    $this->get('/administration?q=rafiqul')->assertOk()->assertSee('Mr. Rafiqul Islam');
+    $this->get('/administration?q=kanij')->assertOk()->assertDontSee('Ms. Kanij Fatema');
+
+    // Reruns keep the same people, no copies
+    $this->artisan('legacy:migrate', ['--step' => ['S11', 'S15T', 'S19P'], '--no-report' => true])->assertSuccessful();
+    expect(Member::query()->withoutGlobalScopes()->where('employment_type', 'contractual')->count())->toBe(1)
+        ->and(Assignment::query()->where('role_key', 'team')->orderBy('sort_order')->pluck('person_id')->all())->toBe([$member->getKey(), $kanij->getKey(), $rafiqul->getKey()])
+        ->and(ManualPerson::query()->withoutGlobalScopes()->where(fn ($q) => $q->where('name->en', 'like', '%Mominul%')->orWhere('name->en', 'like', '%Kanij%')->orWhere('name->en', 'like', '%Rafiqul%'))->exists())->toBeFalse()
+        ->and(AdministrationCategory::query()->where('name->en', S19People::CONTRACTUAL_CATEGORY)->exists())->toBeFalse();   // everyone fitted a category
+});
+
+it('puts the faculty figures of newer dumps into the faculty\'s counters (S04)', function () {
+    DB::connection('legacy')->table('faculties')->where('id', 1)->update(['publication_title' => 'Intellectual Contributions', 'publication' => '390+', 'partner_title' => 'Active Industry Partnerships',
+        'active_partner' => '20+', 'research_title' => 'Diverse Specialized Labs', 'research_lab' => '12', 'phd_faculty_title' => 'PhD Scholarly Faculty', 'phd_faculty' => '41%']);
+
+    $this->artisan('legacy:migrate', ['--step' => ['S04'], '--no-report' => true])->assertSuccessful();
+    $this->artisan('legacy:migrate', ['--step' => ['S04'], '--no-report' => true])->assertSuccessful();
+
+    $fsit = Faculty::query()->sole();
+    $set = StatSet::query()->ownedBy($fsit->getMorphClass().':'.$fsit->getKey())->where('key', 'default')->sole();
+    expect(collect(app(Statistics::class)->forSet($set, 'en'))->map(fn ($s) => $s['display'].' '.$s['label'])->all())
+        ->toBe(['390+ Intellectual Contributions', '20+ Active Industry Partnerships', '12 Diverse Specialized Labs', '41% PhD Scholarly Faculty']);
+});
+
+it('trashes what DIU removed, unless another row still leads to it, and brings it back with its row (S24R)', function () {
+    $l = DB::connection('legacy');
+    $l->table('events')->insert([
+        ['id' => 1, 'title' => 'Old fair', 'content' => null, 'event_date' => '2021-01-24', 'event_time' => null, 'location' => null, 'is_home' => '1'],
+        ['id' => 2, 'title' => 'New fair', 'content' => null, 'event_date' => '2026-01-24', 'event_time' => null, 'location' => null, 'is_home' => '1'],
+    ]);
+    $l->table('offices')->insert([['id' => 3, 'title' => 'Registrar Office', 'slug' => 'registrar-office', 'show_page' => 1]]);
+    $this->artisan('legacy:migrate', ['--step' => ['S10', 'S16E'], '--no-report' => true])->assertSuccessful();
+
+    $l->table('events')->where('id', 1)->delete();
+    $l->table('departments')->where('id', 36)->delete();   // the Registrar's office-"department": its office still comes from offices
+    $this->artisan('legacy:migrate', ['--step' => ['S24R'], '--no-report' => true])->assertSuccessful();
+
+    expect(Event::query()->withoutGlobalScopes()->withTrashed()->where('title->en', 'Old fair')->sole()->trashed())->toBeTrue()
+        ->and(Event::query()->withoutGlobalScopes()->where('title->en', 'New fair')->exists())->toBeTrue()
+        ->and(Office::query()->withoutGlobalScopes()->where('name->en', 'Registrar Office')->exists())->toBeTrue();
+
+    $l->table('events')->insert([['id' => 1, 'title' => 'Old fair', 'content' => null, 'event_date' => '2021-01-24', 'event_time' => null, 'location' => null, 'is_home' => '1']]);
+    $this->artisan('legacy:migrate', ['--step' => ['S16E', 'S24R'], '--no-report' => true])->assertSuccessful();
+    expect(Event::query()->withoutGlobalScopes()->where('title->en', 'Old fair')->exists())->toBeTrue();
 });
 
 it('gives departments their coordination officers, the program text as label, and sends DIU\'s address to the directory (S11C)', function () {
@@ -443,12 +684,14 @@ it('builds the main menus from the live snapshot, a flipbook on webbackend openi
 it('migrates events and sends DIU\'s /events-detail/{id} to the event\'s page (S16E)', function () {
     DB::connection('legacy')->table('events')->insert([
         ['id' => 583, 'title' => 'Industry visit', 'content' => '<p>To the factory.</p>', 'event_date' => '2025-07-13', 'event_time' => '09:00:00', 'location' => 'Gazipur', 'is_home' => '1'],
+        ['id' => 1, 'title' => 'Nineteenth Foundation', 'content' => '<p>Cake.</p>', 'event_date' => '2021-01-24', 'event_time' => null, 'location' => null, 'is_home' => '0'],   // no department, not on DIU's homepage: still on /events, as DIU
     ]);
 
     $this->artisan('legacy:migrate', ['--step' => ['S16E'], '--no-report' => true])->assertSuccessful();
     $this->artisan('legacy:migrate', ['--step' => ['S16E'], '--no-report' => true])->assertSuccessful();   // again: one redirect
 
-    $event = Event::query()->withoutGlobalScopes()->firstOrFail();
+    $this->followingRedirects()->get('/events-detail/1')->assertOk()->assertSee('Cake.');
+    $event = Event::query()->withoutGlobalScopes()->where('title->en', 'Industry visit')->firstOrFail();
     expect(Redirect::query()->where('source_path', '/events-detail/583')->count())->toBe(1);
     $this->get('/events-detail/583')->assertRedirect($event->url())->assertStatus(301);
     $this->get($event->url())->assertOk()->assertSee('To the factory.')->assertSee('Gazipur');

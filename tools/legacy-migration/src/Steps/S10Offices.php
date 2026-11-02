@@ -65,6 +65,18 @@ class S10Offices extends Step
         $this->supportContacts();
     }
 
+    /** An office S15O gives its pages (Registrar, Proctorial) later: its old addresses are made on the first run too */
+    protected function getsSite(string $slug): bool
+    {
+        foreach (S15OfficeSites::OFFICES as $site) {
+            if ($site['office'] === $slug && Schema::connection('legacy')->hasTable($site['table'])) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /** @return Collection<string, Office> by legacy slug */
     protected function offices(): Collection
     {
@@ -73,7 +85,8 @@ class S10Offices extends Step
             $name = Normalizer::text($row->title);
             $office = $this->upsert('offices', $row, Office::class, [
                 'name' => Normalizer::en($name),
-                'has_microsite' => (bool) $row->show_page || isset(self::DIU_PAGES[$row->slug]),
+                // a page S15O (Proctorial Office) or Admin turned on stays on when S10 runs again
+                'has_microsite' => (bool) $row->show_page || isset(self::DIU_PAGES[$row->slug]) || (bool) $this->ids->record('offices', $row->id, Office::class)?->has_microsite,
                 'sort_order' => max(0, (int) $row->serial),
                 'is_active' => (bool) $row->publication_status,
             ], after: fn (Office $o, bool $created) => $this->keepSlug($o, $row->slug, $created),
@@ -82,8 +95,18 @@ class S10Offices extends Step
             if (isset(self::DIU_PAGES[$row->slug])) {
                 $this->oldAddress('/office/'.self::DIU_PAGES[$row->slug], $office);
             }
+            if ($office->has_microsite || $this->getsSite($row->slug)) {   // DIU's new site: /office/{slug}/faqs (here …/faq), /office/exam/team
+                $diu = '/office/'.(self::DIU_PAGES[$row->slug] ?? $row->slug);
+                $base = parse_url($office->url('en'), PHP_URL_PATH);
+                $this->oldAddress($diu.'/faqs', $base.'/faq');
+                if ($diu !== $base) {
+                    $this->oldAddress($diu.'/team', $base.'/team');
+                }
+            }
         }
-        $this->report->review("DIU's new site has /office/tto (Technology Transfer Office), which is not in the legacy database: add the office in People › Offices if wanted.");
+        if (! Schema::connection('legacy')->hasTable('office_sites')) {   // newer dumps: S15T makes it from office_sites
+            $this->report->review("DIU's new site has /office/tto (Technology Transfer Office), which is not in the legacy database: add the office in People › Offices if wanted.");
+        }
 
         $this->report->review('Office types are new: give each office its type in People › Offices (Administration, Academic Support, Student Services …).');
 
@@ -181,6 +204,7 @@ class S10Offices extends Step
     /** One support contact per office and purpose; its rows are its people. */
     protected function supportContacts(): void
     {
+        $this->oldAddress('/support-contact', '/support-contacts');   // DIU's new site
         foreach ($this->rows('support_contacts') as $row) {
             $office = $this->ids->record('offices', $row->office_id, Office::class);
             $person = $this->adminPerson($row->admin_id) ?? $this->rowPerson('support_contacts', $row);

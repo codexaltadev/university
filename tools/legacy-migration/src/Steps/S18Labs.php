@@ -79,7 +79,7 @@ class S18Labs extends Step
             ], after: function (Lab $lab, bool $created) use ($row): void {
                 $this->keepSlug($lab, str_replace('_', '-', (string) $row->slug), $created);
                 if (filled($row->assign_person_name) && $lab->people('in_charge')->isEmpty()) {
-                    $person = $this->manualPerson('lab_facilities@person', $row, $row->assign_person_name, $row->assign_person_designation, $row->assign_person_email, $row->assign_person_phone);
+                    $person = $this->memberFor($row->assign_person_name, $row->assign_person_email) ?? $this->manualPerson('lab_facilities@person', $row, $row->assign_person_name, $row->assign_person_designation, $row->assign_person_email, $row->assign_person_phone);
                     app(AssignmentEngine::class)->assign($person, $lab, 'in_charge');
                 }
             }, existing: $this->same(Lab::class, ['name->en' => $name, 'department_id' => $department?->getKey()]));

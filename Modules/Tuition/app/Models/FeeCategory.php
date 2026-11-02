@@ -3,6 +3,8 @@
 namespace Modules\Tuition\Models;
 
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
+use Modules\Tuition\Support\TuitionWebsite;
 use Platform\Concerns\HasSortOrder;
 use Platform\Models\BaseModel;
 use Spatie\Translatable\HasTranslations;
@@ -26,6 +28,12 @@ class FeeCategory extends BaseModel
     public function tuitions(): HasMany
     {
         return $this->hasMany(Tuition::class);
+    }
+
+    /** Its page: /tuition-fees/international (owner 2026-11-02: the category in the address, filters in the query) */
+    public function url(): string
+    {
+        return '/'.TuitionWebsite::PAGE.'/'.rawurlencode(Str::lower((string) $this->code));
     }
 
     public function symbol(): string

@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Database Design DB-04 |
-| Version | 1.7 — 2026-10-11 (v1.1): §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত); 2026-10-16 (v1.2): §4 Administration সরলীকরণ — contact visibility তিনটি column, campus ও user link পরে, Office scope, website গঠন; 2026-10-16 (v1.3): §6 Leadership — role holder / member, term-এর address, former, migration নেই; 2026-10-16 (v1.4): §7 Committee — is_active, Show in, PeopleManager note, website, term copy; 2026-10-16 (v1.5): §8 Alumni — is_active, contact switches, faculty member link পরে, Pride section, website; 2026-10-24 (v1.6, Phase 4.4h): §3.1 Office-এ `quick_links`, office page-এর default Quick Links Settings-এ (group `office`); 2026-10-30 (v1.7, DIU registrar/proctor office): §3.1 Office-এ `highlights` ও `quick_services`; Registrar ও Proctor-এর page ও sidebar menu migration step `S15O`; §4.1 category-র slug — section `/administration/{slug}` |
+| Version | 1.8 — 2026-10-11 (v1.1): §11.1 legacy office-"department", support contact, admin → manual person (M-13 আসা পর্যন্ত); 2026-10-16 (v1.2): §4 Administration সরলীকরণ — contact visibility তিনটি column, campus ও user link পরে, Office scope, website গঠন; 2026-10-16 (v1.3): §6 Leadership — role holder / member, term-এর address, former, migration নেই; 2026-10-16 (v1.4): §7 Committee — is_active, Show in, PeopleManager note, website, term copy; 2026-10-16 (v1.5): §8 Alumni — is_active, contact switches, faculty member link পরে, Pride section, website; 2026-10-24 (v1.6, Phase 4.4h): §3.1 Office-এ `quick_links`, office page-এর default Quick Links Settings-এ (group `office`); 2026-10-30 (v1.7, DIU registrar/proctor office): §3.1 Office-এ `highlights` ও `quick_services`; Registrar ও Proctor-এর page ও sidebar menu migration step `S15O`; §4.1 category-র slug — section `/administration/{slug}`; 2026-11-01 (v1.8): §4.2 `employment_type` — directory-তে শুধু regular |
 | Date | 2026-10-08 |
 | Status | ✔ Confirmed |
 | Based on | [DB-01](01-DB-Core-Kernel.md), [DB-02](02-DB-Core-SiteBuilding.md), [SRS Part 3](../02-SRS/03-SRS-People.md), `project_diu` (row সংখ্যা `COUNT(*)`, 2026-10-08) |
@@ -141,6 +141,7 @@ IX (প্রতিটিতে): `(office_id, is_active, sort_order)`। `offic
 | id | BIGINT UNSIGNED | PK | | |
 | category_id | BIGINT UNSIGNED | FK administration_categories (restrict), IX | | |
 | employee_id | VARCHAR(30) | N | | বর্তমান `admins.unique_id` |
+| employment_type *(v1.8)* | VARCHAR(20) | IX | regular | `regular` / `probation` / `contractual` / `part_time` / `outsourced` (`Member::EMPLOYMENT`); directory, profile, search, sitemap-এ শুধু `regular`, বাকিরা শুধু যেখানে assign করা (office team, committee, lab …) সেখানে দেখাবেন; legacy-তে এই তথ্য নেই → সবাই `regular` |
 | name | JSON | T | | |
 | designation | JSON | N, T | | Free text: "Director (F & A)" |
 | primary_office_id | BIGINT UNSIGNED | N, IX | | Office optional → FK নয় |
@@ -156,7 +157,7 @@ IX (প্রতিটিতে): `(office_id, is_active, sort_order)`। `offic
 
 UQ: `(employee_id, active_key)`। IX: `(category_id, is_active, sort_order)`, `(primary_office_id, is_active)`। Media: `photo`। Morph alias: `administration.member`।
 
-Directory query: `administration_members JOIN administration_categories WHERE is_public = 1 ORDER BY administration_categories.sort_order, administration_members.sort_order`।
+Directory query: `administration_members JOIN administration_categories WHERE is_public = 1 AND employment_type = 'regular' ORDER BY administration_categories.sort_order, administration_members.sort_order`।
 
 ---
 

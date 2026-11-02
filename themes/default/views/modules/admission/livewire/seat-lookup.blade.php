@@ -6,28 +6,9 @@
     $answer (status, name, serial, program, building, room, floor, seconds); $buildings (name, image, mine)
 --}}
 <div>
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-200/80 p-6 sm:p-8 mb-8">
-        <form wire:submit="lookup">
-            <label for="seat-serial" class="block text-sm font-semibold text-gray-700 mb-2">{{ __('admission::admission.result_view.serial') }}</label>
-            <div class="flex flex-col sm:flex-row gap-3">
-                <input id="seat-serial" type="text" wire:model="serial" required maxlength="50" autocomplete="off" placeholder="{{ __('admission::admission.seats.placeholder') }}"
-                       class="flex-1 px-4 py-3 rounded-xl border border-gray-300 text-base focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary">
-                <input type="text" wire:model="website" tabindex="-1" autocomplete="off" aria-hidden="true" class="absolute -left-[9999px]">
-                <button type="submit" wire:loading.attr="disabled" wire:target="lookup"
-                        class="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-semibold text-white bg-secondary hover:bg-primary transition-colors disabled:opacity-50 cursor-pointer">
-                    <x-theme::icon name="search" class="w-4 h-4" />
-                    <span wire:loading.remove wire:target="lookup">{{ __('admission::admission.seats.search') }}</span>
-                    <span wire:loading wire:target="lookup">{{ __('admission::admission.seats.searching') }}</span>
-                </button>
-                @if ($answer)
-                    <button type="button" wire:click="clear" class="inline-flex items-center justify-center px-4 py-3 rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-50 cursor-pointer" aria-label="{{ __('admission::admission.seats.reset') }}">
-                        <x-theme::icon name="close" class="w-4 h-4" />
-                    </button>
-                @endif
-            </div>
-            @error('serial') <p class="mt-2 text-sm text-red-600" role="alert">{{ $message }}</p> @enderror
-        </form>
-    </div>
+    <x-theme::lookup-form id="seat-serial" :label="__('admission::admission.result_view.serial')" :placeholder="__('admission::admission.seats.placeholder')"
+        :button="__('admission::admission.seats.search')" :busy="__('admission::admission.seats.searching')" :error="$errors->first('serial')"
+        :clear="(bool) $answer" :clear-label="__('admission::admission.seats.reset')" />
 
     <div aria-live="polite">
         @if ($answer && $answer['status'] === 'found')
@@ -52,11 +33,17 @@
                 </div>
             </div>
         @elseif ($answer && $answer['status'] === 'too_many')
-            <div class="rounded-xl bg-amber-50 border border-amber-200 p-4 mb-8 text-amber-900 text-sm" role="alert">{{ __('admission::admission.result_page.too_many', ['seconds' => $answer['seconds']]) }}</div>
+            <div class="rounded-2xl p-5 mb-8 border flex items-start gap-3 bg-blue-50 border-blue-200 text-primary" role="alert">
+                <x-theme::icon name="alert-circle" class="size-5 shrink-0 mt-0.5" />
+                <p class="text-sm">{{ __('admission::admission.result_page.too_many', ['seconds' => $answer['seconds']]) }}</p>
+            </div>
         @elseif ($answer)
-            <div class="rounded-xl bg-red-50 border border-red-200 p-4 mb-8" role="alert">
-                <h3 class="text-base font-semibold text-red-800">{{ __('admission::admission.seats.not_found_title') }}</h3>
-                <p class="text-sm text-red-700 mt-1">{{ __('admission::admission.seats.not_found') }}</p>
+            <div class="rounded-2xl p-5 mb-8 border flex items-start gap-3 bg-red-50 border-red-200 text-red-700" role="alert">
+                <x-theme::icon name="alert-circle" class="size-5 shrink-0 mt-0.5" />
+                <div>
+                    <h3 class="text-sm font-semibold text-red-800">{{ __('admission::admission.seats.not_found_title') }}</h3>
+                    <p class="text-sm mt-1">{{ __('admission::admission.seats.not_found') }}</p>
+                </div>
             </div>
         @endif
     </div>

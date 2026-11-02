@@ -187,6 +187,6 @@ return [
     'help' => [
         'description' => 'One line under the name in the calculator, e.g. "By SSC and HSC GPA"; empty = the name only.',
         'totals' => 'Worked out from the fees: tuition = per year + per semester × semesters + per credit × credits; total = tuition + admission + other. The waiver applies to the tuition only.',
-        'code' => 'Used in the address, e.g. /tuition-fees?category=local',
+        'code' => 'Used in the address, e.g. /tuition-fees/local',
     ],
 ];

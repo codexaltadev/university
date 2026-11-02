@@ -62,6 +62,7 @@ class MediaLibrary
 
         $item->update(['kind' => MediaItem::kindOf($mime), 'mime_type' => $mime, ...$facts]);
         $this->attach($item, $file, $name);
+        app(MediaVisibility::class)->refresh([$item->id]);   // the new file lands public: withheld again if its records are off
 
         return $item->refresh();
     }

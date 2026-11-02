@@ -126,6 +126,12 @@ class Document extends BaseModel implements Scopeable
         return $this->firstMedia('file');
     }
 
+    /** Something to send at /file: download allowed and a file or an outside address. */
+    public function downloadable(): bool
+    {
+        return $this->allow_download && ($this->fileItem() !== null || filled($this->external_url));
+    }
+
     public function isPdf(): bool
     {
         return $this->fileItem()?->mime_type === 'application/pdf';

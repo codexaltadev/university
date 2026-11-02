@@ -8,8 +8,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 /**
  * /media/{id}/{name}: always the item's current file, so links survive "replace
- * file". Public files redirect to storage; private files are streamed only with a
- * valid signed link. Inactive or deleted items are not found.
+ * file". Public files redirect to storage; private files — and withheld ones, whose records are all off
+ * (MediaVisibility) — are streamed only with a valid signed link (the admin's previews). Inactive or deleted
+ * items are not found.
  */
 class MediaFileController
 {
@@ -18,7 +19,7 @@ class MediaFileController
         $media = MediaItem::query()->where('is_active', true)->findOrFail($item);
         $file = $media->file() ?? abort(404);
 
-        if (! $media->is_private) {
+        if (! $media->is_private && ! $media->isWithheld()) {
             return redirect()->away($file->getUrl());
         }
 

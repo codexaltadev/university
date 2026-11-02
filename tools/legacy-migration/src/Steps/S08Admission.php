@@ -32,8 +32,8 @@ class S08Admission extends Step
 {
     /** Old DIU addresses in the cards → the new ones. */
     public const LINKS = [
-        '/tuition-fees' => '/tuition-fees?category=local',
-        '/int-tuition-fees' => '/tuition-fees?category=international',
+        '/tuition-fees' => '/tuition-fees',   // the first category (local): no redirect away from the module's own page
+        '/int-tuition-fees' => '/tuition-fees/international',
         '/scholarship' => '/scholarships',
         '/tuition-fee-calculator' => '/waiver-calculator',
         '/admission-contact' => '/admission/contact',
@@ -86,7 +86,7 @@ class S08Admission extends Step
         'excerpt' => 'Browse 51 undergraduate and graduate programs across six DIU faculties—complete with admissions requirements, scholarship and financial-aid details, plus executive certificates and online courses for lifelong learners.',
         'sections' => [
             ['Admission Information', '/admission', false],
-            ['Admission Schedule', '/admission-test-schedule', false],
+            ['Admission Schedule', '/admission/schedule', false],   // the article under /admission (S15A UNDER)
             ['Admission Eligibility', null, false],   // a heading over a page per faculty (eligibilityPages)
             ['International Student Admission', 'https://daffodilvarsity.edu.bd/photos/international/Booklet-for-Int-Students.pdf', true],
             ['Tuition Fees', '/tuition-fees', true],
@@ -135,6 +135,8 @@ class S08Admission extends Step
 
         $editor = 'Modules\\Menu\\Support\\MenuEditor';
         $menu = $landing->sidebar_menu_id ? 'Modules\\Menu\\Models\\Menu'::query()->find($landing->sidebar_menu_id) : null;
+        // A menu made before 2026-11-02 links the schedule's old addresses: the page is /admission/schedule now (S15A UNDER)
+        $menu?->items()->whereIn('url', ['/admission-test-schedule', '/article/admission-test-schedule'])->get()->each->update(['url' => '/admission/schedule']);   // through the model: the menu's cache follows
         if (class_exists($editor) && $menu && ! $menu->items()->exists()) {
             app($editor)->save($menu, array_map(fn (array $s): array => [
                 'type' => $s[1] === null ? 'heading' : 'url', 'url' => $s[1], 'title' => ['en' => $s[0]], 'open_in_new_tab' => $s[2], 'is_active' => true,
@@ -204,6 +206,17 @@ class S08Admission extends Step
             ['Admission Guidelines', '/admission-guidelines'],
             ['Fees and Funding', '/tuition-fees'],
         ],
+    ];
+
+    /**
+     * DIU's examination buildings on /seat-plan (DIUFronend seat-plan/page BUILDINGS: written in its code, the pictures in its
+     * public/images): name => picture. S03 brings the pictures into the Media Library, titled with the name, and into
+     * Settings › Admission (seat_buildings) — from there the page shows them and marks the applicant's.
+     */
+    public const SEAT_BUILDINGS = [
+        'Inspiration Building' => 'images/set-plan/Inspiration Building.webp',
+        'Knowledge Tower' => 'images/set-plan/Knowledge Tower.jpeg',
+        "Scholar's Home" => 'images/set-plan/Scholar.jpg',
     ];
 
     /** Settings › Admission: DIU's office contact and result page links, only where still empty or as installed. */

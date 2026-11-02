@@ -146,6 +146,23 @@ it('shows assigned support staff on their place, and hides people who left every
     $this->get($this->deputy->url())->assertNotFound();
 });
 
+it('lists only regular staff in the directory; contractual, part-time … people show where they are assigned (owner 2026-11-01)', function () {
+    expect($this->clerk->employment_type)->toBe(Member::REGULAR);                                   // the default
+    $this->clerk->update(['employment_type' => 'contractual']);
+    app(AssignmentEngine::class)->assign($this->clerk, $this->exam, 'team');
+
+    $this->get('/administration/officer')->assertOk()->assertSee('Mr. Karim')->assertDontSee('Ms. Nahar');
+    $this->get('/administration?q=nahar')->assertOk()->assertDontSee('Ms. Nahar');
+    $this->get($this->clerk->url())->assertNotFound();
+    expect($this->clerk->personPresenter()->profileUrl())->toBeNull()
+        ->and(app(AssignmentEngine::class)->people($this->exam)->map->name()->all())->toBe(['Ms. Nahar']);
+    $this->get($this->exam->url())->assertOk()->assertSee('Ms. Nahar');                              // the office's team
+
+    $this->actingAs(superAdmin());
+    Livewire::test(ListMembers::class)->filterTable('employment_type', 'contractual')
+        ->assertCanSeeTableRecords([$this->clerk])->assertCanNotSeeTableRecords([$this->deputy]);
+});
+
 it('turns profile pages off from Settings', function () {
     settings()->save('administration', ['profile_pages' => false]);
     $this->get('/administration/'.$this->vc->slug())->assertNotFound();
@@ -168,27 +185,31 @@ it('adds a member from the admin and offers members in the person picker (FR-ADM
 it('imports and exports with the same columns, checking first (FR-ADMN-06)', function () {
     $this->deputy->update(['employee_id' => '710000101']);
     $file = UploadedFile::fake()->createWithContent('staff.csv', implode("\n", [
-        'Employee ID,Name,Designation,Category,Office,Email,Phone,Extension,Active',
-        '710000101,Mr. Karim,Deputy Registrar (Admin),Officer,Registrar Office,karim@example.edu,+880 1711 222222,101,yes',
-        ',Ms. New,Assistant Officer,Officer,Exam Office,new@example.edu,,,yes',
-        ',No Category,Clerk,Clerical,,,,,yes',
-        ',Bad Email,Clerk,Officer,,not-an-email,,,yes',
+        'Employee ID,Name,Designation,Category,Office,Email,Phone,Extension,Active,Employment',
+        '710000101,Mr. Karim,Deputy Registrar (Admin),Officer,Registrar Office,karim@example.edu,+880 1711 222222,101,yes,',
+        ',Ms. New,Assistant Officer,Officer,Exam Office,new@example.edu,,,yes,Part time',
+        ',No Category,Clerk,Clerical,,,,,yes,',
+        ',Bad Email,Clerk,Officer,,not-an-email,,,yes,',
+        ',Bad Employment,Clerk,Officer,,,,,yes,Seasonal',
     ]));
     $sheet = app(MemberSheet::class);
     $checked = $sheet->check($file->getRealPath(), 'csv');
-    expect($checked['total'])->toBe(4)->and($checked['rows'])->toHaveCount(2)->and($checked['errors'])->toHaveCount(2);
+    expect($checked['total'])->toBe(5)->and($checked['rows'])->toHaveCount(2)->and($checked['errors'])->toHaveCount(3);
 
     expect($sheet->save($checked['rows']))->toBe(['created' => 1, 'updated' => 1])
         ->and($this->deputy->fresh()->phone)->toBe('+880 1711 222222')
         ->and($this->deputy->fresh()->designation)->toBe('Deputy Registrar (Admin)')
-        ->and(Member::query()->where('email', 'new@example.edu')->sole()->primary_office_id)->toBe($this->exam->id);
+        ->and($this->deputy->fresh()->employment_type)->toBe('regular')                                // blank: kept
+        ->and(Member::query()->where('email', 'new@example.edu')->sole())
+        ->primary_office_id->toBe($this->exam->id)->employment_type->toBe('part_time');
 
     $out = fopen('php://memory', 'w+');
     $sheet->export($out);
     rewind($out);
     $csv = stream_get_contents($out);
-    expect($csv)->toStartWith('"Employee ID",Name,Designation,Category,Office,Email,Phone,Extension,Active')
-        ->toContain('710000101,"Mr. Karim","Deputy Registrar (Admin)",Officer,"Registrar Office",karim@example.edu');
+    expect($csv)->toStartWith('"Employee ID",Name,Designation,Category,Office,Email,Phone,Extension,Active,Employment')
+        ->toContain('710000101,"Mr. Karim","Deputy Registrar (Admin)",Officer,"Registrar Office",karim@example.edu')
+        ->toContain('new@example.edu,,,yes,part_time');
 });
 
 it('lets an Office user see and edit only their office\'s members (BRL-ADMN-02)', function () {

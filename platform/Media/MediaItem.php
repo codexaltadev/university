@@ -48,6 +48,20 @@ class MediaItem extends BaseModel implements HasMedia
         ];
     }
 
+    protected static function booted(): void
+    {
+        // The item itself switched off, deleted or restored: its file follows (MediaVisibility)
+        static::saved(fn (MediaItem $item) => $item->wasChanged('is_active') ? app(MediaVisibility::class)->refresh([$item->id]) : null);
+        static::deleted(fn (MediaItem $item) => app(MediaVisibility::class)->refresh([$item->id]));
+        static::restored(fn (MediaItem $item) => app(MediaVisibility::class)->refresh([$item->id]));
+    }
+
+    /** Its file waits off the public disk: everything using it is off (MediaVisibility) — shown only through a signed link */
+    public function isWithheld(): bool
+    {
+        return ! $this->is_private && ($file = $this->file()) !== null && $file->disk === MediaVisibility::WITHHELD_DISK;
+    }
+
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection(self::COLLECTION)->singleFile();
@@ -102,7 +116,7 @@ class MediaItem extends BaseModel implements HasMedia
             return null;
         }
 
-        if ($this->is_private) {
+        if ($this->is_private || $this->isWithheld()) {   // a withheld file: the admin still sees it, the public address is gone
             return URL::temporarySignedRoute('media.file', now()->addMinutes(30), ['item' => $this->id, 'name' => $file->file_name]);
         }
 
@@ -118,7 +132,7 @@ class MediaItem extends BaseModel implements HasMedia
             return null;
         }
 
-        return $this->is_private ? $this->url() : route('media.file', ['item' => $this->id, 'name' => $file->file_name]);
+        return $this->is_private || $this->isWithheld() ? $this->url() : route('media.file', ['item' => $this->id, 'name' => $file->file_name]);
     }
 
     public function previewUrl(): ?string

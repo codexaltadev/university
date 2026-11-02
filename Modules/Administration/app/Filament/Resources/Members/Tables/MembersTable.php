@@ -36,6 +36,9 @@ class MembersTable
                     ->description(fn (Member $record): ?string => $record->designation ?: null),
                 TextColumn::make('category.name')->label(__('administration::administration.category.singular'))->badge()
                     ->color(fn (Member $record): string => $record->category?->is_public ? 'primary' : 'gray'),
+                TextColumn::make('employment_type')->label(__('administration::administration.fields.employment_type'))->badge()
+                    ->formatStateUsing(fn (?string $state): string => Member::employmentTypes()[$state] ?? (string) $state)
+                    ->color(fn (?string $state): string => $state === Member::REGULAR ? 'success' : 'warning')->toggleable(),
                 TextColumn::make('employee_id')->label(__('administration::administration.fields.employee_id'))->toggleable(),
                 TextColumn::make('email')->label(__('administration::administration.fields.email'))->toggleable(),
                 TextColumn::make('phone')->label(__('administration::administration.fields.phone'))
@@ -47,6 +50,8 @@ class MembersTable
                 SelectFilter::make('group')->label(__('administration::administration.fields.group'))
                     ->options(AdministrationCategoryResource::groups())
                     ->query(fn (Builder $query, array $data) => filled($data['value'] ?? null) ? $query->whereHas('category', fn ($c) => $c->where('group', $data['value'])) : $query),
+                SelectFilter::make('employment_type')->label(__('administration::administration.fields.employment_type'))
+                    ->options(Member::employmentTypes()),
                 SelectFilter::make('category_id')->label(__('administration::administration.category.singular'))
                     ->options(fn (): array => AdministrationCategory::query()->ordered()->get()->mapWithKeys(fn ($c): array => [$c->id => $c->name])->all()),
                 SelectFilter::make('primary_office_id')->label(__('administration::administration.fields.primary_office'))

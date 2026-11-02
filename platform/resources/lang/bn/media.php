@@ -18,4 +18,10 @@ return [
     'attachment_title_help' => 'File-এর নামের বদলে দেখায়, যেমন "Exam routine — Fall 2026"।',
     'add_attachment' => 'File যোগ করুন',
     'file' => 'File',
+    'editor' => [
+        'insert' => 'Media Library',
+        'insert_button' => 'বসান',
+        'files' => 'ছবি বা file',
+        'files_help' => 'Library থেকে বাছুন, অথবা + দিয়ে নতুন upload করুন। ছবি ছবি হিসেবে বসে, অন্য file link হিসেবে। Private file তালিকায় আসে না।',
+    ],
 ];

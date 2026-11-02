@@ -49,7 +49,7 @@ class S07Fees extends Step
         }
 
         foreach ($this->rows('tuition_categories') as $row) {
-            // "local-tuition" → "local", "international-tuition" → "international" (/tuition-fees?category=international)
+            // "local-tuition" → "local", "international-tuition" → "international" (/tuition-fees/international)
             $code = Str::limit(Str::before(Str::slug((string) $row->category_code), '-tuition'), 20, '');
 
             $this->upsert('tuition_categories', $row, FeeCategory::class, [

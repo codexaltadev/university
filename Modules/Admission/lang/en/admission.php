@@ -231,7 +231,7 @@ return [
         'venues' => 'Examination Venues & Buildings',
         'venues_text' => 'Preview your examination buildings. Click any building to enlarge the photo.',
         'yours' => 'Your Assigned Venue',
-        'help' => 'Need help with your seat?',
+        'help' => 'Need Help Finding Your Exam Venue?',
         'help_text' => 'Contact the DIU Admission Helpdesk for assistance or inquiries.',
     ],
 ];

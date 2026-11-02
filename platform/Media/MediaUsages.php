@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 /**
- * Keeps core_media_usages and core_media_items.usage_count in step (FR-MEDIA-09/15).
+ * Keeps core_media_usages and core_media_items.usage_count in step (FR-MEDIA-09/15), and the files where their
+ * records' switches say (MediaVisibility).
  * Used by HasMediaUsage, MediaPicker and settings that hold media.
  */
 class MediaUsages
@@ -37,6 +38,7 @@ class MediaUsages
             }
 
             $this->recount([...$before, ...$ids]);
+            app(MediaVisibility::class)->refresh([...$before, ...$ids]);   // a file taken onto a record that is on opens again, and the other way round
         });
     }
 
@@ -72,5 +74,6 @@ class MediaUsages
         $items = (clone $query)->pluck('media_item_id')->all();
         $query->delete();
         $this->recount($items);
+        app(MediaVisibility::class)->refresh($items);
     }
 }

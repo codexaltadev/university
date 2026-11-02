@@ -20,6 +20,9 @@ use Platform\Assignments\ManualPerson;
  */
 class S11Administration extends Step
 {
+    /** Roles that stay with their manual person: testimonial authors and video speakers are mostly people from outside */
+    public const OWN_PEOPLE = ['author', 'speaker'];
+
     /** @var list<string> legacy admin categories counted as management (the rest are officers) */
     public const MANAGEMENT = ['management', 'director', 'additional registrar', 'joint director'];
 
@@ -63,6 +66,9 @@ class S11Administration extends Step
         // Categories DIU does not have (the module's starter ladder) go after DIU's, and are named for review
         foreach (AdministrationCategory::query()->whereNotIn('id', [...$adminCategories, ...$staffCategories])->ordered()->get() as $extra) {
             $extra->update(['sort_order' => ++$order]);
+            if ($extra->getTranslation('name', 'en', false) === S19People::CONTRACTUAL_CATEGORY) {
+                continue;   // made below
+            }
             $this->report->review("Category \"{$extra->name}\" is not DIU's (".$extra->members()->count().' members): delete it in People › Staff categories if it is not needed.');
         }
 
@@ -151,6 +157,6 @@ class S11Administration extends Step
             $this->ids->forget('admins@manual', $legacyId);
         }
 
-        $this->report->review("{$moved} assignments moved from manual persons to Administration members.");
+        $this->report->review("{$moved} assignments moved from admins' manual persons to their members (other people: S19P).");
     }
 }

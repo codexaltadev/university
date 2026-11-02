@@ -51,7 +51,7 @@ return [
         'tabs' => 'Tab',
         'files' => 'File',
         'embed' => 'ভিডিও / ম্যাপ',
-        'html' => 'HTML (যেমন লেখা)',
+        'html' => 'HTML / ডিজাইন (visual বা source)',
         'button' => 'Button',
         'links' => 'Link card',
         'location' => 'অবস্থান (campus ও map)',
@@ -68,7 +68,7 @@ return [
         'web_address' => 'শিরোনাম থেকে তৈরি; এখানে বদলানো যায়। পুরনো ঠিকানাও কাজ করবে।',
         'attachments' => 'Page-এর শেষে download তালিকায় দেখাবে।',
         'embed' => 'YouTube, Vimeo, Google Maps বা Facebook ভিডিওর link।',
-        'html' => 'Class সহ HTML (table, card, accordion — default theme-এ Bootstrap 5)। Script, event handler ও frame বাদ যায়।',
+        'html' => 'Document-এর মতো লিখুন (Ctrl+B …), অথবা Source চেপে class সহ HTML paste বা edit করুন (table, card, accordion — default theme-এ Bootstrap 5)। ছবি ও file: Media Library বোতাম। Website-এ script, event handler ও frame বাদ যায়।',
         'icon' => 'Icon-এর নাম, যেমন calendar, bell, book-open, briefcase, user, headphones।',
         'location' => 'নাম, ঠিকানা, ফোন, ইমেইল ও map আসে Settings › Contact › Campuses থেকে।',
         'jobs_source' => 'studio.skill.jobs-এ বিশ্ববিদ্যালয়ের company-specific jobs ঠিকানা (…/?company_slug=…&limit=1000)। তালিকা সেখান থেকেই আসে।',
@@ -85,5 +85,6 @@ return [
     'actions' => [
         'add_block' => 'Block যোগ করুন',
         'duplicate' => 'কপি করুন',
+        'view_on_site' => 'Website-এ দেখুন',
     ],
 ];

@@ -102,6 +102,18 @@ class Page extends BaseModel implements Scopeable
         return null;
     }
 
+    /** The page's Quick Links: its own, else the nearest parent's — as the sidebar menu (/admission/schedule shows /admission's) */
+    public function sidebarQuickLinks(): array
+    {
+        for ($page = $this; $page !== null; $page = $page->parent) {
+            if (filled($page->quick_links)) {
+                return (array) $page->quick_links;
+            }
+        }
+
+        return [];
+    }
+
     /** @return list<Page> the parents, top first (breadcrumb) */
     public function ancestors(): array
     {

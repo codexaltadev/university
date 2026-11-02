@@ -1,12 +1,11 @@
-{{-- /tuition-fees: category tabs and filters (FR-FEE-03); hidden when printed. Contract: $category, $categories, $choices, $selected --}}
+{{-- /tuition-fees/{category}: category tabs and filters (FR-FEE-03); hidden when printed. Contract: $category, $categories, $choices, $selected --}}
 <div class="tuition-filters no-print">
     <nav aria-label="{{ __('tuition::tuition.fields.category') }}" style="display:flex;flex-wrap:wrap;gap:.75rem;margin-block:var(--space-4, 16px)">
         @foreach ($categories as $item)
-            <a href="{{ url('/tuition-fees').'?category='.urlencode($item->code) }}" @if ($category?->is($item)) aria-current="page" style="font-weight:700" @endif>{{ $item->name }}</a>
+            <a href="{{ url($item->url()) }}" @if ($category?->is($item)) aria-current="page" style="font-weight:700" @endif>{{ $item->name }}</a>
         @endforeach
     </nav>
-    <form method="get" action="{{ url('/tuition-fees') }}" style="display:grid;gap:var(--space-3, 12px);grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));align-items:end">
-        <input type="hidden" name="category" value="{{ $category?->code }}">
+    <form method="get" action="{{ url($category?->url() ?? '/tuition-fees') }}" style="display:grid;gap:var(--space-3, 12px);grid-template-columns:repeat(auto-fit, minmax(160px, 1fr));align-items:end">
         @foreach (['faculty' => 'faculties', 'department' => 'departments'] as $key => $list)
             <label style="display:grid;gap:.25rem">
                 <span>{{ __("tuition::tuition.fields.{$key}") }}</span>

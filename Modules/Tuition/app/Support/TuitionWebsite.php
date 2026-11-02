@@ -2,8 +2,10 @@
 
 namespace Modules\Tuition\Support;
 
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
 use Modules\Department\Models\Department;
 use Modules\Faculty\Models\Faculty;
 use Modules\Tuition\Models\FeeCategory;
@@ -15,23 +17,40 @@ use Platform\Taxonomy\Vocabularies;
 use Platform\Theme\LayoutResolver;
 
 /**
- * /tuition-fees (FR-FEE-03): one fee category at a time (?category=local-tuition, the
- * first one by default), filtered by faculty, department and level, grouped by faculty
- * in the faculties' order; print-friendly.
+ * /tuition-fees (FR-FEE-03): one fee category at a time — /tuition-fees/{code} (owner 2026-11-02:
+ * /tuition-fees/international, not ?category=; the old ?category= redirects there), /tuition-fees the
+ * first one — filtered by faculty, department and level (?faculty=, ?department=, ?level=), grouped by
+ * faculty in the faculties' order; print-friendly.
  */
 class TuitionWebsite
 {
     public const PAGE = 'tuition-fees';
 
-    public function respond(string $rest, SiteContext $context, string $locale): ?Response
+    public function respond(string $rest, SiteContext $context, string $locale): Response|RedirectResponse|null
     {
-        if ($context->isMicrosite() || trim($rest, '/') !== self::PAGE) {
+        $rest = trim($rest, '/');
+        if ($context->isMicrosite() || ($rest !== self::PAGE && ! Str::startsWith($rest, self::PAGE.'/'))) {
+            return null;
+        }
+        $code = $rest === self::PAGE ? null : Str::after($rest, self::PAGE.'/');
+        if ($code !== null && str_contains($code, '/')) {
             return null;
         }
 
         $query = request()->query();
         $categories = FeeCategory::query()->frontendVisible()->ordered()->get();
-        $category = $categories->first(fn (FeeCategory $c): bool => strcasecmp($c->code, (string) ($query['category'] ?? '')) === 0) ?? $categories->first();
+        $find = fn (?string $asked): ?FeeCategory => $categories->first(fn (FeeCategory $c): bool => strcasecmp($c->code, (string) $asked) === 0);
+
+        // The old ?category=international (menus, DIU's links) → its own address, the filters kept
+        if (filled($query['category'] ?? null) && ($asked = $find((string) $query['category']))) {
+            $filters = collect($query)->except('category')->all();
+
+            return redirect(Seo::localized($asked->url(), $locale).($filters ? '?'.http_build_query($filters) : ''), 301);
+        }
+        $category = $code === null ? $categories->first() : $find($code);
+        if ($code !== null && $category === null) {
+            return null;
+        }
 
         $faculties = Faculty::query()->frontendVisible()->ordered()->get();
         $departments = Department::query()->frontendVisible()->ordered()->get();
@@ -51,7 +70,11 @@ class TuitionWebsite
             ->when($selected['faculty'], fn ($q, Faculty $f) => $q->whereHas('program.department', fn ($d) => $d->where('faculty_id', $f->id)))
             ->ordered()->get();
 
-        app(Seo::class)->set(['title' => __('tuition::tuition.tuition_fees'), 'path' => '/'.self::PAGE]);
+        app(Seo::class)->set([
+            'title' => $category ? $category->name.' — '.__('tuition::tuition.tuition_fees') : __('tuition::tuition.tuition_fees'),
+            'path' => $category?->url() ?? '/'.self::PAGE,
+            'canonical' => url($category?->url() ?? '/'.self::PAGE),   // /tuition-fees and /tuition-fees/local are one page: the category's address
+        ]);
 
         $layouts = app(LayoutResolver::class);
 

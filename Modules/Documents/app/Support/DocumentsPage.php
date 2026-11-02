@@ -88,7 +88,7 @@ class DocumentsPage
             'thumb' => $d->firstMedia('thumbnail')?->url('medium'),
             'flipbook' => $d->flipbook(),
             'readable' => $d->fileItem() !== null || filled($d->external_url),
-            'download' => $d->allow_download && $d->fileItem() ? url($base.'/'.Document::PATH.'/'.$d->slug().'/file') : null,
+            'download' => $d->downloadable() ? url($base.'/'.Document::PATH.'/'.$d->slug().'/file') : null,
             'external' => $d->fileItem() ? null : ($d->external_url ?: null),
             'meta' => collect([$d->session_label, $d->version_label, $d->program()?->name, $d->fileFacts()])->filter()->implode(' · ') ?: null,
         ])->all();

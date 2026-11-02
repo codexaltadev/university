@@ -16,6 +16,7 @@ class EditPage extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
+            PagesTable::viewOnSite(),
             PagesTable::duplicate(),
             DeleteAction::make(),
             RestoreAction::make(),

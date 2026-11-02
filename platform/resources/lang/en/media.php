@@ -18,4 +18,10 @@ return [
     'attachment_title_help' => 'Shown instead of the file name, e.g. "Exam routine — Fall 2026".',
     'add_attachment' => 'Add a file',
     'file' => 'File',
+    'editor' => [
+        'insert' => 'Media Library',
+        'insert_button' => 'Insert',
+        'files' => 'Pictures or files',
+        'files_help' => 'Choose from the library, or upload a new one with +. Pictures go in as pictures, other files as links. Private files are not listed.',
+    ],
 ];

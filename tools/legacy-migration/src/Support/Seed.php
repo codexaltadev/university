@@ -41,6 +41,10 @@ class Seed
         'section_employees', 'sections', 'semesters', 'sliders', 'staff', 'staff_categories', 'stops', 'support_contacts', 'testimonials',
         'transport_services', 'transport_settings', 'tuition_categories', 'tuitions', 'tuition_waiver', 'visitors', 'waiver_categories',
         'waiver_waiver_category', 'waivers',
+        // read by steps added after the first seed (S15A, S15O, S15T, S15X, S11C, S08 seat plans, S18P)
+        'articles', 'coordination_officers', 'mps_categories', 'office_site_articles', 'office_site_faqs', 'office_site_menus',
+        'office_site_teams', 'office_sites', 'proctor_office_categories', 'proctor_offices', 'registrar_office_categories',
+        'registrar_offices', 'seat_plans', 'side_menu_categories', 'side_menus',
     ];
 
     /** Personal data, not content: structure only */

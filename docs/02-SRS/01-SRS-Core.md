@@ -327,6 +327,7 @@
 * **BRL-MEDIA-01:** Upload-এর সময় user-এর scope automatically media-তে বসবে।
 * **BRL-MEDIA-02:** Private document (যেমন internal file) public URL ছাড়া signed URL দিয়ে দেওয়ার option থাকবে (Should)।
 * **BRL-MEDIA-03:** File-এর নাম slugify করা হবে এবং collision হলে suffix যোগ হবে।
+* **BRL-MEDIA-04** *(owner 2026-11-02)*: File তার record-এর সাথে চলে — যে record-গুলো একটি media item ব্যবহার করে সেগুলোর **সবকটি** বন্ধ হলে (inactive, trash, `active_at` আসেনি, মেয়াদ শেষ; `BaseModel::activeNow`) বা item নিজে বন্ধ হলে, file ও তার সব size public disk থেকে সরে যায় (সরাসরি ঠিকানা আর খোলে না; admin-এ signed link-এ দেখা যায়); একটি চালু হলেই একই ঠিকানায় ফিরে আসে। কেউ ব্যবহার না করা item (library-র নিজের, rich text-এ লেখা ছবি) ও setting-এর file বদলায় না। সময়ে চালু / বন্ধ হওয়া record প্রতি ৫ মিনিটে (`uwms:media:visibility --minutes=10`); পুরো মিল `uwms:media:visibility` (migration / restore-এর পরে)। `MediaVisibility`।
 
 ### Permissions
 
@@ -464,7 +465,7 @@
 | ID | Requirement | BRD Ref | Priority |
 |---|---|---|---|
 | FR-PAGE-01 | Page create / edit, rich text editor (heading, list, table, image, video embed, file link, button) | BR-THM-05 | Must |
-| FR-PAGE-02 | Block-based content (Filament Builder): text, image gallery, accordion, tabs, people card, file list, embed; *(v0.3, 2026-11-01)* link card (DIU-র /students, /teachers — tile বা box), location (Settings › Contact-এর campus ও map), চাকরির তালিকা (skill.jobs থেকে সরাসরি, কিছু জমা রাখা হয় না, কিছুক্ষণ cache) | BR-THM-05 | Should |
+| FR-PAGE-02 | Block-based content (Filament Builder): text, image gallery, accordion, tabs, people card, file list, embed; *(v0.3, 2026-11-01)* link card (DIU-র /students, /teachers — tile বা box), location (Settings › Contact-এর campus ও map), চাকরির তালিকা (skill.jobs থেকে সরাসরি, কিছু জমা রাখা হয় না, কিছুক্ষণ cache); *(2026-11-02)* HTML / design block: visual editor (Ctrl+B, table, link), "Source" বোতামে HTML paste বা edit, theme-এর `editor_css` দিয়ে website-এর মতো দেখায়, Media Library বোতাম (বাছাই বা সেখানেই upload; ছবি `<img>`, অন্য file link হিসেবে বসে, `data-media-id` থাকায় usage হিসেবে গোনা হয়, BRL-MEDIA-04-এর আওতায় আসে); website-এ দেখানোর সময় sanitize | BR-THM-05 | Should |
 | FR-PAGE-03 | Parent-child hierarchy (breadcrumb ও URL-এ প্রতিফলিত) | — | Must |
 | FR-PAGE-04 | Page layout select (theme থেকে, WordPress-এর মতো): Standard (sidebar ছাড়া, `default`), Full width, Left sidebar (`with-sidebar`), Right sidebar (`right-sidebar`), Landing (শুধু block)। দুই sidebar layout-এ sidebar menu ও Quick Links page থেকে বেছে নেওয়া যায় *(v0.3, 2026-10-31)* | BR-THM-02 | Must |
 | FR-PAGE-05 | Owner entity: Main site, অথবা Faculty / Department / Program / Office / Lab। Entity-র page তার microsite URL-এ থাকবে (যেমন `/fsit/cse/about`) | BR-MS-01 | Must |

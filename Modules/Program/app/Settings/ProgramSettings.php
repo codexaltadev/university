@@ -40,7 +40,7 @@ class ProgramSettings extends ModuleSettings
             'quick_links' => [
                 ['label' => ['en' => 'Tuition Fees', 'bn' => 'টিউশন ফি'], 'url' => '/tuition-fees'],
                 ['label' => ['en' => 'Waiver & Scholarship', 'bn' => 'ওয়েভার ও স্কলারশিপ'], 'url' => '/scholarships'],
-                ['label' => ['en' => 'Intl. Tuition Fees', 'bn' => 'আন্তর্জাতিক টিউশন ফি'], 'url' => '/tuition-fees?category=international-tuition'],
+                ['label' => ['en' => 'Intl. Tuition Fees', 'bn' => 'আন্তর্জাতিক টিউশন ফি'], 'url' => '/tuition-fees/international'],
                 ['label' => ['en' => 'Intl. Scholarship', 'bn' => 'আন্তর্জাতিক স্কলারশিপ'], 'url' => '/scholarships'],
                 ['label' => ['en' => 'Admission Notice', 'bn' => 'ভর্তি বিজ্ঞপ্তি'], 'url' => '/admission'],
                 ['label' => ['en' => 'Rules and Regulation', 'bn' => 'নিয়মকানুন'], 'url' => '/rules-and-regulation'],

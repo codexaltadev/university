@@ -36,6 +36,7 @@ return [
         'group' => 'Group',
         'is_public' => 'In the directory',
         'employee_id' => 'Employee ID',
+        'employment_type' => 'Employment',
         'primary_office' => 'Office',
         'email' => 'Email',
         'phone' => 'Phone',
@@ -43,7 +44,15 @@ return [
         'public' => 'Show on the website',
         'photo' => 'Photo',
     ],
+    'employment' => [
+        'regular' => 'Regular',
+        'probation' => 'Probation',
+        'contractual' => 'Contractual',
+        'part_time' => 'Part time',
+        'outsourced' => 'Outsourced',
+    ],
     'help' => [
+        'employment_type' => 'Only regular staff are listed in the directory. The others show only where they are assigned (office team, committee, lab …).',
         'designation' => 'As written on the website, e.g. "Director (Finance & Accounts)".',
         'contact' => 'Written once: every office, committee and contact list that shows this person uses it.',
         'is_active' => 'Off when the person leaves or retires: they disappear from every page at once.',

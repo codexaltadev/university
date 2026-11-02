@@ -36,6 +36,7 @@ return [
         'group' => 'Group',
         'is_public' => 'Directory-তে দেখাবে',
         'employee_id' => 'Employee ID',
+        'employment_type' => 'চাকরির ধরন',
         'primary_office' => 'Office',
         'email' => 'Email',
         'phone' => 'Phone',
@@ -43,7 +44,15 @@ return [
         'public' => 'Website-এ দেখাবে',
         'photo' => 'ছবি',
     ],
+    'employment' => [
+        'regular' => 'স্থায়ী (Regular)',
+        'probation' => 'শিক্ষানবিশ (Probation)',
+        'contractual' => 'চুক্তিভিত্তিক',
+        'part_time' => 'খণ্ডকালীন',
+        'outsourced' => 'Outsourced',
+    ],
     'help' => [
+        'employment_type' => 'Directory-তে শুধু স্থায়ী (Regular) কর্মীরা দেখাবেন। বাকিরা শুধু যেখানে assign করা আছে সেখানে দেখাবেন (office team, committee, lab …)।',
         'designation' => 'Website-এ যেভাবে লেখা থাকবে, যেমন "Director (Finance & Accounts)"।',
         'contact' => 'একবারই লেখা হয়: যে office, committee বা contact তালিকায় এই ব্যক্তি আছেন, সবখানে এটাই দেখায়।',
         'is_active' => 'চাকরি ছাড়লে বা অবসরে গেলে বন্ধ করুন: সব পাতা থেকে একসাথে সরে যাবেন।',

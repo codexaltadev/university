@@ -38,7 +38,17 @@ abstract class BaseModel extends Model
             return $query->whereRaw('1 = 0');
         }
 
-        $query->where($this->qualifyColumn('is_active'), true);
+        return $this->scopeActiveNow($query);
+    }
+
+    /**
+     * The record's own switch, now: active, not deleted, and each opt-in trait's rule (active_at reached, not
+     * expired …) — without the module's state or a model's own extra conditions (a category in the directory …).
+     * Its files follow it (MediaVisibility).
+     */
+    public function scopeActiveNow(Builder $query): Builder
+    {
+        $query->where($this->qualifyColumn('is_active'), true)->whereNull($this->qualifyColumn($this->getDeletedAtColumn()));
 
         foreach (class_uses_recursive(static::class) as $trait) {
             $method = 'applyFrontendVisibility'.class_basename($trait);

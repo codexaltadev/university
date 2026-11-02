@@ -12,12 +12,12 @@ use OpenSpout\Reader\XLSX\Reader as XlsxReader;
 /**
  * Bulk import and export (FR-ADMN-06), one column set both ways so an exported file can be
  * edited and imported again: Employee ID, Name, Designation, Category, Office, Email, Phone,
- * Extension, Active. A row updates the member with that employee ID (or else that email);
+ * Extension, Active, Employment (regular, contractual …; blank keeps it, a new person is regular). A row updates the member with that employee ID (or else that email);
  * otherwise it adds one. Category by name (must exist); Office by name or short name.
  */
 class MemberSheet
 {
-    public const COLUMNS = ['Employee ID', 'Name', 'Designation', 'Category', 'Office', 'Email', 'Phone', 'Extension', 'Active'];
+    public const COLUMNS = ['Employee ID', 'Name', 'Designation', 'Category', 'Office', 'Email', 'Phone', 'Extension', 'Active', 'Employment'];
 
     protected const OFFICE = 'Modules\\Office\\Models\\Office';
 
@@ -31,7 +31,7 @@ class MemberSheet
                 fputcsv($out, [
                     $m->employee_id, $m->getTranslation('name', 'en', true), $m->getTranslation('designation', 'en', true),
                     $m->category?->getTranslation('name', 'en', true), $offices[$m->primary_office_id] ?? '',
-                    $m->email, $m->phone, $m->extension, $m->is_active ? 'yes' : 'no',
+                    $m->email, $m->phone, $m->extension, $m->is_active ? 'yes' : 'no', $m->employment_type,
                 ]);
             }
         });
@@ -48,6 +48,7 @@ class MemberSheet
 
         $categories = $this->categories();
         $offices = $this->offices();
+        $employments = collect(Member::employmentTypes())->flatMap(fn (string $label, string $key): array => [$key => $key, Str::lower($label) => $key])->all();
         $columns = null;
         $rows = $errors = [];
         $line = $total = 0;
@@ -108,6 +109,15 @@ class MemberSheet
 
                     continue;
                 }
+                $employment = null;   // blank: kept (a new person is regular)
+                if ($get('Employment') !== '') {
+                    $employment = $employments[Str::lower($get('Employment'))] ?? $employments[Str::snake(Str::lower($get('Employment')))] ?? null;
+                    if ($employment === null) {
+                        $fail(__('administration::administration.import.unknown', ['name' => $get('Employment')]));
+
+                        continue;
+                    }
+                }
 
                 $rows[] = [
                     'employee_id' => Str::limit($get('Employee ID'), 30, '') ?: null,
@@ -117,6 +127,7 @@ class MemberSheet
                     'email' => $get('Email') ?: null, 'phone' => Str::limit($get('Phone'), 50, '') ?: null,
                     'extension' => Str::limit($get('Extension'), 20, '') ?: null,
                     'is_active' => ! in_array(Str::lower($get('Active')), ['no', '0', 'false', 'inactive'], true),
+                    ...($employment ? ['employment_type' => $employment] : []),
                 ];
             }
 

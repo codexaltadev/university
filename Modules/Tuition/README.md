@@ -11,7 +11,7 @@ Its own team enters the data (by default the Admission Office). The Waiver modul
 | Permissions | resource `…:Tuition`, `…:FeeCategory`; tuitions are scoped through their program (Program / Department / Faculty users read theirs) |
 | Depends on | `program` (hard: `program_id` FK; level = program type), `department`, `faculty` (page filters) |
 
-* **Tuition categories**: name per language ("Local", "International"), code (used in `/tuition-fees?category=local`),
+* **Tuition categories**: name per language ("Local", "International"), code (the category's address: `/tuition-fees/local`),
   currency (symbol on the website), order by drag.
 * **Tuition fees**: program, category, label (a program may have **several** tuition fees — one per category, and more
   when the label differs, e.g. MBA International "1 Year" / "2 Years"), credits (a range when "up to" is set),
@@ -23,7 +23,9 @@ Its own team enters the data (by default the Admission Office). The Waiver modul
   program's tuitions read only (category · label, credits, tuition, total, active) for who may view tuitions; who may
   create gets "Add tuition fee" (`/admin/tuition/tuitions/create?program=12` — the program fixed, back to the program
   after saving), who may update gets each row's edit link.
-* **Website:** `/tuition-fees` — one category at a time, filters faculty / department (short name) and level (slug),
+* **Website:** `/tuition-fees/{code}` — one category at a time (`/tuition-fees` = the first; owner 2026-11-02: the
+  category in the address, not `?category=`, which redirects 301 with the filters kept; canonical = the category's
+  address), filters in the query: faculty / department (short name) and level (slug) — `/tuition-fees/local?department=CSE`,
   grouped by faculty (layout "grouped") or one table ("compact"); print button. Program page: tab "Tuition Fees"
   (`$r->entityTab(Program::class, TuitionTab::class)`), only where fees exist. Fees of an inactive program,
   department or category are not shown.

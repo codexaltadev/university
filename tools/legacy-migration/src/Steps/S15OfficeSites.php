@@ -122,7 +122,14 @@ class S15OfficeSites extends Step
         // Every row with text is a page; a row with a link only stays a link
         $pages = [];
         foreach ($rows as $row) {
-            if ($row === $home || ! $this->hasText($row)) {
+            if ($row === $home) {
+                continue;
+            }
+            if (! $this->hasText($row)) {   // a link row: DIU's address goes where its menu item leads here (team, news, notices)
+                if (str_starts_with((string) ($url = $this->link($row, [], $office)['url'] ?? ''), '/')) {
+                    $this->oldAddress($config['old'].'/'.$row->article_slug, $url);
+                }
+
                 continue;
             }
             $pages[$row->id] = $this->page($config['table'], $row, $office);
@@ -258,6 +265,7 @@ class S15OfficeSites extends Step
         $known = $office->people(['head', 'team'])->concat($office->people('head', former: true))->first(fn (PersonView $p): bool => $same($p->name()));
 
         return $known?->assignment->person
+            ?? $this->memberFor($name, null)
             ?? ManualPerson::query()->get()->first(fn (ManualPerson $p): bool => $same((string) $p->getTranslation('name', 'en', false)))
             ?? ManualPerson::create(['name' => ['en' => $name], 'designation' => ['en' => $designation], 'is_active' => true]);
     }

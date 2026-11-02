@@ -75,7 +75,8 @@ class S16Events extends Step
                 'is_active' => (bool) $row->publication_status,
             ], after: function (Event $event) use ($row, $department, $categories, $engine): void {
                 $event->syncTerms(Event::CATEGORY, array_filter([$categories[$row->event_category_id] ?? null]));
-                $engine->sync($event, $department ? [$department->getMorphClass().':'.$department->getKey()] : [], mainSite: (string) $row->is_home === '1', user: null);
+                // DIU's /events lists every event: one without a department is the main site's even when not on its homepage
+                $engine->sync($event, $department ? [$department->getMorphClass().':'.$department->getKey()] : [], mainSite: (string) $row->is_home === '1' || $department === null, user: null);
                 $this->oldAddress('/events-detail/'.$row->id, $event);   // DIU's event address
             });
         }
@@ -86,7 +87,7 @@ class S16Events extends Step
             $this->report->review("{$counts['lab']} lab events wait for the Lab module (shown where else they belong until then).");
         }
         if ($counts['no_place'] > 0) {
-            $this->report->review("{$counts['no_place']} events have no department and were not on DIU's homepage: shown nowhere — give them a place or delete them.");
+            $this->report->review("{$counts['no_place']} events have no department and were not on DIU's homepage: on the main site's /events, as on DIU's new site — move or delete the ones that belong elsewhere.");
         }
     }
 

@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use Legacy\Migration\Support\Normalizer;
-use Modules\Administration\Models\Member;
 use Modules\Committee\Models\Committee;
 use Platform\Assignments\Assignment;
 use Platform\Relations\RelationEngine;
@@ -22,11 +21,6 @@ use Platform\Relations\RelationEngine;
  */
 class S13Committees extends Step
 {
-    protected const TITLES = '/^(mr|mrs|ms|miss|dr|prof|professor|engr|engineer)\.?\s+/i';
-
-    /** @var array<string, Member|null> normalized name => the one member with it (null = several) */
-    protected array $members = [];
-
     public static function key(): string
     {
         return 'S13';
@@ -49,8 +43,6 @@ class S13Committees extends Step
 
             return;
         }
-
-        $this->loadMembers();
         $engine = app(RelationEngine::class);
         $committees = [];
 
@@ -84,7 +76,7 @@ class S13Committees extends Step
                 continue;
             }
 
-            $person = $this->member($name);
+            $person = $this->memberFor($name, Normalizer::text($row->email));
             if ($person) {
                 $matched++;
             } else {
@@ -135,31 +127,5 @@ class S13Committees extends Step
             'is_public' => $public,
             'is_active' => true,
         ]);
-    }
-
-    protected function loadMembers(): void
-    {
-        if (! class_exists(Member::class)) {
-            return;
-        }
-        foreach (Member::query()->withoutGlobalScopes()->whereNull('deleted_at')->where('is_active', true)->get() as $member) {
-            $key = $this->normal((string) $member->getTranslation('name', 'en', false));
-            $this->members[$key] = array_key_exists($key, $this->members) ? null : $member;   // a name two people share matches no one
-        }
-    }
-
-    protected function member(string $name): ?Member
-    {
-        return $this->members[$this->normal($name)] ?? null;
-    }
-
-    protected function normal(string $name): string
-    {
-        $name = Str::lower(trim(preg_replace('/\s+/', ' ', $name)));
-        for ($i = 0; $i < 3; $i++) {
-            $name = preg_replace(self::TITLES, '', $name);
-        }
-
-        return trim(preg_replace('/[^\pL\pN ]/u', '', $name));
     }
 }

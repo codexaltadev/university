@@ -66,7 +66,7 @@ class DocumentsWebsite
         return response()->view('documents::show', [
             'document' => $document,
             'reader' => self::readerUrl($document),
-            'download' => $document->allow_download ? url($base.'/'.Document::PATH.'/'.$document->slug($locale).'/file') : null,
+            'download' => $document->downloadable() ? url($base.'/'.Document::PATH.'/'.$document->slug($locale).'/file') : null,
             'older' => $document->olderVersions()->frontendVisible()->get(),
             'base' => $base,
         ]);

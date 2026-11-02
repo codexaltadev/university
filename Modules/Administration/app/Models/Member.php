@@ -45,12 +45,19 @@ class Member extends BaseModel implements PersonSource, Scopeable
 
     public const PATH = 'administration';
 
+    /** How a member is employed (owner 2026-11-01): only regular staff are in the directory */
+    public const EMPLOYMENT = ['regular', 'probation', 'contractual', 'part_time', 'outsourced'];
+
+    public const REGULAR = 'regular';
+
     public static string $titleAttribute = 'name';
 
     protected $table = 'administration_members';
 
+    protected $attributes = ['employment_type' => self::REGULAR];
+
     protected $fillable = [
-        'category_id', 'employee_id', 'name', 'designation', 'primary_office_id', 'email', 'phone', 'extension',
+        'category_id', 'employee_id', 'employment_type', 'name', 'designation', 'primary_office_id', 'email', 'phone', 'extension',
         'biography', 'show_email', 'show_phone', 'show_extension', 'sort_order', 'is_active',
     ];
 
@@ -92,10 +99,17 @@ class Member extends BaseModel implements PersonSource, Scopeable
         return class_exists($class) ? $this->belongsTo($class, 'primary_office_id') : null;
     }
 
-    /** Directory, search, sitemap: active members of active public categories. */
+    /** Directory, profile, search, sitemap: active regular members of active public categories (others show only where assigned). */
     public function scopeFrontendVisible(Builder $query): Builder
     {
-        return parent::scopeFrontendVisible($query)->whereHas('category', fn (Builder $c) => $c->public());
+        return parent::scopeFrontendVisible($query)->where($this->qualifyColumn('employment_type'), self::REGULAR)
+            ->whereHas('category', fn (Builder $c) => $c->public());
+    }
+
+    /** @return array<string, string> key => "Contractual" */
+    public static function employmentTypes(): array
+    {
+        return collect(self::EMPLOYMENT)->mapWithKeys(fn (string $type): array => [$type => __('administration::administration.employment.'.$type)])->all();
     }
 
     /** Name or designation (any language) contains the words, ignoring case — JSON columns compare in binary. */

@@ -50,6 +50,11 @@ class ResultLookup extends Component
         $this->answer = $this->find(trim($this->serial));
     }
 
+    public function clear(): void
+    {
+        $this->reset('serial', 'answer');
+    }
+
     /** @return array<string, mixed> */
     public function find(string $serial): array
     {

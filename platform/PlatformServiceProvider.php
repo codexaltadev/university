@@ -2,6 +2,10 @@
 
 namespace Platform;
 
+use Filament\Support\Assets\AlpineComponent;
+use Filament\Support\Assets\Css;
+use Filament\Support\Assets\Js;
+use Filament\Support\Facades\FilamentAsset;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Contracts\Http\Kernel as HttpKernel;
 use Illuminate\Support\Facades\Event;
@@ -20,6 +24,7 @@ use Platform\Events\ModuleActivated;
 use Platform\Events\ModuleDeactivated;
 use Platform\Events\ModuleUninstalling;
 use Platform\Events\SettingsUpdated;
+use Platform\Filament\Components\HtmlEditor;
 use Platform\Filament\Livewire\WorkingInSwitcher;
 use Platform\Hierarchy\EntityHierarchy;
 use Platform\Localization\DatabaseTranslationLoader;
@@ -106,6 +111,13 @@ class PlatformServiceProvider extends ServiceProvider
         $this->loadViewsFrom(base_path('platform/resources/views'), 'platform');
         $this->loadTranslationsFrom(base_path('platform/resources/lang'), 'platform');
 
+        // HtmlEditor: its Alpine component and Jodit, loaded only where an editor is (filament:assets publishes them)
+        FilamentAsset::register([
+            AlpineComponent::make('html-editor', base_path('platform/resources/js/html-editor.js')),
+            Js::make('jodit', base_path('platform/resources/dist/jodit/jodit.min.js'))->loadedOnRequest(),
+            Css::make('jodit', base_path('platform/resources/dist/jodit/jodit.min.css'))->loadedOnRequest(),
+        ], HtmlEditor::ASSETS);
+
         // Missing translations fall back to the default website language (FR-LANG-05)
         $this->app->make(Languages::class)->applyFallback();
 
@@ -141,6 +153,7 @@ class PlatformServiceProvider extends ServiceProvider
                 Commands\SearchRebuildCommand::class,
                 Commands\SearchScheduledCommand::class,
                 Commands\FlushViewCountsCommand::class,
+                Commands\MediaVisibilityCommand::class,
             ]);
         }
     }
@@ -239,6 +252,7 @@ class PlatformServiceProvider extends ServiceProvider
             $schedule->command('uwms:highlights:expire')->hourly();           // SAD Part B §3.5
             $schedule->command('uwms:activity:clean')->dailyAt('03:00');      // FR-LOG-07
             $schedule->command('uwms:search:scheduled')->everyMinute()->withoutOverlapping();   // FR-SRCH-09
+            $schedule->command('uwms:media:visibility --minutes=10')->everyFiveMinutes()->withoutOverlapping();   // files follow active_at / expiry
             $schedule->command('uwms:views:flush')->everyFiveMinutes()->withoutOverlapping();     // P-17, DB-02 §12.3
         });
     }

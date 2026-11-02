@@ -104,6 +104,12 @@ final class ThemeManifest
         return array_values((array) ($this->data['fonts'] ?? []));
     }
 
+    /** @return list<string> theme files (public/…) the admin's HTML editor shows page text with, so it looks as on the website */
+    public function editorCss(): array
+    {
+        return array_values((array) ($this->data['editor_css'] ?? []));
+    }
+
     /** @return list<array{key: string, type: string, label?: string, options?: list<string>, default?: mixed}> */
     public function options(): array
     {

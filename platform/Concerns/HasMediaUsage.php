@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Platform\Media\MediaItem;
 use Platform\Media\MediaUsage;
 use Platform\Media\MediaUsages;
+use Platform\Media\MediaVisibility;
 
 /**
  * Files from the Media Library on any model (C-07, core_media_usages P-13). The
@@ -17,12 +18,27 @@ use Platform\Media\MediaUsages;
  *     $post->firstMedia('featured_image')?->url('large')
  *     $post->mediaIn('gallery')
  *
- * Usage is shown on the media item and protects it from silent deletion (FR-MEDIA-09/10).
+ * Usage is shown on the media item and protects it from silent deletion (FR-MEDIA-09/10). The files follow the
+ * record's switch: off or deleted, their addresses no longer open (MediaVisibility).
  */
 trait HasMediaUsage
 {
+    /** The switches a record's files follow (MediaVisibility) */
+    public const MEDIA_SWITCHES = ['is_active', 'active_at', 'published_at', 'expires_at'];
+
     public static function bootHasMediaUsage(): void
     {
+        // Its files follow its switch: off, deleted → their addresses no longer open; on, restored → back (owner 2026-11-02)
+        static::saved(function (Model $model): void {
+            if ($model->wasChanged(self::MEDIA_SWITCHES)) {   // false on create: nothing uses a new record's files yet
+                app(MediaVisibility::class)->refreshFor($model);
+            }
+        });
+        static::deleted(fn (Model $model) => app(MediaVisibility::class)->refreshFor($model));
+        if (method_exists(static::class, 'restored')) {
+            static::restored(fn (Model $model) => app(MediaVisibility::class)->refreshFor($model));
+        }
+
         $event = method_exists(static::class, 'forceDeleted') ? 'forceDeleted' : 'deleted';
 
         static::$event(fn (Model $model) => app(MediaUsages::class)->clear($model));

@@ -187,6 +187,6 @@ return [
     'help' => [
         'description' => 'Calculator-এ নামের নিচে এক লাইন, যেমন "SSC ও HSC GPA অনুযায়ী"; খালি = শুধু নাম।',
         'totals' => 'Fee থেকে হিসাব: tuition = প্রতি বছর + প্রতি semester × semester + প্রতি credit × credit; মোট = tuition + ভর্তি + অন্যান্য। Waiver শুধু tuition-এর উপর।',
-        'code' => 'Address-এ ব্যবহার হয়, যেমন /tuition-fees?category=local',
+        'code' => 'Address-এ ব্যবহার হয়, যেমন /tuition-fees/local',
     ],
 ];

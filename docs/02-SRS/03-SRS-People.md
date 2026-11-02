@@ -157,6 +157,7 @@ Dynamic (প্রতিটি Office): `office.{id}.manage`, `office.{id}.conte
 * **BRL-ADMN-01:** Employee ID অনন্য (দেওয়া হলে)।
 * **BRL-ADMN-02:** Office role-এর user শুধু তার Office-এ assign হওয়া staff-এর তথ্য দেখতে পারবে; edit করতে Administration update permission লাগবে।
 * **BRL-ADMN-03:** Non-public category-র ব্যক্তি directory-তে দেখাবেন না, কিন্তু কোনো Office বা Committee-তে public assignment থাকলে সেখানে দেখাবেন।
+* **BRL-ADMN-04** *(owner 2026-11-01)*: প্রত্যেক ব্যক্তির চাকরির ধরন — Regular, Probation, Contractual, Part time, Outsourced; directory ও profile-এ শুধু Regular, বাকিরা Office team, Committee, Lab ইত্যাদিতে assign হলে সেখানে দেখাবেন (অন্য জায়গার মানুষকে আলাদা কপি না করে Administration থেকে tag করা যায়)।
 
 ### Permissions
 

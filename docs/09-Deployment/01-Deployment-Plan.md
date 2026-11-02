@@ -126,8 +126,21 @@ server {
 
     client_max_body_size 64M;            # module / theme ZIP ও বড় PDF
 
+    autoindex off;                       # কোনো folder-এর file তালিকা নয়
+
     # Upload ও media folder-এ PHP কখনো চলবে না
     location ~* ^/(storage|media|themes)/.*\.(php|phtml|phar)$ { deny all; }
+
+    # Media Library-র file (BRL-MEDIA-04): record বন্ধ হলে file public disk থেকে সরে যায় — তাই cache ছোট,
+    # নইলে browser / CDN-এ ৩০ দিন পুরনো copy থাকত। ভেতরের add_header server-এর header বাদ দেয়: nosniff আবার।
+    location ^~ /storage/ {
+        location ~* \.(php|phtml|phar)$ { deny all; }
+        try_files $uri =404;
+        expires 1h;
+        add_header Cache-Control "public, must-revalidate" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        access_log off;
+    }
 
     location / { try_files $uri $uri/ /index.php?$query_string; }
 
@@ -144,7 +157,7 @@ server {
 server { listen 80; server_name daffodilvarsity.edu.bd www.daffodilvarsity.edu.bd; return 301 https://daffodilvarsity.edu.bd$request_uri; }
 ```
 
-`$realpath_root` জরুরি — symlink বদলালে PHP নতুন release দেখে।
+`$realpath_root` জরুরি — symlink বদলালে PHP নতুন release দেখে। `storage/app/private` (private ও withheld file, BRL-MEDIA-04) কখনো `public/`-এর নিচে বা কোনো `location`-এ আসবে না — এগুলো শুধু signed link-এ app দিয়ে যায়। Data migration বা backup restore-এর পরে একবার `php artisan uwms:media:visibility`।
 
 ### 3.3 PHP-FPM ও OPcache
 

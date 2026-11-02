@@ -79,7 +79,7 @@ class TuitionPage
 
         return collect($this->data['categories'] ?? [])->map(fn (FeeCategory $c): array => [
             'label' => (string) $c->name,
-            'url' => url('/'.TuitionWebsite::PAGE).'?category='.urlencode((string) $c->code),
+            'url' => url($c->url()),
             'current' => $current?->is($c) ?? false,
         ])->values()->all();
     }

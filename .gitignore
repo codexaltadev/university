@@ -20,6 +20,8 @@
 /public/fonts/filament
 /public/hot
 /public/js/filament
+/public/js/platform
+/public/css/platform
 /public/storage
 /storage/*.key
 /storage/pail

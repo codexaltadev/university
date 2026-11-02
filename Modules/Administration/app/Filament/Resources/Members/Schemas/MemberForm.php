@@ -65,6 +65,9 @@ class MemberForm
                             ->options(fn (): array => class_exists(self::OFFICE) ? (self::OFFICE)::query()->ordered()->get()->mapWithKeys(fn ($o): array => [$o->id => $o->name])->all() : [])
                             ->visible(fn (): bool => class_exists(self::OFFICE))
                             ->searchable(),
+                        Select::make('employment_type')->label(__('administration::administration.fields.employment_type'))->required()
+                            ->options(Member::employmentTypes())->default(Member::REGULAR)->selectablePlaceholder(false)
+                            ->helperText(__('administration::administration.help.employment_type')),
                         TextInput::make('employee_id')->label(__('administration::administration.fields.employee_id'))->maxLength(30),
                         WebAddressField::make(prefix: '/'.Member::PATH.'/'),
                         Toggle::make('is_active')->label(__('platform::relations.active'))

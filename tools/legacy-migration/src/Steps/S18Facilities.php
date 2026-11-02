@@ -5,6 +5,7 @@ namespace Legacy\Migration\Steps;
 use Illuminate\Support\Facades\Schema;
 use Legacy\Migration\Support\Normalizer;
 use Modules\Facilities\Models\Facility;
+use Modules\Office\Models\Office;
 use Modules\Program\Models\Program;
 use Platform\Relations\RelationEngine;
 
@@ -41,13 +42,17 @@ class S18Facilities extends Step
         $engine = app(RelationEngine::class);
         $rows = $this->rows('facilities', fn ($q) => $q->whereNull('deleted_at'));
         $placeOf = function (object $row): ?string {
-            $program = $row->facilityable_id && str_contains((string) $row->facilityable_type, 'DepartmentProgramType') && class_exists(Program::class)
-                ? $this->ids->record('department_program_type', $row->facilityable_id, Program::class) : null;
-            if ($row->facilityable_id && $program === null) {
-                $this->report->review("facilities #{$row->id}: its program is not migrated (run S06 first) — shown nowhere.");
+            $owner = match (true) {
+                ! $row->facilityable_id => null,
+                str_contains((string) $row->facilityable_type, 'OfficeSite') => $this->ids->record('office_sites', $row->facilityable_id, Office::class),   // DIU's new office sites (TTO), S15T
+                str_contains((string) $row->facilityable_type, 'DepartmentProgramType') && class_exists(Program::class) => $this->ids->record('department_program_type', $row->facilityable_id, Program::class),
+                default => null,
+            };
+            if ($row->facilityable_id && $owner === null) {
+                $this->report->review("facilities #{$row->id}: its program or office site is not migrated (run S06 / S15T first) — shown nowhere.");
             }
 
-            return $program ? $program->getMorphClass().':'.$program->getKey() : null;
+            return $owner ? $owner->getMorphClass().':'.$owner->getKey() : null;
         };
         // A program row without its own title "uses" a main facility (reference_id): that facility is shown in the program too
         $uses = [];

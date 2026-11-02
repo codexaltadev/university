@@ -134,6 +134,10 @@ class MicrositeResolver
         if ($entry === null || ! method_exists($entity, 'slug')) {
             return null;
         }
+        // No microsite of its own (FR-OFF-11): resolve() answers 404 there, so no address to link to
+        if (method_exists($entity, 'hasMicrosite') && ! $entity->hasMicrosite()) {
+            return null;
+        }
 
         $parent = $entry['parent'] ? $this->parentOf($entity) : null;
 

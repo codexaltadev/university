@@ -5,16 +5,20 @@
 | scope (FR-PAGE-01..05/08, AC-PAGE-01).
 */
 
+use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Livewire\Livewire;
+use Modules\Page\Blocks\HtmlBlock;
 use Modules\Page\Filament\Resources\Pages\Pages\CreatePage;
 use Modules\Page\Filament\Resources\Pages\Pages\EditPage;
 use Modules\Page\Filament\Resources\Pages\Pages\ListPages;
 use Modules\Page\Filament\Resources\Pages\Schemas\PageForm;
 use Modules\Page\Models\Page;
 use Platform\Exceptions\ParentHasActiveChildren;
+use Platform\Filament\Components\HtmlEditor;
 use Platform\Media\MediaLibrary;
 use Platform\Modules\ModulePermissions;
 use Platform\Scope\UserScopeFilter;
@@ -136,6 +140,37 @@ it('counts pictures in blocks, main picture and downloads as Media usage', funct
     expect($gallery->refresh()->usage_count)->toBe(0);
 });
 
+it('edits an HTML block visually or as source, with Media Library files inserted and counted (FR-PAGE-02)', function () {
+    $this->actingAs(superAdmin());
+    $library = app(MediaLibrary::class);
+    $photo = $library->store(UploadedFile::fake()->image('campus.jpg'), ['alt_text' => ['en' => 'Campus']]);
+    $pdf = $library->store(UploadedFile::fake()->createWithContent('rules.pdf', "%PDF-1.4\n%%EOF"));
+    $secret = $library->store(UploadedFile::fake()->image('secret.jpg'), ['is_private' => true]);
+
+    $html = HtmlEditor::mediaHtml([$pdf->id, $photo->id, $secret->id]);
+    expect($html)->toStartWith('<p><a href="/media/'.$pdf->id.'/')                          // a file as a link, by its permalink
+        ->toContain('<img src="/storage/')->toContain('alt="Campus" data-media-id="'.$photo->id.'"')
+        ->not->toContain('secret');                                                           // private files never go into page text
+
+    $form = Livewire::test(CreatePage::class)
+        ->fillForm([
+            'title' => ['en' => 'Campus'],
+            'content' => ['en' => blocks(['type' => 'html', 'data' => ['html' => '<div class="row"><strong>Hi</strong></div>']])],
+        ])
+        ->assertSeeHtml('htmlEditorFormComponent');
+
+    $key = collect($form->instance()->form->getFlatComponents())->first(fn ($c) => $c instanceof HtmlEditor)->getKey();
+    $form->callAction(TestAction::make('insertMedia')->schemaComponent(Str::after($key, 'form.')), ['items' => [$photo->id]])
+        ->assertDispatched('html-editor-insert', key: $key, html: HtmlEditor::mediaHtml([$photo->id]));
+
+    $form->fillForm(['content' => ['en' => blocks(['type' => 'html', 'data' => ['html' => '<div class="row">'.$html.'</div>']])]])
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    expect(Page::first()->mediaIdsIn('content'))->toEqualCanonicalizing([$pdf->id, $photo->id])
+        ->and((string) HtmlBlock::clean('<img src="/storage/1/a.jpg" data-media-id="5" onerror="x()">'))->toContain('data-media-id="5"')->not->toContain('onerror');
+});
+
 it('changes the web address, keeping the old one for redirects (FR-GEN-30/32)', function () {
     $this->actingAs(superAdmin());
     $page = Page::factory()->create(['title' => ['en' => 'Admission Info']]);
@@ -164,4 +199,17 @@ it('duplicates a page as an inactive copy with the same files (FR-PAGE-08)', fun
         ->and($copy->is_active)->toBeFalse()
         ->and($copy->mediaIdsIn('attachments'))->toBe([$pdf->id])
         ->and($copy->slug('en'))->toBe('forms-copy');
+});
+
+it('links to the page on the website while it is shown there', function () {
+    $this->actingAs(superAdmin());
+    $page = Page::factory()->ownedBy($this->cse)->create(['title' => ['en' => 'Lab Rules']]);
+
+    Livewire::test(EditPage::class, ['record' => $page->getRouteKey()])
+        ->assertActionVisible('view_on_site')
+        ->assertActionHasUrl('view_on_site', url('/engineering/cse/lab-rules'))
+        ->assertActionShouldOpenUrlInNewTab('view_on_site');
+
+    $page->update(['is_active' => false]);
+    Livewire::test(EditPage::class, ['record' => $page->getRouteKey()])->assertActionHidden('view_on_site');
 });

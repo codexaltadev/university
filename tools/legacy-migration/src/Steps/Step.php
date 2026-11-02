@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Legacy\Migration\Support\IdMap;
 use Legacy\Migration\Support\Normalizer;
 use Legacy\Migration\Support\Report;
 use Modules\Seo\Support\Redirects;
+use Platform\Assignments\Assignment;
 use Platform\Assignments\ManualPerson;
 use Platform\Localization\Languages;
 
@@ -25,6 +27,9 @@ abstract class Step
 
     /** @var Collection<int, object>|null legacy admins by id (adminPerson) */
     protected ?Collection $admins = null;
+
+    /** @var array{email: array<string, Model|null>, name: array<string, Model|null>}|null active members (memberFor; null = several) */
+    protected ?array $members = null;
 
     public function __construct(protected IdMap $ids) {}
 
@@ -141,16 +146,72 @@ abstract class Step
         return $this->manualPerson('admins@manual', $admin, $admin->name, $admin->designation, $admin->email, $admin->phone);
     }
 
-    /** A manual person from a legacy row's own name / designation / email / phone (rows without an admin). */
-    protected function rowPerson(string $table, object $row): ?ManualPerson
+    /**
+     * The person of a legacy row's own name / designation / email / phone (rows without an admin):
+     * their Administration member when there is one (memberFor), else a manual person.
+     */
+    protected function rowPerson(string $table, object $row): ?Model
     {
         return filled($row->name ?? null)
-            ? $this->manualPerson($table.'@person', $row, $row->name, $row->designation ?? null, $row->email ?? null, $row->phone ?? null)
+            ? $this->memberFor($row->name, $row->email ?? null)
+                ?? $this->manualPerson($table.'@person', $row, $row->name, $row->designation ?? null, $row->email ?? null, $row->phone ?? null)
             : null;
     }
 
-    protected function manualPerson(string $key, object $row, ?string $name, ?string $designation, ?string $email, ?string $phone): ManualPerson
+    /**
+     * The Administration member a person named elsewhere is (owner 2026-11-01: office teams,
+     * contacts, coordinators, committees are tagged to Administration, not copied): the active
+     * member with that email when the names agree ("Md." aside), else the one active member with
+     * that name (titles and dots aside; a name two members share matches no one). Null before S11.
+     */
+    protected function memberFor(?string $name, ?string $email): ?Model
     {
+        $class = 'Modules\\Administration\\Models\\Member';
+        if (! class_exists($class)) {
+            return null;
+        }
+        if ($this->members === null) {
+            $this->members = ['email' => [], 'name' => []];
+            foreach ($class::query()->withoutGlobalScopes()->whereNull('deleted_at')->where('is_active', true)->get() as $member) {
+                foreach (['email' => Str::lower(trim((string) $member->email)), 'name' => self::personKey($member->getTranslation('name', 'en', false))] as $by => $key) {
+                    if ($key !== '') {
+                        $this->members[$by][$key] = array_key_exists($key, $this->members[$by]) ? null : $member;
+                    }
+                }
+            }
+        }
+
+        // an office mailbox (breoffice@, cseoffice3@) is shared: the email counts only when the names agree too
+        $byEmail = filled($email) ? $this->members['email'][Str::lower(trim($email))] ?? null : null;
+        $words = fn (?string $n): array => array_diff(explode(' ', self::personKey($n)), ['md', 'mohammad', 'mohammed', 'muhammad', '']);
+        if ($byEmail !== null) {
+            [$a, $b] = [$words($name), $words($byEmail->getTranslation('name', 'en', false))];
+            if ($a !== [] && $b !== [] && (array_diff($a, $b) === [] || array_diff($b, $a) === [])) {
+                return $byEmail;
+            }
+        }
+
+        return $this->members['name'][self::personKey($name)] ?? null;
+    }
+
+    /** "Dr. Md. Rahim," → "md rahim" */
+    public static function personKey(?string $name): string
+    {
+        $name = Str::lower(trim((string) preg_replace('/\s+/', ' ', (string) $name)));
+        for ($i = 0; $i < 3; $i++) {
+            $name = (string) preg_replace('/^(mr|mrs|ms|miss|dr|prof|professor|engr|engineer)\.?\s+/i', '', $name);
+        }
+
+        return trim((string) preg_replace('/[^\pL\pN ]/u', '', $name));
+    }
+
+    /** The row's manual person — or the member S11 turned it into (contractual, a fuller name), kept on reruns */
+    protected function manualPerson(string $key, object $row, ?string $name, ?string $designation, ?string $email, ?string $phone): Model
+    {
+        $member = 'Modules\\Administration\\Models\\Member';
+        if (class_exists($member) && ($found = $this->ids->record($key, $row->id, $member))) {
+            return $found;
+        }
         $name = Normalizer::text($name);
 
         return $this->upsert($key, $row, ManualPerson::class, [
@@ -160,6 +221,21 @@ abstract class Step
             'phone' => mb_substr((string) Normalizer::text($phone), 0, 30) ?: null,
             'is_active' => true,
         ], existing: $this->same(ManualPerson::class, ['name->en' => $name]));
+    }
+
+    /** Assignments and id-map rows of a manual person (or a member made earlier) → the member; the old one goes */
+    protected function movePerson(Model $from, Model $to): void
+    {
+        if ($from->is($to)) {
+            return;
+        }
+        Assignment::withTrashed()->where('person_type', $from->getMorphClass())->where('person_id', $from->getKey())->whereNotIn('role_key', S11Administration::OWN_PEOPLE)
+            ->update(['person_type' => $to->getMorphClass(), 'person_id' => $to->getKey()]);
+        if (! Assignment::withTrashed()->where('person_type', $from->getMorphClass())->where('person_id', $from->getKey())->exists()) {
+            DB::table(IdMap::TABLE)->where('new_type', $from->getMorphClass())->where('new_id', $from->getKey())
+                ->update(['new_type' => $to->getMorphClass(), 'new_id' => $to->getKey()]);   // a rerun's manualPerson() finds the member
+            $from->forceDelete();
+        }
     }
 
     /**

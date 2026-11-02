@@ -182,6 +182,7 @@ php artisan uwms:theme:activate campus --preview     # শুধু আপনা
 | `page_templates` | পাঁচটি standard template বাধ্যতামূলক (FR-PAGE-04 v0.3); অতিরিক্ত যোগ করা যায়, কিন্তু theme বদলালে অচেনা template `default`-এ পড়ে |
 | `tokens` | শুধু **default** — admin Theme settings-এ বদলালে সেটাই জয়ী (Section 6) |
 | `options` | Theme-নির্দিষ্ট ছোট setting; type: `toggle`, `select`, `text`, `number`, `color`, `image` (Section 11) |
+| `editor_css` | ঐচ্ছিক; theme-এর `public/`-এর CSS file-এর তালিকা, যেমন `["css/bootstrap-5.0.2.min.css"]`। Admin-এর HTML block editor (Jodit) এগুলো দিয়ে লেখা দেখায়, যাতে website-এর মতো দেখায়। Default theme-এ page-এর লেখা Bootstrap 5.0.2 দিয়ে দেখানো হয় |
 
 ---
 

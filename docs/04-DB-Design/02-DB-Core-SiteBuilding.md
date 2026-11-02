@@ -122,7 +122,7 @@ IX: `(kind, created_at)`, `(created_by)`।
 
 ### 3.3 `media` — S (spatie/laravel-medialibrary, F-07)
 
-Package-এর default table। `model_type = 'core.media-item'`, `model_id = core_media_items.id`, `collection_name = 'file'`। Conversion (thumbnail 150, medium 768, large 1600, WebP) `generated_conversions`-এ। পরিবর্তন নেই।
+Package-এর default table। `model_type = 'core.media-item'`, `model_id = core_media_items.id`, `collection_name = 'file'`। Conversion (thumbnail 150, medium 768, large 1600, WebP) `generated_conversions`-এ। পরিবর্তন নেই। *(2026-11-02, BRL-MEDIA-04)* `disk` / `conversions_disk`: `public` = সরাসরি ঠিকানায় খোলে; `local` = withheld (যাদের ব্যবহার সবকটি বন্ধ) বা private — folder `{media id}/` একই path-এ দুই disk-এর মধ্যে সরে (`MediaVisibility`), নতুন column নেই।
 
 ### 3.4 `core_media_usages` — P (P-13)
 

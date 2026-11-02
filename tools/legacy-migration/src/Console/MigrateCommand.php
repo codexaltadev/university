@@ -24,7 +24,9 @@ use Legacy\Migration\Steps\S15DiuPages;
 use Legacy\Migration\Steps\S15MainHomepage;
 use Legacy\Migration\Steps\S15MainSiteMenus;
 use Legacy\Migration\Steps\S15MicrositeHomepages;
+use Legacy\Migration\Steps\S15OfficeMicrosites;
 use Legacy\Migration\Steps\S15OfficeSites;
+use Legacy\Migration\Steps\S15Sections;
 use Legacy\Migration\Steps\S15SiteIdentity;
 use Legacy\Migration\Steps\S16Events;
 use Legacy\Migration\Steps\S16News;
@@ -43,6 +45,8 @@ use Legacy\Migration\Steps\S18Labs;
 use Legacy\Migration\Steps\S18Newsletter;
 use Legacy\Migration\Steps\S18Partners;
 use Legacy\Migration\Steps\S18Transport;
+use Legacy\Migration\Steps\S19People;
+use Legacy\Migration\Steps\S24Removed;
 use Legacy\Migration\Steps\Step;
 use Legacy\Migration\Support\Seed;
 use Platform\Modules\ModuleRegistry;
@@ -60,17 +64,23 @@ class MigrateCommand extends Command
     protected $signature = 'legacy:migrate {--step=* : S02, S04, S06 …} {--all : every step in order} {--no-report : do not write report files}
         {--from-seed : read the seed files (tools/legacy-migration/seed) instead of the legacy database}
         {--download-files : S03: fetch the files missing from the cache from webbackend}
-        {--only=* : S03: only these groups (faculty, department, program, facilities, accreditation, testimonials, events, notices, gallery, visitors, documents)}';
+        {--only=* : S03: only these groups (faculty, department, program, facilities, offices, admission, accreditation, testimonials, events, notices, gallery, visitors, documents)}';
 
     protected $description = 'Migrate DIU data from the legacy database (project_diu)';
 
     /** In the order of the plan (§5). */
-    public const STEPS = [S02Vocabularies::class, S04FacultiesDepartments::class, S06Programs::class, S07Fees::class, S07Scholarships::class, S08Admission::class, S09Calendars::class, S10Offices::class, S11Administration::class, S11Coordinators::class, S11Alumni::class, S13Committees::class, S15DepartmentSites::class, S15OfficeSites::class, S15Articles::class, S15DiuPages::class, S15MainSiteMenus::class, S15SiteIdentity::class, S16News::class, S16Events::class, S16Notices::class, S17Faqs::class, S17Testimonials::class, S17Gallery::class, S17Slider::class, S17Documents::class, S17Announcements::class, S18Transport::class, S18Facilities::class, S18Csr::class, S18Labs::class, S18Partners::class, S18Accreditation::class, S18International::class, S18Newsletter::class, S03Media::class, S15MainHomepage::class, S15MicrositeHomepages::class];
+    public const STEPS = [S02Vocabularies::class, S04FacultiesDepartments::class, S06Programs::class, S07Fees::class, S07Scholarships::class, S08Admission::class, S09Calendars::class, S10Offices::class, S11Administration::class, S11Coordinators::class, S11Alumni::class, S13Committees::class, S15DepartmentSites::class, S15OfficeSites::class, S15OfficeMicrosites::class, S15Articles::class, S15DiuPages::class, S15Sections::class, S15MainSiteMenus::class, S15SiteIdentity::class, S16News::class, S16Events::class, S16Notices::class, S17Faqs::class, S17Testimonials::class, S17Gallery::class, S17Slider::class, S17Documents::class, S17Announcements::class, S18Transport::class, S18Facilities::class, S18Csr::class, S18Labs::class, S18Partners::class, S18Accreditation::class, S18International::class, S18Newsletter::class, S19People::class, S03Media::class, S15MainHomepage::class, S15MicrositeHomepages::class, S24Removed::class];
+
+    /** Steps that take S03's library items from the id map (albums, documents, CSR pictures) — by S03 group: run again after S03, so one run from an empty database is complete */
+    public const AFTER_FILES = ['gallery' => S17Gallery::class, 'documents' => S17Documents::class, 'csr' => S18Csr::class];
 
     public function handle(): int
     {
         $wanted = array_map('strtoupper', (array) $this->option('step'));
-        $steps = collect(self::STEPS)->filter(fn (string $step): bool => $this->option('all') || in_array($step::key(), $wanted, true))->values();
+        $only = array_map('strtolower', (array) $this->option('only'));
+        $after = array_values(array_filter(self::AFTER_FILES, fn (string $step, string $group): bool => $only === [] || in_array($group, $only, true), ARRAY_FILTER_USE_BOTH));
+        $steps = collect(self::STEPS)->filter(fn (string $step): bool => $this->option('all') || in_array($step::key(), $wanted, true))
+            ->flatMap(fn (string $step): array => $step === S03Media::class ? [$step, ...$after] : [$step])->values();
 
         if ($steps->isEmpty()) {
             $this->error('Choose --all or --step=… ('.collect(self::STEPS)->map(fn (string $s): string => $s::key())->implode(', ').').');
