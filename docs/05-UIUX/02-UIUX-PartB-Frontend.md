@@ -517,3 +517,14 @@ search, 404। Owner-এর reference link দেওয়া হয়নি; �
 
 Card hover 150ms, section-এ fade-up একবার (IntersectionObserver, `prefers-reduced-motion`-এ বন্ধ); focus ring 2px primary;
 touch target ≥ 44px; skip link; সব রং-জোড়া AA; 360px-এ পাশে scroll নেই।
+
+### 12.7 Module পাতা — modern-এ কোনটা কীভাবে (ধাপ ৫–৬)
+
+| ধরন | পাতা |
+|---|---|
+| Modern override (`themes/modern/views/modules/…`) | notice board + notice, news listing + post, event, program card (সব listing layout ও section-এ) + card listing + program page, waiver calculator frame, tuition fee (grouped), search (`views/search.blade.php`) |
+| Module view + modern contract style ও "module pages" CSS | events listing (list / cards / timeline / calendar), faculty / department / office / lab microsite home, program listing-এর list / table / detailed layout, tuition compact, admission (circular, result, seat plan, contact), scholarship, documents, gallery, FAQ, administration / people, committee, calendar, transport, CSR, achievements, alumni, partners, testimonials, international, links, newsletter, facilities, accreditation |
+| Page template | default, full-width, with-sidebar, right-sidebar, landing — সবই page hero ও modern page block (core block = prose) |
+| HTML block editor | `editor_css: ["css/editor.css"]` — Jodit-এ website-এর মতো font, heading, table |
+
+পরে আলাদা override লাগলে অগ্রাধিকার: events listing, office microsite frame, admission circular, gallery album।

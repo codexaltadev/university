@@ -143,6 +143,7 @@ Owner-এর নির্দেশে ধাপ ১ → ৮ একটি session
 | ৪ Homepage section | ✔ | theme.json-এ ১৩টি section (hero, program-finder, notices, events, news, faculties, programs, stats, achievements, admission-cta, testimonials, gallery, partners) + core section-এর view (`sections/core-*`) |
 | ৫ক মূল পাতা | ✔ | override: notice board + notice, news listing + post, event, program card / listing (card layout) / program page, search (`views/modules/*`, `views/search.blade.php`) |
 | ৫খ fee / বাকি মূল পাতা | ✔ (আংশিক) | override: waiver calculator পাতার frame (Livewire অপরিবর্তিত), tuition fee (grouped); বাকি (admission circular, scholarship, documents, gallery, FAQ, office, administration, contact) module view + modern CSS (`sections.css`-এর "module pages" অংশ) |
+| ৬ বাকি module ও page template | ✔ | UI/UX Part B §12.7 (কোন পাতা override, কোনটা module view), ৫টি page template-এর test, `public/css/editor.css` (editor_css) |
 
 ## Decisions
 

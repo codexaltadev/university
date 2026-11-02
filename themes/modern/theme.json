@@ -351,6 +351,9 @@
         "Inter",
         "Noto Sans Bengali"
     ],
+    "editor_css": [
+        "css/editor.css"
+    ],
     "tokens": {
         "color-primary": "#1D4ED8",
         "color-secondary": "#0F172A",

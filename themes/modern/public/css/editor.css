@@ -1,0 +1,20 @@
+/*
+ * University Modern — how page text looks inside Admin's HTML block editor (theme.json "editor_css"),
+ * so it reads as on the website. The admin panel has no website tokens: each var() names a fallback.
+ */
+body, .jodit-wysiwyg { font: 16px/1.65 "Inter", system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--color-text, #111827); }
+:lang(bn) { font-family: "Noto Sans Bengali", system-ui, sans-serif; line-height: 1.85; }
+h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; font-weight: 700; }
+h2 { font-size: 1.875rem; margin: 1.6em 0 .6em; }
+h3 { font-size: 1.5rem; margin: 1.4em 0 .5em; }
+h4 { font-size: 1.25rem; margin: 1.2em 0 .5em; }
+p, ul, ol, blockquote, table { margin: 0 0 1em; }
+a { color: var(--color-primary, #1D4ED8); text-decoration: underline; text-underline-offset: 3px; }
+ul { list-style: disc; padding-left: 1.4em; }
+ol { list-style: decimal; padding-left: 1.4em; }
+blockquote { border-left: 3px solid var(--color-primary, #1D4ED8); padding-left: 1em; color: var(--color-text-muted, #4B5563); font-size: 1.125rem; }
+img { max-width: 100%; height: auto; border-radius: 12px; }
+table { width: 100%; border-collapse: collapse; font-size: .875rem; }
+th, td { border-bottom: 1px solid var(--color-border, #E5E7EB); padding: 10px 12px; text-align: left; vertical-align: top; }
+th { color: var(--color-text-muted, #4B5563); font-weight: 600; }
+hr { border: 0; border-top: 1px solid var(--color-border, #E5E7EB); margin: 2em 0; }

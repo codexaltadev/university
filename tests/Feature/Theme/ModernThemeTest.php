@@ -15,6 +15,7 @@ use Modules\Events\Models\Event;
 use Modules\Homepage\Support\Homepages;
 use Modules\News\Models\Post;
 use Modules\Notice\Models\Notice;
+use Modules\Page\Models\Page;
 use Modules\Program\Models\Program;
 use Platform\Context\SiteContext;
 use Platform\Relations\RelationEngine;
@@ -247,3 +248,19 @@ it('frames the fee pages and leaves the waiver calculator itself untouched (step
     $this->get('/tuition-fees')->assertOk()->assertSee('page-hero__title', false);
     $this->get('/faq')->assertOk()->assertSee('site-header--modern', false);
 });
+
+it('draws every page template and offers its editor stylesheet (step 6, FR-PAGE-04)', function (string $template, string $class) {
+    useModernTheme();
+    Page::factory()->create([
+        'title' => ['en' => 'About the campus'], 'template' => $template,
+        'content' => ['en' => [['type' => 'text', 'data' => ['body' => '<p>Founded <strong>long ago</strong>.</p>']]]],
+    ]);
+
+    $this->get('/about-the-campus')->assertOk()->assertSee($class, false)->assertSee('<strong>long ago</strong>', false)->assertSee('page-block', false);
+
+    expect(app(Themes::class)->manifest()->editorCss())->toBe(['css/editor.css'])
+        ->and(File::exists(modernThemePath('public/css/editor.css')))->toBeTrue();
+})->with([
+    ['default', 'page--default'], ['full-width', 'page--full-width'], ['with-sidebar', 'page--with-sidebar'],
+    ['right-sidebar', 'page--right-sidebar'], ['landing', 'page--landing'],
+]);
