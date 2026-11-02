@@ -1,6 +1,7 @@
 # Handoff — University Website Management System
 
 Last updated: 2026-10-10. Read this first when continuing on another machine.
+Rules for Claude Code: [CLAUDE.md](../CLAUDE.md); cloud sessions (claude.ai/code): [00-CLOUD-SESSION.md](00-CLOUD-SESSION.md).
 
 ## Where we are (SDLC)
 
