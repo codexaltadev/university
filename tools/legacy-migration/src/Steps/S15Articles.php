@@ -47,6 +47,44 @@ class S15Articles extends Step
         '/visiting-professor' => 'international-adviser',
     ];
 
+    /** The numbers on top of a key facts page, taken from its approved text (owner 2026-11-03): article => [[value, label]] */
+    public const HIGHLIGHTS = [
+        'at-a-glance' => [
+            ['2002', 'Year of establishment'], ['30+ Acre', 'Land for Daffodil International University'], ['58', 'Total Approved Program'],
+            ['620+', 'International collaborations'], ['51', 'No. of clubs and alliances'], ['9', 'DSC Hall'],
+        ],
+    ];
+
+    /**
+     * A key facts page in chapters (owner 2026-11-03, UI/UX §5.8 v0.6): article => chapter => its facts by label (as on
+     * the old page, without the colon), each "label" or "label" => [display, featured]. A fact not named here goes to a
+     * last chapter without a title — nothing of the approved text is left out.
+     */
+    public const CHAPTERS = [
+        'at-a-glance' => [
+            'University' => [
+                'The official name of the University' => ['auto', true], 'Year of establishment', 'Campus buildings and locations',
+                'Land for Daffodil International University', 'Branch Campus',
+            ],
+            'Academics' => [
+                'Programs', 'Faculties' => ['cards', false], 'Departments', 'Institute', 'Admission session',
+                'Scholarship and waiver status' => ['auto', true],
+            ],
+            'People' => ['Faculty members', 'Officials' => ['bars', false]],
+            'Rankings' => ['Ranking / Award'],
+            'Global' => ['International collaborations' => ['stat', true], 'International Affairs' => ['text', false], 'International Affiliation'],
+            'Campus' => [
+                'Lecture Theatre &Class rooms', 'Full equipped laboratories', 'Specialized Laboratory', 'Laptop Distributation',
+                'Library' => ['stat', true], 'DSC Hall' => ['stat', false], 'Digital Amenities', 'Venue & Events', 'Canteens',
+                'Central exam control section',
+            ],
+            'Student life & research' => [
+                'No. of clubs and alliances' => ['auto', true], 'Scouting', 'Research centers', 'Events Calendar',
+                'Career Development Center', 'Office of the Students\' Affairs', 'Entrepreneurship',
+            ],
+        ],
+    ];
+
     public static function key(): string
     {
         return 'S15A';
@@ -101,7 +139,7 @@ class S15Articles extends Step
                 'owner_id' => 0,
                 'parent_id' => $section?->getKey(),
                 'title' => Normalizer::en($title),
-                'content' => ['en' => [['type' => 'html', 'data' => ['html' => Normalizer::legacyHtml($row->article_content) ?? '<p></p>']]]],   // as written: the old Bootstrap markup
+                'content' => ['en' => [$this->block(Normalizer::legacyHtml($row->article_content), $slug)]],
                 'template' => $section ? 'with-sidebar' : 'default',
                 'is_active' => (bool) $row->publication_status,
             ], after: function (Page $page, bool $created) use ($slug, $address, $section): void {
@@ -127,6 +165,56 @@ class S15Articles extends Step
         }
 
         $this->report->review('Article pictures and files still load from webbackend.daffodilvarsity.edu.bd: S03 brings them into the Media Library later.');
+    }
+
+    /**
+     * The article's text as written: one two-column table (At a Glance) as the key facts block, its approved
+     * text unchanged (UI/UX Part B §5.8), its numbers on top from HIGHLIGHTS; anything else as an HTML block
+     * with the old Bootstrap markup.
+     */
+    protected function block(?string $html, string $slug): array
+    {
+        $facts = Normalizer::factsTable($html);
+        if ($facts === null) {
+            return ['type' => 'html', 'data' => ['html' => $html ?? '<p></p>']];
+        }
+        $facts['highlights'] = array_map(fn (array $h): array => ['value' => $h[0], 'label' => $h[1]], self::HIGHLIGHTS[$slug] ?? []);
+        $facts['chapters'] = $this->chapters(array_map(fn (array $row): array => $row + ['display' => 'auto', 'featured' => false], $facts['rows']), self::CHAPTERS[$slug] ?? []);
+        unset($facts['rows']);
+
+        return ['type' => 'facts', 'data' => $facts];
+    }
+
+    /**
+     * The facts in the chapters of CHAPTERS (their order there), the rest after them in a chapter without a title.
+     *
+     * @param  list<array{label: string, value: string, display: string, featured: bool}>  $rows
+     * @return list<array{title: ?string, rows: list<array>}>
+     */
+    protected function chapters(array $rows, array $plan): array
+    {
+        $key = fn (string $label): string => Str::lower(preg_replace('/\s+/', ' ', rtrim(trim($label), " :\u{00A0}")));
+        $byLabel = collect($rows)->keyBy(fn (array $row): string => $key($row['label']))->all();
+        $chapters = [];
+
+        foreach ($plan as $title => $facts) {
+            $chapter = [];
+            foreach ($facts as $label => $shape) {
+                [$label, [$display, $featured]] = is_int($label) ? [$shape, ['auto', false]] : [$label, $shape];
+                if ($row = $byLabel[$key($label)] ?? null) {
+                    $chapter[] = ['display' => $display, 'featured' => $featured] + $row;
+                    unset($byLabel[$key($label)]);
+                }
+            }
+            if ($chapter !== []) {
+                $chapters[] = ['title' => $title, 'rows' => $chapter];
+            }
+        }
+        if ($byLabel !== []) {
+            $chapters[] = ['title' => null, 'rows' => array_values($byLabel)];
+        }
+
+        return $chapters;
     }
 
     /** The main site's top page at that address (/admission), if there is one */

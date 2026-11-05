@@ -178,3 +178,65 @@ document.addEventListener('alpine:init', () => {
         },
     }));
 });
+
+// Key facts block (UI/UX §5.8): the numbers count up once, a bar grows from zero the first time it is seen (full at
+// rest), and a slow network drifts behind the numbers — nodes in the contrast colour, a few in the accent. Colours from
+// the tokens; nothing moves with reduced motion.
+document.querySelectorAll('.facts').forEach((facts) => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    facts.querySelectorAll('[data-count]').forEach((el, i) => {
+        const to = Number(el.dataset.count), from = Number(el.dataset.from || 0), final = el.textContent, commas = final.includes(',');
+        const begin = performance.now() + 150 + i * 70;
+        const step = (now) => {
+            const t = Math.min(1, Math.max(0, (now - begin) / 1300)), n = Math.round(from + (to - from) * (1 - Math.pow(1 - t, 3)));
+            el.textContent = t < 1 ? (commas ? n.toLocaleString('en') : String(n)) : final;
+            if (t < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+        window.addEventListener('beforeprint', () => { el.textContent = final; });
+    });
+
+    const grow = new IntersectionObserver((entries) => entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        grow.unobserve(entry.target);
+        entry.target.querySelectorAll('.facts__bar-fill').forEach((fill) => {
+            const width = fill.style.width;
+            fill.style.transition = 'none';
+            fill.style.width = '0';
+            void fill.offsetWidth;
+            fill.style.transition = '';
+            fill.style.width = width;
+        });
+    }), { threshold: 0.4 });
+    facts.querySelectorAll('.facts__bars').forEach((bars) => grow.observe(bars));
+
+    facts.querySelectorAll('canvas[data-network]').forEach((canvas) => {
+        const ctx = canvas.getContext('2d'), css = getComputedStyle(canvas);
+        const ink = css.getPropertyValue('--color-primary-contrast').trim() || 'white', accent = css.getPropertyValue('--color-accent').trim() || ink;
+        let w = 0, h = 0, nodes = [];
+        const size = () => {
+            const r = canvas.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+            w = r.width; h = r.height; canvas.width = w * d; canvas.height = h * d; ctx.setTransform(d, 0, 0, d, 0, 0);
+            nodes = Array.from({ length: Math.round(Math.min(60, w / 18)) }, (_, i) => ({ x: Math.random() * w, y: Math.random() * h, vx: (Math.random() - 0.5) * 0.25, vy: (Math.random() - 0.5) * 0.25, accent: i % 9 === 0 }));
+        };
+        const frame = () => {
+            ctx.clearRect(0, 0, w, h);
+            nodes.forEach((n) => { n.x += n.vx; n.y += n.vy; if (n.x < 0 || n.x > w) n.vx *= -1; if (n.y < 0 || n.y > h) n.vy *= -1; });
+            ctx.strokeStyle = ink;
+            for (let i = 0; i < nodes.length; i++) {
+                for (let j = i + 1; j < nodes.length; j++) {
+                    const d = Math.hypot(nodes[i].x - nodes[j].x, nodes[i].y - nodes[j].y);
+                    if (d < 110) { ctx.globalAlpha = 0.14 * (1 - d / 110); ctx.beginPath(); ctx.moveTo(nodes[i].x, nodes[i].y); ctx.lineTo(nodes[j].x, nodes[j].y); ctx.stroke(); }
+                }
+            }
+            nodes.forEach((n) => { ctx.globalAlpha = n.accent ? 0.9 : 0.4; ctx.fillStyle = n.accent ? accent : ink; ctx.beginPath(); ctx.arc(n.x, n.y, n.accent ? 2.4 : 1.6, 0, Math.PI * 2); ctx.fill(); });
+            ctx.globalAlpha = 1;
+            if (!document.hidden) requestAnimationFrame(frame);
+        };
+        size();
+        window.addEventListener('resize', size, { passive: true });
+        document.addEventListener('visibilitychange', () => { if (!document.hidden) requestAnimationFrame(frame); });
+        requestAnimationFrame(frame);
+    });
+});

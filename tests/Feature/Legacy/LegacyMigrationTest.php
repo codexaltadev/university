@@ -788,3 +788,27 @@ it('reads credits, years and semesters from the free text', function (string $te
     ['complete 142 credits … The program having 12 semesters normally extends over four academic years', 142.0, null, 12],
     ['<p>Nothing useful here.</p>', null, null, null],
 ]);
+
+it('makes an At a Glance table the key facts block, its text as written, and leaves other tables as HTML (S15A, UI/UX §5.8)', function () {
+    $glance = '<div class="table-responsive"><table class="table"><tbody>'
+        .'<tr style="height: 44px;"><td style="width: 20%;">Year of establishment :</td><td style="width: 80%;">2002 With the approval of UGC</td></tr>'
+        .'<tr><td>Faculties :</td><td><ol><li>Faculty of Engineering</li><li>Faculty of Agriculture Sciences</li></ol></td></tr>'
+        .'<tr><td>Programs :</td><td><table class="table table-bordered"><tr><td style="width: 50%;">Bachelor Program</td><td>: 31</td></tr></table></td></tr>'
+        .'<tr><td>Canteens :</td><td><ol><li>Green Gardeen 1</li></ol></td></tr>'
+        .'</tbody></table></div><p>Note: mail at <a href="mailto:web@example.edu">web@example.edu</a></p>';
+
+    $facts = Normalizer::factsTable($glance);
+
+    expect(array_column($facts['rows'], 'label'))->toBe(['Year of establishment :', 'Faculties :', 'Programs :', 'Canteens :'])
+        ->and($facts['rows'][0]['value'])->toBe('2002 With the approval of UGC')
+        ->and($facts['rows'][2]['value'])->toBe('<table class="table table-bordered"><tr><td>Bachelor Program</td><td>: 31</td></tr></table>')   // nested table kept, sizes gone
+        ->and($facts['rows'][3]['value'])->toContain('Green Gardeen 1')                                                                         // approved text, typos and all
+        ->and($facts['note'])->toBe('<p>Note: mail at <a href="mailto:web@example.edu">web@example.edu</a></p>')
+        ->and($facts['highlights'])->toBe([]);
+
+    // A calendar, a committee or a single row: two-column tables, but no fact sheet
+    expect(Normalizer::factsTable('<table><tr><td>Classes Start</td><td>5 May</td></tr><tr><td>First Quiz</td><td>1 June</td></tr><tr><td>Final</td><td>1 July</td></tr></table>'))->toBeNull()
+        ->and(Normalizer::factsTable('<table><tr><td>Name :</td><td>DIU</td></tr></table>'))->toBeNull()
+        ->and(Normalizer::factsTable('<p>Intro</p><table><tr><td>A :</td><td>1</td></tr><tr><td>B :</td><td>2</td></tr><tr><td>C :</td><td>3</td></tr></table>'))->toBeNull()
+        ->and(Normalizer::factsTable('<table><tr><td>A :</td><td>1</td><td>x</td></tr><tr><td>B :</td><td>2</td></tr><tr><td>C :</td><td>3</td></tr></table>'))->toBeNull();
+});

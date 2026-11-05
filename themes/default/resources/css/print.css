@@ -7,7 +7,7 @@
 @media print {
     @page { margin: 1.5cm; }
 
-    .no-print, .skip-link, .site-header, .site-footer, .announcements, .announcement-ticker, .breadcrumb,
+    .no-print, .facts__hero, .skip-link, .site-header, .site-footer, .announcements, .announcement-ticker, .breadcrumb,
     [role="dialog"], video, iframe, [x-data^="carousel"] button { display: none !important; }
 
     *, *::before, *::after {

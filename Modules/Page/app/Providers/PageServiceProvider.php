@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\View;
 use Modules\Page\Blocks\JobsBlock;
 use Modules\Page\Blocks\LocationBlock;
 use Modules\Page\Models\Page;
+use Modules\Page\Support\FactsPage;
 use Modules\Page\Support\PageRouter;
 use Platform\Context\SiteContext;
 use Platform\Context\UrlRules;
@@ -45,6 +46,9 @@ class PageServiceProvider extends ModuleServiceProvider
             $jobs = JobsBlock::jobs((array) ($view->getData()['data'] ?? []));
             $view->with(['jobs' => $jobs, 'index' => array_map(fn (array $j): array => [$j['type'], $j['level'], $j['expired']], $jobs ?? []), 'types' => collect($jobs)->pluck('type')->filter()->unique()->values()->all(), 'levels' => collect($jobs)->pluck('level')->filter()->unique()->values()->all()]);
         });
+
+        // The key facts block, shaped for a theme (UI/UX Part B §5.8)
+        View::composer('page::blocks.facts', fn ($view) => $view->with('facts', new FactsPage((array) ($view->getData()['data'] ?? []))));
 
         // Website: /about, /fsit/cse/about/history (FR-PAGE-03/05)
         $this->app->make(Website::class)->handle(fn (string $rest, SiteContext $context, string $locale) => $this->app->make(PageRouter::class)->respond($rest, $context, $locale));

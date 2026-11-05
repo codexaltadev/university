@@ -12,7 +12,9 @@ Core module C-11 (SRS Part 1). Content › Pages: pages of the main site and of 
 * Owner: main site (unscoped users) or one of the user's entities — `HasOwner`, scope path "owner".
 * Address: owner's microsite + parent pages + slug, e.g. `/department/cse/about/history` (`$page->url()`).
   The web address is editable; old addresses stay as history for redirects.
-* Content: blocks per language — text, picture, gallery, accordion, tabs, files, video / map, button.
+* Content: blocks per language — text, picture, gallery, accordion, tabs, files, video / map, button,
+  HTML, link cards, location, job listings, key facts (`facts`: highlights, chapters of rows — label, value, display,
+  featured — show_nav, note; the view gets `$facts`, a `Support\FactsPage`).
   Modules add blocks with `$r->pageBlock(MyBlock::class)` (a `Platform\Pages\PageBlock`). Pictures and
   files in blocks, the main picture and downloads are Media Library usage.
 * Layouts: default, full width, with sidebar, landing (the theme renders them).

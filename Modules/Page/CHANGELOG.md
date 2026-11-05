@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+- Key facts block `facts` (UI/UX Part B §5.8 v0.6, 2026-11-03 — At a Glance): numbers on top, chapters of facts (label,
+  value as HTML cleaned as the HTML block's, "Show as", brand tile), a note. `Support\FactsPage` (`$facts` by a view
+  composer) finds each fact's shape from its value — bars, big number, timeline by year newest first, chips, text — and
+  never changes or drops its text. S15A makes it from an old article that is one two-column table with colon labels,
+  At a Glance in DIU's seven chapters (`CHAPTERS`) with its six numbers (`HIGHLIGHTS`).
+
 - Each block goes through the theme's wrapper `theme::partials.page.block` when the theme has one ($type, $core,
   $html) — page text and a module's block can look different.
 - `quick_links` (DB-02 v0.3): "Quick Links" under the sidebar menu of a with-sidebar page.

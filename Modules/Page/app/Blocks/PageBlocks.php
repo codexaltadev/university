@@ -19,11 +19,11 @@ class PageBlocks
     public const CORE = [
         TextBlock::class, ImageBlock::class, GalleryBlock::class, AccordionBlock::class,
         TabsBlock::class, FilesBlock::class, EmbedBlock::class, ButtonBlock::class, HtmlBlock::class,
-        LinksBlock::class, LocationBlock::class, JobsBlock::class,
+        LinksBlock::class, LocationBlock::class, JobsBlock::class, FactsBlock::class,
     ];
 
     /** Core blocks with a look of their own (cards, a map): the theme shows them as a module's block, not as page text */
-    public const DESIGNED = [LinksBlock::class, LocationBlock::class, JobsBlock::class];
+    public const DESIGNED = [LinksBlock::class, LocationBlock::class, JobsBlock::class, FactsBlock::class];
 
     /** @return array<string, class-string<PageBlock>> name => block */
     public static function all(): array

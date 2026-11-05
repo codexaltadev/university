@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | UI/UX Part B: Frontend |
-| Version | 0.4 — v0.1 approved 2026-10-08; v0.2: microsite URL hierarchy অনুযায়ী (§3, FR-GEN-34); v0.3: module UI class contract (§9.1, Phase 4.1); v0.4: default theme = live DIU site-এর কপি (owner 2026-10-17) |
+| Version | 0.4 — v0.1 approved 2026-10-08; v0.2: microsite URL hierarchy অনুযায়ী (§3, FR-GEN-34); v0.3: module UI class contract (§9.1, Phase 4.1); v0.4: default theme = live DIU site-এর কপি (owner 2026-10-17); v0.5: At a Glance — "Key facts" block (§5.8, owner 2026-11-02: approved content হুবহু, design উন্নত); v0.6: §5.8 chapter, auto display, brand band ও animation (owner 2026-11-03) |
 | Date | 2026-10-08 |
 | Status | ✔ Approved — prototype v3 সহ (2026-10-08); v0.2 (URL) approved 2026-10-10 |
 | Based on | BRD v1.7, SRS v1.0, SAD Part B §6 (Microsite), §8 (Theme Engine), UI/UX Part A |
@@ -277,6 +277,77 @@ Event: date badge, time, venue map, speakers (person card), [ Add to calendar ] 
 * **404:** "Page not found" + search box + জনপ্রিয় link (Admission, Programs, Notices) — ভাষা অনুযায়ী।
 * **Maintenance:** university logo, বার্তা (settings থেকে), সম্ভাব্য সময়।
 
+### 5.8 At a Glance — "Key facts" block *(v0.5, 2026-11-02; v0.6, 2026-11-03)*
+
+**Owner সিদ্ধান্ত:** At a Glance-এর content DIU-র approved — শব্দ, সংখ্যা ও item হুবহু থাকবে, typo-সহ (2026-11-02)। v0.5-এর "সাজানো টেবিল" owner-এর পছন্দ হয়নি; v0.6 (2026-11-03, prototype দেখে "oky"): brand রং ও theme token-এ modern design — উপরে সংখ্যার band, chapter, bento tile, প্রতিটি fact তার ধরন অনুযায়ী, university-র সাথে মানানসই animation। Chapter-এ ভাগ করায় fact-এর ক্রম বদলানো যায় (owner ঠিক আছে বলেছেন); সালসহ item সালের ক্রমে, নতুন আগে।
+
+Prototype: [DIU At a Glance](https://claude.ai/artifact/SzBmnWaQUuDQFrKG4nGY2x)
+
+**Block:** Page module-এর core block `facts` ("Key facts") — যেকোনো page-এ (main site বা microsite)। FR-PAGE-02।
+
+| Field | ধরন | কাজ |
+|---|---|---|
+| `highlights` | repeater: `value` ("30+ Acre"), `label` | উপরের সংখ্যার band; ঐচ্ছিক, সর্বোচ্চ 6; সংখ্যা approved text থেকেই |
+| `chapters` | repeater: `title` ("Academics"), `rows` | অধ্যায়; ক্রম অনুযায়ী |
+| `chapters.*.rows` | repeater: `label`, `value` (HTML — list, link, table হুবহু), `display` (auto ▾), `featured` (toggle) | তথ্য |
+| `show_nav` | toggle (default on) | উপরে chapter bar (দুই বা বেশি নামসহ chapter থাকলে) |
+| `note` | HTML, ঐচ্ছিক | শেষের নোট |
+
+পুরনো (v0.5) data-য় `rows` থাকলে নামহীন একটি chapter হিসেবে দেখায়।
+
+**দেখানোর ধরন (`display`)** — admin "Automatic" রাখলে `Support\FactsPage` value দেখে ঠিক করে; লেখা কখনো বদলায় না, কিছু বাদ যায় না:
+
+| ধরন | Auto কখন | কী দেখায় |
+|---|---|---|
+| `bars` | value-তে টেবিল, প্রতিটি সারিতে দুই cell, অন্তত দুটি সংখ্যা | সারি = bar (সবচেয়ে বড়টির অনুপাতে); "Total …" সারি আলাদা, accent রঙে বড়; সংখ্যা ছাড়া সারি (Program approved by UGC) উপরে এক লাইনে। Admin বাছলে "Officials: 351" ধরনের লাইন থেকেও — যে লাইনে সংখ্যা নেই সেটিও লাইন হিসেবে থাকে |
+| `stat` | লেখা সংখ্যা দিয়ে শুরু, ≤ 240 অক্ষর | প্রথম সংখ্যা বড় করে; লেখা থেকে শুধু সেটি সরে (বন্ধনী সহ "(1,140,500)"), বাকিটা হুবহু নিচে |
+| `timeline` | তালিকার অর্ধেক বা বেশি item-এ সাল (19xx/20xx), ≥ 3 item | সাল অনুযায়ী দল, নতুন সাল আগে, সাল-ছাড়া item শেষে (•); একই সালের মধ্যে আগের ক্রম |
+| `chips` | তালিকায় ≥ 8 item | pill; 12-র বেশি হলে "Show all N" |
+| `cards` | শুধু admin বাছলে | নম্বরসহ card (Faculties) |
+| `text` | বাকি সব | value হুবহু |
+
+Tile-এর মাপ auto (s / m / l / xl ≈ সারির ¼ / ⅓ / ½ / পুরো): chips ও timeline পুরো; bars ও cards অর্ধেক; stat এক-চতুর্থাংশ (brand tile বা লম্বা লেখা হলে অর্ধেক); text এক-তৃতীয়াংশ (220 অক্ষরের বেশি হলে অর্ধেক)। Tile-গুলো সারি ভরাতে বাড়ে — কোনো সারির শেষে ফাঁকা থাকে না।
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│ (theme-এর page hero: Home / At A Glance, শিরোনাম)            │
+├──────────────────────────────────────────────────────────────┤
+│ ╔══ primary → secondary gradient, পেছনে ধীরে ভাসা network ══╗ │
+│ ║ ┌──────┐┌────────┐┌──────┐┌──────┐┌──────┐┌──────┐      ║ │  highlights: সংখ্যা গুনে
+│ ║ │ 2002 ││30+ Acre││  58  ││ 620+ ││  51  ││  9   │      ║ │  ওঠে (সাল 1990 থেকে);
+│ ║ │Year..││Land .. ││Total ││Intl..││Clubs ││DSC.. │      ║ │  "+ Acre" accent রঙে
+│ ╚════════════════════════════════════════════════════════════╝ │
+│ (University) Academics  People  Rankings  Global  Campus  …  │  sticky chapter bar
+│ 01 University ─────────────                                  │
+│ ┌ brand tile ──────┐┌ YEAR OF EST. ┐┌ CAMPUS ───────────┐    │
+│ │ Daffodil Int. U. ││ 2002         ││ Daffodil Smart ...│    │
+│ └──────────────────┘└──────────────┘└───────────────────┘    │
+│ 02 Academics ──────────────                                  │
+│ ┌ PROGRAMS ─────────────┐┌ FACULTIES ──────────────────┐     │
+│ │ Bachelor Program   31 ││ [01 Faculty of ..][02 ..]   │     │
+│ │ ███████████████████   ││ [03 ..][04 ..][05 ..]       │     │
+│ │ Total Approved…    58 ││                             │     │
+│ └───────────────────────┘└─────────────────────────────┘     │
+│ ┌ DEPARTMENTS: (Dept of BBA)(Dept of Mgmt)(…) Show all 33 ┐  │
+│ 04 Rankings ── ● 2025 [card][card][card] ● 2024 [..] ● • [..]│
+│ Note: If any more query please mail at …                     │
+└──────────────────────────────────────────────────────────────┘
+```
+
+**রং ও brand (শুধু token, theme-এ hex নেই):** band, brand tile ও চলতি chapter = `--gradient-primary` (primary → secondary, DIU-র button-এর মতো); chapter নম্বর, timeline, "+", total, card নম্বর = `--color-accent` (DIU green); শিরোনাম `--color-secondary`; tile `--color-surface`; font heading Montserrat, body Manrope।
+
+**Animation (`prefers-reduced-motion`-এ সব বন্ধ; বিশ্রামে সব দেখা যায়):**
+* Band-এর পেছনে "knowledge network" — ভাসমান বিন্দু, কাছাকাছি এলে রেখা, কয়েকটি accent রঙে (620+ সহযোগী বিশ্ববিদ্যালয়ের প্রতীক); canvas `[data-network]`, theme JS।
+* Highlight card এক এক করে উঠে আসে; সংখ্যা একবার গুনে ওঠে (`data-count`, `data-from`); print-এ চূড়ান্ত সংখ্যা।
+* Tile scroll-এ নিচ থেকে উঠে আসে (CSS scroll-driven, সমর্থন না থাকলে স্থির); bar প্রথমবার দেখা গেলে শূন্য থেকে বাড়ে (বিশ্রামে পূর্ণ)।
+* Hover: tile, chip, card হালকা ওঠে।
+
+**আচরণ:** label-এর শেষের " :" শুধু দেখানোর সময় লুকানো; chapter ও tile-এর anchor (`#academics`, `#departments`); chapter bar-এ click-এ scroll, চলতি chapter চিহ্নিত (`aria-current`); phone-এ bar আড়াআড়ি scroll, tile এক column; print-এ band ও bar লুকানো।
+
+**Admin:** Page form › "Key facts (At a Glance)": উপরের সংখ্যা; Chapters (নাম) › Facts (label, লেখা, "Show as" ▾ Automatic …, "Brand tile")। সাধারণত শুধু chapter-এর নাম দিলেই চলে।
+
+**Legacy migration (S15Articles):** legacy article-এর HTML যদি একটিমাত্র টেবিল হয় যার প্রতিটি সারিতে ঠিক দুটি cell (label · value) এবং অন্তত 80% label ":" দিয়ে শেষ (fact sheet — calendar, committee বা domain তালিকা নয়; DIU-তে at-a-glance ও statistics), তবে `facts` block হয় — label প্রথম cell-এর text হুবহু, value দ্বিতীয় cell-এর HTML হুবহু (`style`/`width`/`height` বাদ), টেবিলের পরের নোট `note`-এ। `S15Articles::CHAPTERS` at-a-glance-কে prototype-এর 7 chapter-এ ভাগ করে (কিছু fact-এ display ও brand tile), `HIGHLIGHTS` উপরের 6 সংখ্যা দেয়; map-এ নেই এমন fact নামহীন শেষ chapter-এ যায় — কিছু বাদ পড়ে না। অন্য ধরনের HTML আগের মতো `html` block।
+
 ---
 
 ## 6. Component Inventory (Default Theme)
@@ -364,6 +435,7 @@ Module-এর website view theme জানে না, তাই সে শুধ
 | `accordion__item`, `accordion__title`, `accordion__body` | Accordion (FAQ, scholarship) |
 | `empty-state`, `form-error`, `no-print`, `sr-only` | খালি তালিকা, field error, print-এ লুকানো, শুধু screen reader |
 | `page`, `page__title`, `page-grid`, `home-section` (`--alt`, `--dark`, `__title`, `__sub`) | Page ও homepage section-এর কাঠামো |
+| `facts`, `facts__hero`, `facts__network`, `facts__highlights`, `facts__highlight` (`-value`, `-label`, `-rest`), `facts__chapters`, `facts__chapter-link` (`--current`), `facts__chapter` (`-head`, `-index`, `-title`), `facts__grid`, `facts__tile` (`--s`, `--m`, `--l`, `--xl`, `--featured`, `--{display}`), `facts__label`, `facts__value`, `facts__number`, `facts__chips` (`--all`), `facts__more`, `facts__cards`, `facts__meta`, `facts__bars`, `facts__bar` (`-value`, `-track`, `-fill`, `--total`), `facts__timeline`, `facts__year` (`-tag`, `-items`), `facts__note` | Key facts block (§5.8, v0.6) |
 
 Default theme-এর test (`tests/Feature/Theme/DefaultThemeAssetsTest.php`) যাচাই করে যে build-এ প্রতিটি class আছে।
 

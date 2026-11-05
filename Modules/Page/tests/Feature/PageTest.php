@@ -185,6 +185,21 @@ it('changes the web address, keeping the old one for redirects (FR-GEN-30/32)', 
         ->and(Page::findBySlug('admission-info', 'en')[1])->toBeFalse();                    // found, not current: redirect
 });
 
+it('edits a key facts block in Admin: chapters of facts, each with its shape, saved as given (UI/UX Part B §5.8)', function () {
+    $this->actingAs(superAdmin());
+    $data = ['highlights' => [['value' => '2002', 'label' => 'Year of establishment']], 'show_nav' => true, 'note' => '<p>Note</p>', 'chapters' => [
+        ['title' => 'Academics', 'rows' => [['label' => 'Faculties :', 'value' => '<ol><li>Faculty of Engineering</li></ol>', 'display' => 'cards', 'featured' => true]]],
+    ]];
+    $page = Page::factory()->create(['title' => ['en' => 'At a Glance'], 'content' => ['en' => [['type' => 'facts', 'data' => $data]]]]);
+
+    Livewire::test(EditPage::class, ['record' => $page->getRouteKey()])->assertOk()->call('save')->assertHasNoFormErrors();
+
+    $saved = $page->fresh()->getTranslation('content', 'en')[0];
+    expect($saved['type'])->toBe('facts')
+        ->and(array_values($saved['data']['chapters'])[0]['title'])->toBe('Academics')
+        ->and(array_values(array_values($saved['data']['chapters'])[0]['rows'])[0])->toMatchArray(['label' => 'Faculties :', 'display' => 'cards', 'featured' => true]);
+});
+
 it('duplicates a page as an inactive copy with the same files (FR-PAGE-08)', function () {
     $this->actingAs(superAdmin());
     $pdf = app(MediaLibrary::class)->store(UploadedFile::fake()->createWithContent('form.pdf', "%PDF-1.4\n%%EOF"));

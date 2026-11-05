@@ -50,6 +50,12 @@ it('styles every class of the module UI contract', function (string $class) {
     'card', 'prose', 'lead', 'table', 'empty-state', 'form-error', 'no-print', 'sr-only',
     'accordion__item', 'accordion__title', 'accordion__body',
     'page', 'page__title', 'page-grid', 'home-section', 'home-section__title', 'home-section__sub',
+    'facts', 'facts__hero', 'facts__network', 'facts__highlights', 'facts__highlight', 'facts__highlight-value', 'facts__highlight-label',
+    'facts__highlight-rest', 'facts__chapters', 'facts__chapter-link', 'facts__chapter-link--current', 'facts__chapter', 'facts__chapter-head',
+    'facts__chapter-index', 'facts__chapter-title', 'facts__grid', 'facts__tile', 'facts__tile--s', 'facts__tile--m', 'facts__tile--l',
+    'facts__tile--featured', 'facts__label', 'facts__value', 'facts__number', 'facts__chips', 'facts__chips--all', 'facts__more', 'facts__cards',
+    'facts__meta', 'facts__bars', 'facts__bar', 'facts__bar-value', 'facts__bar-track', 'facts__bar-fill', 'facts__bar--total',
+    'facts__timeline', 'facts__year', 'facts__year-tag', 'facts__year-items', 'facts__note',
 ]);
 
 it('takes brand colours only from the design tokens (T-2)', function () {

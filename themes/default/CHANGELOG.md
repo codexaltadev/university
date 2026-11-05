@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Key facts block (At a Glance, UI/UX §5.8 v0.6): `facts__*` classes in the brand tokens — the numbers in a
+  primary → secondary band, a sticky chapter bar, tiles that fill their rows, brand tiles in the gradient, bars,
+  chips, numbered cards, a timeline by year in the accent. Motion (none with reduced motion): a drifting network behind
+  the numbers, numbers counting up, tiles rising in on scroll, bars growing once seen.
+
 ## 2.2.0 — 2026-10-31
 
 - Page template `right-sidebar` (FR-PAGE-04 v0.3): the blocks, then the sidebar on the right ("Browse by Section" from the

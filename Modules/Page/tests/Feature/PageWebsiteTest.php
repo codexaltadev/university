@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 use Modules\Office\Models\Office;
+use Modules\Page\Blocks\FactsBlock;
 use Modules\Page\Filament\Resources\Pages\Pages\EditPage;
 use Modules\Page\Models\Page;
 use Platform\Media\MediaLibrary;
@@ -88,6 +89,57 @@ it('keeps the classes and collapse attributes of an HTML block, without scripts 
         ->assertSee('data-bs-parent="#a1"', false)
         ->assertSee('src="https://webbackend.example.edu/x.jpg"', false)
         ->assertDontSee('onerror', false)->assertDontSee('alert(2)', false)->assertDontSee('javascript:', false)->assertDontSee('evil.example.com', false);
+});
+
+it('shows the key facts block in chapters, each fact in the shape its text asks for, the text as written (UI/UX Part B §5.8 v0.6)', function () {
+    $chapters = [
+        ['title' => 'University', 'rows' => [
+            ['label' => 'Year of establishment :', 'value' => '2002 With the approval of UGC', 'display' => 'auto', 'featured' => true],
+            ['label' => 'Canteens :', 'value' => '<ol><li>Green Gardeen 1</li></ol><script>alert(1)</script>', 'display' => 'auto'],
+        ]],
+        ['title' => 'Academics', 'rows' => [
+            ['label' => 'Programs :', 'value' => '<table><tr><td>Program approved by</td><td>UGC</td></tr><tr><td>Bachelor Program</td><td>: 31</td></tr><tr><td>Master\'s Program</td><td>: 18</td></tr><tr><td>Total Approved Program:</td><td>: 58</td></tr></table>', 'display' => 'auto'],
+            ['label' => 'Departments :', 'value' => '<ol>'.collect(range(1, 14))->map(fn ($i) => "<li>Department {$i}</li>")->implode('').'</ol>', 'display' => 'auto'],
+            ['label' => 'Faculties :', 'value' => '<ol><li>Faculty of Engineering</li><li>Faculty of Agriculture Sciences</li></ol>', 'display' => 'cards'],
+            ['label' => 'Library :', 'value' => '<ul><li>Approximately one million (1,140,500) items</li></ul>', 'display' => 'stat'],
+            ['label' => 'Venue & Events:', 'value' => '<ul><li>Hall, Seat Capacity : 500</li><li>Bonomaya 01</li></ul>', 'display' => 'auto'],
+        ]],
+        ['title' => 'Rankings', 'rows' => [
+            ['label' => 'Ranking / Award :', 'value' => '<p><a class="btn btn-primary" href="/rankings">View Details</a></p><ul><li>THE Impact Rankings 2024</li><li>QS World 2025</li><li>SCIMAGO Q1</li><li>THE World 2025</li></ul>', 'display' => 'auto'],
+        ]],
+    ];
+    $this->about->update(['content' => ['en' => [['type' => 'facts', 'data' => [
+        'highlights' => [['value' => '2002', 'label' => 'Year of establishment'], ['value' => '30+ Acre', 'label' => 'Land']],
+        'chapters' => $chapters, 'show_nav' => true, 'note' => '<p>Note: mail us</p>',
+    ]]]]]);
+
+    $this->get('/about-us')->assertOk()
+        ->assertSee('page-block--facts', false)->assertDontSee('<diu-rich-html', false)                       // the theme's own look, not page text
+        ->assertSee('data-count="2002" data-from="1990">2002</span>', false)                                 // a year counts up from a little before
+        ->assertSee('data-count="30" data-from="0">30</span><span class="facts__highlight-rest">+ Acre</span>', false)
+        ->assertSee('<a href="#academics" class="facts__chapter-link"', false)->assertSee('<span class="facts__chapter-index">02</span>', false)
+        ->assertSee('<h3 class="facts__label">Year of establishment</h3>', false)                             // the colon only hidden
+        ->assertSee('facts__tile--stat facts__tile--featured', false)->assertSee('<div class="facts__number">2002</div>', false)
+        ->assertSee('With the approval of UGC')
+        ->assertSee('<p class="facts__meta">Program approved by UGC</p>', false)                             // bars from the table, total apart
+        ->assertSee('<b class="facts__bar-value">31</b>', false)->assertSee('style="width: 58.1%"', false)
+        ->assertSee('facts__bar--total"><span class="facts__bar-label">Total Approved Program</span><b class="facts__bar-value">58</b>', false)
+        ->assertSee('facts__tile--chips', false)->assertSee('Show all 14')                                    // a long list → chips
+        ->assertSee('<ol class="facts__cards">', false)->assertSee('Faculty of Agriculture Sciences')
+        ->assertSee('<div class="facts__number">1,140,500</div>', false)->assertSee('Approximately one million items')
+        ->assertSee('<article id="venue-events" class="facts__tile facts__tile--m facts__tile--text">', false)->assertSee('Bonomaya 01')   // lines stay text: nothing left out
+        ->assertSeeInOrder(['facts__year-tag">2025', 'QS World 2025', 'THE World 2025', 'facts__year-tag">2024', 'THE Impact Rankings 2024', 'facts__year-tag">•', 'SCIMAGO Q1'], false)
+        ->assertSee('href="/rankings">View Details</a>', false)
+        ->assertSee('Green Gardeen 1')->assertDontSee('alert(1)', false)
+        ->assertSee('Note: mail us');
+
+    // Saved before chapters (rows only): one chapter without a title and no chapter bar
+    $this->about->update(['content' => ['en' => [['type' => 'facts', 'data' => ['rows' => $chapters[0]['rows'], 'show_nav' => true]]]]]);
+    $this->get('/about-us')->assertOk()->assertSee('Green Gardeen 1')->assertDontSee('facts__chapters', false)->assertDontSee('facts__hero', false);
+
+    // Media Library files inside the values and the note count as usage
+    expect(FactsBlock::mediaIds(['chapters' => [['rows' => [['label' => 'Map :', 'value' => '<img src="/storage/1/a.jpg" data-media-id="5">']]]], 'note' => '<a href="/storage/2/b.pdf" data-media-id="9">PDF</a>']))
+        ->toBe([5, 9]);
 });
 
 it('hides pages that are off, scheduled, expired, or under a hidden parent (FR-GEN-12)', function () {

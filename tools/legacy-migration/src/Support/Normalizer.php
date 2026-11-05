@@ -136,4 +136,61 @@ class Normalizer
 
         return ['credits' => $credits, 'years' => $years, 'terms' => $terms];
     }
+
+    /**
+     * An old page that is one two-column table (DIU's At a Glance: "Faculties :" | the list) as the
+     * key facts block's data (UI/UX Part B §5.8): label = the first cell's text, value = the second
+     * cell's HTML as written, without the editor's sizes (style, width, height); what follows the
+     * table is the note. Null when the page is anything else (also a two-column table whose labels mostly
+     * have no colon: a calendar, a committee) — then it stays an HTML block.
+     *
+     * @return array{highlights: list<array>, rows: list<array{label: string, value: string}>, show_nav: bool, note: ?string}|null
+     */
+    public static function factsTable(?string $html): ?array
+    {
+        if (static::html($html) === null) {
+            return null;
+        }
+
+        $dom = new \DOMDocument;
+        @$dom->loadHTML('<?xml encoding="utf-8"?><body>'.$html.'</body>', LIBXML_NOERROR | LIBXML_NOWARNING);
+        $nodes = fn (\DOMNode $node): array => array_values(array_filter(iterator_to_array($node->childNodes),
+            fn (\DOMNode $child): bool => $child instanceof \DOMElement || trim(str_replace("\u{00A0}", ' ', $child->textContent)) !== ''));
+
+        $top = $nodes($dom->getElementsByTagName('body')->item(0));
+        $first = $top[0] ?? null;
+        $table = $first?->nodeName === 'div' && count($nodes($first)) === 1 ? $nodes($first)[0] : $first;   // Bootstrap's .table-responsive around it
+        if ($table?->nodeName !== 'table') {
+            return null;
+        }
+
+        $rows = [];
+        foreach ($nodes($table) as $part) {
+            foreach (in_array($part->nodeName, ['tbody', 'thead'], true) ? $nodes($part) : [$part] as $tr) {
+                $cells = $tr->nodeName === 'tr' ? $nodes($tr) : [];
+                if (count($cells) !== 2 || array_diff(array_map(fn ($c) => $c->nodeName, $cells), ['td', 'th']) !== []) {
+                    return null;
+                }
+                foreach ((new \DOMXPath($dom))->query('.//*[@style or @width or @height]', $cells[1]) as $sized) {
+                    $sized->removeAttribute('style');
+                    $sized->removeAttribute('width');
+                    $sized->removeAttribute('height');
+                }
+                $label = static::text(preg_replace('/\s+/u', ' ', str_replace("\u{00A0}", ' ', $cells[0]->textContent)));
+                $value = trim(implode('', array_map(fn (\DOMNode $n): string => $dom->saveHTML($n), iterator_to_array($cells[1]->childNodes))));
+                if ($label !== null) {
+                    $rows[] = ['label' => $label, 'value' => $value === '' ? '<p></p>' : $value];
+                }
+            }
+        }
+        // A fact sheet's labels end with a colon ("Faculties :"); a calendar, a list or a committee's table does not
+        $labelled = count(array_filter($rows, fn (array $row): bool => str_ends_with($row['label'], ':')));
+        if (count($rows) < 3 || $labelled < 0.8 * count($rows)) {
+            return null;
+        }
+
+        $note = static::html(implode('', array_map(fn (\DOMNode $n): string => $dom->saveHTML($n), array_slice($top, 1))));
+
+        return ['highlights' => [], 'rows' => $rows, 'show_nav' => true, 'note' => $note];   // S15A puts the rows into chapters
+    }
 }
