@@ -479,8 +479,8 @@ final class DepartmentExtension implements ModuleExtension
 | প্রশ্ন | উত্তর দেয় | কোথায় সেট হয় |
 |---|---|---|
 | User **কী** করতে পারবে? (News create, Program delete, Dashboard widget দেখা) | **Filament Shield** (spatie/laravel-permission-এর উপর) | Shield Role UI |
-| User **কোন data-তে** করতে পারবে? (শুধু CSE, অথবা Engineering-এর সব) | **Platform Scope engine** (P-03) | User form-এর Scope field |
-| User **কোন Office / Lab**-এ করতে পারবে? | **Dynamic entity permission** (Shield custom permission হিসেবে) | Shield Role UI-এর "Entity Permissions" tab |
+| User **কোন data-তে** করতে পারবে? (শুধু CSE, Engineering-এর সব, অথবা Registrar Office) | **Platform Scope engine** (P-03) | User form-এর Scope field |
+| User **কোন Lab**-এ করতে পারবে? *(2026-11-06: Office এখন Scope-এ, BRD Q-13 v1.9)* | **Dynamic entity permission** (Shield custom permission হিসেবে) | Shield Role UI-এর "Entity Permissions" tab |
 
 #### Permission-এর প্রকার
 
@@ -490,7 +490,7 @@ final class DepartmentExtension implements ModuleExtension
 | Page permission | Shield | `View:{Page}` | `View:ManageSettings` |
 | Widget permission | Shield | `View:{Widget}` | `View:AdmissionStatsWidget` |
 | Custom permission | Module manifest-এর `custom_permissions` | `{Action}:{Subject}` | `PublishMain:NewsPost` (main site-এ প্রকাশ, BRD Q-26), `HighlightMain:NewsPost`, `Import:Course` |
-| Dynamic entity permission | Kernel, Office / Lab তৈরি হলে (FR-ROLE-07) | `{Action}:{Entity}#{id}` | `Manage:Office#12`, `Content:Lab#3` |
+| Dynamic entity permission | Kernel, Lab তৈরি হলে (FR-ROLE-07) | `{Action}:{Entity}#{id}` | `Manage:Lab#3` |
 
 > SRS-এ লেখা permission (যেমন `news.create`, `office.{id}.manage`) **logical নাম**; বাস্তব key উপরের Shield format-এ হবে। Mapping প্রতিটি module-এর README-তে থাকবে।
 >
@@ -501,7 +501,7 @@ final class DepartmentExtension implements ModuleExtension
 ```
 1. Shield permission আছে?                 (যেমন Update:NewsPost)        না → 403
 2. Record কি user-এর scope-এর ভেতরে?        (Scope engine, P-03)           না → 403
-3. Office / Lab record হলে entity permission আছে? (Manage:Office#12)       না → 403
+3. Lab record হলে entity permission আছে? (Manage:Lab#3)                     না → 403
 4. Business rule (যেমন Main Site highlight → HighlightMain)                না → 403
 → অনুমতি
 ```
@@ -591,7 +591,7 @@ Kernel ও core-এর dispatch করা event। Module এগুলো listen
 | Public URL segment | Module settings-এ configurable, default slug | `/faculty-member/{slug}` |
 | Filament Resource / Page / Widget class | System-wide অনন্য; সাধারণ নামে module prefix | `FacultyMemberProfileResource`, `NewsCategoryResource` |
 | Permission (Shield) | `{Action}:{Resource}` (Section 7.4) | `Update:FacultyMemberProfile` |
-| Dynamic permission | `{Action}:{Entity}#{id}` | `Manage:Office#12` |
+| Dynamic permission | `{Action}:{Entity}#{id}` | `Manage:Lab#3` |
 | Config key | `{slug}.*` | `config('faculty-member.per_page')` |
 | Settings key | `{slug}.{key}` | `faculty-member.show_email` |
 | View ও translation namespace | `{slug}::` | `faculty-member::listing.grid` |

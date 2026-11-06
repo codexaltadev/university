@@ -95,7 +95,7 @@ Alumni (M-17)          ─┘                   Committee: Syndicate → "Member
 |---|---|---|---|
 | FR-OFF-01 | Office CRUD; Office type একটি Taxonomy vocabulary | BR-MS-01 | Must |
 | FR-OFF-02 | Relation Target ও Microsite entity (parent নেই, fallback: নিজের → Main site; parent Office থাকলে তার menu-তে fallback ঐচ্ছিক) | BR-MS-01, BR-MS-04 | Must |
-| FR-OFF-03 | Office তৈরি হলে dynamic permission তৈরি: `office.{slug}.manage`, `office.{slug}.content`, `office.{slug}.menu` (FR-ROLE-07) | Q-13, Q-14 | Must |
+| FR-OFF-03 | *(2026-11-06)* Office user Department user-এর মতো scope দিয়ে: user-এর Scope-এ Office, শুধু সেই Office ও তার content (FR-USER-03); নিজের profile edit করবে, নাম, ধরন, ঠিকানা, active Admin-এর | Q-13, Q-14 | Must |
 | FR-OFF-04 | Section / Sub-unit CRUD, Office-এর ভেতরে (Relation Manager); Section একটি Assignable, যাতে Section-এ ব্যক্তি assign করা যায় (Section content-এর Relation Target নয়) | Q-08 | Must |
 | FR-OFF-05 | Office ও Section-এ ব্যক্তি assign (FR-REL-10): ভূমিকা, ক্রম, public কিনা; Office page-এ "Our Team" তালিকা | Q-08 | Must |
 | FR-OFF-06 | Service catalog CRUD; Office page-এ "Services" section; সব Office-এর service একসাথে খোঁজার page (`/services`) | — | Should |
@@ -117,7 +117,7 @@ Alumni (M-17)          ─┘                   Committee: Syndicate → "Member
 ### Permissions
 
 Static: `office.view`, `office.create`, `office.delete`, `office.manage-all`
-Dynamic (প্রতিটি Office): `office.{id}.manage`, `office.{id}.content`, `office.{id}.menu`
+Dynamic permission নেই (2026-11-06): কোন Office তা user-এর Scope ঠিক করে।
 
 ### Acceptance Criteria
 

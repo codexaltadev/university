@@ -12,29 +12,31 @@ use Modules\ActivityLog\Filament\Resources\Activities\Pages\ListActivities;
 use Modules\ActivityLog\Filament\Resources\Activities\Pages\ViewActivity;
 use Modules\Faq\Filament\Resources\Faqs\Pages\EditFaq;
 use Modules\Faq\Models\Faq;
+use Nwidart\Modules\Facades\Module;
 use Platform\Activity\Activity;
 use Platform\Filament\RelationManagers\ActivityRelationManager;
+use Platform\Modules\Manifest;
 use Platform\Modules\ModulePermissions;
 use Spatie\Permission\Models\Permission;
 
 beforeEach(function () {
     Filament::setCurrentPanel(Filament::getPanel('admin'));
-    app(ModulePermissions::class)->sync('ActivityLog');
+    app(ModulePermissions::class)->syncCustom(Manifest::fromDirectory(Module::getModulePath('ActivityLog')));
     app(ModulePermissions::class)->sync('Faq');
 });
 
 it('offers only "view any" and "view" in the role editor', function () {
-    expect(Permission::where('name', 'like', '%:Activity')->pluck('name')->sort()->values()->all())
-        ->toBe(['View:Activity', 'ViewAny:Activity']);
+    expect(Permission::where('name', 'like', '%:ActivityLog')->pluck('name')->sort()->values()->all())
+        ->toBe(['View:ActivityLog', 'ViewAny:ActivityLog']);
 });
 
 it('shows the log to users with permission only', function () {
     $this->actingAs(makeUser())->get(ActivityResource::getUrl('index'))->assertForbidden();
-    $this->actingAs(makeUser(['ViewAny:Activity']))->get(ActivityResource::getUrl('index'))->assertOk();
+    $this->actingAs(makeUser(['ViewAny:ActivityLog']))->get(ActivityResource::getUrl('index'))->assertOk();
 });
 
 it('lists, filters and shows changes', function () {
-    $editor = makeUser(['ViewAny:Activity', 'View:Activity']);
+    $editor = makeUser(['ViewAny:ActivityLog', 'View:ActivityLog']);
     $this->actingAs($editor);
 
     $faq = Faq::factory()->create(['question' => 'Old?']);
@@ -58,7 +60,7 @@ it('lists, filters and shows changes', function () {
 });
 
 it('exports the filtered log as CSV (FR-LOG-05)', function () {
-    $this->actingAs(makeUser(['ViewAny:Activity']));
+    $this->actingAs(makeUser(['ViewAny:ActivityLog']));
     Faq::factory()->create();
 
     Livewire::test(ListActivities::class)
@@ -82,7 +84,7 @@ it('shows a record\'s history on its edit page (FR-GEN-83)', function () {
 
     expect(ActivityRelationManager::canViewForRecord($faq, EditFaq::class))->toBeFalse();   // guest
 
-    $this->actingAs(makeUser(['ViewAny:Activity', 'Update:Faq']));
+    $this->actingAs(makeUser(['ViewAny:ActivityLog', 'Update:Faq']));
     expect(ActivityRelationManager::canViewForRecord($faq, EditFaq::class))->toBeTrue();
 
     Livewire::test(ActivityRelationManager::class, ['ownerRecord' => $faq, 'pageClass' => EditFaq::class])

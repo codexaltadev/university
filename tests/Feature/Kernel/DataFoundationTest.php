@@ -10,7 +10,7 @@ use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 use Modules\Faq\Models\Faq;
-use Modules\Office\Models\Office;
+use Modules\Lab\Models\Lab;
 use Nwidart\Modules\Facades\Module;
 use Platform\Activity\Activity;
 use Platform\Exceptions\ParentHasActiveChildren;
@@ -225,15 +225,15 @@ it('module permissions record their module and kind; entity permissions are mapp
         ->module_slug->toBe('faq')
         ->kind->toBe('resource');
 
-    $office = Office::create(['name' => 'Registrar Office']);
-    $permission = Permission::where('name', "Manage:Office#{$office->id}")->first();
+    $lab = Lab::query()->create(['name' => ['en' => 'Robotics Lab']]);
+    $permission = Permission::where('name', "Manage:Lab#{$lab->id}")->first();
 
     expect($permission->kind)->toBe('entity')
         ->and(DB::table('core_entity_permissions')->where('permission_id', $permission->id)->first())
-        ->entity_id->toBe($office->id)
+        ->entity_id->toBe($lab->id)
         ->action->toBe('manage');
 
-    $office->forceDelete();
-    expect(Permission::where('name', "Manage:Office#{$office->id}")->exists())->toBeFalse()
-        ->and(DB::table('core_entity_permissions')->count())->toBe(0);
+    $lab->forceDelete();
+    expect(Permission::where('name', "Manage:Lab#{$lab->id}")->exists())->toBeFalse()
+        ->and(DB::table('core_entity_permissions')->where('entity_id', $lab->id)->where('entity_type', $lab->getMorphClass())->count())->toBe(0);
 });

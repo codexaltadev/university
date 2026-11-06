@@ -11,6 +11,7 @@ use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Illuminate\Support\Facades\Auth;
 use Modules\Office\Models\Office;
 use Platform\Filament\Components\LinkListField;
 use Platform\Filament\Components\MediaPicker;
@@ -18,6 +19,7 @@ use Platform\Filament\Components\PeopleManager;
 use Platform\Filament\Components\SeoPanel;
 use Platform\Filament\Components\TranslatableTabs;
 use Platform\Filament\Components\WebAddressField;
+use Platform\Scope\UserScopeFilter;
 use Platform\Taxonomy\Vocabularies;
 
 /**
@@ -30,11 +32,13 @@ class OfficeForm
 {
     public static function configure(Schema $schema): Schema
     {
+        $profileOnly = fn (string $operation): bool => $operation === 'edit' && static::profileOnly();
+
         return $schema->components([
             Grid::make(3)->columnSpanFull()->schema([
                 Section::make()->columnSpan(2)->schema([
                     TranslatableTabs::make()->schema(fn (string $locale, bool $isDefault): array => [
-                        TextInput::make("name.{$locale}")->label(__('office::office.fields.name'))->required($isDefault)->maxLength(255),
+                        TextInput::make("name.{$locale}")->label(__('office::office.fields.name'))->required($isDefault)->maxLength(255)->disabled($profileOnly),
                         RichEditor::make("overview.{$locale}")->label(__('office::office.fields.overview'))->fileAttachments(false),
                         RichEditor::make("head_message.{$locale}")->label(__('office::office.fields.head_message'))->fileAttachments(false),
                         TextInput::make("location.{$locale}")->label(__('office::office.fields.location'))->maxLength(255),
@@ -70,16 +74,16 @@ class OfficeForm
                 Grid::make(1)->columnSpan(1)->schema([
                     Section::make(__('office::office.sections.office'))->compact()->schema([
                         Select::make('type_term_id')->label(__('office::office.fields.type'))
-                            ->options(fn (): array => app(Vocabularies::class)->options(Office::TYPE))->searchable(),
+                            ->options(fn (): array => app(Vocabularies::class)->options(Office::TYPE))->searchable()->disabled($profileOnly),
                         Select::make('parent_id')->label(__('office::office.fields.parent'))
-                            ->options(fn (?Office $record): array => Office::query()->when($record?->exists, fn ($q) => $q->whereKeyNot($record->getKey()))
-                                ->ordered()->get()->mapWithKeys(fn (Office $o): array => [$o->id => $o->name])->all())
-                            ->searchable(),
-                        TextInput::make('short_name')->label(__('office::office.fields.short_name'))->maxLength(50),
-                        WebAddressField::forMicrosite(Office::class),
+                            ->options(fn (?Office $record): array => UserScopeFilter::withoutScope(fn () => Office::query()->when($record?->exists, fn ($q) => $q->whereKeyNot($record->getKey()))
+                                ->ordered()->get()->mapWithKeys(fn (Office $o): array => [$o->id => $o->name])->all()))
+                            ->searchable()->disabled($profileOnly),
+                        TextInput::make('short_name')->label(__('office::office.fields.short_name'))->maxLength(50)->disabled($profileOnly),
+                        WebAddressField::forMicrosite(Office::class)->disabled($profileOnly),
                         Toggle::make('has_microsite')->label(__('office::office.fields.has_microsite'))
-                            ->helperText(__('office::office.help.has_microsite'))->default(true),
-                        Toggle::make('is_active')->label(__('platform::relations.active'))->default(true),
+                            ->helperText(__('office::office.help.has_microsite'))->default(true)->disabled($profileOnly),
+                        Toggle::make('is_active')->label(__('platform::relations.active'))->default(true)->disabled($profileOnly),
                     ]),
                     Section::make(__('office::office.sections.contact'))->compact()->schema([
                         TextInput::make('email')->label(__('office::office.fields.email'))->email()->maxLength(191),
@@ -95,6 +99,14 @@ class OfficeForm
             ]),
             PeopleManager::make()->columnSpanFull(),   // Head, team (FR-OFF-05)
         ]);
+    }
+
+    /** Scoped users edit the profile only, as Department users do; the rest is an Admin's. */
+    public static function profileOnly(): bool
+    {
+        $user = Auth::user();
+
+        return $user !== null && ! $user->isSuperAdmin() && $user->scopes()->exists();
     }
 
     /** Icon name the theme draws; the usual ones are suggested */

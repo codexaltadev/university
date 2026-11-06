@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | Business Requirements Document (BRD) |
-| Version | 1.8 — Frontend Blade + Livewire, API Release 2-এ (Q-28); ৫৮টি module |
+| Version | 1.9 — Office user-ও Department-এর মতো Scope দিয়ে (Q-13, Q-14); Frontend Blade + Livewire, API Release 2-এ (Q-28); ৫৮টি module |
 | Date | 2026-10-08 |
 | Status | **Approved** (Project Owner, 2026-10-08) |
 | Source | [requrment.md](../requrment.md), বর্তমান DIU website database (`project_diu`) |
@@ -26,6 +26,7 @@
 | 1.6 | 2026-10-08 | Main site-এ প্রকাশ শুধু Admin-এর সিদ্ধান্ত (BR-CNT-08, Q-26) |
 | 1.7 | 2026-10-08 | Publish সরল: `is_active` + `published_at`; `status` ও Approval workflow বাদ (Q-27) |
 | 1.8 | 2026-10-08 | Public website Laravel Blade + Livewire; REST API Release 2-এ; API documentation public নয় (Q-28) |
+| 1.9 | 2026-11-06 | Office-এর access Department-এর মতো Scope দিয়ে (owner); per-office permission বাদ, Lab-এ থাকছে (Q-13, Q-14) |
 
 ---
 
@@ -148,12 +149,12 @@ Program user      → শুধু ওই Program
 
 ### 5.4 Office ও Lab Access (Permission-ভিত্তিক)
 
-Office ও Lab / Research Center-এর access scope দিয়ে নয়, **module permission দিয়ে** নিয়ন্ত্রিত হবে:
+*(v1.9, owner 2026-11-06)* **Office-এর access Department-এর মতোই Scope দিয়ে:** user-এর "কোথায় কাজ করবেন"-এ Office দিলে সে শুধু সেই Office ও তার content দেখে। Lab / Research Center-এর access আগের মতো **module permission দিয়ে** নিয়ন্ত্রিত হবে:
 
-* Office module (এবং Lab module) নিজের permission নিজেই register করবে।
-* **প্রতিটি Office-এর জন্য আলাদা permission** automatically তৈরি হবে যখন Office তৈরি করা হবে (যেমন `office.registrar.manage`, `office.exam.manage`)। এতে Registrar Office-এর staff Exam Office-এর data পরিবর্তন করতে পারবে না। Lab-এর ক্ষেত্রেও একই নিয়ম।
-* Super Admin একটি role তৈরি করবে (যেমন "Registrar Office Staff") এবং সেই role-এ প্রয়োজনীয় permission দেবে।
-* যে user-কে ওই role দেওয়া হবে, সে ওই Office access করতে পারবে। Role-এ permission না থাকলে access পাবে না।
+* Lab module নিজের permission নিজেই register করবে।
+* **প্রতিটি Lab-এর জন্য আলাদা permission** automatically তৈরি হবে যখন Lab তৈরি করা হবে (যেমন `Manage:Lab#3`)।
+* Super Admin একটি role তৈরি করবে (যেমন "Robotics Lab Staff") এবং সেই role-এ প্রয়োজনীয় permission দেবে।
+* যে user-কে ওই role দেওয়া হবে, সে ওই Lab access করতে পারবে। Role-এ permission না থাকলে access পাবে না।
 
 ---
 
@@ -519,8 +520,8 @@ System-এ যত file upload হবে (image, PDF, document, video, audio ই�
 | Q-10 | Out-of-scope তালিকা? | ঠিক আছে (Section 4.2) |
 | Q-11 | Menu fallback? | Standard hierarchical: নিজের → নিকটতম parent → main site |
 | Q-12 | Faculty user কি অধীন Department ও Program access করতে পারবে? | হ্যাঁ |
-| Q-13 | Office-এর access কীভাবে? | Office module-এর নিজস্ব permission, role-এর মাধ্যমে |
-| Q-14 | প্রতিটি Office-এর জন্য আলাদা permission? | হ্যাঁ, Office তৈরি হলে automatically |
+| Q-13 | Office-এর access কীভাবে? | *(v1.9)* Department-এর মতো Scope দিয়ে: role = কী করবে, Scope = কোন Office। আগে: Office module-এর নিজস্ব permission, role-এর মাধ্যমে |
+| Q-14 | প্রতিটি Office-এর জন্য আলাদা permission? | *(v1.9)* না, Scope-ই যথেষ্ট; per-record permission শুধু Lab-এ। আগে: হ্যাঁ, Office তৈরি হলে automatically |
 | Q-15 | Theme কি ZIP দিয়ে install করা যাবে? | হ্যাঁ |
 | Q-16 | বর্তমান DB থেকে কোন অতিরিক্ত module যোগ হবে? | Admission Info, Tuition/Waiver/Scholarship, Academic Calendar, Transport, Lab / Research Center, Facilities, Accreditation & Ranking, International Linkage & Conference, CSR, Partners |
 | Q-17 | কোন অংশ existing module-এ একত্রিত হবে? | Prospectus / Flipbook / Guidebook → Documents; Documentary / Lecture Series → Gallery; Accordion → FAQ; Greetings / News Ticker / Countdown → Announcement Widgets; Article / Blog → Pages ও News |

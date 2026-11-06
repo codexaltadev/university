@@ -196,7 +196,7 @@ Laravel default table, extend করা।
 
 ### 5.2 `core_entity_permissions` — P (P-10)
 
-Dynamic entity permission (`Manage:Office#12`) কোন entity-র তা নির্দেশ করে (FR-ROLE-07)।
+Dynamic entity permission (`Manage:Lab#3`) কোন entity-র তা নির্দেশ করে (FR-ROLE-07)।
 
 | Column | Type | Key / N | বর্ণনা |
 |---|---|---|---|

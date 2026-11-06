@@ -30,7 +30,7 @@ final class OfficeExtension implements ModuleExtension
         $r->assignable(OfficeSection::class, roles: [OfficeSection::ROLE]);                 // FR-OFF-04
         $r->assignable(OfficeService::class, roles: [OfficeService::ROLE]);                 // FR-OFF-06
         $r->assignable(OfficeSupportContact::class, roles: [OfficeSupportContact::ROLE]);   // FR-OFF-07
-        $r->dynamicPermissions(Office::class);                    // "Manage:Office#{id}" per office (FR-ROLE-07)
+        $r->scopeable(Office::class);                             // Office users (BRD Q-13 v1.9)
         $r->searchable(Office::class, label: 'office::office.search_group', weight: 7);   // website search (FR-SRCH-01)
         $r->searchable(OfficeService::class, label: 'office::office.services.plural', weight: 5);
         $r->vocabulary(Office::TYPE, label: 'Office type', multiple: false);   // Administrative, Student Service … (FR-OFF-01)

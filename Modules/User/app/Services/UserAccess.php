@@ -23,16 +23,23 @@ class UserAccess
     public function __construct(protected Registry $registry, protected ScopeResolver $scope) {}
 
     /**
-     * Entities a user can be scoped to, grouped by type label (registered with scopeable()).
+     * Entities a user can be scoped to, grouped by type label: relation targets registered with
+     * scopeable() — not records like a member or a tuition that are only filtered by it.
      *
      * @return array<string, array<string, string>> label => ["type:id" => name]
      */
     public function scopeOptions(): array
     {
         $groups = [];
+        $entities = array_column($this->registry->all('relationTarget'), 'model');
 
         foreach ($this->registry->all('scopeable') as $entry) {
             $model = $entry['model'];
+
+            if (! in_array($model, $entities, true)) {
+                continue;
+            }
+
             $type = MorphMap::alias($model);
             $label = Str::headline(Str::plural(class_basename($model)));
 

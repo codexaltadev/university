@@ -19,7 +19,7 @@ class RoleDatabaseSeeder extends Seeder
             'admin' => ['Central web team: all content and settings, main site; not System.', false],
             'content_manager' => ['Selected content modules only.', false],
             'entity_editor' => ['Faculty / department / program editors; limited by "Works on".', false],
-            'office_editor' => ['Office / lab editors; limited by entity permissions.', false],
+            'office_editor' => ['Office / lab editors; offices by "Works on", labs by entity permissions.', false],
             'viewer' => ['Can look, cannot change.', false],
         ];
 

@@ -33,7 +33,6 @@ use Platform\Assignments\ManualPerson;
 use Platform\Assignments\RoleCatalog;
 use Platform\Context\SiteContext;
 use Platform\Modules\ModulePermissions;
-use Platform\Permissions\EntityPermissions;
 use Platform\Relations\RelationEngine;
 use Platform\Statistics\Statistics;
 use Platform\Taxonomy\Vocabularies;
@@ -256,10 +255,12 @@ it('gives a new office its own counters: services and team (FR-OFF-14)', functio
 });
 
 it('lets an office user manage their own office\'s services, not another\'s (BRL-OFF-03)', function () {
-    $user = makeUser(['ViewAny:Office', 'View:Office', 'Update:Office', EntityPermissions::key('Manage', 'Office', $this->registrar->id)]);
+    $user = makeUser(['ViewAny:Office', 'View:Office', 'Update:Office'], [$this->registrar]);
     $this->actingAs($user);
 
     $this->get(OfficeResource::getUrl('edit', ['record' => $this->registrar]))->assertOk();
+    $this->get(OfficeResource::getUrl('edit', ['record' => $this->transport]))->assertNotFound();   // no existence leak
+    $this->get(OfficeResource::getUrl('index'))->assertOk()->assertSee('Registrar Office')->assertDontSee('Transport');
     Livewire::test(ServicesRelationManager::class, ['ownerRecord' => $this->registrar, 'pageClass' => EditOffice::class])
         ->assertSee('Transcript issue')
         ->callTableAction('create', data: ['title' => ['en' => 'Certificate verification'], 'is_active' => true])

@@ -4,7 +4,7 @@
 | বিষয় | তথ্য |
 |---|---|
 | Document | SRS Part 1: Core Modules |
-| Version | 0.2 — FR-REL-09/10 (Person Source, Assignment), FR-HOME-11 (section source mode), C-20 Statistics যোগ; v0.3 (2026-10-31): FR-PAGE-04 Right sidebar layout, sidebar menu দুই পাশেই; FR-PAGE-02 নতুন block (2026-11-01) |
+| Version | 0.2 — FR-REL-09/10 (Person Source, Assignment), FR-HOME-11 (section source mode), C-20 Statistics যোগ; v0.3 (2026-10-31): FR-PAGE-04 Right sidebar layout, sidebar menu দুই পাশেই; FR-PAGE-02 নতুন block (2026-11-01); v0.4 (2026-11-06): Office scope-এ — FR-USER-03, FR-ROLE-07, AC-ROLE-03, AC-ROLE-04 |
 | Date | 2026-10-08 |
 | Status | Review-এর জন্য অপেক্ষমাণ |
 | Based on | [BRD v1.1](../01-BRD.md), [SRS Part 0](00-SRS-Overview.md) |
@@ -102,7 +102,7 @@
 |---|---|---|---|
 | FR-USER-01 | User create, edit, deactivate, soft delete, restore | BR-SEC-01 | Must |
 | FR-USER-02 | User-কে এক বা একাধিক role assign করা যাবে | BR-SEC-01 | Must |
-| FR-USER-03 | User-কে এক বা একাধিক entity scope (Faculty / Department / Program) assign করা যাবে | Q-03 | Must |
+| FR-USER-03 | User-কে এক বা একাধিক entity scope (Faculty / Department / Program / *v0.4* Office) assign করা যাবে | Q-03, Q-13 | Must |
 | FR-USER-04 | Email দিয়ে login; "Forgot password" email link দিয়ে reset | NFR-SEC-02 | Must |
 | FR-USER-05 | Inactive user login করতে পারবে না; চলমান session সাথে সাথে বাতিল হবে | BR-DATA-03 | Must |
 | FR-USER-06 | User নিজের profile, photo, password, interface ভাষা ও 2FA পরিবর্তন করতে পারবে | NFR-SEC-04 | Must |
@@ -147,7 +147,7 @@
 | FR-ROLE-04 | Default role seed হবে: Super Admin, Admin, Content Manager, Faculty Editor, Department Editor, Program Editor; *(v1.1)* module-এর নিজের default role — Tuition module: **Admission Office** (tuition fee ও tuition category), Waiver module: **Waiver Office** (waiver rule, waiver category, board, calculator settings, scholarship)। সবই role editor-এ বদলানো যায়; যেকোনো role-কে যেকোনো permission দেওয়া যায় | — | Must |
 | FR-ROLE-05 | Scope engine: user-এর scope থেকে অধীন entity হিসাব করে (Faculty → Department → Program) query filter প্রয়োগ | Q-12, BR-SEC-04 | Must |
 | FR-ROLE-06 | Scope engine একটি contract দেবে, যাতে নতুন module নিজেকে scope-যোগ্য entity হিসেবে register করতে পারে | BR-MOD-05 | Must |
-| FR-ROLE-07 | Entity-ভিত্তিক dynamic permission: Office বা Lab তৈরি হলে `office.{slug}.manage` ধরনের permission তৈরি হবে, এবং মুছে ফেললে (permanent) সরে যাবে | Q-14 | Must |
+| FR-ROLE-07 | Entity-ভিত্তিক dynamic permission: Lab তৈরি হলে `Manage:Lab#{id}` ধরনের permission তৈরি হবে, এবং মুছে ফেললে (permanent) সরে যাবে। *v0.4:* Office আর এতে নেই — Office scope দিয়ে (FR-USER-03) | Q-14 | Must |
 | FR-ROLE-08 | Role duplicate (copy) করে নতুন role তৈরি | — | Should |
 | FR-ROLE-09 | কোনো user-এর "effective permission" (সব role মিলিয়ে) ও scope এক জায়গায় দেখা যাবে | — | Should |
 
@@ -166,7 +166,8 @@
 
 * **AC-ROLE-01:** Engineering Faculty scope-এর user CSE Department ও BSc in CSE-এর news দেখতে পারবে, কিন্তু Business Faculty-র news দেখবে না।
 * **AC-ROLE-02:** CSE Department user EEE-এর একটি news-এর edit URL সরাসরি খুললে 404 পাবে (scope-এর বাইরের record দেখা যায় না, FR-GEN-52)।
-* **AC-ROLE-03:** "Registrar Office" তৈরি করলে `office.registrar-office.manage` permission role editor-এ দেখা যাবে।
+* **AC-ROLE-03:** "Robotics Lab" তৈরি করলে `Manage:Lab#{id}` permission role editor-এ দেখা যাবে।
+* **AC-ROLE-04:** *(v0.4)* Registrar Office-এর scope-এর user শুধু Registrar Office ও তার content দেখবে; অন্য Office-এর edit URL খুললে 404 পাবে।
 
 ---
 

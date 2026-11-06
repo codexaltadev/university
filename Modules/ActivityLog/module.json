@@ -26,7 +26,7 @@
         "dependencies": {},
         "optional_dependencies": [],
         "morph_aliases": {},
-        "custom_permissions": [],
+        "custom_permissions": ["ViewAny:ActivityLog", "View:ActivityLog"],
         "provides": {}
     }
 }

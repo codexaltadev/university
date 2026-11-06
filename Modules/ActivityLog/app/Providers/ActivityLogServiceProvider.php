@@ -19,7 +19,7 @@ class ActivityLogServiceProvider extends ModuleServiceProvider
         parent::register();
 
         // Read-only: the role editor offers only "view any" and "view"
-        config(['filament-shield.resources.manage.'.ActivityResource::class => ['viewAny', 'view']]);
+        config()->push('filament-shield.resources.exclude', ActivityResource::class);   // module.json: ViewAny:ActivityLog, View:ActivityLog (CSR's model is an "Activity" too)
     }
 
     public function boot(): void

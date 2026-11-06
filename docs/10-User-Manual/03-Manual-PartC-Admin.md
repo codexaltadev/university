@@ -231,7 +231,7 @@ Website: `/transport` (stop দিয়ে খোঁজা সহ); homepage-�
 3. **Has microsite** (Office / Lab) চালু করলে নিজস্ব microsite।
 4. **Save** — সাথে সাথে:
    * Microsite তৈরি (`/{faculty}/{department}`, যেমন `/fsit/cse`), menu / homepage parent থেকে নেয় যতক্ষণ না নিজেরটা বানানো হয়।
-   * Office / Lab-এর জন্য নতুন permission ("Manage: … Office") — Role-এ দিন (§14)।
+   * Lab-এর জন্য নতুন permission ("Manage: … Lab") — Role-এ দিন (§14)। Office-এর জন্য Scope-ই যথেষ্ট।
    * Content-এর **Show in**-এ নতুন নাম দেখা দেয়।
 5. User দিন: §13-এ user-এর **Scope**-এ নতুন Department / Office।
 
@@ -260,7 +260,7 @@ Website: `/transport` (stop দিয়ে খোঁজা সহ); homepage-�
 | Name, Email * | Email দিয়ে login |
 | Password | দিন, অথবা **Send invitation** — user নিজে password ঠিক করবেন (প্রস্তাবিত) |
 | **Roles** | কী করতে পারবেন — যেমন Department Editor (§14) |
-| **Scope** | কোথায় — যেমন CSE Department। Faculty দিলে তার সব Department ও Program-ও |
+| **Scope** | কোথায় — যেমন CSE Department বা Registrar Office। Faculty দিলে তার সব Department ও Program-ও |
 | Active | বন্ধ করলে login করতে পারবেন না, চলমান session-ও সাথে সাথে বন্ধ |
 
 * **View effective permissions** — এই user আসলে কী কী করতে পারবেন তার সম্পূর্ণ তালিকা; ভুল বোঝাবুঝি এড়াতে নতুন user-এর পর দেখে নিন।
@@ -280,7 +280,7 @@ Website: `/transport` (stop দিয়ে খোঁজা সহ); homepage-�
 | **Resources** | প্রতিটি module-এ View / Create / Update / Delete / Restore; content-এ **Publish to main site**, **Highlight on main site** |
 | **Pages**, **Widgets** | বিশেষ screen ও dashboard card |
 | **Custom** | Import, Export ইত্যাদি বিশেষ কাজ |
-| **Entity permissions** | নির্দিষ্ট Office / Lab-এর অনুমতি — যেমন "Registrar Office: Manage, Content, Menu" |
+| **Entity permissions** | নির্দিষ্ট Lab-এর অনুমতি — যেমন "Manage: Robotics Lab" |
 
 **প্রস্তাবিত role (শুরু):**
 
@@ -290,7 +290,7 @@ Website: `/transport` (stop দিয়ে খোঁজা সহ); homepage-�
 | Admin | Central web / PR team | সব content ও settings, main site; System নয় |
 | Content Manager | নির্দিষ্ট module (যেমন শুধু News ও Events) | ঐ module-গুলো |
 | Faculty / Department / Program Editor | Entity-র মানুষ | Content, My Microsite — **Scope** দিয়ে সীমিত |
-| Office / Lab Editor | Office / Lab-এর মানুষ | Entity permission দিয়ে নির্দিষ্ট Office / Lab |
+| Office / Lab Editor | Office / Lab-এর মানুষ | Content, My Microsite — Office **Scope** দিয়ে, Lab entity permission দিয়ে সীমিত |
 | Admission Officer | Admission office | Admission, Fees & Waiver, Scholarship |
 | Viewer | দেখার জন্য | শুধু View |
 

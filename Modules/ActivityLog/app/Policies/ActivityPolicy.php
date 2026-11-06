@@ -13,12 +13,12 @@ class ActivityPolicy extends ScopedPolicy
 {
     public function viewAny(AuthUser $authUser): bool
     {
-        return $this->allows($authUser, 'ViewAny:Activity');
+        return $this->allows($authUser, 'ViewAny:ActivityLog');
     }
 
     public function view(AuthUser $authUser, Activity $activity): bool
     {
-        return $this->allows($authUser, 'View:Activity');
+        return $this->allows($authUser, 'View:ActivityLog');
     }
 
     public function create(AuthUser $authUser): bool

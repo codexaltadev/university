@@ -13,7 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * An office's sections, services or support contacts (FR-OFF-04/06/07, BRL-OFF-03): whoever
- * may change the office (an Admin, or its Office role with Manage:Office#{id}) manages them;
+ * may change the office (an Admin, or a user working on it) manages them;
  * they are edited in a modal with their people.
  */
 abstract class OfficePartRelationManager extends RelationManager

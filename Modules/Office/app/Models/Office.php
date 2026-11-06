@@ -5,6 +5,7 @@ namespace Modules\Office\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Platform\Concerns\AppliesUserScope;
 use Platform\Concerns\HasMediaUsage;
 use Platform\Concerns\HasSeo;
 use Platform\Concerns\HasSlug;
@@ -13,7 +14,7 @@ use Platform\Concerns\IsAssignable;
 use Platform\Concerns\IsRelationTarget;
 use Platform\Concerns\IsSearchable;
 use Platform\Context\MicrositeResolver;
-use Platform\Contracts\HasEntityPermissions;
+use Platform\Contracts\Scopeable;
 use Platform\Models\BaseModel;
 use Platform\Taxonomy\Term;
 use Spatie\Translatable\HasTranslations;
@@ -21,12 +22,13 @@ use Spatie\Translatable\HasTranslations;
 /**
  * An office / administrative unit (M-12, DB-04 §3): VC Office, Registrar, Exam Office,
  * Library … with its sections, services and support contacts; Head = assignment "head".
- * Office access is permission-based ("Manage:Office#12", BRD Q-13/14), not data scope, so it
- * is a relation target and assignable but not Scopeable. Without its own microsite
- * (has_microsite off, FR-OFF-11) it is a contact card on /offices only.
+ * Office users work through data scope like Department users ("Works on", BRD Q-13 v1.9): only
+ * their office and what is shown in it. Without its own microsite (has_microsite off, FR-OFF-11)
+ * it is a contact card on /offices only.
  */
-class Office extends BaseModel implements HasEntityPermissions
+class Office extends BaseModel implements Scopeable
 {
+    use AppliesUserScope;   // Office users: their own office
     use HasMediaUsage;      // logo, cover (Media Library)
     use HasSeo;
     use HasSlug;            // microsite /office/{slug}
@@ -56,21 +58,6 @@ class Office extends BaseModel implements HasEntityPermissions
     protected function casts(): array
     {
         return ['quick_links' => 'array', 'highlights' => 'array', 'quick_services' => 'array', 'parent_id' => 'integer', 'type_term_id' => 'integer', 'campus_id' => 'integer', 'has_microsite' => 'boolean'];
-    }
-
-    public static function entityPermissionSubject(): string
-    {
-        return 'Office';
-    }
-
-    public static function entityPermissionActions(): array
-    {
-        return ['Manage'];
-    }
-
-    public function entityPermissionLabel(): string
-    {
-        return $this->name;
     }
 
     public function parent(): BelongsTo

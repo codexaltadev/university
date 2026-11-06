@@ -28,7 +28,7 @@ return [
     'help' => [
         'active' => 'Inactive users cannot sign in; an open session ends at once.',
         'access' => 'Roles decide what the user can do; "Works on" decides where.',
-        'scope' => 'Leave empty to work on everything. A faculty includes its departments and programs.',
+        'scope' => 'Leave empty to work on everything. A faculty includes its departments and programs; an office is on its own.',
         'send_invitation' => 'The user receives an email and sets their own password.',
     ],
 

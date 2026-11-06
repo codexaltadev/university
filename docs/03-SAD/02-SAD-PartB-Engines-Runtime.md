@@ -219,7 +219,7 @@ assignments(target: office:3, role: 'team', current: true)
 
 ### 5.1 Table (logical): `core_user_scopes` — P-03
 
-`user_id`, `scopeable_type`, `scopeable_id`। Office ও Lab এখানে নয় — সেগুলো dynamic entity permission (Part A 7.4)।
+`user_id`, `scopeable_type`, `scopeable_id`। Office-ও এখানে *(2026-11-06, BRD Q-13 v1.9)*; Lab এখানে নয় — সেটি dynamic entity permission (Part A 7.4)।
 
 ### 5.2 Effective Scope গণনা
 

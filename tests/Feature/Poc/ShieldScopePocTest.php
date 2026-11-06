@@ -11,8 +11,8 @@ use Modules\Faq\Filament\FaqPlugin;
 use Modules\Faq\Filament\Resources\Faqs\FaqResource;
 use Modules\Faq\Models\Faq;
 use Modules\Faq\Policies\FaqPolicy;
+use Modules\Lab\Models\Lab;
 use Modules\Office\Filament\OfficePlugin;
-use Modules\Office\Models\Office;
 use Modules\Role\Filament\Resources\Roles\Pages\EditRole;
 use Nwidart\Modules\Facades\Module;
 use Platform\Modules\Manifest;
@@ -25,6 +25,7 @@ beforeEach(function () {
     Filament::setCurrentPanel(Filament::getPanel('admin'));
     app(ModulePermissions::class)->sync('Faq');
     app(ModulePermissions::class)->sync('Office');
+    app(ModulePermissions::class)->sync('Lab');
     Role::findOrCreate(config('filament-shield.super_admin.name'), 'web');
 
     $this->engineering = faculty('Engineering');
@@ -108,38 +109,38 @@ it('POC-2: a faculty scope includes its departments (hierarchy)', function () {
 
 // ─── POC-3 ──────────────────────────────────────────────────────────────────
 
-it('POC-3: creating an office creates its own entity permission', function () {
-    $office = Office::create(['name' => 'Registrar Office']);
+it('POC-3: creating a lab creates its own entity permission', function () {
+    $lab = Lab::query()->create(['name' => ['en' => 'Robotics Lab']]);
 
-    expect(Permission::where('name', "Manage:Office#{$office->id}")->exists())->toBeTrue();
+    expect(Permission::where('name', "Manage:Lab#{$lab->id}")->exists())->toBeTrue();
 });
 
 it('POC-3: role editor shows the entity permission and saves it', function () {
-    $registrar = Office::create(['name' => 'Registrar Office']);
-    Office::create(['name' => 'Proctor Office']);
-    $role = Role::create(['name' => 'Office Editor', 'guard_name' => 'web']);
+    $robotics = Lab::query()->create(['name' => ['en' => 'Robotics Lab']]);
+    Lab::query()->create(['name' => ['en' => 'Physics Lab']]);
+    $role = Role::create(['name' => 'Lab Editor', 'guard_name' => 'web']);
 
     $this->actingAs(superAdmin());
 
     Livewire::test(EditRole::class, ['record' => $role->getRouteKey()])
         ->assertSee('Entity permissions')
-        ->assertSee('Manage: Registrar Office')
-        ->assertSee('Manage: Proctor Office')
-        ->fillForm(['entity_permissions_office' => ["Manage:Office#{$registrar->id}"]])
+        ->assertSee('Manage: Robotics Lab')
+        ->assertSee('Manage: Physics Lab')
+        ->fillForm(['entity_permissions_lab' => ["Manage:Lab#{$robotics->id}"]])
         ->call('save')
         ->assertHasNoFormErrors();
 
-    expect($role->fresh()->hasPermissionTo("Manage:Office#{$registrar->id}"))->toBeTrue();
+    expect($role->fresh()->hasPermissionTo("Manage:Lab#{$robotics->id}"))->toBeTrue();
 });
 
-it('POC-3: an office editor can manage only the office they were given', function () {
-    $registrar = Office::create(['name' => 'Registrar Office']);
-    $proctor = Office::create(['name' => 'Proctor Office']);
+it('POC-3: a lab editor can manage only the lab they were given', function () {
+    $robotics = Lab::query()->create(['name' => ['en' => 'Robotics Lab']]);
+    $physics = Lab::query()->create(['name' => ['en' => 'Physics Lab']]);
 
-    $editor = makeUser(['ViewAny:Office', 'View:Office', 'Update:Office', "Manage:Office#{$registrar->id}"]);
+    $editor = makeUser(['ViewAny:Lab', 'View:Lab', 'Update:Lab', "Manage:Lab#{$robotics->id}"]);
 
-    expect($editor->can('update', $registrar))->toBeTrue()
-        ->and($editor->can('update', $proctor))->toBeFalse();
+    expect($editor->can('update', $robotics))->toBeTrue()
+        ->and($editor->can('update', $physics))->toBeFalse();
 });
 
 // ─── POC-4 ──────────────────────────────────────────────────────────────────

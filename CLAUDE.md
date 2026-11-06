@@ -42,7 +42,7 @@ docs/          SDLC documents (Bangla with English terms) — BRD, SRS, SAD, DB,
   filters, search, paging; old `?category=` addresses redirect 301.
 - People via Person Picker / assignments (fixed role keys, relabelled by admins), places via "Show in" + main site.
 - Access: out-of-scope record → **404** (no existence leak); no permission → 403. Scoped users (faculty,
-  department, program) see only their entity tree; Office access is permission-based.
+  department, program, office) see only their entity tree; Lab access is permission-based.
 - Modules never know each other: they plug in through the Extension registrar (`$r->entityFormPart()`,
   `$r->micrositeTool()`, `$r->pageBlock()` …); an inactive module's parts disappear.
 - Theme files: **no `@php`** (even inline), no `Modules\…` / `App\Models` references, no hex colours or

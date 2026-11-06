@@ -80,7 +80,7 @@
 | `cse@test` | Department Editor | `department:CSE` |
 | `eee@test` | Department Editor | `department:EEE` |
 | `bsc-cse@test` | Program Editor | `program:BSC-CSE` |
-| `registrar@test` | Office Editor | `Manage:Office#registrar` (dynamic permission) |
+| `registrar@test` | Office Editor | `office:registrar` |
 | `viewer@test` | Viewer | শুধু `ViewAny:*` |
 
 ---
@@ -159,8 +159,8 @@ POC fail হলে: SAD ADR-04-এর বিকল্প (নিজস্ব rol
 | TC-PERM-04 | `cse@test` নতুন record তৈরি | "Show in"-এ শুধু নিজের scope-এর entity, default নিজের entity; scope-এর বাইরের id POST করলে validation error | FR-GEN-51, SAD Part B §5.4 |
 | TC-PERM-05 | `cse@test` "Main site"-এ publish | Switch নেই; শুধু "Request main site" (P-23) | Q-26, FR-CNT-H09 |
 | TC-PERM-06 | `admin@test` request approve | `site:0` relation তৈরি, request "approved", requester notification | FR-CNT-H09 |
-| TC-PERM-07 | `registrar@test` | শুধু Registrar Office ও তার content; অন্য office-এ 403; নতুন content automatically Registrar-এ যুক্ত | BR-SEC-05, FR-OFF-12 |
-| TC-PERM-08 | নতুন Office তৈরি | Code ছাড়া `Manage:Office#{id}` permission তৈরি | BRD §11 |
+| TC-PERM-07 | `registrar@test` | শুধু Registrar Office ও তার content; অন্য office-এ 404; নতুন content automatically Registrar-এ যুক্ত | BR-SEC-05, FR-OFF-12 |
+| TC-PERM-08 | নতুন Lab তৈরি | Code ছাড়া `Manage:Lab#{id}` permission তৈরি | BRD §11 |
 | TC-PERM-09 | Admin global search, Media Library (P-22), dashboard widget, export, bulk action, notification recipient | Scope-এর বাইরের record কোথাও নেই; CSE-এর inquiry শুধু CSE user পায় | FR-SRCH-07, FR-NOTI-07, FR-INQ-08 |
 | TC-PERM-11 | Permission নেই এমন action | Button ও menu দেখায় না | FR-GEN-82 |
 | TC-PERM-12 | User deactivate | Login বাতিল; চলমান session সাথে সাথে শেষ | FR-USER-05 |
